@@ -2,18 +2,30 @@
 #' @title Creating the model matrix
 #' @description Create the specific model matrix needed for the ASCA+ method from the design and model matrices
 #'
-#' @param
+#' @param formula The formula of the GLM used to predict the outcomes
+#' @param design The "free encoded" experimental design
+#'
+#' @return A list with the 3 following elements
+#' \describe{
+#' \item{\code{formula}}{The formula of the GLM used to predict the outcomes}
+#' \item{\code{design}}{The "free" encoded" experimental design}
+#' \item{\code{ModelMatrix}}{The model matrix specifically encoded for the GLM}
+#' }
+#'
+#' @example
+#' data('UCH')
+#' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
+#' View(ResLMModelMatrix$ModelMatrix)
 
 
 
-LMModelMatrix <- function(formula, outcomes, design) {
+
+LMModelMatrix <- function(formula, design) {
 
   # Checking no missing argument
 
   if (missing(formula))
     stop("Missing the formula")
-  if (missing(outcomes))
-    stop("Missing the outcomes")
   if (missing(design))
     stop("Missing the design")
 
@@ -55,7 +67,7 @@ LMModelMatrix <- function(formula, outcomes, design) {
     modelMatrix <- (model.matrix(formulaDesignMatrix, data = design))
   }
 
-  ResLMModelMatrix = list(formula = formula, outcomes = outcomes, design = design,
+  ResLMModelMatrix = list(formula = formula, design = design,
                           modelMatrix = modelMatrix)
 
   return(ResLMModelMatrix)

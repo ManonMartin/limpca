@@ -4,7 +4,20 @@
 \alias{LMModelMatrix}
 \title{Creating the model matrix}
 \usage{
-LMModelMatrix(formula, outcomes, design)
+LMModelMatrix(formula, design)
+}
+\arguments{
+\item{formula}{The formula of the GLM used to predict the outcomes}
+
+\item{design}{The "free encoded" experimental design}
+}
+\value{
+A list with the 3 following elements
+\describe{
+\item{\code{formula}}{The formula of the GLM used to predict the outcomes}
+\item{\code{design}}{The "free" encoded" experimental design}
+\item{\code{ModelMatrix}}{The model matrix specifically encoded for the GLM}
+}
 }
 \description{
 Create the specific model matrix needed for the ASCA+ method from the design and model matrices
