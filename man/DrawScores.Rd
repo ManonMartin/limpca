@@ -63,7 +63,7 @@ If \code{type.obj} is \code{'OPLSDA'}, axes = 1 represents the predictive score 
 \examples{
 
 data('UCH')
-PCA.res = SVDforPCA(outcomes)
+PCA.res = SVDforPCA(UCH$outcomes)
 
 DrawScores(PCA.res,
   type.obj = 'PCA',

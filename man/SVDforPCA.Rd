@@ -30,5 +30,5 @@ PCA over a X matrix by singular value decomposition, the preprocessing involves 
 }
 \examples{
 data('UCH')
-PCA.res = SVDforPCA(outcomes)
+PCA.res = SVDforPCA(UCH$outcomes)
 }
