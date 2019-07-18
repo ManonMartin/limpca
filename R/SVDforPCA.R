@@ -22,7 +22,7 @@
 #'
 #' @examples
 #' data('UCH')
-#' PCA.res = SVDforPCA(outcomes)
+#' PCA.res = SVDforPCA(UCH$outcomes)
 
 
 SVDforPCA <- function(x, ncomp = min(dim(x))) {

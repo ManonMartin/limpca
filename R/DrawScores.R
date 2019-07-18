@@ -31,7 +31,7 @@
 #' @examples
 #'
 #' data('UCH')
-#' PCA.res = SVDforPCA(outcomes)
+#' PCA.res = SVDforPCA(UCH$outcomes)
 #'
 #' DrawScores(PCA.res,
 #'   type.obj = 'PCA',

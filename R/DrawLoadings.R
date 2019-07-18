@@ -27,7 +27,7 @@
 #' @examples
 #'
 #' data('UCH')
-#' PCA.res = SVDforPCA(outcomes)
+#' PCA.res = SVDforPCA(UCH$outcomes)
 #'
 #' DrawLoadings(PCA.res, type.obj = 'PCA',
 #' createWindow = FALSE, main = 'PCA loadings plot for UCH dataset',

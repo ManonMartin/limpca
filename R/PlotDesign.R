@@ -12,7 +12,7 @@
 #' @author Sebastien Franceschini
 #' @examples
 #' data("UCH.RData")
-#' PlotDesign(design=design,var1_name="Hippurate",var2_name="Citrate",var3_name="Day")
+#' PlotDesign(design=UCH$design,var1_name="Hippurate",var2_name="Citrate",var3_name="Day")
 #'
 #' @import ggplot2
 #' @import gridExtra
