@@ -1,31 +1,29 @@
 \name{UCH}
 \alias{UCH}
 \docType{data}
-\title{ UCH Data
-%%   ~~ data name/kind ... ~~
-}
-\description{
-%%  ~~ A concise (1-5 lines) description of the dataset. ~~
-}
+\title{ UCH Data : Urine Citrate-Hippurate database}
+
+\description{This dataset comes from a H-NMR analysis of urine.}
 \usage{data("UCH")}
 \format{
-  A data frame with 0 observations on the following 2 variables.
+There are 3 objects : the experimental design, the outcomes for every observations and the formula considered to analyze the data.
   \describe{
-    \item{\code{x}}{a numeric vector}
-    \item{\code{y}}{a numeric vector}
+    \item{\code{outcomes}}{  A dataset with 34 observations and 600 response variables}
+    \item{\code{formula}}{ The suggested formula to analyze the data}
+    \item{\code{design}}{  The experimental design of 34 observations and 5 explanatory variables}
   }
 }
 \details{
-%%  ~~ If necessary, more details than the __description__ above ~~
+\code{outcomes = Hippurate + Citrate + Time +
+            H*C + T*H + T*C +
+            H*C*T}
 }
 \source{
-%%  ~~ reference to a publication or URL from which the data were obtained ~~
+Rousseau, R. (2011),\emph{Statistical contribution to the analysis of metabonomic data in H-NMR spectroscopy}, PhD thesis, Louvain-la-Neuve: UCL.
 }
-\references{
-%%  ~~ possibly secondary sources and usages ~~
-}
+
 \examples{
 data(UCH)
-## maybe str(UCH) ; plot(UCH) ...
+
 }
 \keyword{datasets}
