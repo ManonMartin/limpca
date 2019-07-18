@@ -6,7 +6,7 @@
 \description{This dataset comes from a H-NMR analysis of urine.}
 \usage{data("UCH")}
 \format{
-There are 3 objects : the experimental design, the outcomes for every observations and the formula considered to analyze the data.
+A list of 3 : the experimental design, the outcomes for every observations and the formula considered to analyze the data.
   \describe{
     \item{\code{outcomes}}{  A dataset with 34 observations and 600 response variables}
     \item{\code{formula}}{ The suggested formula to analyze the data}
