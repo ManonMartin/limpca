@@ -2,6 +2,7 @@
 
 export(DrawLoadings)
 export(DrawScores)
+export(PlotDesign)
 import(ggplot2)
 import(gridExtra)
 import(reshape2)
