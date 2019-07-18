@@ -11,9 +11,12 @@
 #'
 #' @author Sebastien Franceschini
 #' @examples
-#' data(".RData")
+#' data("UCH.RData")
+#' PlotDesign(design=design,var1_name="Hippurate",var2_name="Citrate",var3_name="Day")
 #'
 #' @import ggplot2
+#' @import gridExtra
+#' @import reshape2
 
 PlotDesign = function(design,var1_name,var2_name,var3_name){
 

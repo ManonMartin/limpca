@@ -22,7 +22,8 @@ A ggplot of the design
 Plot the experimental design of the data
 }
 \examples{
-data(".RData")
+data("UCH.RData")
+PlotDesign(design=design,var1_name="Hippurate",var2_name="Citrate",var3_name="Day")
 
 }
 \author{

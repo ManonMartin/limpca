@@ -3,6 +3,7 @@
 export(DrawLoadings)
 export(DrawScores)
 export(PlotDesign)
+export(SVDforPCA)
 import(ggplot2)
 import(gridExtra)
 import(reshape2)

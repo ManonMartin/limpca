@@ -1,7 +1,7 @@
 \name{UCH}
 \alias{UCH}
 \docType{data}
-\title{
+\title{ UCH Data
 %%   ~~ data name/kind ... ~~
 }
 \description{
