@@ -62,13 +62,11 @@ If \code{type.obj} is \code{'OPLSDA'}, axes = 1 represents the predictive score 
 }
 \examples{
 
-data('HumanSerum')
-res.PCA = SVDforPCA(HumanSerumSpectra)
-class = ClassHS
+data('UCH')
+PCA.res = SVDforPCA(outcomes)
 
-DrawScores(res.PCA, drawNames=TRUE, type.obj = 'PCA',
-createWindow=FALSE, main = 'PCA score plot for HumanSerum dataset',
-  color = class, axes =c(1,2))
-
+DrawScores(PCA.res,
+  type.obj = 'PCA',
+  main = 'PCA score plot for UCH dataset', axes =c(1,2))
 
 }

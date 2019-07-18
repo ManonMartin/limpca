@@ -29,6 +29,6 @@ A list with the following elements:
 PCA over a X matrix by singular value decomposition, the preprocessing involves the mean-centering of X.
 }
 \examples{
-data('HumanSerum')
-PCA.res = SVDforPCA(HumanSerumSpectra)
+data('UCH')
+PCA.res = SVDforPCA(outcomes)
 }

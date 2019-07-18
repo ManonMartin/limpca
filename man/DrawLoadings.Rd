@@ -50,11 +50,11 @@ Better results printping is obtained by saving the plot as an object
 }
 \examples{
 
-data('HumanSerum')
-res.PCA = SVDforPCA(HumanSerumSpectra)
+data('UCH')
+PCA.res = SVDforPCA(outcomes)
 
-DrawLoadings(res.PCA, type.obj = 'PCA',
-createWindow = FALSE, main = 'PCA loadings plot for HumanSerum dataset',
+DrawLoadings(PCA.res, type.obj = 'PCA',
+createWindow = FALSE, main = 'PCA loadings plot for UCH dataset',
    axes = 1,  loadingstype='l', xlab = "L1")
 
 }
