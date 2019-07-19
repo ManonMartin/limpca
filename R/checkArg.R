@@ -4,7 +4,9 @@ checkArg <- function(arg, checks, can.be.null = FALSE) {
                      num = c(is.numeric, "a numeric"),
                      str = c(is.character, "a string"),
                      pos = c(function(x) {x > 0 }, "positive"),
-                     pos0 = c(function(x) {x >= 0}, "positive or zero"))
+                     pos0 = c(function(x) {x >= 0}, "positive or zero"),
+                     formula = c(plyr::is.formula,"a formula"),
+                     data.frame = c(is.data.frame,"a dataframe"))
 
   if (is.null(arg))  {
     if (!can.be.null)  {
