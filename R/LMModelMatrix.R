@@ -1,6 +1,6 @@
 #' @export LMModelMatrix
 #' @title Creating the model matrix
-#' @description Create the specific model matrix needed for the ASCA+ method from the design and model matrices
+#' @description Create the specific model matrix needed for the ASCA-GLM method from the design and model matrices
 #'
 #' @param formula The formula of the GLM used to predict the outcomes
 #' @param design The "free encoded" experimental design
@@ -9,16 +9,21 @@
 #' \describe{
 #' \item{\code{formula}}{A \code{\link{formula}} object with the expression of the GLM used to predict the outcomes}
 #' \item{\code{design}}{A data frame with the "free encoded" experimental design}
-#' \item{\code{ModelMatrix}}{A model matrix specifically encoded for the GLM}
+#' \item{\code{ModelMatrix}}{A model matrix specifically encoded for the ASCA-GLM}
 #' }
 #'
+#' @seealso \code{\link{model.matrix}}
+#'
+#' More informations about the specific encoding is available in the article from (\emph{Thiel et al}, 2017)
 #'
 #' @examples
 #' data('UCH')
 #' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
 #' View(ResLMModelMatrix$ModelMatrix)
 #'
-#' @seealso \code{\link{model.matrix}}
+#' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
+#' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
+#'
 #'
 #' @import grDevices
 #' @import stats
