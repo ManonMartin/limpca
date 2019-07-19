@@ -42,6 +42,8 @@
 #' @import reshape2
 #' @import gridExtra
 #' @importFrom plyr ddply
+#' @import grDevices
+#' @import stats
 
 DrawScores <- function(obj, type.obj = c("PCA", "PLSDA", "OPLSDA"), drawNames = TRUE,
                        createWindow = FALSE, main = NULL, color = NULL, pch = NULL, size = 1,
@@ -226,8 +228,8 @@ DrawScores <- function(obj, type.obj = c("PCA", "PLSDA", "OPLSDA"), drawNames = 
       dataf <- cbind(color_factor, scores)
       x <- colnames(scores)[Xax]
       y <- colnames(scores)[Yax]
-      chulls <- plyr::ddply(dataf, .(color_factor), function(df) df[chull(df[,x], df[,y]), ])
-
+      chulls <- plyr::ddply(dataf, .data$color_factor, function(df) df[chull(df[,x], df[,y]), ])
+#####################################################################
       plots <- plots  +
         geom_polygon(data = chulls, aes(get(colnames(scores)[Xax]),
                                         get(colnames(scores)[Yax]), fill = color_factor, color = color_factor),
@@ -321,8 +323,8 @@ DrawScores <- function(obj, type.obj = c("PCA", "PLSDA", "OPLSDA"), drawNames = 
       dataf <- cbind(color_factor, scores)
       x <- colnames(scores)[Xax]
       y <- colnames(scores)[Yax]
-      chulls <- plyr::ddply(dataf, .(color_factor), function(df) df[chull(df[,x], df[,y]), ])
-
+      chulls <- plyr::ddply(dataf, .data$color_factor, function(df) df[chull(df[,x], df[,y]), ])
+#############################################
       plots <- plots  +
         geom_polygon(data = chulls, aes(get(colnames(scores)[Xax]),
                                         get(colnames(scores)[Yax]), fill = color_factor, color = color_factor),

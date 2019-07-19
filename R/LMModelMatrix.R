@@ -16,6 +16,9 @@
 #' data('UCH')
 #' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
 #' View(ResLMModelMatrix$ModelMatrix)
+#'
+#' @import grDevices
+#' @import stats
 
 
 

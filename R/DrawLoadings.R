@@ -37,6 +37,8 @@
 #' @import ggplot2
 #' @import reshape2
 #' @import gridExtra
+#' @import grDevices
+#' @import stats
 
 
 
@@ -173,7 +175,6 @@ DrawLoadings <- function(obj, type.obj = c("PCA", "PLSDA", "OPLSDA"),
         y = melted$value
       )
       plot <- ggplot2::ggplot(data = plot_data, ggplot2::aes(x = .data$x, y = .data$y))
-
       # plot <- ggplot2::ggplot(data = melted, ggplot2::aes(x = Var, y = value))
     } else  {
       melted$index <- as.numeric(as.factor(melted$Var))
@@ -215,10 +216,10 @@ DrawLoadings <- function(obj, type.obj = c("PCA", "PLSDA", "OPLSDA"),
       plot <- plot + ggplot2::geom_hline(yintercept = 0, size = 0.5, linetype = "dashed", colour = "gray60")
 
       if (xaxis_type == "numerical"){
-        plot <- plot + ggplot2::geom_segment(ggplot2::aes(xend = x, yend = 0),
+        plot <- plot + ggplot2::geom_segment(ggplot2::aes(xend = .data$x, yend = 0),
                                              size = 0.5, lineend = "round")
       } else {
-        plot <- plot + ggplot2::geom_segment(ggplot2::aes(xend = x, yend = 0),
+        plot <- plot + ggplot2::geom_segment(ggplot2::aes(xend = .data$x, yend = 0),
                                              size = 0.5, lineend = "round")
 
         plot <- plot + ggplot2::scale_x_continuous(breaks = seq(1, nn, floor(nn/nxaxis)),
