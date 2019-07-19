@@ -7,7 +7,7 @@
 #'
 #' @return A list with the 3 following named elements :
 #' \describe{
-#' \item{\code{formula}}{A \code{formula} object with the expression of the GLM used to predict the outcomes}
+#' \item{\code{formula}}{A \code{\link{formula}} object with the expression of the GLM used to predict the outcomes}
 #' \item{\code{design}}{A data frame with the "free encoded" experimental design}
 #' \item{\code{ModelMatrix}}{A model matrix specifically encoded for the GLM}
 #' }
@@ -18,7 +18,7 @@
 #' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
 #' View(ResLMModelMatrix$ModelMatrix)
 #'
-#' @seealso See also \link{PlotDesign} \url{www.google.com} [PlotDesign()]
+#' @seealso \code{\link{model.matrix}}
 #'
 #' @import grDevices
 #' @import stats
