@@ -1,6 +1,6 @@
 #' @export LMModelMatrix
 #' @title Creating the model matrix
-#' @description Create the specific model matrix needed for the ASCA-GLM method from the design and model matrices
+#' @description Create the specific model matrix from the design and model matrices for the ASCA-GLM method
 #'
 #' @param formula The formula of the GLM used to predict the outcomes
 #' @param design The "free encoded" experimental design
@@ -19,7 +19,6 @@
 #' @examples
 #' data('UCH')
 #' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
-#' View(ResLMModelMatrix$ModelMatrix)
 #'
 #' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
@@ -78,7 +77,7 @@ LMModelMatrix <- function(formula, design) {
   }
 
   ResLMModelMatrix = list(formula = formula, design = design,
-                          modelMatrix = modelMatrix)
+                          ModelMatrix = modelMatrix)
 
   return(ResLMModelMatrix)
 }

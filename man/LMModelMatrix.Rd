@@ -20,12 +20,11 @@ A list with the 3 following named elements :
 }
 }
 \description{
-Create the specific model matrix needed for the ASCA-GLM method from the design and model matrices
+Create the specific model matrix from the design and model matrices for the ASCA-GLM method
 }
 \examples{
 data('UCH')
 ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
-View(ResLMModelMatrix$ModelMatrix)
 
 }
 \references{

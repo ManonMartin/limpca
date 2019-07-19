@@ -2,6 +2,7 @@
 
 export(DrawLoadings)
 export(DrawScores)
+export(LMEffectMatrices)
 export(LMModelMatrix)
 export(PlotDesign)
 export(SVDforPCA)
