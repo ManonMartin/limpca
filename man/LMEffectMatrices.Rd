@@ -9,32 +9,30 @@ LMEffectMatrices(ResLMModelMatrix, outcomes)
 \arguments{
 \item{ResLMModelMatrix}{A list of 3 from \code{\link{LMModelMatrix}}}
 
-\item{outcomes}{A (n x y) matrix with n observations and y response variables}
+\item{outcomes}{A n x y matrix with n observations and y response variables}
 }
 \value{
 A list with the following elements:
  \describe{
-   \item{\code{formula}}{}
-   \item{\code{design}}{}
-   \item{\code{ModelMatrix}}{}
-   \item{\code{outcomes}}{}
-   \item{\code{effectMatrices}}{}
-   \item{\code{modelMatrixByEffect}}{}
-   \item{\code{predictedvalues}}{}
-   \item{\code{residuals}}{}
-   \item{\code{parameters}}{}
-   \item{\code{covariateEffectsNamesUnique}}{}
-   \item{\code{covariateEffectsNames}}{}
+   \item{\code{formula}}{A formula object with the expression of the GLM used to predict the outcomes}
+   \item{\code{design}}{A data frame with the "free encoded" experimental design}
+   \item{\code{ModelMatrix}}{A model matrix specifically encoded for the ASCA-GLM}
+   \item{\code{outcomes}}{A matrix with n observations and y response variables}
+   \item{\code{effectMatrices}}{A list of effect matrices for each model terms}
+   \item{\code{modelMatrixByEffect}}{A list of model matrix by models terms }
+   \item{\code{predictedvalues}}{A matrix with the predicted values}
+   \item{\code{residuals}}{A matrix with the residuals}
+   \item{\code{parameters}}{A matrix with the coefficients of every parameters by response variables}
+   \item{\code{covariateEffectsNamesUnique}}{A character vector with the name of the model terms}
+   \item{\code{covariateEffectsNames}}{A character vector with every name of the coefficients}
  }
-
- @examples
+}
+\description{
+Runs a GLM model and decomposes the outcomes into effect matrices for each model terms
+}
+\examples{
  data('UCH')
  ResLMModelMatrix = LMModelMatrix(formula=UCH$formula,design=UCH$design)
  LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 
- @import stringr
- @import plyr
-}
-\description{
-Runs a GLM model and decomposes the outcomes into effect matrices
 }
