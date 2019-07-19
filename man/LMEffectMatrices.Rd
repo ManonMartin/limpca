@@ -30,7 +30,7 @@ A list with the following elements:
  @examples
  data('UCH')
  ResLMModelMatrix = LMModelMatrix(formula=UCH$formula,design=UCH$design)
- LMEffectMatrices(ResLMModelMatrix,outcomes=outcomes)
+ LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 
  @import stringr
  @import plyr
