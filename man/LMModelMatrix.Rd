@@ -12,13 +12,22 @@ LMModelMatrix(formula, design)
 \item{design}{The "free encoded" experimental design}
 }
 \value{
-A list with the 3 following elements
+A list with the 3 following named elements :
 \describe{
-\item{\code{formula}}{The formula of the GLM used to predict the outcomes}
-\item{\code{design}}{The "free" encoded" experimental design}
-\item{\code{ModelMatrix}}{The model matrix specifically encoded for the GLM}
+\item{\code{formula}}{A \code{formula} object with the expression of the GLM used to predict the outcomes}
+\item{\code{design}}{A data frame with the "free encoded" experimental design}
+\item{\code{ModelMatrix}}{A model matrix specifically encoded for the GLM}
 }
 }
 \description{
-Create the specific model matrix needed for the ASCA+ method from the design and model matrices
+Create the specific model matrix needed for the ASCA+ method from the design and model matrices \code{\link{PlotDesign}}
+}
+\examples{
+data('UCH')
+ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
+View(ResLMModelMatrix$ModelMatrix)
+
+}
+\seealso{
+See also \link{PlotDesign} \url{www.google.com} [PlotDesign()] \code{\link{PlotDesign}}
 }

@@ -5,17 +5,20 @@
 #' @param formula The formula of the GLM used to predict the outcomes
 #' @param design The "free encoded" experimental design
 #'
-#' @return A list with the 3 following elements
+#' @return A list with the 3 following named elements :
 #' \describe{
-#' \item{\code{formula}}{The formula of the GLM used to predict the outcomes}
-#' \item{\code{design}}{The "free" encoded" experimental design}
-#' \item{\code{ModelMatrix}}{The model matrix specifically encoded for the GLM}
+#' \item{\code{formula}}{A \code{formula} object with the expression of the GLM used to predict the outcomes}
+#' \item{\code{design}}{A data frame with the "free encoded" experimental design}
+#' \item{\code{ModelMatrix}}{A model matrix specifically encoded for the GLM}
 #' }
 #'
-#' @example
+#'
+#' @examples
 #' data('UCH')
 #' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
 #' View(ResLMModelMatrix$ModelMatrix)
+#'
+#' @seealso See also \link{PlotDesign} \url{www.google.com} [PlotDesign()]
 #'
 #' @import grDevices
 #' @import stats
@@ -25,12 +28,10 @@
 
 LMModelMatrix <- function(formula, design) {
 
-  # Checking no missing argument
+  # Checking no missing argument and the class of the object
 
-  if (missing(formula))
-    stop("Missing the formula")
-  if (missing(design))
-    stop("Missing the design")
+  checkArg(formula,"formula",can.be.null = FALSE)
+  checkArg(design,"data.frame",can.be.null = FALSE)
 
   # Checking formula
 
@@ -44,6 +45,7 @@ LMModelMatrix <- function(formula, design) {
   }
 
   # Checking correspondance between formula names and design names
+
   varNames <- all.vars(formulaDesignMatrix)
   matchesVarNames <- varNames %in% names(design)
   if (!all(matchesVarNames, na.rm = FALSE)) {
