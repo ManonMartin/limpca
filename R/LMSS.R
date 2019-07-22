@@ -7,8 +7,8 @@
 #' @return A list with the following elements :
 #'  \describe{
 #'   \item{\code{formula}}{A formula object with the expression of the GLM used to predict the outcomes}
-#'   \item{\code{Type3Residuals}}{}
-#'   \item{\code{variationPercentages}}{}
+#'   \item{\code{Type3Residuals}}{A list of matrices with the type III residuals for each model terms}
+#'   \item{\code{variationPercentages}}{A named vector with the variation percentages of each model terms}
 #'  }
 #'
 #' @examples
@@ -73,6 +73,8 @@ LMSS = function(ResLMEffectMatrices){
   variationPercentages[1:nEffect-1] <- plyr::llply(Type3Residuals[-1], function(xx) 100*(norm(xx, "F")^2 - numeratorFullModelSSType3)/denominatorSSType3)
   #Variation percentages
   variationPercentages[[nEffect]] <- 100*numeratorFullModelSSType3/denominatorSSType3
+
+  variationPercentages = unlist(variationPercentages)
 
   ResLMSS = list(formula=ResLMEffectMatrices$formula,Type3Residuals=Type3Residuals,variationPercentages=variationPercentages)
   return(ResLMSS)

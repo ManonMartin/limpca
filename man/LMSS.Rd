@@ -13,8 +13,8 @@ LMSS(ResLMEffectMatrices)
 A list with the following elements :
  \describe{
   \item{\code{formula}}{A formula object with the expression of the GLM used to predict the outcomes}
-  \item{\code{Type3Residuals}}{}
-  \item{\code{variationPercentages}}{}
+  \item{\code{Type3Residuals}}{A list of matrices with the type III residuals for each model terms}
+  \item{\code{variationPercentages}}{A named vector with the variation percentages of each model terms}
  }
 }
 \description{
