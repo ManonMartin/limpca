@@ -9,5 +9,7 @@ Description: More about what it does (maybe more than one line)
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+VignetteBuilder:knitr
 Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, reshape2, grDevices
+Suggests: BiocStyle,qpdf,remotes
 RoxygenNote: 6.1.1
