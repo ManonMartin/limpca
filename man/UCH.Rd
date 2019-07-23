@@ -23,7 +23,7 @@ Rousseau, R. (2011),\emph{Statistical contribution to the analysis of metabonomi
 }
 
 \examples{
-data(UCH)
+data("UCH")
 
 }
 \keyword{datasets}
