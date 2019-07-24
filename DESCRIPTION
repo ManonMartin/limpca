@@ -3,12 +3,13 @@ Type: Package
 Title: R Routines for Linear Model with Wide Response
 Version: 0.1.0
 Author: person("Sebastien","Franceschini",email="sebastien.franceschini@student.uclouvain.be")
-Maintainer: The package maintainer <yourself@somewhere.net>
+Maintainer: The package maintainer <francseba@gmail.com>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true
+LazyDataCompression: gzip
 VignetteBuilder:knitr
 Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, reshape2, grDevices
 Suggests: BiocStyle,qpdf,remotes
