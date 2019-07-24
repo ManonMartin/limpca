@@ -18,7 +18,8 @@
 #'
 #' @examples
 #' data('UCH')
-#' ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
+#'
+#' ResLMModelMatrix = LMModelMatrix(as.formula(UCH$formula),UCH$design)
 #'
 #' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics

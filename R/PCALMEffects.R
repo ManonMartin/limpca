@@ -19,7 +19,7 @@
 #'
 #' @examples
 #'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=UCH$formula,design=UCH$design)
+#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
 #'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
 #'  DrawScores(ResPCALMEffects$Hippurate,type.obj="PCA")

@@ -24,7 +24,8 @@ Create the specific model matrix from the design and model matrices for the ASCA
 }
 \examples{
 data('UCH')
-ResLMModelMatrix = LMModelMatrix(UCH$formula,UCH$design)
+
+ResLMModelMatrix = LMModelMatrix(as.formula(UCH$formula),UCH$design)
 
 }
 \references{

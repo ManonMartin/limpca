@@ -22,7 +22,7 @@
 #'
 #' @examples
 #'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=UCH$formula,design=UCH$design)
+#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
 #'  LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'
 #' @import stringr

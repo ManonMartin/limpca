@@ -19,7 +19,7 @@ Plotting the variation percentages of the model terms
 }
 \examples{
  data('UCH')
- ResLMModelMatrix = LMModelMatrix(formula=UCH$formula,design=UCH$design)
+ ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
  ResLMSS = LMSS(ResLMEffectMatrices)
  PlotLMSS(ResLMSS,abbrev=TRUE)

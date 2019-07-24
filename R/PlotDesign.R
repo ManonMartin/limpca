@@ -11,7 +11,7 @@
 #'
 #' @author Sebastien Franceschini
 #' @examples
-#' data("UCH.RData")
+#' data("UCH")
 #' PlotDesign(design=UCH$design,var1_name="Hippurate",var2_name="Citrate",var3_name="Day")
 #'
 #' @import ggplot2
