@@ -11,6 +11,6 @@ Encoding: UTF-8
 LazyData: true
 LazyDataCompression: gzip
 VignetteBuilder:knitr
-Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, reshape2, grDevices
-Suggests: BiocStyle,qpdf,remotes
+Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, reshape2, grDevices,Rcpp
+Suggests: BiocStyle
 RoxygenNote: 6.1.1
