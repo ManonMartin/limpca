@@ -33,8 +33,9 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
 
   for(i in 1:length(EffectVector)){
 
-  iEffect_temp = paste(deparse(substitute(ResPCALMEffects)), EffectVector[i], sep = "$")
-  iEffect = eval(parse(text = iEffect_temp))
+  # iEffect_temp = paste(deparse(substitute(ResPCALMEffects)), EffectVector[i], sep = "$")
+  iEffect_temp=which(names(ResPCALMEffects)==EffectVector[i])
+  iEffect = ResPCALMEffects[iEffect_temp]
   # Effect$scores = round(eval(parse(text = EffectVar))$scores, 5)
 
   if(iEffect$var[2]<1){
