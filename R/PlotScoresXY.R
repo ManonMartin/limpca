@@ -33,7 +33,7 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
 
   for(i in 1:length(EffectVector)){
 
-  iEffect_temp = paste("ResPCALMEffects", EffectVector[i], sep = "$")
+  iEffect_temp = paste(deparse(substitute(ResPCALMEffects)), EffectVector[i], sep = "$")
   iEffect = eval(parse(text = iEffect_temp))
   # Effect$scores = round(eval(parse(text = EffectVar))$scores, 5)
 
