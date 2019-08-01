@@ -22,7 +22,7 @@
 #' @return A loading plot in the current device.
 #'
 #' @details
-#' Better results printping is obtained by saving the plot as an object
+#' Better results printing is obtained by saving the plot as an object
 #'
 #' @examples
 #'

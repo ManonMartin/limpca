@@ -3,26 +3,26 @@
 #' @description Runs a GLM model and decomposes the outcomes into effect matrices for each model terms
 #'
 #' @param ResLMModelMatrix A list of 3 from \code{\link{LMModelMatrix}}
-#' @param outcomes A n x y matrix with n observations and y response variables
+#' @param outcomes A \emph{nxm} matrix with n observations and m response variables
 #'
 #' @return A list with the following elements:
 #'  \describe{
 #'    \item{\code{formula}}{A formula object with the expression of the GLM used to predict the outcomes}
-#'    \item{\code{design}}{A data frame with the "free encoded" experimental design}
-#'    \item{\code{ModelMatrix}}{A model matrix specifically encoded for the ASCA-GLM}
-#'    \item{\code{outcomes}}{A matrix with n observations and y response variables}
-#'    \item{\code{effectMatrices}}{A list of effect matrices for each model terms}
-#'    \item{\code{modelMatrixByEffect}}{A list of model matrix by models terms }
-#'    \item{\code{predictedvalues}}{A matrix with the predicted values}
-#'    \item{\code{residuals}}{A matrix with the residuals}
-#'    \item{\code{parameters}}{A matrix with the coefficients of every parameters by response variables}
-#'    \item{\code{covariateEffectsNamesUnique}}{A character vector with the name of the model terms}
-#'    \item{\code{covariateEffectsNames}}{A character vector with every name of the coefficients}
+#'    \item{\code{design}}{A \emph{nxk} data frame with the "free encoded" experimental design.}
+#'    \item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
+#'    \item{\code{outcomes}}{A \emph{nxm} matrix with n observations and m response variables}
+#'    \item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model terms}
+#'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices by models terms }
+#'    \item{\code{predictedvalues}}{A \emph{nxm} matrix with the predicted values}
+#'    \item{\code{residuals}}{A \emph{nxm} matrix with the residuals}
+#'    \item{\code{parameters}}{A \emph{pxm} matrix with the coefficients of every parameters by response variables}
+#'    \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique name of the model terms}
+#'    \item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients}
 #'  }
 #'
 #' @examples
 #'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+#'  ResLMModelMatrix <- LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
 #'  LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'
 #' @import stringr
@@ -33,15 +33,15 @@
 LMEffectMatrices = function(ResLMModelMatrix,outcomes){
 
   #Checking the object
-  if(!is.list(ResLMModelMatrix)){stop("Argument is not a list")}
+  if(!is.list(ResLMModelMatrix)){stop("Argument ResLMModelMatrix is not a list")}
   if(length(ResLMModelMatrix)!=3){stop("List does not contain 3 arguments")}
   if(names(ResLMModelMatrix)[1]!="formula"|names(ResLMModelMatrix)[2]!="design"|names(ResLMModelMatrix)[3]!="ModelMatrix"){stop("Argument is not a ResLMModelMAtrix object")}
 
   #Attribute a name in the function environment
 
-  formula=ResLMModelMatrix[[1]]
-  design=ResLMModelMatrix[[2]]
-  modelMatrix=ResLMModelMatrix[[3]]
+  formula=ResLMModelMatrix$formula
+  design=ResLMModelMatrix$design
+  modelMatrix=ResLMModelMatrix$ModelMatrix
 
   #Creating a list containing effect matrices and model matrices by effect
   dummyVarNames <- colnames(modelMatrix)

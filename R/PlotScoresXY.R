@@ -7,7 +7,7 @@
 #' @param EffectVector A character vector of length l with the name of the model terms to plot
 #' @param varname.color A character variable with the name of the model term to use as color
 #' @param varname.pch A character variable with the name of the model term to use as pch
-#' @param PCaxes A vector with the two PC to plot
+#' @param PCaxes A vector with the two PC to plot for every effects
 #' @param ... Other arguments from \code{\link{DrawScores}}
 #'
 #' @return A list of l ggplot2 graphs
@@ -26,6 +26,21 @@
 PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
                       varname.color, varname.pch, ...) {
 
+  # Checking arguments :
+
+  if(!is.character(EffectVector)){stop("The argument EffectVector is not a vector of characters")}
+  if(!is.vector(PCaxes)){stop("The argument PCaxes is not a vector")}
+  if(length(PCaxes)!=2){stop("The argument PCaxes must be of length 2")}
+  checkArg(varname.color,"str")
+  checkArg(varname.pch,"str")
+  if(!varname.color%in%names(ResPCALMEffects)){stop("The argument varname.color is not in ResPCALMEffects")}
+  if(!varname.pch%in%names(ResPCALMEffects)){stop("The argument varname.pch is not in ResPCALMEffects")}
+  if(!all(EffectVector%in%names(ResPCALMEffects))){stop("One of the effect from EffectVector is not in ResPCALMEffects")}
+  if(!is.list(ResPCALMEffects)){stop("The ResPCALMEffects argument is not a list")}
+
+
+  # Defining the legend
+
   var.color = paste(deparse(substitute(design)), varname.color, sep = "$")
   var.pch = paste(deparse(substitute(design)), varname.pch, sep = "$")
 
@@ -33,11 +48,11 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
 
   for(i in 1:length(EffectVector)){
 
-  # iEffect_temp = paste(deparse(substitute(ResPCALMEffects)), EffectVector[i], sep = "$")
+  # Finding the effect
   iEffect_temp=which(names(ResPCALMEffects)==EffectVector[i])
   iEffect = ResPCALMEffects[[iEffect_temp]]
-  # Effect$scores = round(eval(parse(text = EffectVar))$scores, 5)
 
+  # Checking the second component
   if(iEffect$var[2]<1){
     warning("The variance of PC2 is inferior to 1%. Graph scaled")
     pc2lim = c(100*min(iEffect$scores[,2]),100*max(iEffect$scores[,2]))
@@ -57,12 +72,5 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
   return(ListGraphs)
 }
 
-# EffectName='Hippurate' PCAxes=c(1,2) varname.color='Citrate'
-# varname.pch='Time'
-# test=PlotScoresXY(ResPCALMEffects = ResPCALMEffects, design = UCH$design, EffectVector = c("Time","Hippurate"),varname.color = "Citrate", varname.pch = "Hippurate")
-# test[[1]]
-# test[[2]]
-#
-# test
 
 

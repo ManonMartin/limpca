@@ -46,7 +46,7 @@ A loading plot in the current device.
 Draws Loadings plots for the SVDforPCA, PLSDA or OPLSDA functions.
 }
 \details{
-Better results printping is obtained by saving the plot as an object
+Better results printing is obtained by saving the plot as an object
 }
 \examples{
 

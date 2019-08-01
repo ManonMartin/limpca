@@ -14,24 +14,35 @@ PCALMEffects(ResLMEffectMatrices, method = c("ASCA", "APCA", "ASCA-E"))
 \value{
 A list of PCA results from \code{\link{SVDforPCA}} for each effect matrix. Those results contain :
  \describe{
-  \item{\code{scores}}{Scores from the PCA for each component}
-  \item{\code{loadings}}{Loadings from the PCA for each component}
-  \item{\code{eigval}}{Eigenvalues of each component}
-  \item{\code{pcd}}{Singular values}
-  \item{\code{pcu}}{Normalized scores}
-  \item{\code{var}}{Explained variance}
-  \item{\code{cumvar}}{Cumulated explained variance}
+  \item{\code{scores}}{Scores from the PCA for each of the n components}
+  \item{\code{loadings}}{Loadings from the PCA for each of the n component}
+  \item{\code{eigval}}{Eigenvalues of each of the n component}
+  \item{\code{pcd}}{Singular values of each of the n component}
+  \item{\code{pcu}}{\emph{nxn} matrix of normalized scores}
+  \item{\code{var}}{Explained variance of each of the n component}
+  \item{\code{cumvar}}{Cumulated explained variance of each of the n component}
   \item{\code{original.dataset}}{Original dataset}
  }
 }
 \description{
-Run a Principal Component Analysis on the effect matrices
+Run a Principal Component Analysis on the effect matrices and adapt the result according to the method.
+}
+\details{
+The function allows 3 different methods :
+
+  \describe{
+  \item{ASCA}{The PCA is applied directly on the pure effect matrix}
+  \item{ASCA-E}{The PCA is applied directly on the pure effect matrix but scores are updated}
+  \item{APCA}{The PCA is applied on the augmented effect matrix}
+ }
+The ASCA-E method add the residual to the scores. APCA applied add the residuals to the effect matrix before the PCA.
 }
 \examples{
  data('UCH')
  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
- DrawScores(ResPCALMEffects$Hippurate,type.obj="PCA")
+ PlotScoresXY(ResPCALMEffects,UCH$design,EffectVector=c("Hippurate"),
+               varname.color=c("Citrate"),varname.pch=c("Time"))
 
 }

@@ -6,16 +6,17 @@
 #'
 #' @return A list with the following elements :
 #'  \describe{
-#'   \item{\code{formula}}{A formula object with the expression of the GLM used to predict the outcomes}
+#'   \item{\code{formula}}{The \emph{p} terms formula of the GLM used to predict the response variables.}
 #'   \item{\code{Type3Residuals}}{A list of matrices with the type III residuals for each model terms}
-#'   \item{\code{variationPercentages}}{A named vector with the variation percentages of each model terms}
+#'   \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms}
 #'  }
 #'
 #' @examples
 #'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
-#'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
-#'  LMSS(ResLMEffectMatrices)
+#'  ResLMModelMatrix <- LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+#'  ResLMEffectMatrices <- LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+#'  ResLMSS <- LMSS(ResLMEffectMatrices)
+#'  PlotLMSS(ResLMSS,abbrev=TRUE)
 #'
 #' @import plyr
 
@@ -23,6 +24,13 @@
 
 
 LMSS = function(ResLMEffectMatrices){
+
+  #Check the ResLMEffectMatrices
+
+  if(!is.list(ResLMEffectMatrices)){stop("ResLMEffectMatrices argument is not a list")}
+  if(length(ResLMEffectMatrices)!=11)(stop("Length of ResLMEffectMatrices has not a length of 11."))
+  if(!all(names(ResLMEffectMatrices)==c("formula","design","ModelMatrix","outcomes","effectMatrices","modelMatrixByEffect","predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames"))){stop("Object is not a ResLMEffectMatrices list from LMEffectMatrices")}
+
   #Getting needed variables
   nEffect = length(ResLMEffectMatrices$effectMatrices)
   covariateEffectsNamesUnique = ResLMEffectMatrices$covariateEffectsNamesUnique

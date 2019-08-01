@@ -3,7 +3,7 @@
 #' @description Plotting the variation percentages of the model terms
 #'
 #' @param ResLMSS A list from the \code{\link{LMSS}} function
-#' @param abbrev If TRUE, the interaction names are abbreviated
+#' @param abbrev Logical, if TRUE, the interaction names are abbreviated
 #'
 #' @return A barplot from ggplot2
 #'
@@ -17,6 +17,15 @@
 #' @import ggplot2
 
 PlotLMSS = function(ResLMSS,abbrev=FALSE){
+
+  #Checking the argument
+
+  checkArg(abbrev,"bool")
+  if(!is.list(ResLMSS)){stop("ResLMSS argument is not a list")}
+  if(length(ResLMSS)!=3){stop("ResLMSS list must have a length of 3")}
+  if(!all(names(ResLMSS)==c("formula","Type3Residuals","variationPercentages"))){stop("ResLMSS list is not a list from the LMSS function")}
+
+  #Abbreviation
 
   VariationPercentages = ResLMSS$variationPercentages
 

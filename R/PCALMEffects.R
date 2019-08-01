@@ -1,31 +1,54 @@
 #' @export PCALMEffects
 #' @title PCA on the effect matrices
-#' @description Run a Principal Component Analysis on the effect matrices
+#' @description Run a Principal Component Analysis on the effect matrices and adapt the result according to the method.
 #'
 #' @param ResLMEffectMatrices a ResLMEffectMatrices list from \code{\link{LMEffectMatrices}}
 #' @param method The method use to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}
 #'
 #' @return A list of PCA results from \code{\link{SVDforPCA}} for each effect matrix. Those results contain :
 #'  \describe{
-#'   \item{\code{scores}}{Scores from the PCA for each component}
-#'   \item{\code{loadings}}{Loadings from the PCA for each component}
-#'   \item{\code{eigval}}{Eigenvalues of each component}
-#'   \item{\code{pcd}}{Singular values}
-#'   \item{\code{pcu}}{Normalized scores}
-#'   \item{\code{var}}{Explained variance}
-#'   \item{\code{cumvar}}{Cumulated explained variance}
+#'   \item{\code{scores}}{Scores from the PCA for each of the n components}
+#'   \item{\code{loadings}}{Loadings from the PCA for each of the n component}
+#'   \item{\code{eigval}}{Eigenvalues of each of the n component}
+#'   \item{\code{pcd}}{Singular values of each of the n component}
+#'   \item{\code{pcu}}{\emph{nxn} matrix of normalized scores}
+#'   \item{\code{var}}{Explained variance of each of the n component}
+#'   \item{\code{cumvar}}{Cumulated explained variance of each of the n component}
 #'   \item{\code{original.dataset}}{Original dataset}
 #'  }
+#'
+#' @details
+#'  The function allows 3 different methods :
+#'
+#'   \describe{
+#'   \item{ASCA}{The PCA is applied directly on the pure effect matrix}
+#'   \item{ASCA-E}{The PCA is applied directly on the pure effect matrix but scores are updated}
+#'   \item{APCA}{The PCA is applied on the augmented effect matrix}
+#'  }
+#' The ASCA-E method add the residual to the scores. APCA applied add the residuals to the effect matrix before the PCA.
 #'
 #' @examples
 #'  data('UCH')
 #'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
 #'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
-#'  DrawScores(ResPCALMEffects$Hippurate,type.obj="PCA")
+#'  PlotScoresXY(ResPCALMEffects,UCH$design,EffectVector=c("Hippurate"),
+#'                varname.color=c("Citrate"),varname.pch=c("Time"))
 #'
 
 PCALMEffects = function(ResLMEffectMatrices,method=c("ASCA","APCA","ASCA-E")){
+
+  # Checking the ResLMEffectMatrices list
+
+  checkname = c("formula","design","ModelMatrix","outcomes","effectMatrices","modelMatrixByEffect",
+                "predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames")
+
+
+  if(!is.list(ResLMEffectMatrices)){stop("Argument ResLMMEffectMatrices is not a list")}
+  if(length(ResLMEffectMatrices)!=11){stop("List does not contain 11 arguments")}
+  if(!all(names(ResLMEffectMatrices)==checkname)){stop("Argument is not a ResLMEffectMatrices object")}
+  if(length(ResLMEffectMatrices$effectMatrices)!=length(ResLMEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
+  if(method %in% c("ASCA","APCA","ASCA-E")){}else{stop("Method must be one of the 3 : ASCA, ASCA-E, APCA")}
 
   # Construction of the list of pure effect matrix
 

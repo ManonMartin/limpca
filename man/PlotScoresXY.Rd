@@ -14,7 +14,7 @@ PlotScoresXY(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
 
 \item{EffectVector}{A character vector of length l with the name of the model terms to plot}
 
-\item{PCaxes}{A vector with the two PC to plot}
+\item{PCaxes}{A vector with the two PC to plot for every effects}
 
 \item{varname.color}{A character variable with the name of the model term to use as color}
 

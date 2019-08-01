@@ -7,25 +7,34 @@
 LMModelMatrix(formula, design)
 }
 \arguments{
-\item{formula}{The formula of the GLM used to predict the outcomes}
+\item{formula}{The \emph{p} terms formula of the GLM used to predict the response variables.}
 
-\item{design}{The "free encoded" experimental design}
+\item{design}{The nxk "free encoded" experimental design data frame. \strong{Variables must be factors}.}
 }
 \value{
 A list with the 3 following named elements :
 \describe{
-\item{\code{formula}}{A \code{\link{formula}} object with the expression of the GLM used to predict the outcomes}
-\item{\code{design}}{A data frame with the "free encoded" experimental design}
-\item{\code{ModelMatrix}}{A model matrix specifically encoded for the ASCA-GLM}
+\item{\code{formula}}{A \code{\link{formula}} object with the expression of the GLM used to predict the outcomes.}
+\item{\code{design}}{A \emph{nxk} data frame with the "free encoded" experimental design.}
+\item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
 }
 }
 \description{
-Create the specific model matrix from the design and model matrices for the ASCA-GLM method
+Create the specific model matrix from the design for the ASCA-GLM method.
+}
+\details{
+In typical ASCA-glm analysis, the GLM model need the design to be re-encoded with the commonly used in industrial experimental design \emph{sum coding}. The result is the model matrix.
+Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors. After the transformation the model matrix
+will be \emph{nxK}. For a parameter with a levels the re-encoding is \emph{a-1} colums with 0 and 1 for \emph{a-1} first levels and -1 for the last.
+\emph{K} is the sum of all the columns for every parameters.
 }
 \examples{
+
 data('UCH')
 
-ResLMModelMatrix = LMModelMatrix(as.formula(UCH$formula),UCH$design)
+ResLMModelMatrix <- LMModelMatrix(as.formula(UCH$formula),UCH$design)
+
+head(ResLMModelMatrix$ModelMatrix)
 
 }
 \references{

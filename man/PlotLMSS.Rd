@@ -9,7 +9,7 @@ PlotLMSS(ResLMSS, abbrev = FALSE)
 \arguments{
 \item{ResLMSS}{A list from the \code{\link{LMSS}} function}
 
-\item{abbrev}{If TRUE, the interaction names are abbreviated}
+\item{abbrev}{Logical, if TRUE, the interaction names are abbreviated}
 }
 \value{
 A barplot from ggplot2

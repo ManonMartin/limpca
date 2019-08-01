@@ -12,9 +12,9 @@ LMSS(ResLMEffectMatrices)
 \value{
 A list with the following elements :
  \describe{
-  \item{\code{formula}}{A formula object with the expression of the GLM used to predict the outcomes}
+  \item{\code{formula}}{The \emph{p} terms formula of the GLM used to predict the response variables.}
   \item{\code{Type3Residuals}}{A list of matrices with the type III residuals for each model terms}
-  \item{\code{variationPercentages}}{A named vector with the variation percentages of each model terms}
+  \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms}
  }
 }
 \description{
@@ -22,8 +22,9 @@ Compute the type III sum of squares from a ResLMEffectMatrices list and return t
 }
 \examples{
  data('UCH')
- ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
- ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
- LMSS(ResLMEffectMatrices)
+ ResLMModelMatrix <- LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+ ResLMEffectMatrices <- LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+ ResLMSS <- LMSS(ResLMEffectMatrices)
+ PlotLMSS(ResLMSS,abbrev=TRUE)
 
 }
