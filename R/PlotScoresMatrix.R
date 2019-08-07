@@ -503,14 +503,14 @@ PlotScoresMatrix = function(
 #                  varname.colordown="Time",
 #                  vec.colordown = c("brown","grey"))
 #
-PlotScoresMatrix(ResPCALMEffects,
-                 alleffect = TRUE,
-                 PCdim=c(2,2,1,1,1,1,1,1),
-                 design=UCH$design,
-                 varname.colorup = "Citrate",
-                 varname.pchdown = "Day",
-                 varname.pchup="Hippurate",
-                 varname.colordown="Time")
+# PlotScoresMatrix(ResPCALMEffects,
+#                  alleffect = TRUE,
+#                  PCdim=c(2,2,1,1,1,1,1,1),
+#                  design=UCH$design,
+#                  varname.colorup = "Citrate",
+#                  varname.pchdown = "Day",
+#                  varname.pchup="Hippurate",
+#                  varname.colordown="Time")
 #
 # PlotScoresMatrix(ResPCALMEffects,
 #                  alleffect = FALSE,
