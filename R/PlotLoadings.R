@@ -26,7 +26,7 @@ PlotLoadings = function(ResPCALMEffects,EffectNames,PCdim,...){
   if(!is.numeric(PCdim)){stop("PCdim is not a numeric or a vector")}
   if(length(EffectNames)!=length(PCdim)){stop("Lengths differ between EffectNames and PCdim")}
   if(!is.list(ResPCALMEffects)){stop("The ResPCALMEffects argument is not a list")}
-  for(i in 1:(length(ResPCALMEffects)-1)){
+  for(i in 1:(length(ResPCALMEffects)-3)){
     if(!isresultfromPCA(ResPCALMEffects[[i]])){stop("One of the element from the list beside method is not a PCA result from SVDforPCA")}
   }
 

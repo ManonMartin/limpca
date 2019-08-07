@@ -12,6 +12,8 @@
 #'
 #' @return A list of l ggplot2 graphs
 #'
+#' @details Some messages from ggplot2 could be suppressed while we overwrite the graphs.
+#'
 #' @examples
 #'  data('UCH')
 #'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
@@ -33,10 +35,13 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
   if(length(PCaxes)!=2){stop("The argument PCaxes must be of length 2")}
   checkArg(varname.color,"str")
   checkArg(varname.pch,"str")
+  if(!is.list(ResPCALMEffects)){stop("The ResPCALMEffects argument is not a list")}
+
+  # Corresponding Name
   if(!varname.color%in%names(ResPCALMEffects)){stop("The argument varname.color is not in ResPCALMEffects")}
   if(!varname.pch%in%names(ResPCALMEffects)){stop("The argument varname.pch is not in ResPCALMEffects")}
   if(!all(EffectVector%in%names(ResPCALMEffects))){stop("One of the effect from EffectVector is not in ResPCALMEffects")}
-  if(!is.list(ResPCALMEffects)){stop("The ResPCALMEffects argument is not a list")}
+  # Check for matches between names from design and ResPCALMEffects
 
 
   # Defining the legend
@@ -49,6 +54,7 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
   for(i in 1:length(EffectVector)){
 
   # Finding the effect
+
   iEffect_temp=which(names(ResPCALMEffects)==EffectVector[i])
   iEffect = ResPCALMEffects[[iEffect_temp]]
 
@@ -64,11 +70,13 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
   main = paste(ResPCALMEffects$method, "scores plot :", EffectVector[i], "effect")
 
 
-  ListGraphs[[i]] = DrawScores(obj = iEffect, type.obj = "PCA", size = 4, main = main, axes = PCaxes,
+  ListGraphs[[i]] = suppressMessages(DrawScores(obj = iEffect, type.obj = "PCA", size = 4, main = main, axes = PCaxes,
              color = eval(parse(text = var.color)), pch = eval(parse(text = var.pch)),
              drawNames = FALSE) + ggplot2::scale_shape_discrete(name = varname.pch) + ggplot2::scale_colour_discrete(name = varname.color) +
-    ggplot2::geom_point(alpha = 0.5)+ggplot2::ylim(pc2lim)
+    ggplot2::geom_point(alpha = 0.5)+ggplot2::ylim(pc2lim))
+
   }
+
   return(ListGraphs)
 }
 

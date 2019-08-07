@@ -6,33 +6,38 @@
 \usage{
 PlotScoresMatrix(ResPCALMEffects, design, EffectNames = NULL, alleffect,
   PCdim = NULL, varname.colorup = NULL, varname.colordown = NULL,
-  varname.pch = NULL, vec.colorup, vec.colordown, vec.pch)
+  varname.pchup = NULL, varname.pchdown = NULL, vec.colorup = NULL,
+  vec.colordown = NULL, vec.pchup = NULL, vec.pchdown = NULL)
 }
 \arguments{
-\item{ResPCALMEffects}{object}
+\item{ResPCALMEffects}{A list of p+3 elements depending of the model terms from \code{\link{PCALMEffects}}}
 
-\item{design}{design}
+\item{design}{The nxk "free encoded" experimental design data frame}
 
-\item{EffectNames}{name}
+\item{EffectNames}{A character vector with the name of the effects to plot}
 
-\item{alleffect}{logical}
+\item{alleffect}{A logical whether to plot every effect}
 
-\item{PCdim}{pc}
+\item{PCdim}{A numeric vector with the same length than EffectNames and indicating the number of component to plot}
 
-\item{varname.colorup}{varname}
+\item{varname.colorup}{A character with the name of variable used to color the upper triangle}
 
-\item{varname.colordown}{varname}
+\item{varname.colordown}{A character with the name of variable used to color the upper triangle}
 
-\item{varname.pch}{varname}
+\item{varname.pchup}{A character with the name of variable used to mark points from the upper triangle}
 
-\item{vec.colorup}{vec}
+\item{varname.pchdown}{A character with the name of variable used to mark points from the lower triangle}
 
-\item{vec.colordown}{vec}
+\item{vec.colorup}{A color vector with a length equivalent to the number of levels from varname.colorup}
 
-\item{vec.pch}{vec}
+\item{vec.colordown}{A color vector with a length equivalent to the number of levels from varname.colordown}
+
+\item{vec.pchup}{A pch vector with a length equivalent to the number of levels from varname.pchup}
+
+\item{vec.pchdown}{A pch vector with a length equivalent to the number of levels from varname.pchdown}
 }
 \value{
-A graph
+A matrix of graphs
 }
 \description{
 Plot a matrix of scores graphs

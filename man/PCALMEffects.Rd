@@ -23,6 +23,12 @@ A list of PCA results from \code{\link{SVDforPCA}} for each effect matrix. Those
   \item{\code{cumvar}}{Cumulated explained variance of each of the n component}
   \item{\code{original.dataset}}{Original dataset}
  }
+ There are also others outputs :
+ \describe{
+ \item{\code{method}}{}
+ \item{\code{Type3Residuals}}{}
+ \item{\code{variationPercentages}}{}
+ }
 }
 \description{
 Run a Principal Component Analysis on the effect matrices and adapt the result according to the method.
@@ -38,10 +44,10 @@ The function allows 3 different methods :
 The ASCA-E method add the residual to the scores. APCA applied add the residuals to the effect matrix before the PCA.
 }
 \examples{
- data('UCH')
- ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
- ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
- ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
+data('UCH')
+ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
  PlotScoresXY(ResPCALMEffects,UCH$design,EffectVector=c("Hippurate"),
                varname.color=c("Citrate"),varname.pch=c("Time"))
 

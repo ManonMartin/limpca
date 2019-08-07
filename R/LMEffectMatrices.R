@@ -96,5 +96,12 @@ LMEffectMatrices = function(ResLMModelMatrix,outcomes){
                              parameters=parameters,
                              covariateEffectsNamesUnique=covariateEffectsNamesUnique,
                              covariateEffectsNames=covariateEffectsNames)
+
+  # Compute the Sum of Squares Type 3
+
+  ResLMSS = LMSS(ResLMEffectMatrices = ResLMEffectMatrices)
+
+  ResLMEffectMatrices = c(ResLMEffectMatrices,ResLMSS)
+
   return(ResLMEffectMatrices)
 }

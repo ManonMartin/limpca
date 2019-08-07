@@ -28,6 +28,9 @@ A list of l ggplot2 graphs
 \description{
 Draw one or more graphs of the scores from a PCA. More specifically the result of the \code{\link{PCALMEffects}} function.
 }
+\details{
+Some messages from ggplot2 could be suppressed while we overwrite the graphs.
+}
 \examples{
  data('UCH')
  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)

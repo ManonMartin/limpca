@@ -4,10 +4,10 @@
 \alias{PlotLMSS}
 \title{Barplot of the variation percentages}
 \usage{
-PlotLMSS(ResLMSS, abbrev = FALSE)
+PlotLMSS(ResLMEffectMatrices, abbrev = FALSE)
 }
 \arguments{
-\item{ResLMSS}{A list from the \code{\link{LMSS}} function}
+\item{ResLMEffectMatrices}{A list from the \code{\link{LMEffectMatrices}} function}
 
 \item{abbrev}{Logical, if TRUE, the interaction names are abbreviated}
 }
@@ -18,10 +18,9 @@ A barplot from ggplot2
 Plotting the variation percentages of the model terms
 }
 \examples{
- data('UCH')
- ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
- ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
- ResLMSS = LMSS(ResLMEffectMatrices)
- PlotLMSS(ResLMSS,abbrev=TRUE)
+data('UCH')
+ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+PlotLMSS(ResLMEffectMatrices,abbrev=TRUE)
 
 }

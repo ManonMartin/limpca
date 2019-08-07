@@ -2,7 +2,7 @@
 #' @title Creating the model matrix
 #' @description Create the specific model matrix from the design for the ASCA-GLM method.
 #'
-#' @param formula The \emph{p} terms formula of the GLM used to predict the response variables.
+#' @param formula The \emph{p} terms formula of the GLM used to predict the response variables.\strong{Variable must be character}
 #' @param design The nxk "free encoded" experimental design data frame. \strong{Variables must be factors}.
 #'
 #' @return A list with the 3 following named elements :
@@ -42,6 +42,8 @@
 
 
 LMModelMatrix <- function(formula, design) {
+
+  formula=as.formula(formula)
 
   # Checking no missing argument and the class of the object
 

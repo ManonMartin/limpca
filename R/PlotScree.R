@@ -24,7 +24,7 @@ PlotScree = function(ResPCALMEffects,EffectName,PCnumber=5){
   checkArg(EffectName,"str")
   checkArg(PCnumber,"num")
   if(!is.list(ResPCALMEffects)){stop("The ResPCALMEffects argument is not a list")}
-  for(i in 1:(length(ResPCALMEffects)-1)){
+  for(i in 1:(length(ResPCALMEffects)-3)){
     if(!isresultfromPCA(ResPCALMEffects[[i]])){stop("One of the element from the list beside method is not a PCA result from SVDforPCA")}
   }
   if(names(ResPCALMEffects[length(ResPCALMEffects)])!= "method")

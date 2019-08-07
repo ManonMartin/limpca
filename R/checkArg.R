@@ -1,4 +1,4 @@
-checkArg <- function(arg, checks, can.be.null = FALSE) {
+checkArg = function(arg, checks, can.be.null = FALSE){
   check.list <- list(bool = c(is.logical, "a boolean"),
                      int = c(function(x) {x%%1 == 0}, "an integer"),
                      num = c(is.numeric, "a numeric"),
@@ -6,7 +6,8 @@ checkArg <- function(arg, checks, can.be.null = FALSE) {
                      pos = c(function(x) {x > 0 }, "positive"),
                      pos0 = c(function(x) {x >= 0}, "positive or zero"),
                      formula = c(plyr::is.formula,"a formula"),
-                     data.frame = c(is.data.frame,"a dataframe"))
+                     data.frame = c(is.data.frame,"a dataframe"),
+                     list = c(is.list,"a list"))
 
   if (is.null(arg))  {
     if (!can.be.null)  {

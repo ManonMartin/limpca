@@ -124,15 +124,10 @@ ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,UCH$outcomes)
 
 ```
 
-The part of the total variance for every effect is computed using the type III Sum of Squares. 
-
-```{r}
-ResLMSS = LMSS(ResLMEffectMatrices)
-```
 
 This can be shown with the `PlotLMSS` function.
 ```{r}
-PlotLMSS(ResLMSS = ResLMSS,abbrev=TRUE)
+PlotLMSS(ResLMEffectMatrices,abbrev=TRUE)
 ```
 
 

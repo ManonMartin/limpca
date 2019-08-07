@@ -16,6 +16,12 @@
 #'   \item{\code{cumvar}}{Cumulated explained variance of each of the n component}
 #'   \item{\code{original.dataset}}{Original dataset}
 #'  }
+#'  There are also others outputs :
+#'  \describe{
+#'  \item{\code{method}}{}
+#'  \item{\code{Type3Residuals}}{}
+#'  \item{\code{variationPercentages}}{}
+#'  }
 #'
 #' @details
 #'  The function allows 3 different methods :
@@ -28,10 +34,10 @@
 #' The ASCA-E method add the residual to the scores. APCA applied add the residuals to the effect matrix before the PCA.
 #'
 #' @examples
-#'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
-#'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
-#'  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
+#' data('UCH')
+#' ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+#' ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+#' ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
 #'  PlotScoresXY(ResPCALMEffects,UCH$design,EffectVector=c("Hippurate"),
 #'                varname.color=c("Citrate"),varname.pch=c("Time"))
 #'
@@ -41,11 +47,12 @@ PCALMEffects = function(ResLMEffectMatrices,method=c("ASCA","APCA","ASCA-E")){
   # Checking the ResLMEffectMatrices list
 
   checkname = c("formula","design","ModelMatrix","outcomes","effectMatrices","modelMatrixByEffect",
-                "predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames")
+                "predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames",
+                "Type3Residuals","variationPercentages")
 
 
   if(!is.list(ResLMEffectMatrices)){stop("Argument ResLMMEffectMatrices is not a list")}
-  if(length(ResLMEffectMatrices)!=11){stop("List does not contain 11 arguments")}
+  if(length(ResLMEffectMatrices)!=13){stop("List does not contain 13 arguments")}
   if(!all(names(ResLMEffectMatrices)==checkname)){stop("Argument is not a ResLMEffectMatrices object")}
   if(length(ResLMEffectMatrices$effectMatrices)!=length(ResLMEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
   if(method %in% c("ASCA","APCA","ASCA-E")){}else{stop("Method must be one of the 3 : ASCA, ASCA-E, APCA")}
@@ -104,7 +111,7 @@ PCALMEffects = function(ResLMEffectMatrices,method=c("ASCA","APCA","ASCA-E")){
 
   names(ResPCALMEffects) = names(EffectMatGLM)
 
-  ResPCALMEffects = utils::modifyList(ResPCALMEffects,list(method=method))
+  ResPCALMEffects = c(ResPCALMEffects,method=method,Type3Residuals=list(ResLMEffectMatrices$Type3Residuals),variationPercentages=list(ResLMEffectMatrices$variationPercentages))
 
   return(ResPCALMEffects)
 }

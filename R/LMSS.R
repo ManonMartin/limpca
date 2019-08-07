@@ -1,24 +1,15 @@
-#' @export LMSS
-#' @title Linear Model Sum of Squares
-#' @description Compute the type III sum of squares from a ResLMEffectMatrices list and return the variation percentages
-#'
-#' @param ResLMEffectMatrices a ResLMEffectMatrices list from \code{\link{LMEffectMatrices}}
-#'
-#' @return A list with the following elements :
-#'  \describe{
-#'   \item{\code{formula}}{The \emph{p} terms formula of the GLM used to predict the response variables.}
-#'   \item{\code{Type3Residuals}}{A list of matrices with the type III residuals for each model terms}
-#'   \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms}
-#'  }
-#'
-#' @examples
-#'  data('UCH')
-#'  ResLMModelMatrix <- LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
-#'  ResLMEffectMatrices <- LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
-#'  ResLMSS <- LMSS(ResLMEffectMatrices)
-#'  PlotLMSS(ResLMSS,abbrev=TRUE)
-#'
-#' @import plyr
+# @title Linear Model Sum of Squares
+# @description Compute the type III sum of squares from a ResLMEffectMatrices list and return the variation percentages
+#
+# @param ResLMEffectMatrices a ResLMEffectMatrices list from \code{\link{LMEffectMatrices}}
+#
+# @return A list with the following elements :
+#  \describe{
+#   \item{\code{Type3Residuals}}{A list of matrices with the type III residuals for each model terms}
+#   \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms}
+# }
+#
+# @import plyr
 
 
 
@@ -84,6 +75,6 @@ LMSS = function(ResLMEffectMatrices){
 
   variationPercentages = unlist(variationPercentages)
 
-  ResLMSS = list(formula=ResLMEffectMatrices$formula,Type3Residuals=Type3Residuals,variationPercentages=variationPercentages)
+  ResLMSS = list(Type3Residuals=Type3Residuals,variationPercentages=variationPercentages)
   return(ResLMSS)
 }

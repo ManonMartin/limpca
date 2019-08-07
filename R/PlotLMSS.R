@@ -2,21 +2,22 @@
 #' @title Barplot of the variation percentages
 #' @description Plotting the variation percentages of the model terms
 #'
-#' @param ResLMSS A list from the \code{\link{LMSS}} function
+#' @param ResLMEffectMatrices A list from the \code{\link{LMEffectMatrices}} function
 #' @param abbrev Logical, if TRUE, the interaction names are abbreviated
 #'
 #' @return A barplot from ggplot2
 #'
 #' @examples
-#'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
-#'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
-#'  ResLMSS = LMSS(ResLMEffectMatrices)
-#'  PlotLMSS(ResLMSS,abbrev=TRUE)
+#' data('UCH')
+#' ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+#' ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+#' PlotLMSS(ResLMEffectMatrices,abbrev=TRUE)
 #'
 #' @import ggplot2
 
-PlotLMSS = function(ResLMSS,abbrev=FALSE){
+PlotLMSS = function(ResLMEffectMatrices,abbrev=FALSE){
+
+  ResLMSS = list(formula=ResLMEffectMatrices$formula,Type3Residuals=ResLMEffectMatrices$Type3Residuals,variationPercentages=ResLMEffectMatrices$variationPercentages)
 
   #Checking the argument
 

@@ -7,7 +7,7 @@
 LMModelMatrix(formula, design)
 }
 \arguments{
-\item{formula}{The \emph{p} terms formula of the GLM used to predict the response variables.}
+\item{formula}{The \emph{p} terms formula of the GLM used to predict the response variables.\strong{Variable must be character}}
 
 \item{design}{The nxk "free encoded" experimental design data frame. \strong{Variables must be factors}.}
 }
