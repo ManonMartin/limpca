@@ -323,7 +323,7 @@ PlotScoresMatrix = function(
       if(is.null(vec.pchdown)){
         vec.pchup = vec.pchdown
       }else{
-        vec.pchup = c(1:(length(levels(design[,which(names(design)==varname.pchup)]))))
+        vec.pchup = c(20:(20+(length(levels(design[,which(names(design)==varname.pchup)])))))
       }
     }
   }else{
@@ -334,7 +334,7 @@ PlotScoresMatrix = function(
       if(varname.pchdown == varname.pchup){
         vec.pchup = vec.pchdown
       }else{
-        vec.pchup = c(1:(length(levels(design[,which(names(design)==varname.pchup)]))))
+        vec.pchup = c(20:(20+(length(levels(design[,which(names(design)==varname.pchup)])))))
       }
 
     }else{
@@ -503,14 +503,14 @@ PlotScoresMatrix = function(
 #                  varname.colordown="Time",
 #                  vec.colordown = c("brown","grey"))
 #
-# PlotScoresMatrix(ResPCALMEffects,
-#                  alleffect = TRUE,
-#                  PCdim=c(2,2,1,1,1,1,1,1),
-#                  design=UCH$design,
-#                  varname.colorup = "Citrate",
-#                  varname.pchdown = "Day",
-#                  varname.pchup="Hippurate",
-#                  varname.colordown="Time")
+PlotScoresMatrix(ResPCALMEffects,
+                 alleffect = TRUE,
+                 PCdim=c(2,2,1,1,1,1,1,1),
+                 design=UCH$design,
+                 varname.colorup = "Citrate",
+                 varname.pchdown = "Day",
+                 varname.pchup="Hippurate",
+                 varname.colordown="Time")
 #
 # PlotScoresMatrix(ResPCALMEffects,
 #                  alleffect = FALSE,
