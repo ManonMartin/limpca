@@ -159,7 +159,9 @@ LMBootstrapTest = function(ResLMEffectMatrices,TermToTest,nboot=100,ncomp=4){
   # Compute the statistics
 
   pvalue = vector()
-  for(i in 1:length(SS_vector)){pvalue[i] = sum(SSboot[i,]>=SS_vector[i])/nboot}
+  if(length(TermToTest)==1){for(i in 1:length(SS_vector)){pvalue[i] = sum(SSboot[i]>=SS_vector[i])/nboot}}
+  if(length(TermToTest)!=1){for(i in 1:length(SS_vector)){pvalue[i] = sum(SSboot[i,]>=SS_vector[i])/nboot}}
+
   names(pvalue) = TermToTest
 
   ending_time = Sys.time()
