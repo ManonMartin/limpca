@@ -81,22 +81,22 @@ PlotScoresMatrix = function(
 
   # Checking for colors
   if(!is.null(varname.colorup)){if(is.null(vec.colorup)){
-    warning("No specified colors for the upper triangle, colors by default",immediate. = TRUE)}else{
+    message("No specified colors for the upper triangle, colors by default",immediate. = TRUE)}else{
       if(length(levels(design[,which(names(design)!=varname.colorup)])==length(vec.colorup))){
         stop("length(vec.colorup) differs from the number of levels of the varname.colorup variable")}
     }}
   if(!is.null(varname.colordown)){if(is.null(vec.colordown)){
-    warning("No specified colors for the lower triangle, colors by default")}else{
+    message("No specified colors for the lower triangle, colors by default")}else{
       if(!(length(levels(design[,which(names(design)==varname.colordown)]))==length(vec.colordown))){
         stop("length(vec.colordown) differs from the number of levels of the varname.colordown variable")}
     }}
   if(!is.null(varname.pchup)){if(is.null(vec.pchup)){
-    warning("No specified pch for the upper triangle, pch by default")}else{
+    message("No specified pch for the upper triangle, pch by default")}else{
       if(!(length(levels(design[,which(names(design)==varname.pchup)]))==length(vec.pchup))){
         stop("length(vec.pchup) differs from the number of levels of the varname.pchup variable")}
     }}
   if(!is.null(varname.pchdown)){if(is.null(vec.pchdown)){
-    warning("No specified pch for the lower triangle, pch by default")}else{
+    message("No specified pch for the lower triangle, pch by default")}else{
       if(!(length(levels(design[,which(names(design)==varname.pchdown)]))==length(vec.pchdown))){
         stop("length(vec.pchdown) differs from the number of levels of the varname.pchdown variable")}
     }}
