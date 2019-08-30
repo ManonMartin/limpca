@@ -4,6 +4,7 @@
 #'
 #' @param ResLMModelMatrix A list of 3 from \code{\link{LMModelMatrix}}
 #' @param outcomes A \emph{nxm} matrix with n observations and m response variables
+#' @param SS a logical whether to compute the effect percentage variations
 #'
 #' @return A list with the following elements:
 #'  \describe{
@@ -30,7 +31,7 @@
 
 
 
-LMEffectMatrices = function(ResLMModelMatrix,outcomes){
+LMEffectMatrices = function(ResLMModelMatrix,outcomes,SS=TRUE){
 
   #Checking the object
   if(!is.list(ResLMModelMatrix)){stop("Argument ResLMModelMatrix is not a list")}
@@ -78,12 +79,8 @@ LMEffectMatrices = function(ResLMModelMatrix,outcomes){
     #Model matrices by effect
     modelMatrixByEffect[[iEffect]] <- as.matrix(modelMatrix[, selection])
 
-    # matrixVolume[[iEffect]] <- (norm(effectMatrices[[iEffect]], "F"))^2
-    # if(covariateEffectsNamesUnique[iEffect] != 'Intercept'){
-    #   resGLMComplement <- alply(outcomes, 2, function(xx) glm.fit(modelMatrix[, selectionComplement], xx))
-    #   Type3Residuals[[iEffect]] <- t(laply(resGLMComplement, function(xx) xx$residuals))
-    # }
-  }
+    }
+
 
   ResLMEffectMatrices = list(formula=formula,
                              design=design,
@@ -98,10 +95,13 @@ LMEffectMatrices = function(ResLMModelMatrix,outcomes){
                              covariateEffectsNames=covariateEffectsNames)
 
   # Compute the Sum of Squares Type 3
+  if(SS==TRUE){
+    ResLMSS = LMSS(ResLMEffectMatrices = ResLMEffectMatrices)
+    ResLMEffectMatrices = c(ResLMEffectMatrices,ResLMSS)
+  }else{
+    ResLMEffectMatrices = c(ResLMEffectMatrices,Type3Residuals=NA,variationPercentages=NA)
+  }
 
-  ResLMSS = LMSS(ResLMEffectMatrices = ResLMEffectMatrices)
-
-  ResLMEffectMatrices = c(ResLMEffectMatrices,ResLMSS)
 
   return(ResLMEffectMatrices)
 }

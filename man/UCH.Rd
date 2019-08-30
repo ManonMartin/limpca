@@ -19,7 +19,8 @@ A list of 3 : the experimental design, the outcomes for every observations and t
             H*C*T}
 }
 \source{
-Rousseau, R. (2011),\emph{Statistical contribution to the analysis of metabonomic data in H-NMR spectroscopy}, PhD thesis, Louvain-la-Neuve: UCL.
+Rousseau, R. (2011). \emph{Statistical contribution to the analysis of metabonomics data in 1H NMR spectroscopy}
+  (Doctoral dissertation, PhD thesis. Institut de statistique, biostatistique et sciences actuarielles, Université catholique de Louvain, Belgium).
 }
 
 \examples{

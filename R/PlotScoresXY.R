@@ -76,7 +76,7 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
     ggplot2::geom_point(alpha = 0.5)+ggplot2::ylim(pc2lim))
 
   }
-
+names(ListGraphs) = EffectVector
   return(ListGraphs)
 }
 

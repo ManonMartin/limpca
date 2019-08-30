@@ -14,14 +14,14 @@ SVDforPCA(x, ncomp = min(dim(x)))
 \value{
 A list with the following elements:
 \describe{
-  \item{\code{scores}}{Scores}
-  \item{\code{loadings}}{Loadings}
-  \item{\code{eigval}}{Eigenvalues}
-  \item{\code{pcd}}{Singular values}
-  \item{\code{pcu}}{Normalized scores}
-  \item{\code{var}}{Explained variance}
-  \item{\code{cumvar}}{Cumulated explained variance}
- \item{\code{original.dataset}}{Original dataset}
+\item{\code{scores}}{Scores}
+\item{\code{loadings}}{Loadings}
+\item{\code{eigval}}{Eigenvalues}
+\item{\code{pcd}}{Singular values}
+\item{\code{pcu}}{Normalized scores}
+\item{\code{var}}{Explained variance}
+\item{\code{cumvar}}{Cumulated explained variance}
+\item{\code{original.dataset}}{Original dataset}
 
 }
 }

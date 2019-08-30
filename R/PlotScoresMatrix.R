@@ -309,6 +309,8 @@ PlotScoresMatrix = function(
         vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
       }else if(varname.pchdown == varname.pchup){
         vec.pchdown = vec.pchup
+      }else{
+        vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))##############################
       }
     }else{
       #OK
@@ -342,14 +344,14 @@ PlotScoresMatrix = function(
     }
   }
 
-  print(varname.colordown)
-  print(varname.colorup)
-  print(varname.pchup)
-  print(varname.pchdown)
-  print(vec.colorup)
-  print(vec.colordown)
-  print(vec.pchup)
-  print(vec.pchdown)
+  # print(varname.colordown)
+  # print(varname.colorup)
+  # print(varname.pchup)
+  # print(varname.pchdown)
+  # print(vec.colorup)
+  # print(vec.colordown)
+  # print(vec.pchup)
+  # print(vec.pchdown)
 
   # Creation of the upper triangle
 
