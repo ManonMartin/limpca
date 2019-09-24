@@ -9,7 +9,7 @@
 #'
 #' @return A list of p graphs with the asked number of dimensions for each.
 #'
-#' @example
+#' @examples
 #'
 #'  data('UCH')
 #'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)

@@ -19,3 +19,12 @@ A ggplot2 object with the Screeplot
 \description{
 Plot a Screeplot of the Principal Component variances
 }
+\examples{
+
+ data('UCH')
+ ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+ ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+ ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
+ PlotScree(ResPCALMEffects,"Hippurate:Citrate",PCnumber=8)
+
+}

@@ -46,9 +46,10 @@ PCALMEffects = function(ResLMEffectMatrices,method=c("ASCA","APCA","ASCA-E")){
 
   # Checking the ResLMEffectMatrices list
 
-  checkname = c("formula","design","ModelMatrix","outcomes","effectMatrices","modelMatrixByEffect",
-                "predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames",
-                "Type3Residuals","variationPercentages")
+  checkname = c("formula","design","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames",
+                "covariateEffectsNamesUnique","outcomes","effectMatrices",
+                "predictedvalues","residuals","parameters",
+                "SS","variationPercentages")
 
 
   if(!is.list(ResLMEffectMatrices)){stop("Argument ResLMMEffectMatrices is not a list")}

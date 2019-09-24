@@ -8,7 +8,7 @@
 #'
 #' @return A ggplot2 object with the Screeplot
 #'
-#' @example
+#' @examples
 #'
 #'  data('UCH')
 #'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)

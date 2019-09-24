@@ -4,7 +4,8 @@
 \alias{LMEffectMatrices}
 \title{Computing the Effect Matrices}
 \usage{
-LMEffectMatrices(ResLMModelMatrix, outcomes, SS = TRUE)
+LMEffectMatrices(ResLMModelMatrix, outcomes, SS = TRUE,
+  newSSmethod = TRUE, contrastList = NA)
 }
 \arguments{
 \item{ResLMModelMatrix}{A list of 3 from \code{\link{LMModelMatrix}}}
@@ -12,6 +13,10 @@ LMEffectMatrices(ResLMModelMatrix, outcomes, SS = TRUE)
 \item{outcomes}{A \emph{nxm} matrix with n observations and m response variables}
 
 \item{SS}{a logical whether to compute the effect percentage variations}
+
+\item{newSSmethod}{a logical whether to use the new optimized method to compute SS}
+
+\item{contrastList}{a list of contrast for each parameter. The function creates automatically the list by default}
 }
 \value{
 A list with the following elements:

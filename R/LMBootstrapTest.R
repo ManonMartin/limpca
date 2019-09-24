@@ -2,60 +2,46 @@
 #' @md
 #' @title Perform a test on the effects from the model
 #' @description Compute a partial model without the tested effects then estimate the residuals. Next, compute new outcomes from the predicted values of the partial model and sampled residuals. Finally, compute the Sum of Squares and the test statistic.
+#'
 #' @param ResLMEffectMatrices A list of 13 from \code{\link{LMEffectMatrices}}
-#' @param TermToTest A character vector with the term to test and their interactions (in the right order)
 #' @param nboot A integer with the number of iterations to perform (by default: 100)
-#' @param ncomp A integer with the number of principal component used to compute the Sum of Squares
 #'
 #' @return A list with the following elements:
 #'  \describe{
-#'    \item{\code{pvalue}}{A numeric vector with the pvalue for each tested effect}
-#'    \item{\code{SSEffect}}{A numeric vector with the SS for the complete model}
-#'    \item{\code{SSboot}}{A matrix with the SS of each effect for each iterations }
+#'    \item{\code{Fobs}}{A vector with the F statistics observed with the data}
+#'    \item{\code{Fboot}}{A matrix with the F statistics observed with the bootstrap}
+#'    \item{\code{Pvalues}}{A vector with the pvalue for every effect}
 #'  }
 #'
 #' @details
 #' The function works as follow:
-#'    - 1.1 Estimate the partial model H0
-#'    - 2.1 Under H_0, estimate the variance of the residuals e*
-#'    - 3.1 For nboot iterations,
-#'    - 3.1 Simulate new outcomes from the predicted values of H0 and sampled residuals from N(0,e^*)
-#'    - 3.2 Estimate the complete model on these new outcomes
-#'    - 3.3 Perform a PCA on the Effect Matrices of the tested effects
-#'    - 3.4 Compute the SS
-#'    - 4.1 Compute the pval
 #'
-#' The pvalue is computed with the same formula than the permutation test in the paper of Thiel et al.
+#' To be written again
 #'
 #' @examples
 #'  data('UCH')
 #'  ResLMModelMatrix <- LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
-#'  ResLMEffectMatrices=LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+#'  ResLMEffectMatrices <- LMEffectMatrices(ResLMModelMatrix = ResLMModelMatrix,outcomes=UCH$outcomes)
 #'
-#'  TermToTest = c("Hippurate","Hippurate * Citrate","Time * Hippurate","Hippurate * Citrate * Time")
-#'  result=LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,TermToTest = TermToTest,nboot=100)
-#'
-#'  # Plot Barplot
-#'  for(i in 1:length(TermToTest)){
-#'    hist(x=result$SSboot[i,],xlim=c(0,max(result$SSEffect[i],result$SSboot[i,])),
-#'     breaks=20,main=rownames(result$SSboot)[i],xlab="SST III",freq=FALSE)
-#'    points(result$SSEffect[i],0,col="red",pch=19)
-#'  }
+#'  result <- LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,nboot=10)
 #'
 #' @references
 #' Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
 #'
+#' @import plyr
+#' @import doParallel
+#' @import parallel
 
 
 
-LMBootstrapTest = function(ResLMEffectMatrices,TermToTest,nboot=100,ncomp=4){
+LMBootstrapTest = function(ResLMEffectMatrices,nboot=100){
 
   # Checking the ResLMEffectMatrices list
 
-  checkname = c("formula","design","ModelMatrix","outcomes","effectMatrices","modelMatrixByEffect",
-                "predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames",
-                "Type3Residuals","variationPercentages")
+  checkname = c("formula","design","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames","covariateEffectsNamesUnique",
+                "outcomes","effectMatrices","predictedvalues","residuals","parameters",
+                "SS","variationPercentages")
 
 
   if(!is.list(ResLMEffectMatrices)){stop("Argument ResLMMEffectMatrices is not a list")}
@@ -63,119 +49,138 @@ LMBootstrapTest = function(ResLMEffectMatrices,TermToTest,nboot=100,ncomp=4){
   if(!all(names(ResLMEffectMatrices)==checkname)){stop("Argument is not a ResLMEffectMatrices object")}
   if(length(ResLMEffectMatrices$effectMatrices)!=length(ResLMEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
 
-  # Checking TermToTest
-
-  starting_time = Sys.time()
+  # Attributing names
+  start_time = Sys.time()
   design = ResLMEffectMatrices$design
   formula_complete = ResLMEffectMatrices$formula
   outcomes = ResLMEffectMatrices$outcomes
+  modelMatrix=ResLMEffectMatrices$ModelMatrix
+  ModelMatrixByEffect = ResLMEffectMatrices$ModelMatrixByEffect
+  covariateEffectsNames = ResLMEffectMatrices$covariateEffectsNames
+  covariateEffectsNamesUnique = ResLMEffectMatrices$covariateEffectsNamesUnique
+  nEffect <- length(covariateEffectsNamesUnique)
+  SS_complete = ResLMEffectMatrices$SS
+  SSE_complete = ResLMEffectMatrices$SS[which(names(SS_complete)=="Residuals")]
+  nObs = nrow(outcomes)
+  nParam = length(covariateEffectsNames)
 
-  temp_formula = as.character(formula_complete)
-  split_formula_complete = strsplit(x=temp_formula[3],c("+"),fixed=TRUE)
-  trim_formula_complete = stringr::str_trim(unlist(split_formula_complete),side="both")
-  PartialFormula = trim_formula_complete
-  if(!all(TermToTest %in% trim_formula_complete)){
-    stop(paste("TermToTest must be one of the following",paste(trim_formula_complete,collapse=", ")))
-  }
+  # Recreate ResLMModelMatrix
 
-  # Remove the TermToTest from formula
+  ResLMModelMatrix = ResLMEffectMatrices[1:6]
 
-  for(i in 1:length(TermToTest)){PartialFormula = PartialFormula[-which(PartialFormula==TermToTest[i])]}
-  PartialFormula = paste(PartialFormula,collapse="+")
-  PartialFormula = paste(temp_formula[2],PartialFormula,sep="~")
-  formula_partial = PartialFormula
+  #### Estimating the partial model for each effect ####
 
-  # Create vector with term encoded with ":"
+  listResultPartial = list()
+  Fobs = list()
+  Pobs = list()
 
-  TermToTest_encoded = attr(terms(formula_complete),"term.labels")
-  TermfromFormula = attr(terms(as.formula(formula_partial)),"term.labels")
-  for(i in 1:length(TermfromFormula)){TermToTest_encoded=TermToTest_encoded[-which(TermToTest_encoded==TermfromFormula[i])]}
+  for(iEffect in 2:nEffect){
+    selection_tmp <- which(covariateEffectsNames == covariateEffectsNamesUnique[iEffect])
+    selectionall <- which(covariateEffectsNames == covariateEffectsNamesUnique[iEffect])
+    selectionComplement_tmp <- which(covariateEffectsNamesUnique != covariateEffectsNamesUnique[iEffect])
+    selectionComplementall <- which(covariateEffectsNames != covariateEffectsNamesUnique[iEffect])
 
-  # Recreate ResLMModelMatrix form ResLMEffect
+    #Model matrices Partial
 
-  ResLMModelMatrix_Complete = list(formula=formula_complete,design=design,ModelMatrix=ResLMEffectMatrices$ModelMatrix)
+    ModelMatrixPartial = ModelMatrixByEffect[[selectionComplement_tmp[1]]]
+    listModelMatrixByEffectPartial_temp = list()
+    listModelMatrixByEffectPartial_temp[[1]] = ModelMatrixByEffect[[selectionComplement_tmp[1]]]
 
-  # Compute SS for the complete model
+    for(i in 2:length(selectionComplement_tmp)){
+    # Create Model Matrix for the partial model
+    ModelMatrixPartial = cbind(ModelMatrixPartial,ModelMatrixByEffect[[selectionComplement_tmp[i]]])
 
-  SS_vector = vector()
-  for(i in 1:length(TermToTest_encoded)){
-    iterm_temp=which(names(ResLMEffectMatrices$effectMatrices)==TermToTest_encoded[i])
-    iterm = ResLMEffectMatrices$effectMatrices[[iterm_temp]]
-    svdCenteredMatrix = svd(iterm) # Compute the singular-value decomposition
-    ScoreMatrix = svdCenteredMatrix$u %*% diag(svdCenteredMatrix$d) # scores
-    SS_vector[i] = norm(ScoreMatrix[,1:ncomp],"F")^2
-  }
-
-  # Estimate the partial model
-
-  ModelMatrix_Partial = LMModelMatrix(formula_partial,design)
-  EffectMatrices_Partial = LMEffectMatrices(ModelMatrix_Partial,outcomes,SS=FALSE)
-
-  # Compute residual from the partial model
-
-  PartialModelResidual = ResLMEffectMatrices$outcomes - EffectMatrices_Partial$predictedvalues
-  numb_row = nrow(PartialModelResidual)
-  numb_col = ncol(PartialModelResidual)
-
-  # Compute residual variance
-
-  ResidualVariance = apply(PartialModelResidual,2,var)
-
-  # Function "loop" to bootstrap
-
-  bootstrap_func = function(ResLMEffectMatrices,ResidualVariance){
-
-    # Create bootstrapped outcomes
-
-    boot_residuals_vector = rnorm((numb_col*numb_row),mean = 0,sd=ResidualVariance)
-    boot_residuals = matrix(data=boot_residuals_vector,nrow=numb_row)
-    boot_outcomes = boot_residuals + EffectMatrices_Partial$predictedvalues
-
-    # Estimate complete model
-
-    temp_complete_model = LMEffectMatrices(ResLMModelMatrix_Complete,boot_outcomes,SS=FALSE)
-
-    # Compute SS = (Frobenius Norm)^2
-
-    FrobNorm = function(TermToTest_encoded){
-      tempSS = vector()
-      iterm_temp=which(names(temp_complete_model$effectMatrices)==TermToTest_encoded)
-      iterm = temp_complete_model$effectMatrices[[iterm_temp]]
-      svdCenteredMatrix = svd(iterm) # Compute the singular-value decomposition
-      scoreMatrix = svdCenteredMatrix$u %*% diag(svdCenteredMatrix$d) # scores
-      tempSS = c(tempSS,norm(scoreMatrix[,1:ncomp],"F")^2)
-      return(tempSS)
+    # Create listModelMatrixByEffectPartial
+    listModelMatrixByEffectPartial_temp[[i]] = ModelMatrixByEffect[[selectionComplement_tmp[i]]]
     }
 
-    tempSS = sapply(TermToTest_encoded,FrobNorm)
+    colnames(ModelMatrixPartial) = colnames(modelMatrix[,selectionComplementall])
 
-    return(tempSS)
+        # Be careful ModelMatrixByEffect with 1 parameters have no colnames
+
+    # Create covariateEffectsNames
+
+    covariateEffectsNamesUniquePartial = covariateEffectsNamesUnique[selectionComplement_tmp]
+    covariateEffectsNamesPartial = covariateEffectsNames[selectionComplementall]
+    names(listModelMatrixByEffectPartial_temp)=covariateEffectsNamesUniquePartial
+    # Create the partial formula
+
+    temp=gsub(":","*",covariateEffectsNamesUniquePartial)
+    temp = paste(temp,collapse="+")
+    temp = paste0("outcomes~",temp)
+    formula_temp = as.formula(temp)
+
+    # Create pseudo ResLMModelMatrix
+
+    Pseudo_ResLMModelMatrix = list(formula=formula_temp,
+                                   design=design,
+                                   ModelMatrix=ModelMatrixPartial,
+                                   ModelMatrixByEffect=listModelMatrixByEffectPartial_temp,
+                                   covariateEffectsNames=covariateEffectsNamesPartial,
+                                   covariateEffectsNamesUnique=covariateEffectsNamesUniquePartial)
+
+    # Compute the partial models
+
+    listResultPartial[[iEffect]] = LMEffectMatrices(Pseudo_ResLMModelMatrix,outcomes,SS=TRUE)
+
+    # Compute Fobs
+
+    Fobs[[iEffect]] = (SS_complete[iEffect]/length(selection_tmp))/(SSE_complete/(nObs - nParam ))
+
   }
 
-  # Replicate the function nboot times
+  # Formating the output
+  names(listResultPartial) = covariateEffectsNamesUnique
+  Fobs = unlist(Fobs)
+  names(Fobs) = covariateEffectsNamesUnique[2:nEffect]
 
-  SSboot = replicate(nboot,bootstrap_func(ResLMEffectMatrices=ResLMEffectMatrices,ResidualVariance=ResidualVariance))
+  #### Bootstrap #####
 
-  # Compute the statistics
+  # Parallel computing to go faster
+  doParallel::registerDoParallel(cores=2)
 
-  pvalue = vector()
-  if(length(TermToTest)==1){for(i in 1:length(SS_vector)){pvalue[i] = sum(SSboot[i]>=SS_vector[i])/nboot}}
-  if(length(TermToTest)!=1){for(i in 1:length(SS_vector)){pvalue[i] = sum(SSboot[i,]>=SS_vector[i])/nboot}}
+  # Function to compute the F statistic for every effect
+  ComputeFboot = function(ResLMObject,ResLMEffectMatrices,nObs,ResLMModelMatrix,nParam,E_sample){
 
-  names(pvalue) = TermToTest
+    # Find the tested effect and its number of parameters
+    effect = names(ResLMEffectMatrices$effectMatrices)[!(names(ResLMEffectMatrices$effectMatrices)%in%names(ResLMObject$ModelMatrixByEffect))]
+    npar <- ncol(ResLMEffectMatrices$ModelMatrixByEffect[[which(names(ResLMEffectMatrices$effectMatrices) == effect)]])
 
-  ending_time = Sys.time()
-  TimeDiff = ending_time - starting_time
-  print(TimeDiff)
+    # Compute the Y_boot value
+    E_boot = ResLMObject$residuals[E_sample,]
+    Y_boot = ResLMObject$predictedvalues + E_boot
 
-  return(list(pvalue=pvalue,SSEffect=SS_vector,SSboot=SSboot))
+    # Estimate the model then
+    result_boot = LMWiRe::LMEffectMatrices(ResLMModelMatrix = ResLMModelMatrix,outcomes=Y_boot)
+    Fboot = (result_boot$SS[which(names(result_boot$SS)==effect)]/npar)/(result_boot$SS[which(names(result_boot$SS)=="Residuals")]/(nObs - nParam ))
+    return(Fboot)
+  }
 
-}
+  # Create the matrix of results
+  Fboot=matrix(data=NA,nrow=nboot,ncol=(nEffect-1))
 
+  # Loop for every iteration (nboot)
+  for(j in 1:nboot){
+  E_sample = sample(c(1:nObs),nObs,replace=TRUE)
+  Fboot[j,]=  plyr::laply(listResultPartial[2:8],ComputeFboot,E_sample=E_sample,ResLMEffectMatrices=ResLMEffectMatrices,nParam=nParam,nObs=nObs,ResLMModelMatrix=ResLMModelMatrix,.parallel = TRUE)
+  }
 
+  # Compute the pvalue
+  result = vector()
+  matrix_temp = rbind(Fobs,Fboot)
 
+  ComputePval = function(Effect,Fobs){
+    result=1-sum(Effect[1]>Effect[2:(nboot+1)])/nboot
+    return(result)
+  }
 
+  result = apply(X=matrix_temp,FUN = ComputePval,MARGIN = 2)
+  colnames(Fboot) = names(Fobs)
 
+  ResLMBootstrapTest = list(Fobs=Fobs,Fboot=Fboot,Pvalues = result)
+  doParallel::stopImplicitCluster
+  print(Sys.time() - start_time)
+  return(ResLMBootstrapTest)
+  }
 
-
-
+# LMBootstrapTest(ResLMEffectMatrices,nboot=10)

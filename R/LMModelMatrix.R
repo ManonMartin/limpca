@@ -94,13 +94,41 @@ LMModelMatrix <- function(formula, design) {
                                  data = design))
   }
 
-  # If factors are not present
+  # If factors are not present (Currently not the case)
   if (length(varNamesFactors) == 0) {
     modelMatrix <- (model.matrix(formulaDesignMatrix, data = design))
   }
 
+  #Creating a list containing model matrices by effect
+
+    # Finding all unique variables
+  dummyVarNames <- colnames(modelMatrix)
+  presencePolynomialEffects <- stringr::str_detect(dummyVarNames, '\\^[0-9]') # Detect exponent
+  covariateEffectsNames <- character(length = length(dummyVarNames))
+  covariateEffectsNames[presencePolynomialEffects] <- dummyVarNames[presencePolynomialEffects]
+  covariateEffectsNames[!presencePolynomialEffects] <- gsub('[0-9]', '', dummyVarNames[!presencePolynomialEffects])
+  covariateEffectsNames[covariateEffectsNames == '(Intercept)'] <- 'Intercept'
+  covariateEffectsNamesUnique <- unique(covariateEffectsNames)
+  nEffect <- length(covariateEffectsNamesUnique)
+
+    #Creating empty model matrices by effect
+  modelMatrixByEffect <- list()
+  length(modelMatrixByEffect) <- nEffect
+  names(modelMatrixByEffect) <- covariateEffectsNamesUnique
+
+    #Filling model matrices by effect
+  for(iEffect in 1:nEffect){
+    selection <- which(covariateEffectsNames == covariateEffectsNamesUnique[iEffect])
+    selectionComplement <- which(covariateEffectsNames != covariateEffectsNamesUnique[iEffect])
+    #Model matrices by effect
+    modelMatrixByEffect[[iEffect]] <- as.matrix(modelMatrix[, selection])
+
+  }
+
   ResLMModelMatrix = list(formula = formula, design = design,
-                          ModelMatrix = modelMatrix)
+                          ModelMatrix = modelMatrix,ModelMatrixByEffect=modelMatrixByEffect,
+                          covariateEffectsNames=covariateEffectsNames,
+                          covariateEffectsNamesUnique=covariateEffectsNamesUnique)
 
   return(ResLMModelMatrix)
 }

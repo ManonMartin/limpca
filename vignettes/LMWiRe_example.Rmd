@@ -55,7 +55,7 @@ knitr::opts_chunk$set(message=FALSE,warning=FALSE)
 
 # Introduction
 
-The main aim of this vignette is to give a brief example of the LMWiRe package. This package has been created to analyze models with wide response and categorical parameters. The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual step of the analysis starting from the data importation to the results visualisation.
+The main aim of this vignette is to give a brief example of the LMWiRe package. This package has been created to analyze models with wide response and categorical parameters. The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual step of the analysis starting from the data importation to the results visualisation. The methods used come from the article of M. Thiel @Thiel2017 and S. Guisset @Guisset2019.
 
 # Installation
 
@@ -184,19 +184,19 @@ We can use bootstrap to determine whether an effect is significant. We suggest t
 
 ```{r}
 
-TermToTest = c("Hippurate","Hippurate * Citrate","Time * Hippurate","Hippurate * Citrate * Time")
-ResLMBootstrapTest= LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,TermToTest = TermToTest,nboot=100)
-
-# Print Pvalue
-
-pander::pander(ResLMBootstrapTest$pvalue)
-
-# Plot Barplot
-for(i in 1:length(TermToTest)){
-    hist(x=ResLMBootstrapTest$SSboot[i,],xlim=c(0,max(ResLMBootstrapTest$SSEffect[i],ResLMBootstrapTest$SSboot[i,])),
-     breaks=20,main=rownames(ResLMBootstrapTest$SSboot)[i],xlab="SST III",freq=FALSE)
-    points(ResLMBootstrapTest$SSEffect[i],0,col="red",pch=19)
-}
+# TermToTest = c("Hippurate","Hippurate * Citrate","Time * Hippurate","Hippurate * Citrate * Time")
+# ResLMBootstrapTest= LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,TermToTest = TermToTest,nboot=100)
+# 
+# # Print Pvalue
+# 
+# pander::pander(ResLMBootstrapTest$pvalue)
+# 
+# # Plot Barplot
+# for(i in 1:length(TermToTest)){
+#     hist(x=ResLMBootstrapTest$SSboot[i,],xlim=c(0,max(ResLMBootstrapTest$SSEffect[i],ResLMBootstrapTest$SSboot[i,])),
+#      breaks=20,main=rownames(ResLMBootstrapTest$SSboot)[i],xlab="SST III",freq=FALSE)
+#     points(ResLMBootstrapTest$SSEffect[i],0,col="red",pch=19)
+# }
 ```
 
 # ASCA/ASCA-E/APCA

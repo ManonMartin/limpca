@@ -21,3 +21,11 @@ A list of p graphs with the asked number of dimensions for each.
 \description{
 Plot the loadings from the ASCA, ASCA-E or APCA methods from PCALMEffects
 }
+\examples{
+
+ data('UCH')
+ ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+ ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+ ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
+ PlotLoadings(ResPCALMEffects,c("Citrate","Hippurate"),PCdim=c(2,3))
+}

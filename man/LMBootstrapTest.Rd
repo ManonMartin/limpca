@@ -4,24 +4,19 @@
 \alias{LMBootstrapTest}
 \title{Perform a test on the effects from the model}
 \usage{
-LMBootstrapTest(ResLMEffectMatrices, TermToTest, nboot = 100,
-  ncomp = 4)
+LMBootstrapTest(ResLMEffectMatrices, nboot = 100)
 }
 \arguments{
 \item{ResLMEffectMatrices}{A list of 13 from \code{\link{LMEffectMatrices}}}
 
-\item{TermToTest}{A character vector with the term to test and their interactions (in the right order)}
-
 \item{nboot}{A integer with the number of iterations to perform (by default: 100)}
-
-\item{ncomp}{A integer with the number of principal component used to compute the Sum of Squares}
 }
 \value{
 A list with the following elements:
 \describe{
-\item{\code{pvalue}}{A numeric vector with the pvalue for each tested effect}
-\item{\code{SSEffect}}{A numeric vector with the SS for the complete model}
-\item{\code{SSboot}}{A matrix with the SS of each effect for each iterations }
+\item{\code{Fobs}}{A vector with the F statistics observed with the data}
+\item{\code{Fboot}}{A matrix with the F statistics observed with the bootstrap}
+\item{\code{Pvalues}}{A vector with the pvalue for every effect}
 }
 }
 \description{
@@ -29,33 +24,15 @@ Compute a partial model without the tested effects then estimate the residuals. 
 }
 \details{
 The function works as follow:
-\itemize{
-\item 1.1 Estimate the partial model H0
-\item 2.1 Under H_0, estimate the variance of the residuals e*
-\item 3.1 For nboot iterations,
-\item 3.1 Simulate new outcomes from the predicted values of H0 and sampled residuals from N(0,e^*)
-\item 3.2 Estimate the complete model on these new outcomes
-\item 3.3 Perform a PCA on the Effect Matrices of the tested effects
-\item 3.4 Compute the SS
-\item 4.1 Compute the pval
-}
 
-The pvalue is computed with the same formula than the permutation test in the paper of Thiel et al.
+To be written again
 }
 \examples{
  data('UCH')
  ResLMModelMatrix <- LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
- ResLMEffectMatrices=LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+ ResLMEffectMatrices <- LMEffectMatrices(ResLMModelMatrix = ResLMModelMatrix,outcomes=UCH$outcomes)
 
- TermToTest = c("Hippurate","Hippurate * Citrate","Time * Hippurate","Hippurate * Citrate * Time")
- result=LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,TermToTest = TermToTest,nboot=100)
-
- # Plot Barplot
- for(i in 1:length(TermToTest)){
-   hist(x=result$SSboot[i,],xlim=c(0,max(result$SSEffect[i],result$SSboot[i,])),
-    breaks=20,main=rownames(result$SSboot)[i],xlab="SST III",freq=FALSE)
-   points(result$SSEffect[i],0,col="red",pch=19)
- }
+ result <- LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,nboot=10)
 
 }
 \references{

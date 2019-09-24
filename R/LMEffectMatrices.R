@@ -5,6 +5,8 @@
 #' @param ResLMModelMatrix A list of 3 from \code{\link{LMModelMatrix}}
 #' @param outcomes A \emph{nxm} matrix with n observations and m response variables
 #' @param SS a logical whether to compute the effect percentage variations
+#' @param newSSmethod a logical whether to use the new optimized method to compute SS
+#' @param contrastList a list of contrast for each parameter. The function creates automatically the list by default
 #'
 #' @return A list with the following elements:
 #'  \describe{
@@ -31,38 +33,32 @@
 
 
 
-LMEffectMatrices = function(ResLMModelMatrix,outcomes,SS=TRUE){
+LMEffectMatrices = function(ResLMModelMatrix,outcomes,SS=TRUE,newSSmethod=TRUE,contrastList=NA){
 
   #Checking the object
   if(!is.list(ResLMModelMatrix)){stop("Argument ResLMModelMatrix is not a list")}
-  if(length(ResLMModelMatrix)!=3){stop("List does not contain 3 arguments")}
-  if(names(ResLMModelMatrix)[1]!="formula"|names(ResLMModelMatrix)[2]!="design"|names(ResLMModelMatrix)[3]!="ModelMatrix"){stop("Argument is not a ResLMModelMAtrix object")}
+  if(length(ResLMModelMatrix)!=6){stop("List does not contain 6 elements")}
+  if(names(ResLMModelMatrix)[1]!="formula"|
+     names(ResLMModelMatrix)[2]!="design"|
+     names(ResLMModelMatrix)[3]!="ModelMatrix"|
+     names(ResLMModelMatrix)[4]!="ModelMatrixByEffect"|
+     names(ResLMModelMatrix)[5]!="covariateEffectsNames"|
+     names(ResLMModelMatrix)[6]!="covariateEffectsNamesUnique"){stop("Argument is not a ResLMModelMAtrix object")}
 
   #Attribute a name in the function environment
 
   formula=ResLMModelMatrix$formula
   design=ResLMModelMatrix$design
   modelMatrix=ResLMModelMatrix$ModelMatrix
-
-  #Creating a list containing effect matrices and model matrices by effect
-  dummyVarNames <- colnames(modelMatrix)
-  presencePolynomialEffects <- stringr::str_detect(dummyVarNames, '\\^[0-9]') # Detect exponent
-  covariateEffectsNames <- character(length = length(dummyVarNames))
-  covariateEffectsNames[presencePolynomialEffects] <- dummyVarNames[presencePolynomialEffects]
-  covariateEffectsNames[!presencePolynomialEffects] <- gsub('[0-9]', '', dummyVarNames[!presencePolynomialEffects])
-  covariateEffectsNames[covariateEffectsNames == '(Intercept)'] <- 'Intercept'
-  covariateEffectsNamesUnique <- unique(covariateEffectsNames)
+  ModelMatrixByEffect = ResLMModelMatrix$ModelMatrixByEffect
+  covariateEffectsNames = ResLMModelMatrix$covariateEffectsNames
+  covariateEffectsNamesUnique = ResLMModelMatrix$covariateEffectsNamesUnique
   nEffect <- length(covariateEffectsNamesUnique)
 
   #Creating empty effects matrices
   effectMatrices <- list()
   length(effectMatrices) <- nEffect
   names(effectMatrices) <- covariateEffectsNamesUnique
-
-  #Creating empty model matrices by effect
-  modelMatrixByEffect <- list()
-  length(modelMatrixByEffect) <- nEffect
-  names(modelMatrixByEffect) <- covariateEffectsNamesUnique
 
   #GLM decomposition calculated by using glm.fit and alply on outcomes
   resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
@@ -76,30 +72,32 @@ LMEffectMatrices = function(ResLMModelMatrix,outcomes,SS=TRUE){
     selectionComplement <- which(covariateEffectsNames != covariateEffectsNamesUnique[iEffect])
     #Effect matrices
     effectMatrices[[iEffect]] <- t(plyr::aaply(parameters, 2, function(xx) as.matrix(modelMatrix[, selection])%*%xx[selection]))
-    #Model matrices by effect
-    modelMatrixByEffect[[iEffect]] <- as.matrix(modelMatrix[, selection])
-
     }
 
 
   ResLMEffectMatrices = list(formula=formula,
                              design=design,
                              ModelMatrix=modelMatrix,
+                             ModelMatrixByEffect=ModelMatrixByEffect,
+                             covariateEffectsNames=covariateEffectsNames,
+                             covariateEffectsNamesUnique=covariateEffectsNamesUnique,
                              outcomes=outcomes,
                              effectMatrices=effectMatrices,
-                             modelMatrixByEffect=modelMatrixByEffect,
                              predictedvalues=predictedValues,
                              residuals=residuals,
-                             parameters=parameters,
-                             covariateEffectsNamesUnique=covariateEffectsNamesUnique,
-                             covariateEffectsNames=covariateEffectsNames)
+                             parameters=parameters)
 
   # Compute the Sum of Squares Type 3
   if(SS==TRUE){
-    ResLMSS = LMSS(ResLMEffectMatrices = ResLMEffectMatrices)
+    if(newSSmethod){
+      if(is.na(contrastList)){L = contrastSS(ResLMModelMatrix)}else{L = contrastList}
+      ResLMSS = LMSSv2(ResLMEffectMatrices,L)
+    }else{
+      ResLMSS = LMSS(ResLMEffectMatrices)
+    }
     ResLMEffectMatrices = c(ResLMEffectMatrices,ResLMSS)
   }else{
-    ResLMEffectMatrices = c(ResLMEffectMatrices,Type3Residuals=NA,variationPercentages=NA)
+    ResLMEffectMatrices = c(ResLMEffectMatrices,SS=NA,variationPercentages=NA)
   }
 
 

@@ -42,3 +42,24 @@ A matrix of graphs
 \description{
 Plot a matrix of scores graphs
 }
+\examples{
+
+ data('UCH')
+ ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+ ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
+ ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
+ PlotScoresMatrix(ResPCALMEffects,
+                 alleffect = FALSE,
+                 EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
+                 PCdim=c(2,2,2),
+                 design=UCH$design,
+                 varname.colorup = "Citrate",
+                 vec.colorup = c("red","blue","green"),
+                 varname.pchup="Hippurate",
+                 vec.pchup=c(1,2,3),
+                 varname.pchdown = "Day",
+                 vec.pchdown = c(4,5),
+                 varname.colordown="Time",
+                 vec.colordown = c("brown","grey"))
+
+}

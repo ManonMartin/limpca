@@ -18,19 +18,17 @@
 #'
 #' @return A matrix of graphs
 #'
-#' @example
+#' @examples
 #'
 #'  data('UCH')
 #'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
 #'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
-#'  ResLMSS = LMSS(ResLMEffectMatrices)
 #'  PlotScoresMatrix(ResPCALMEffects,
 #'                  alleffect = FALSE,
 #'                  EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
 #'                  PCdim=c(2,2,2),
 #'                  design=UCH$design,
-#'                  ResLMSS=ResLMSS
 #'                  varname.colorup = "Citrate",
 #'                  vec.colorup = c("red","blue","green"),
 #'                  varname.pchup="Hippurate",
