@@ -1,5 +1,5 @@
 ---
-title: "Analysis of the UCH dataset with LMWiRe"
+title: "Application of LMWiRe on the UCH dataset"
 author: "Franceschini Sébastien"
 date: "`r Sys.Date()`"
 package: LMWiRe
@@ -11,17 +11,16 @@ output:
 vignette: >
    %\VignetteIndexEntry{Analysis of the UCH dataset with LMWiRe}
    %\VignetteEncoding{UTF-8}
-   %\VignetteEngine{knitr::knitr}
+   %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
    chunk_output_type: console
-      
 references:
 - id: Thiel2017
   title: ASCA+ and APCA+ Extensions of ASCA and APCA in the analysis of unbalanced multifactorial designs
   author:
   - family: Thiel
     given: Michel
-  - family: Feraux
+  - family: Feraud
     given: Baptiste
   - family: Govaerts
     given: Bernadette
@@ -42,7 +41,6 @@ references:
   type: article-journal
   issued:
     year: 2019
-
 ---
 
 ```{r Setup,include=FALSE}
@@ -64,7 +62,7 @@ The package is actually in its developping stage and is available on GitHub at t
 
 ```{r Install, results=FALSE, message=FALSE}
 
-# devtools::install_github("FranceschiniS/LMWiRe")
+# devtools::install_github("FranceschiniS/LMWiRe",build_vignettes = TRUE)
 
 library("LMWiRe")
 
@@ -315,5 +313,9 @@ PlotScoresMatrix(ResAPCA,
                  vec.pchup = c(3,4,5))
 ```
 
+# Session info
+```{r}
+sessionInfo()
+```
 
 # References
