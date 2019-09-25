@@ -178,7 +178,7 @@ We can use bootstrap to determine whether an effect is significant. We suggest t
 ```{r Bootstrap}
 
 
-ResLMBootstrapTest= LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,nboot=20)
+ResLMBootstrapTest= LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,nboot=5)
 
 # Print Pvalue
 
