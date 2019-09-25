@@ -62,7 +62,7 @@ The package is actually in its developping stage and is available on GitHub at t
 
 ```{r Install, results=FALSE, message=FALSE}
 
-devtools::install_github("FranceschiniS/LMWiRe")
+devtools::install_github("FranceschiniS/LMWiRe",force=TRUE)
 
 library("LMWiRe")
 
