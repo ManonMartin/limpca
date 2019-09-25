@@ -3,6 +3,7 @@
 #' @description Plot a matrix of scores graphs
 #'
 #' @param ResPCALMEffects A list of p+3 elements depending of the model terms from \code{\link{PCALMEffects}}
+#' @param ModelAbbrev A logical whether to abbreviate the interaction terms
 #' @param design The nxk "free encoded" experimental design data frame
 #' @param EffectNames A character vector with the name of the effects to plot
 #' @param alleffect A logical whether to plot every effect
@@ -25,10 +26,11 @@
 #'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
 #'  PlotScoresMatrix(ResPCALMEffects,
-#'                  alleffect = FALSE,
-#'                  EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
-#'                  PCdim=c(2,2,2),
+#'                  ModelAbbrev=FALSE,
 #'                  design=UCH$design,
+#'                  EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
+#'                  alleffect = FALSE,
+#'                  PCdim=c(2,2,2),
 #'                  varname.colorup = "Citrate",
 #'                  vec.colorup = c("red","blue","green"),
 #'                  varname.pchup="Hippurate",
@@ -42,6 +44,7 @@
 #'
 PlotScoresMatrix = function(
   ResPCALMEffects, #PCALMEffects Objects
+  ModelAbbrev=FALSE,
   design,
   EffectNames = NULL, # Vector of character with the name of the effect to plot
   alleffect, #Logical whether to plot all effects
@@ -128,6 +131,8 @@ PlotScoresMatrix = function(
 
   }
 
+
+
   # Create the matrix for the "pairs" function
 
   k = sum(PCdim) # Length of the diagonal of the plot
@@ -189,12 +194,12 @@ PlotScoresMatrix = function(
 
   labelvector = vector()
 
-
-
   for(i in 1:k){
     div_name = strsplit(x=colnames(coomatrix)[i],split=" ")
     div_name = div_name[[1]]
-    labelvector[i] = paste(div_name[1],"\n",div_name[2],"\n",round(var[i],2),"%")
+    effect_name = div_name
+    if(ModelAbbrev==TRUE){effect_name=ModelAbbrev(div_name)}  # Abbrev interaction term
+    labelvector[i] = paste(effect_name[1],"\n",div_name[2],"\n",round(var[i],2),"%")
   }
 
   # Determine the graphics parameter from the graph

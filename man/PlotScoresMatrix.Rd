@@ -4,13 +4,16 @@
 \alias{PlotScoresMatrix}
 \title{Plotting a Scores Matrix}
 \usage{
-PlotScoresMatrix(ResPCALMEffects, design, EffectNames = NULL, alleffect,
-  PCdim = NULL, varname.colorup = NULL, varname.colordown = NULL,
+PlotScoresMatrix(ResPCALMEffects, ModelAbbrev = FALSE, design,
+  EffectNames = NULL, alleffect, PCdim = NULL,
+  varname.colorup = NULL, varname.colordown = NULL,
   varname.pchup = NULL, varname.pchdown = NULL, vec.colorup = NULL,
   vec.colordown = NULL, vec.pchup = NULL, vec.pchdown = NULL)
 }
 \arguments{
 \item{ResPCALMEffects}{A list of p+3 elements depending of the model terms from \code{\link{PCALMEffects}}}
+
+\item{ModelAbbrev}{A logical whether to abbreviate the interaction terms}
 
 \item{design}{The nxk "free encoded" experimental design data frame}
 
@@ -49,10 +52,11 @@ Plot a matrix of scores graphs
  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
  ResPCALMEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
  PlotScoresMatrix(ResPCALMEffects,
-                 alleffect = FALSE,
-                 EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
-                 PCdim=c(2,2,2),
+                 ModelAbbrev=FALSE,
                  design=UCH$design,
+                 EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
+                 alleffect = FALSE,
+                 PCdim=c(2,2,2),
                  varname.colorup = "Citrate",
                  vec.colorup = c("red","blue","green"),
                  varname.pchup="Hippurate",

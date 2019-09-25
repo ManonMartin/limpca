@@ -84,18 +84,11 @@ The UCH dataset stands for Urine-Citrate-Hippurate and comes from \textit{Rousse
 
 ## Spectrum Visualization (= Outcomes)
 
-The 600 response variables are the spectrum of the H-NMR for each observations. They can be plot together with the simple `geom_line` function from the `ggplot2` package.
+The 600 response variables are the spectrum of the H-NMR for each observations. 
 
 ```{r Spectrum visualization}
-firstobslab = names(UCH$outcomes[,1])[1]
 
-ggplot2::ggplot(data = as.data.frame(t(UCH$outcomes))) + 
-  ggplot2::geom_line(ggplot2::aes(x = as.numeric(colnames(UCH$outcomes)), y = UCH$outcomes[1, ])) +
-  ggplot2::scale_x_reverse(lim = c(10, 0)) +
-  ggplot2::xlab("ppm") +
-  ggplot2::ylab("Intensity")+
-  ggplot2::ggtitle(paste("H-NMR spectrum for the first observation : ",firstobslab))+
-  ggplot2::theme(plot.title = ggplot2::element_text(hjust = 0.5))
+LinePlot(UCH$outcomes[1:2,],main="H-NMR spectrum")
 
 ```
 
@@ -144,6 +137,8 @@ ggplot2::ggplot(data=as.data.frame(eig.res[1,]),ggplot2::aes(x=colnames(eig.res)
 
 ```{r Scores}
 
+ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
+
 DrawScores(ResPCA, type.obj = "PCA", drawNames = TRUE, createWindow = F, 
     main = "Reponse matrix score plot", color = UCH$design$Citrate, pch = UCH$design$Hippurate, 
     axes = c(1, 2), size = 2.5) + ggplot2::scale_color_discrete(name = "Citrate") + ggplot2::scale_shape_discrete(name = "Hippurate")
@@ -180,21 +175,15 @@ ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,UCH$outcomes)
 
 We can use bootstrap to determine whether an effect is significant. We suggest the function `LMBootstrapTest()`.
 
-```{r}
+```{r Bootstrap}
 
-# TermToTest = c("Hippurate","Hippurate * Citrate","Time * Hippurate","Hippurate * Citrate * Time")
-# ResLMBootstrapTest= LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,TermToTest = TermToTest,nboot=100)
-# 
-# # Print Pvalue
-# 
-# pander::pander(ResLMBootstrapTest$pvalue)
-# 
-# # Plot Barplot
-# for(i in 1:length(TermToTest)){
-#     hist(x=ResLMBootstrapTest$SSboot[i,],xlim=c(0,max(ResLMBootstrapTest$SSEffect[i],ResLMBootstrapTest$SSboot[i,])),
-#      breaks=20,main=rownames(ResLMBootstrapTest$SSboot)[i],xlab="SST III",freq=FALSE)
-#     points(ResLMBootstrapTest$SSEffect[i],0,col="red",pch=19)
-# }
+
+ResLMBootstrapTest= LMBootstrapTest(ResLMEffectMatrices = ResLMEffectMatrices,nboot=20)
+
+# Print Pvalue
+
+pander::pander(ResLMBootstrapTest$Pvalue)
+
 ```
 
 # ASCA/ASCA-E/APCA
@@ -232,14 +221,18 @@ Finally we can represent the scores with a matrix of plots. This graph allows to
 
 PlotScoresMatrix(ResASCA,
                  alleffect = FALSE,
-                 EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
-                 PCdim=c(1,1,1),
+                 EffectNames = c("Hippurate","Citrate","Time","Hippurate:Citrate","Hippurate:Time","Citrate:Time","Hippurate:Citrate:Time","Residuals"),
+                 ModelAbbrev = TRUE,
+                 PCdim=c(1,1,1,1,1,1,1,2),
                  design=UCH$design,
                  varname.colorup = "Citrate",
-                 vec.colorup = c("black","blue","skyblue"),
-                 varname.pchdown = "Day",
+                 vec.colorup = c("blue","forestgreen","red"),
+                 varname.colordown  = "Time",
+                 vec.colordown = c("orange","black"),
                  varname.pchup="Hippurate",
-                 vec.pchup = c(3,4,5))
+                 vec.pchup = c(4,16,2),
+                 varname.pchdown="Time",
+                 vec.pchdown = c(1,3))
 
 ```
 
@@ -268,14 +261,18 @@ PlotScoresXY(ResASCAE,UCH$design,EffectVector = c("Hippurate","Hippurate:Citrate
 ```{r ASCAE ScoresMatrix}
 PlotScoresMatrix(ResASCAE,
                  alleffect = FALSE,
-                 EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
-                 PCdim=c(1,1,1),
+                 EffectNames = c("Hippurate","Citrate","Time","Hippurate:Citrate","Hippurate:Time","Citrate:Time","Hippurate:Citrate:Time","Residuals"),
+                 ModelAbbrev = TRUE,
+                 PCdim=c(1,1,1,1,1,1,1,2),
                  design=UCH$design,
                  varname.colorup = "Citrate",
-                 vec.colorup = c("black","blue","skyblue"),
-                 varname.pchdown = "Day",
+                 vec.colorup = c("blue","forestgreen","red"),
+                 varname.colordown  = "Time",
+                 vec.colordown = c("orange","black"),
                  varname.pchup="Hippurate",
-                 vec.pchup = c(3,4,5))
+                 vec.pchup = c(4,16,2),
+                 varname.pchdown="Time",
+                 vec.pchdown = c(1,3))
 ```
 
 
@@ -303,14 +300,18 @@ PlotScoresXY(ResAPCA,UCH$design,EffectVector = c("Hippurate","Citrate","Hippurat
 ```{r APCA ScoresMatrix}
 PlotScoresMatrix(ResAPCA,
                  alleffect = FALSE,
-                 EffectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
-                 PCdim=c(1,1,1),
+                 EffectNames = c("Hippurate","Citrate","Time","Hippurate:Citrate","Hippurate:Time","Citrate:Time","Hippurate:Citrate:Time","Residuals"),
+                 ModelAbbrev = TRUE,
+                 PCdim=c(1,1,1,1,1,1,1,2),
                  design=UCH$design,
                  varname.colorup = "Citrate",
-                 vec.colorup = c("black","blue","skyblue"),
-                 varname.pchdown = "Day",
+                 vec.colorup = c("blue","forestgreen","red"),
+                 varname.colordown  = "Time",
+                 vec.colordown = c("orange","black"),
                  varname.pchup="Hippurate",
-                 vec.pchup = c(3,4,5))
+                 vec.pchup = c(4,16,2),
+                 varname.pchdown="Time",
+                 vec.pchdown = c(1,3))
 ```
 
 # Session info

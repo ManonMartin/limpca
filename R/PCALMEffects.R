@@ -80,7 +80,7 @@ PCALMEffects = function(ResLMEffectMatrices,method=c("ASCA","APCA","ASCA-E")){
 
     EffectMatGLM = ResLMEffectMatrices$effectMatrices[-1]  # effectMatrices minus intercept
     EffectMatGLM = lapply(EffectMatGLM, function(x) x + ResLMEffectMatrices$residuals)
-    EffectMatGLM = c(EffectMatGLM, residuals = res)  # plus residuals
+    EffectMatGLM = c(EffectMatGLM, Residuals = res)  # plus residuals
 
   }else if(method=="ASCA-E"){
 
