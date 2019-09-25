@@ -60,7 +60,7 @@ PlotScoresMatrix = function(
 ){
 
   # Checking arguments
-
+# test
     #Checking the class
 
   if(alleffect==FALSE){
