@@ -59,12 +59,12 @@ PlotScoresXY = function(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
   iEffect = ResPCALMEffects[[iEffect_temp]]
 
   # Checking the second component
-  if(iEffect$var[2]<1){
-    warning("The variance of PC2 is inferior to 1%. Graph scaled")
-    pc2lim = c(100*min(iEffect$scores[,2]),100*max(iEffect$scores[,2]))
-  }else{
+  #if(iEffect$var[2]<1){
+  #  warning("The variance of PC2 is inferior to 1%. Graph scaled")
+  #  pc2lim = c(100*min(iEffect$scores[,2]),100*max(iEffect$scores[,2]))
+  #  }else{
     pc2lim = c(1.4*min(iEffect$scores[,2]),1.4*max(iEffect$scores[,2]))
-    }
+  #  }
 
 
   main = paste(ResPCALMEffects$method, "scores plot :", EffectVector[i], "effect")

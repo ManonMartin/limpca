@@ -61,7 +61,13 @@ LMEffectMatrices = function(ResLMModelMatrix,outcomes,SS=TRUE,newSSmethod=TRUE,c
   names(effectMatrices) <- covariateEffectsNamesUnique
 
   #GLM decomposition calculated by using glm.fit and alply on outcomes
-  resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
+
+  #The following line gives an error of type: Error in glm.fit(modelMatrix, xx) : NAs in V(mu),
+  #it is temporarily replaced by a loop
+  #resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
+
+  resGLM <- list()
+  for(i in 1:ncol(outcomes)) resGLM[[i]] <- glm.fit(modelMatrix, outcomes[,i])
   parameters <- t(plyr::laply(resGLM, function(xx) xx$coefficients))
   predictedValues <- t(plyr::laply(resGLM, function(xx) xx$fitted.values))
   residuals <- t(plyr::laply(resGLM, function(xx) xx$residuals))

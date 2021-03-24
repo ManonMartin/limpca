@@ -31,7 +31,7 @@ PlotLoadings = function(ResPCALMEffects,EffectNames,PCdim,...){
   }
 
 
-  if(!all(EffectNames %in% names(ResPCALMEffects))){stop("At least on of th effects is not found in ResPCALMEffects")}
+  if(!all(EffectNames %in% names(ResPCALMEffects))){stop("At least one of the effects is not found in ResPCALMEffects")}
 
   # Creating the list
 

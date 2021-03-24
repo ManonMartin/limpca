@@ -14,7 +14,7 @@ result = vector()
 var_percentage = vector()
 
 Y_withoutIntercept = ResLMEffectMatrices$outcomes - ResLMEffectMatrices$effectMatrices$Intercept
-denom = norm(x=Y_withoutIntercept,"F")^2
+denom = norm(x= data.matrix(Y_withoutIntercept),"F")^2
 
 for(i in 1:length(L)){
   result[i]=computeSS(Xmat=ResLMEffectMatrices$ModelMatrix,L=L[[i]],ResLMEffectMatrices$parameters)
