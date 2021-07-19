@@ -162,7 +162,7 @@ LMBootstrapTest = function(ResLMEffectMatrices,nboot=100){
   # Loop for every iteration (nboot)
   for(j in 1:nboot){
   E_sample = sample(c(1:nObs),nObs,replace=TRUE)
-  Fboot[j,]=  plyr::laply(listResultPartial[2:8],ComputeFboot,E_sample=E_sample,ResLMEffectMatrices=ResLMEffectMatrices,nParam=nParam,nObs=nObs,ResLMModelMatrix=ResLMModelMatrix,.parallel = TRUE)
+  Fboot[j,]=  plyr::laply(listResultPartial[2:nEffect],ComputeFboot,E_sample=E_sample,ResLMEffectMatrices=ResLMEffectMatrices,nParam=nParam,nObs=nObs,ResLMModelMatrix=ResLMModelMatrix,.parallel = TRUE)
   }
 
   # Compute the pvalue

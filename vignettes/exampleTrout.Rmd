@@ -83,7 +83,7 @@ design <- trout$design
 
 # 4 Data visualisation
 
-The trout dataset contains 3 elements : a matrix `responses` with 72 observations of 15 response variables, a formula for the GLM model used and a `design` matrix with 72 observations and 3 explanatory variables.
+The trout dataset contains 3 elements : a matrix `outcomes` with 72 observations of 15 response variables, a formula for the GLM model used and a `design` matrix with 72 observations and 3 explanatory variables.
 
 ```{r Data visualization}
 
@@ -115,7 +115,7 @@ table(trout$design$Treatment,trout$design$Day,trout$design$Exposure.Cd)
 
 ## 4.3 Principal Component Analysis
 
-The function `SVDforPCA` is useful to compute a PCA decomposition of the `responses` matrix. The `scores` and `loadings` can then be plotted with the function `DrawScores` and `DrawLoadings`.
+The function `SVDforPCA` is useful to compute a PCA decomposition of the `outcomes` matrix. The `scores` and `loadings` can then be plotted with the function `DrawScores` and `DrawLoadings`.
 
 ```{r PCA}
 ResPCA = SVDforPCA(trout$outcomes)
@@ -136,11 +136,19 @@ ggplot2::ggplot(data=as.data.frame(eig.res[1,]),ggplot2::aes(x=colnames(eig.res)
 
 ```{r Scores}
 
-ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
+#ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
 
 DrawScores(ResPCA, type.obj = "PCA", drawNames = TRUE, createWindow = F, 
     main = "Reponse matrix score plot", color = trout$design$Exposure.Cd, pch = trout$design$Day, 
     axes = c(1, 2), size = 2.5) + ggplot2::scale_color_discrete(name = "Exposure.Cd") + ggplot2::scale_shape_discrete(name = "Day")
+
+DrawScores(ResPCA, type.obj = "PCA", drawNames = TRUE, createWindow = F, 
+    main = "Reponse matrix score plot", color = trout$design$Exposure.Cd, pch = trout$design$Treatment, 
+    axes = c(1, 2), size = 2.5) + ggplot2::scale_color_discrete(name = "Exposure.Cd") + ggplot2::scale_shape_discrete(name = "Treatment")
+
+DrawScores(ResPCA, type.obj = "PCA", drawNames = TRUE, createWindow = F, 
+    main = "Reponse matrix score plot", color = trout$design$Treatment, pch = trout$design$Day, 
+    axes = c(1, 2), size = 2.5) + ggplot2::scale_color_discrete(name = "Treatment") + ggplot2::scale_shape_discrete(name = "Day")
 
 ```
 
@@ -221,9 +229,9 @@ PlotScoresMatrix(ResASCA,
                  PCdim=c(1,1,1,1,1,1,1,2),
                  design=trout$design,
                  varname.colorup = "Treatment",
-                 vec.colorup = c("blue","forestgreen","red", "yellow"),
+                 vec.colorup = c("brown1","chartreuse3","cyan3", "darkorchid1"),
                  varname.colordown  = "Exposure.Cd",
-                 vec.colordown = c("orange","black"),
+                 vec.colordown = c("darkorange","midnightblue"),
                  varname.pchup="Day",
                  vec.pchup = c(4,16,2),
                  varname.pchdown="Day",
@@ -269,9 +277,9 @@ PlotScoresMatrix(ResASCAE,
                  PCdim=c(1,1,1,1,1,1,1,2),
                  design=trout$design,
                  varname.colorup = "Treatment",
-                 vec.colorup = c("blue","forestgreen","red", "yellow"),
+                 vec.colorup = c("brown1","chartreuse3","cyan3", "darkorchid1"),
                  varname.colordown  = "Exposure.Cd",
-                 vec.colordown = c("orange","black"),
+                 vec.colordown = c("darkorange","midnightblue"),
                  varname.pchup="Day",
                  vec.pchup = c(4,16,2),
                  varname.pchdown="Day",
@@ -317,9 +325,9 @@ PlotScoresMatrix(ResAPCA,
                  PCdim=c(1,1,1,1,1,1,1,2),
                  design=trout$design,
                  varname.colorup = "Treatment",
-                 vec.colorup = c("blue","forestgreen","red", "yellow"),
+                 vec.colorup = c("brown1","chartreuse3","cyan3", "darkorchid1"),
                  varname.colordown  = "Exposure.Cd",
-                 vec.colordown = c("orange","black"),
+                 vec.colordown = c("darkorange","midnightblue"),
                  varname.pchup="Day",
                  vec.pchup = c(4,16,2),
                  varname.pchdown="Day",
@@ -335,13 +343,15 @@ PlotScoresMatrix(ResAPCA,
                  PCdim=2,
                  design=trout$design,
                  varname.colorup = "Treatment",
-                 vec.colorup = c("blue","forestgreen","red", "yellow"),
+                 vec.colorup = c("brown1","chartreuse3","cyan3", "darkorchid1"),
                  varname.colordown  = "Exposure.Cd",
-                 vec.colordown = c("orange","black"),
+                 vec.colordown = c("darkorange","midnightblue"),
                  varname.pchup="Day",
                  vec.pchup = c(4,16,2))
 
-plot(ResAPCA$Residuals$scores)
+plot(ResAPCA$Residuals$scores, pch = NA_integer_)
+text(ResAPCA$Residuals$scores, labels = rownames(outcomes), cex = 0.5)
+abline(h=0, v=0)
 ```
 
 ``` {r APCA loadings}
