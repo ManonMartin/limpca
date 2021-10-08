@@ -2,223 +2,141 @@
 #' @title ScatterPlot
 #'
 #' @description
-#' Draws scatter plots.
+#' Draws a scatter plot.
 #'
-#' @param x x-axis values.
-#' @param y y-axis values.
-#' @param points_labs If not \code{NULL}, will show the labels for each observation on the plot.
-#' @param createWindow If \code{TRUE}, will create a new window for the plot.
-#' @param main Plot title. If \code{NULL}, default title is provided.
-#' @param color Optional character, factor or numeric vector giving the color of the observations. If \code{length(color)} = 1, the unique color is kept for all the points.
-#' @param pch Optional character, factor or numeric vector giving the pch of the observations.
-#' @param size The points size.
-#' @param cex.lab The size of points labels.
+#' @param outcomes The nxm matrix with n observations and m response variables.
+#' @param design The nxk "free encoded" experimental design data frame.
+#' @param xy x- and y-axis values: A vector of length 2 with either column names of the outcomes matrix to plot (character) or the index positions.
+#' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color
+#' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape
+#' @param points_labs If not \code{NULL}, a character vector with point labels.
+#' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
 #' @param ylab If not \code{NULL}, label for the y-axis.
-#' @param legend_pch If not \code{NULL}, the labels for the pch legend.
-#' @param legend_color If not \code{NULL}, the labels for the color legend.
-#' @param drawEllipses If \code{TRUE}, will draw ellipses with the \code{ggplot2::stat_ellipse} with groups coresponding to the color vector.
-#' @param typeEl The type of ellipse, either "norm" (multivariate normal distribution), "t" (multivariate t-distribution) and "euclid" draws a circle with the radius equal to level, representing the euclidean distance from the center.
+#' @param size The points size.
+#' @param size_lab The size of points labels.
+#' @param drawEllipses If \code{TRUE}, will draw ellipse(s).
+#' @param typeEl The type of ellipse, either `norm` (multivariate normal distribution), `t` (multivariate t-distribution) or `euclid` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
 #' @param levelEl The confidence level at which to draw an ellipse.
 #'
-#' @return A score or loading plot in the current device.
-
-#' @details
-#' If \code{type.obj} is \code{'OPLSDA'}, axes = 1 represents the predictive score vector, axes = 2 represents the first orthogonal score vector, etc.
-#'
+#' @return A scatterplot in the current device.
+#' 
 #' @examples
 #'
-#'x <- c(1:20)
-#'y <- sample(20)
-#'colors <- c(rep(1,10), rep(2,10))
-#'points_pch <-  c(rep(17,10), rep(18,10))
-#'labels <- as.character(c(1:20))
-#'# automatic legend names and values assignment
-#'ScatterPlot(x = x, y = y, points_labs = labels, createWindow=FALSE,
-#'            main = 'Scatter plot', color = colors, pch = points_pch,
-#'            xlab = "x axis", ylab = "y axis")
+#' data("UCH")
+#' 
+#' # With color and shape
+#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' xy = c(453, 369), color = "Hippurate",  shape = "Citrate")
+#' 
+#' # With color and ellipses
+#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' xy = c(453, 369), color = "Hippurate", 
+#' drawEllipses = TRUE)
 #'
-#'# decide on the color or pch values
-# while adding a personalized legend
-#'legend_color = c(rep("A", 10), rep("B", 10))
-#'legend_pch = c(rep("C", 10), rep("D", 10))
-#'ScatterPlot(x = x, y = y, points_labs=labels, createWindow=FALSE,
-#'            main = 'Scatter plot', color = colors, pch = points_pch,
-#'            xlab = "x axis", ylab = "y axis",
-#'            legend_pch = legend_pch,legend_color=legend_color)
+#' # with labels
+#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' xy = c(453, 369), points_labs = rownames(UCH$design))
 #'
 #' @importFrom grDevices dev.new
 #' @import ggplot2
 #' @import reshape2
 #' @import gridExtra
+#' @import ggrepel
 
-ScatterPlot <- function(x, y, points_labs = NULL, createWindow = FALSE, main = NULL,
-                        color = NULL, pch = NULL, size = 1, cex.lab = 3, xlab = NULL, ylab = NULL, legend_pch = NULL,
-                        legend_color = NULL, drawEllipses = FALSE, typeEl = "norm", levelEl = 0.9) {
-
-
-  checkArg(main, "str", can.be.null = TRUE)
-
-  checkArg(x, "num", can.be.null = FALSE)
-  checkArg(y, "num", can.be.null = FALSE)
-
-  data <- cbind(x,y)
-  data <- as.data.frame(data)
-
-  # color = numeric, or factor
-  # pch = numeric, or factor
-
-  m <- length(x)
-  # nn <- dim(obj$original.dataset)[2]
-
-  # checks points_labs
-  if (!is.null(points_labs) && is.vector(points_labs, mode = "any") && length(points_labs) != m) {
-    stop("the length of color is not equal to the nrow of data matrix")
+ScatterPlot <- function(outcomes, design, xy, color = NULL, 
+                        shape = NULL, points_labs = NULL,
+                        title = "scatterplot", xlab = NULL, 
+                        ylab = NULL, size = 2,  size_lab = 3, 
+                        drawEllipses = FALSE, 
+                        typeEl = c("norm","t","euclid"), 
+                        levelEl = 0.9) {
+  
+  # checks ==============================
+  checkArg(design,"data.frame",can.be.null = FALSE)
+  checkArg(outcomes,"matrix",can.be.null = FALSE)
+  checkArg(color,c("str","length1"),can.be.null = TRUE)
+  checkArg(shape,c("str","length1"),can.be.null = TRUE)
+  checkArg(points_labs,"str", can.be.null = TRUE)
+  checkArg(title,c("str","length1"),can.be.null = TRUE)
+  checkArg(xlab,c("str","length1"),can.be.null = TRUE)
+  checkArg(ylab,c("str","length1"),can.be.null = TRUE)
+  checkArg(size,c("num", "pos","length1"),can.be.null = FALSE)  
+  checkArg(size_lab,c("num", "pos","length1"),can.be.null = FALSE)
+  checkArg(drawEllipses,c("bool","length1"),can.be.null = FALSE)
+  checkArg(levelEl,c("num", "pos","length1"),can.be.null = FALSE)
+  
+  typeEl <- match.arg(typeEl)
+  match.arg(color, choices = c(colnames(design), NULL))
+  match.arg(shape, choices = c(colnames(design), NULL))
+  
+  
+  if (length(xy) !=2){
+    stop("xy is not of length 2")
   }
-
-  # checks color
-  if (!is.null(color) && is.vector(color, mode = "any") && !length(color) %in% c(1,m)) {
-    stop("the length of color is not equal to 1 or to the nrow of data matrix")
+  
+  if (!is.numeric(xy) & !is.character(xy)){
+    stop("xy is neither numeric or character")
   }
-
-
-  # checks pch
-  if (!is.null(pch) && is.vector(pch, mode = "any") && length(pch) != m) {
-    stop("the length of pch is not equal to the nrow of data matrix")
+  
+  # if (!color %in% colnames(design)){
+  #   stop("color is not a column name of design")
+  # }
+  # 
+  # if (!shape %in% colnames(design)){
+  #   stop("shape is not a column name of design")
+  # }
+  
+  if(length(points_labs) != nrow(design) & !is.null(points_labs)){
+    stop("length of points_labs is different than the number of observations")
   }
-
-
-  # define color and pch
-
-  if (!is.null(color)) {
-    color_factor <- as.factor(color)
-    namecolor <- deparse(substitute(color))
-    if (is.null(legend_color)) {
-      valuescolor <- color_factor
-    } else {
-      if (!sum(diag(table(color_factor, legend_color)))==m & !sum(diag(table(color_factor, legend_color)))==0) {
-        warning("pch_factor and legend_pch do not have concordant classes")
-        print(table(color_factor, legend_color))
-      }
-      valuescolor <- legend_color
-    }
+  
+  
+  # prepare the arguments  ==============================
+  if (is.numeric(xy)){
+    xy <- colnames(outcomes)[xy]
   }
-
-  if (!is.null(pch)) {
-    pch_factor <- as.factor(pch)
-    namepch <- deparse(substitute(pch))
-    if (is.null(legend_pch)) {
-      valuespch <- pch_factor
-    } else {
-      if (!sum(diag(table(pch_factor, legend_pch)))==m & !sum(diag(table(pch_factor, legend_pch)))==0) {
-        warning("pch_factor and legend_pch do not have concordant classes")
-        print(table(pch_factor, legend_pch))
-      }
-      valuespch <- legend_pch
-    }
-  }
-
-
-  plots <- list()
-  plot <- list()
-  Var <- rowname <- value <- NULL  # only for R CMD check
-
-  ##########################################
-
-
-  # labs
+  mn_xy <- make.names(xy) # correct the naming of variables
+  
   if (is.null(xlab)) {
-    xlab <- deparse(substitute(x))
+    xlab <- xy[1]
   }
   if (is.null(ylab)) {
-    ylab <- deparse(substitute(y))
+    ylab <- xy[2]
   }
+  
+  out_df <- outcomes[,c(xy)]
+  colnames(out_df) <- mn_xy
+  
+  design_df <- design[,c(color, shape), drop = FALSE]
+  
+  df_tot <- cbind(out_df, design_df)
 
-  if (createWindow)  {
-    grDevices::dev.new(noRStudioGD = TRUE)
-  }
-
-
-
-  plots <- ggplot2::ggplot(data=data, ggplot2::aes(x=x,y=y))
-
-  if (is.null(color) & is.null(pch)) {
-    # no color & no shape
-    plots <- plots + ggplot2::geom_point(size=size)
-
-  } else if (!is.null(color) & is.null(pch)) {
-
-    # color
-    if (length(color)>1){
-      plots <- plots + ggplot2::geom_point(ggplot2::aes(colour = color_factor), size=size) +
-        scale_colour_discrete(name = namecolor, breaks = color_factor,
-                              labels = valuescolor,
-                              guide=guide_legend(order=1))
-    }else {
-      plots <- plots + ggplot2::geom_point(colour=color, size=size)
-    }
-
-    if (drawEllipses) {
-      plots <- plots + ggplot2::stat_ellipse(mapping = aes(x=x,y=y,
-                                                           colour = color_factor),
-                                             data = data, type = typeEl,
-                                             level = levelEl)
-    }
-
-
-  } else if (is.null(color) & !is.null(pch)) {
-    # shape
-    plots <- plots + ggplot2::geom_point(ggplot2::aes(shape = pch_factor), size=size) +
-      scale_shape_manual(name = namepch, values=seq(0,26),
-                         guide = guide_legend(order=1, shape = 1))
-  } else {
-    # color + shape
-    #
-    if (length(color)>1){
-      plots <- plots + ggplot2::geom_point(ggplot2::aes(colour = color_factor, shape = pch_factor), size=size) +
-        scale_colour_discrete(name = namecolor,
-                              guide=guide_legend(order=1, shape = 1))+
-        scale_shape_manual(name = namepch, values=seq(0,26),
-                           guide=guide_legend(order=1, shape = 1))
-    }else {
-      plots <- plots + ggplot2::geom_point(ggplot2::aes(shape = pch_factor),
-                                           size=size, color=color) +
-        scale_shape_manual(name = namepch, values=seq(0,26),
-                           guide=guide_legend(order=1, shape = 1))
-    }
-    #
-
-    if (drawEllipses) {
-      plots <- plots + ggplot2::stat_ellipse(mapping = aes(x=x,y=y,
-                                                           colour = color_factor),
-                                             data = data, type = typeEl,
-                                             level = levelEl)
-    }
-  }
-
-
-  # title, theme
-  plots <- plots + ggplot2::labs(title = main, x = xlab, y = ylab) + ggplot2::theme_bw() +
-    ggplot2::theme(panel.grid.major = ggplot2::element_line(color = "gray60",
-                                                            size = 0.2), panel.grid.minor = ggplot2::element_blank(),
-                   panel.background = ggplot2::element_rect(fill = "gray98"))
-
-  # points_labs
+  df_tot$points_labs <- points_labs
+  
+  # ScatterPlot  ==============================
+  
+  # ggplot ++++
+  fig <- ggplot2::ggplot(data=df_tot, 
+                         ggplot2::aes_string(x=mn_xy[1],y=mn_xy[2],
+                                             label = "points_labs",
+                                             color = color, 
+                                             shape = shape)) + 
+    ggplot2::geom_point(size=size) +
+    labs(x = xlab, y = ylab, title = title)
+  
+  # points_labs ++++
   if (!is.null(points_labs)) {
-
-    if (is.null(color)) {
-      plots <- plots + ggplot2::geom_text(ggplot2::aes(x = x,
-                                                       y = y, label = points_labs),
-                                          hjust = 0, vjust = 1, show.legend = F, size = cex.lab)
-    } else {
-      plots <- plots + ggplot2::geom_text(ggplot2::aes(x = x,
-                                                       y = y, label = points_labs, colour = color_factor),
-                                          hjust = 0, vjust = 1,  show.legend = F, size = cex.lab)
-    }
+    fig <- fig + 
+      ggrepel::geom_text_repel(show.legend = F, 
+                               size = size_lab)
   }
-
-  plots
-
-
-
-}  # END
+  
+  # drawEllipses  ++++
+  if (drawEllipses) {
+    fig <- fig + ggplot2::stat_ellipse(type = typeEl, level = levelEl)
+  }
+  
+  return(fig)
+  
+}

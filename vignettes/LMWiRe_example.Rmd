@@ -137,7 +137,7 @@ ggplot2::ggplot(data=as.data.frame(eig.res[1,]),ggplot2::aes(x=colnames(eig.res)
 
 ```{r Scores}
 
-ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
+# ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
 
 DrawScores(ResPCA, type.obj = "PCA", drawNames = TRUE, createWindow = F, 
     main = "Reponse matrix score plot", color = UCH$design$Citrate, pch = UCH$design$Hippurate, 

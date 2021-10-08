@@ -4,8 +4,13 @@
 \alias{LMEffectMatrices}
 \title{Computing the Effect Matrices}
 \usage{
-LMEffectMatrices(ResLMModelMatrix, outcomes, SS = TRUE,
-  newSSmethod = TRUE, contrastList = NA)
+LMEffectMatrices(
+  ResLMModelMatrix,
+  outcomes,
+  SS = TRUE,
+  newSSmethod = TRUE,
+  contrastList = NA
+)
 }
 \arguments{
 \item{ResLMModelMatrix}{A list of 3 from \code{\link{LMModelMatrix}}}

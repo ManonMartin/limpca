@@ -2,9 +2,9 @@
 #' @title Singular value decomposition for PCA analysis
 #'
 #' @description
-#' PCA over a X matrix by singular value decomposition, the preprocessing involves the mean-centering of X.
+#' PCA by singular value decomposition, the preprocessing involves the mean-centering of X.
 #'
-#' @param x   A data matrix on which will be based the analysis.
+#' @param outcomes The nxm matrix with n observations and m response variables.
 #' @param ncomp  Number of Principal Components.
 #'
 #' @return A list with the following elements:
@@ -25,7 +25,7 @@
 #' PCA.res = SVDforPCA(UCH$outcomes)
 
 
-SVDforPCA <- function(x, ncomp = min(dim(x))) {
+SVDforPCA <- function(outcomes, ncomp = min(dim(x))) {
 
 
   original.dataset <- x

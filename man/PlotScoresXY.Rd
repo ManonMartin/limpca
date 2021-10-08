@@ -4,8 +4,15 @@
 \alias{PlotScoresXY}
 \title{Plotting the scores from the PCALMEffects function}
 \usage{
-PlotScoresXY(ResPCALMEffects, design, EffectVector, PCaxes = c(1, 2),
-  varname.color, varname.pch, ...)
+PlotScoresXY(
+  ResPCALMEffects,
+  design,
+  EffectVector,
+  PCaxes = c(1, 2),
+  varname.color,
+  varname.pch,
+  ...
+)
 }
 \arguments{
 \item{ResPCALMEffects}{A list of p elements depending of the model terms from \code{\link{PCALMEffects}}}

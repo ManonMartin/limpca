@@ -4,11 +4,22 @@
 \alias{PlotScoresMatrix}
 \title{Plotting a Scores Matrix}
 \usage{
-PlotScoresMatrix(ResPCALMEffects, ModelAbbrev = FALSE, design,
-  EffectNames = NULL, alleffect, PCdim = NULL,
-  varname.colorup = NULL, varname.colordown = NULL,
-  varname.pchup = NULL, varname.pchdown = NULL, vec.colorup = NULL,
-  vec.colordown = NULL, vec.pchup = NULL, vec.pchdown = NULL)
+PlotScoresMatrix(
+  ResPCALMEffects,
+  ModelAbbrev = FALSE,
+  design,
+  EffectNames = NULL,
+  alleffect,
+  PCdim = NULL,
+  varname.colorup = NULL,
+  varname.colordown = NULL,
+  varname.pchup = NULL,
+  varname.pchdown = NULL,
+  vec.colorup = NULL,
+  vec.colordown = NULL,
+  vec.pchup = NULL,
+  vec.pchdown = NULL
+)
 }
 \arguments{
 \item{ResPCALMEffects}{A list of p+3 elements depending of the model terms from \code{\link{PCALMEffects}}}
