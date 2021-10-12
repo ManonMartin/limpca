@@ -4,54 +4,77 @@
 \alias{LinePlot}
 \title{Line plots}
 \usage{
-LinePlot(X, createWindow = FALSE, main = NULL, rows = NULL,
-  type = c("l", "p", "s"), num.stacked = 4, xlab = NULL,
-  ylab = NULL, ang = c("0", "45", "90"), xaxis_type = c("numerical",
-  "character"), nxaxis = 10, y_axis_text = TRUE, xaxis_size = 11)
+LinePlot(
+  X,
+  title = "Line plot",
+  rows = 1,
+  type = c("l", "p", "s"),
+  xlab = NULL,
+  ylab = NULL,
+  xaxis_type = c("numeric", "character"),
+  stacked = FALSE,
+  ncol = 1,
+  nrow = NULL,
+  hline = 0,
+  size = 0.5,
+  color = NULL,
+  shape = 1,
+  theme = theme_bw()
+)
 }
 \arguments{
 \item{X}{A numerical matrix containing the rows to be drawn.}
 
-\item{createWindow}{If \code{TRUE}, will create a new window for the plot.}
+\item{title}{Plot title.}
 
-\item{main}{Plot title. If \code{NULL}, default title is provided.}
+\item{rows}{A vector with either the row name(s) of the X matrix to plot (character) or the row index position(s).}
 
-\item{rows}{Numerical vector indicating the X matrix rows that are drawn.}
+\item{type}{Type of graph to be drawn: "p" for point, "l" for line or "s" for segment.}
 
-\item{type}{The type of plot, either a line plot (\code{'l'}), points (\code{'p'}) or segments (\code{'s'}).}
+\item{xlab}{If not \code{NULL}, label for the x-axis.}
 
-\item{num.stacked}{Number of stacked plots.}
+\item{ylab}{If not \code{NULL}, label for the y-axis.}
 
-\item{xlab}{Label for the x-axis.}
+\item{xaxis_type}{The data type of the x axis: either "numeric" or "character".}
 
-\item{ylab}{Label for the y-axis.}
+\item{stacked}{Logical. If \code{TRUE}, will draw stacked plots, otherwise will draw separate plots.}
 
-\item{ang}{Angle to rotate the x axis labels for a better visualisation, either 0, 45 or 90 degrees.}
+\item{ncol}{If stacked is \code{FALSE}, the number of columns to represent the separate plots.}
 
-\item{xaxis_type}{Specify if the xaxis is numerical or character (corresponds to the colnames of X).}
+\item{nrow}{If stacked is \code{FALSE}, the number of rows to represent the separate plots.}
 
-\item{nxaxis}{Number of thick marks on the xaxis for a character x variable.}
+\item{hline}{If not \code{NULL}, draws (a) horizontal line(s).}
 
-\item{y_axis_text}{if \code{TRUE}, will display the y-axis text.}
+\item{size}{Argument of length 1 giving the points size (if \code{type} == "p") or the line size (if \code{type} == "l" or "s").}
 
-\item{xaxis_size}{Size of the x axis.}
+\item{color}{If not \code{NULL}, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.}
+
+\item{shape}{The points shape if \code{type} == "p" (argument of length 1).}
+
+\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A loading plot in the current device.
+A line plot.
 }
 \description{
-Draws Line plots.
-}
-\details{
-Better results printping is obtained by saving the plot as an object
+Draws Line plot(s).
 }
 \examples{
 
-X <- rbind(sample(1:20,20), sample(21:40,20), sample(41:60,20))
-colnames(X) <- as.character(1:20)
+LinePlot(X = UCH$outcomes)
 
-a <- LinePlot(X = X, createWindow = FALSE, main = "line plot",  rows = c(1, 2),
-             type = "l", num.stacked = 4, xlab = "x-axis", ylab = "y-axis",
-             ang = "0", xaxis_type = "numerical", nxaxis = 10)
+# separate plots
+LinePlot(X = UCH$outcomes, rows = c(1:4), hline = NULL)
+LinePlot(X = UCH$outcomes, rows = c(1:4), color = 2)
+LinePlot(X = UCH$outcomes, rows = c(1:8), ncol=2)
+LinePlot(X = UCH$outcomes, type = "p", 
+         rows = c(1:8), ncol=2)
+
+# stacked plots
+LinePlot(X = UCH$outcomes, rows = c(1:4), 
+         stacked = TRUE, color = "rows") + 
+         scale_color_brewer(palette="Set1")
+
+
 
 }

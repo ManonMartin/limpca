@@ -4,10 +4,10 @@
 \alias{SVDforPCA}
 \title{Singular value decomposition for PCA analysis}
 \usage{
-SVDforPCA(x, ncomp = min(dim(x)))
+SVDforPCA(outcomes, ncomp = min(dim(outcomes)))
 }
 \arguments{
-\item{x}{A data matrix on which will be based the analysis.}
+\item{outcomes}{The nxm matrix with n observations and m response variables.}
 
 \item{ncomp}{Number of Principal Components.}
 }
@@ -26,7 +26,7 @@ A list with the following elements:
 }
 }
 \description{
-PCA over a X matrix by singular value decomposition, the preprocessing involves the mean-centering of X.
+PCA by singular value decomposition, the preprocessing involves the mean-centering of X.
 }
 \examples{
 data('UCH')

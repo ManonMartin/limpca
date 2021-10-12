@@ -2,197 +2,175 @@
 #' @title Line plots
 #'
 #' @description
-#' Draws Line plots.
+#' Draws Line plot(s).
 #'
 #' @param X A numerical matrix containing the rows to be drawn.
-#' @param createWindow If \code{TRUE}, will create a new window for the plot.
-#' @param main Plot title. If \code{NULL}, default title is provided.
-#' @param rows Numerical vector indicating the X matrix rows that are drawn.
-#' @param type The type of plot, either a line plot (\code{'l'}), points (\code{'p'}) or segments (\code{'s'}).
-#' @param num.stacked Number of stacked plots.
-#' @param xlab Label for the x-axis.
-#' @param ylab Label for the y-axis.
-#' @param ang Angle to rotate the x axis labels for a better visualisation, either 0, 45 or 90 degrees.
-#' @param xaxis_type Specify if the xaxis is numerical or character (corresponds to the colnames of X).
-#' @param nxaxis Number of thick marks on the xaxis for a character x variable.
-#' @param y_axis_text if \code{TRUE}, will display the y-axis text.
-#' @param xaxis_size Size of the x axis.
+#' @param title Plot title.
+#' @param rows A vector with either the row name(s) of the X matrix to plot (character) or the row index position(s).
+#' @param type Type of graph to be drawn: "p" for point, "l" for line or "s" for segment. 
+#' @param xlab If not \code{NULL}, label for the x-axis.
+#' @param ylab If not \code{NULL}, label for the y-axis.
+#' @param xaxis_type The data type of the x axis: either "numeric" or "character".
+#' @param stacked Logical. If `TRUE`, will draw stacked plots, otherwise will draw separate plots.
+#' @param ncol If stacked is `FALSE`, the number of columns to represent the separate plots.
+#' @param nrow If stacked is `FALSE`, the number of rows to represent the separate plots.
+#' @param hline If not \code{NULL}, draws (a) horizontal line(s).
+#' @param size Argument of length 1 giving the points size (if `type` == "p") or the line size (if `type` == "l" or "s").
+#' @param color If not `NULL`, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.
+#' @param shape The points shape if `type` == "p" (argument of length 1).
+#' @param theme ggplot theme, see `?ggtheme` for more info. 
 #'
-#' @return A loading plot in the current device.
-#'
-#' @details
-#' Better results printping is obtained by saving the plot as an object
+#' @return A line plot.
 #'
 #' @examples
 #'
-#' X <- rbind(sample(1:20,20), sample(21:40,20), sample(41:60,20))
-#' colnames(X) <- as.character(1:20)
+#'LinePlot(X = UCH$outcomes)
 #'
-#' a <- LinePlot(X = X, createWindow = FALSE, main = "line plot",  rows = c(1, 2),
-#'              type = "l", num.stacked = 4, xlab = "x-axis", ylab = "y-axis",
-#'              ang = "0", xaxis_type = "numerical", nxaxis = 10)
+#' # separate plots
+#' LinePlot(X = UCH$outcomes, rows = c(1:4), hline = NULL)
+#' LinePlot(X = UCH$outcomes, rows = c(1:4), color = 2)
+#' LinePlot(X = UCH$outcomes, rows = c(1:8), ncol=2)
+#' LinePlot(X = UCH$outcomes, type = "p", 
+#'          rows = c(1:8), ncol=2)
 #'
-#' @importFrom grDevices dev.new
+#' # stacked plots
+#' LinePlot(X = UCH$outcomes, rows = c(1:4), 
+#'          stacked = TRUE, color = "rows") + 
+#'          scale_color_brewer(palette="Set1")
+#'
+#'
+#'
+#' @import tidyr
 #' @import ggplot2
-#' @import reshape2
-#' @import gridExtra
+#' @import dplyr
+#' @import tibble
 
 
-
-LinePlot <- function(X, createWindow = FALSE, main = NULL,  rows=NULL,
-                     type = c("l", "p", "s"), num.stacked = 4, xlab = NULL, ylab = NULL,
-                     ang = c("0", "45", "90"), xaxis_type = c("numerical", "character"), nxaxis = 10,
-                     y_axis_text = TRUE, xaxis_size = 11) {
-
-  checkArg(main, "str", can.be.null = TRUE)
-  checkArg(nxaxis, "num", can.be.null = FALSE)
-  checkArg(xaxis_size, "num", can.be.null = FALSE)
-
+LinePlot <- function(X, title = "Line plot",  rows = 1,
+                     type = c("l", "p", "s"), xlab = NULL, ylab = NULL,
+                     xaxis_type = c("numeric", "character"), stacked = FALSE,
+                     ncol = 1, nrow = NULL, hline = 0, size = 0.5,
+                     color = NULL, shape = 1, theme = theme_bw()) {
+  
+  # checks =========================
+  checkArg(X,"matrix",can.be.null = FALSE)
+  checkArg(title, c("str", "length1"), can.be.null = TRUE)
+  checkArg(xlab, c("str", "length1"), can.be.null = TRUE)
+  checkArg(ylab, c("str", "length1"), can.be.null = TRUE)
+  if (!is.null(ncol)){
+    checkArg(ncol, c("int","length1"), can.be.null = FALSE)
+  }
+  if (!is.null(nrow)){
+    checkArg(nrow, c("int","length1"), can.be.null = FALSE)
+  }
+  checkArg(hline, "num", can.be.null = TRUE)
+  checkArg(size, "num", can.be.null = FALSE)
+  checkArg(color, "length1", can.be.null = TRUE)
+  checkArg(shape, "length1", can.be.null = FALSE)  
+  checkArg(stacked, "bool", can.be.null = FALSE)  
+  
   type <- match.arg(type)
-
   xaxis_type <- match.arg(xaxis_type)
-
-  ang <- match.arg(ang)
-
-  if (ang %in% c("0", "45")) {
-    vjust <- 1
-    hjust <- 0.5
+  
+  if(is.numeric(rows)){
+    checkArg(rows, c("pos","int"), can.be.null = FALSE)
+  }
+  
+  if (!is.numeric(rows) & !is.character(rows)){
+    stop("rows is neither numeric or character")
+  }
+  
+  # prepare the arguments  ==============================
+  
+  if (is.numeric(rows)){
+    rows <- rownames(X)[rows]
+  }
+  
+  X <- t(X[rows,, drop=FALSE])
+  
+  mn_xy <- make.names(rows) # correct the naming of variables
+  
+  X <- X %>% as.data.frame() %>%
+    tibble::rownames_to_column(var = "x_axis")
+  
+  X_long <-  X %>% tidyr::pivot_longer(all_of(mn_xy), names_to = "rownames") 
+  
+  if (xaxis_type == "numeric") {
+    rn <- X_long$x_axis
+    rn <- as.numeric(rn)
+    if(sum(is.na(rn))>0){
+      stop("cannot convert column names to numerical, change xaxis_type from numeric to character")
+    } else{
+      X_long$x_axis <- rn
+    }
+  }
+  
+  if (!is.null(color)){
+    if (color == "rows"){
+      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value, 
+                                                         group = rownames, color = rownames)) 
+      color <- NULL
+    } else {
+      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value, 
+                                                         group = rownames))
+    }
   } else {
-    vjust <- 0.5
-    hjust <- 1
+      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value, 
+                                                         group = rownames)) 
   }
-
-
-  m <- dim(X)[1]
-  nn <- dim(X)[2]
-
-
-  if (is.vector(X)){
-    if (xaxis_type=="numerical"){
-      X <- matrix(X, nrow = 1, dimnames = list(deparse(substitute(X)), 1:nn))
-    }else{
-      X <- matrix(X, nrow = 1, dimnames = list(deparse(substitute(X)), paste0("V",1:nn)))
+  
+  
+  fig <- fig + ggplot2::xlab(xlab) + ggplot2::ylab(ylab) +
+    theme
+  
+  # revert x axis if necessary 
+  if (xaxis_type == "numeric")  {
+    if ((X_long$x_axis[1] - X_long$x_axis[nrow(X_long)]) > 0) {
+      fig <- fig + ggplot2::scale_x_reverse()
     }
   }
-
-
-  if (is.null(rownames(X))){
-    if (m==1){
-      rownames(X) = deparse(substitute(X))
-    }else{rownames(X) <- 1:m}
+  
+  if (!is.null(hline)){
+    fig <- fig + ggplot2::geom_hline(yintercept = hline,
+                                     size = 0.5, linetype = "dashed", 
+                                     colour = "gray60")
   }
-
-  if (is.null(colnames(X))) {
-    if (xaxis_type=="numerical"){
-      colnames(X) <- 1:nn
-    }else{
-      colnames(X) <- paste0("V",1:nn)
+  
+  if (type == "l"){
+    if (!is.null(color)){
+      fig <- fig + ggplot2::geom_line(color = color, size = size) 
+    } else{ 
+      fig <- fig + ggplot2::geom_line(size = size) 
     }
   }
-
-  X <- as.data.frame(X)
-
-  plots <- list()
-  plot <- list()
-  Var <- colname <- value <- index <- NULL  # only for R CMD check
-
-  ##########################################
-
-
-  # labs
-  if (is.null(rows)){
-    n <- m
-  } else {
-    n <- length(rows)
-    X <- X[rows,]
-  } # number of line plots to draw
-
-
-  j <- 1
-  i <- 1
-  while (i <= n) {
-
-
-    last <- min(i + num.stacked - 1, n)
-
-    melted <- reshape2::melt(t(X[i:last, ]), varnames = c("Var", "colname"))
-    if (n==1){
-      if (!is.null(rows)) {
-        melted[,"colname"] <-  rep(row.names(X)[rows],nn)
-      } else { melted[,"colname"] <-  rep(row.names(X),nn)}
+  
+  
+  
+  if (type == "p"){
+    if (!is.null(color)){
+      fig <- fig + ggplot2::geom_point(size = size, shape = shape, color = color)
+    } else{ 
+      fig <- fig + ggplot2::geom_point(size = size, shape = shape)
     }
-
-
-
-    if (xaxis_type == "numerical") {
-      plot <- ggplot2::ggplot(data = melted, ggplot2::aes(x = Var, y = value))
-    }else{
-      melted$index <- as.numeric(as.factor(melted$Var))
-      melted <- as.data.frame(melted)
-      plot <- ggplot2::ggplot(data = melted, ggplot2::aes(x = index, y = value))
-    }
-
-    plot <- plot + ggplot2::theme_bw()
-    if (type == "p") {
-      plot <- plot + ggplot2::geom_point(size=0.5)
-      if (xaxis_type == "character"){
-        plot <- plot + ggplot2::scale_x_continuous(breaks = seq(1, nn, floor(nn/nxaxis)),
-                                                   labels = colnames(X)[seq(1, nn, floor(nn/nxaxis))])
-      }
-    } else if (type == "l")  {
-      plot <- plot + ggplot2::geom_line()
-      if (xaxis_type == "character"){
-        plot <- plot + ggplot2::scale_x_continuous(breaks = seq(1, nn, floor(nn/nxaxis)),
-                                                   labels = colnames(X)[seq(1, nn, floor(nn/nxaxis))])
-      }
-    } else  {
-      plot <- plot + ggplot2::geom_hline(yintercept = 0, color = "grey")
-
-      if (xaxis_type == "numerical"){
-        plot <- plot + ggplot2::geom_segment(ggplot2::aes(xend = Var, yend = 0),
-                                             size = 0.5, lineend = "round")
-      } else {
-        plot <- plot + ggplot2::geom_segment(ggplot2::aes(xend = index, yend = 0),
-                                             size = 0.5, lineend = "round")
-
-        plot <- plot + ggplot2::scale_x_continuous(breaks = seq(1, nn, floor(nn/nxaxis)),
-                                                   labels = colnames(X)[seq(1, nn, floor(nn/nxaxis))])
-
-      }
-
-    }
-
-
-    plot <- plot + ggplot2::labs(title = main, x = xlab, y = ylab) + ggplot2::facet_grid(colname ~., scales = "free_y") +
-      ggplot2::theme(axis.text.x = ggplot2::element_text(angle = as.numeric(ang), vjust = vjust, hjust = hjust,
-                                                         size = xaxis_size)) +
-      ggplot2::theme(strip.text.y = ggplot2::element_text(angle = 90)) +
-      ggplot2::theme(legend.position = "none") +
-      ggplot2::geom_hline(yintercept = 0, size = 0.5, linetype = "dashed", colour = "gray60")
-
-    if (!y_axis_text) {
-      plot <- plot +
-        ggplot2::theme(axis.text.y = element_blank(), axis.ticks.y = element_blank())
-    }
-
-    if (xaxis_type == "numerical")  {
-      if ((melted[1, "Var"] - melted[(dim(melted)[1]), "Var"]) > 0) {
-        plot <- plot + ggplot2::scale_x_reverse()
-      }
-    }
-
-    plots[[j]] <- plot
-    i <- last + 1
-
-    if (createWindow)  {
-      grDevices::dev.new(noRStudioGD = TRUE)
-    }
-
-    # gridExtra::grid.arrange(plot)
-    j <- j + 1
-
   }
-
-  return(plots)
-
-}  # END
+  
+  if (type == "s"){
+    if (!is.null(color)){
+      fig <- fig + ggplot2::geom_segment(aes(xend = x_axis, yend = 0),
+                                         size = size, lineend = "round", color = color)
+    } else{ 
+      fig <- fig + ggplot2::geom_segment(aes(xend = x_axis, yend = 0),
+                                         size = size, lineend = "round")
+    }
+  }
+  
+  
+  if(! stacked){
+    # facet_wrap
+    fig <- fig + 
+      ggplot2::facet_wrap(~ rownames, ncol = ncol, nrow = nrow)  
+  }
+  
+  return(fig)
+  
+}
