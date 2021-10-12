@@ -4,11 +4,11 @@
 #' @description
 #' Draws a scatter plot.
 #'
-#' @param outcomes The nxm matrix with n observations and m response variables.
-#' @param design The nxk "free encoded" experimental design data frame.
-#' @param xy x- and y-axis values: A vector of length 2 with either column names of the outcomes matrix to plot (character) or the index positions.
-#' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color
-#' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape
+#' @param X A nxm matrix with n observations and m variables.
+#' @param design A nxk "free encoded" experimental design data frame.
+#' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the X matrix to plot (character) or the index position(s).
+#' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color.
+#' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape.
 #' @param points_labs If not \code{NULL}, a character vector with point labels.
 #' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
@@ -28,38 +28,38 @@
 #' data("UCH")
 #' 
 #' # With color and shape
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #' xy = c(453, 369), color = "Hippurate",  shape = "Citrate")
 #' 
 #' # With color and drawShapes
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #'             xy = c(453, 369), color = "Hippurate", 
 #'             drawShapes = "ellipse")
 #' 
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #'             xy = c(453, 369), color = "Hippurate", 
 #'             drawShapes = "polygon")
 #' 
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #'             xy = c(453, 369), color = "Hippurate", 
 #'             drawShapes = "segment") 
 #' 
 #' # customize shapes
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #'             xy = c(453, 369), shape = "Hippurate", size = 3) + 
 #'   scale_discrete_identity(aesthetics = 'shape', 
 #'                           guide = 'legend')
 #' 
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #'             xy = c(453, 369), shape = "Hippurate") + 
 #'   scale_shape_discrete(solid=FALSE)
 #' 
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #'             xy = c(453, 369), shape = "Hippurate") + 
 #'   scale_shape_manual(values = c(15,16,17))
 #'
 #' # with labels
-#' ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 #' xy = c(453, 369), points_labs = rownames(UCH$design))
 #'
 #' @import ggplot2
@@ -67,7 +67,7 @@
 #' @import dplyr
 #' @importFrom plyr ddply
 
-ScatterPlot <- function(outcomes, design, xy, color = NULL, 
+ScatterPlot <- function(X, design, xy, color = NULL, 
                         shape = NULL, points_labs = NULL,
                         title = "scatterplot", xlab = NULL, 
                         ylab = NULL, size = 2,  size_lab = 3, 
@@ -78,7 +78,7 @@ ScatterPlot <- function(outcomes, design, xy, color = NULL,
   
   # checks ==============================
   checkArg(design,"data.frame",can.be.null = FALSE)
-  checkArg(outcomes,"matrix",can.be.null = FALSE)
+  checkArg(X,"matrix",can.be.null = FALSE)
   checkArg(color,c("str","length1"),can.be.null = TRUE)
   checkArg(shape,c("str","length1"),can.be.null = TRUE)
   checkArg(points_labs,"str", can.be.null = TRUE)
@@ -115,7 +115,7 @@ ScatterPlot <- function(outcomes, design, xy, color = NULL,
   
   # prepare the arguments  ==============================
   if (is.numeric(xy)){
-    xy <- colnames(outcomes)[xy]
+    xy <- colnames(X)[xy]
   }
   mn_xy <- make.names(xy) # correct the naming of variables
   
@@ -126,7 +126,7 @@ ScatterPlot <- function(outcomes, design, xy, color = NULL,
     ylab <- xy[2]
   }
   
-  out_df <- outcomes[,c(xy)]
+  out_df <- X[,c(xy)]
   colnames(out_df) <- mn_xy
   
   design_df <- design[,c(color, shape), drop = FALSE]

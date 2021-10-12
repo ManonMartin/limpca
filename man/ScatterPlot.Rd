@@ -5,7 +5,7 @@
 \title{ScatterPlot}
 \usage{
 ScatterPlot(
-  outcomes,
+  X,
   design,
   xy,
   color = NULL,
@@ -24,15 +24,15 @@ ScatterPlot(
 )
 }
 \arguments{
-\item{outcomes}{The nxm matrix with n observations and m response variables.}
+\item{X}{A nxm matrix with n observations and m variables.}
 
-\item{design}{The nxk "free encoded" experimental design data frame.}
+\item{design}{A nxk "free encoded" experimental design data frame.}
 
-\item{xy}{x- and y-axis values: A vector of length 2 with either column names of the outcomes matrix to plot (character) or the index positions.}
+\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the X matrix to plot (character) or the index position(s).}
 
-\item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color}
+\item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color.}
 
-\item{shape}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as shape}
+\item{shape}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as shape.}
 
 \item{points_labs}{If not \code{NULL}, a character vector with point labels.}
 
@@ -67,38 +67,38 @@ Draws a scatter plot.
 data("UCH")
 
 # With color and shape
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 xy = c(453, 369), color = "Hippurate",  shape = "Citrate")
 
 # With color and drawShapes
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), color = "Hippurate", 
             drawShapes = "ellipse")
 
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), color = "Hippurate", 
             drawShapes = "polygon")
 
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), color = "Hippurate", 
             drawShapes = "segment") 
 
 # customize shapes
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), shape = "Hippurate", size = 3) + 
   scale_discrete_identity(aesthetics = 'shape', 
                           guide = 'legend')
 
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), shape = "Hippurate") + 
   scale_shape_discrete(solid=FALSE)
 
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), shape = "Hippurate") + 
   scale_shape_manual(values = c(15,16,17))
 
 # with labels
-ScatterPlot(outcomes = UCH$outcomes, design = UCH$design, 
+ScatterPlot(X = UCH$outcomes, design = UCH$design, 
 xy = c(453, 369), points_labs = rownames(UCH$design))
 
 }
