@@ -87,10 +87,28 @@ The UCH dataset stands for Urine-Citrate-Hippurate and comes from \textit{Rousse
 The 600 response variables are the spectrum of the H-NMR for each observations. 
 
 ```{r Spectrum visualization}
-
-LinePlot(UCH$outcomes[1:2,],main="H-NMR spectrum")
-
+LinePlot(UCH$outcomes, title="H-NMR spectrum", rows = c(1,2))
 ```
+
+
+Variables (ppm) Visualization
+
+```{r}
+# xy corresponds to citrate (453) and hippurate peaks (369)
+
+ScatterPlot(X = UCH$outcomes, 
+            design = UCH$design, 
+            xy = c(453, 369),
+            color = "Hippurate", 
+            shape = "Citrate")
+# Or
+ScatterPlot(X = UCH$outcomes, 
+            design = UCH$design, 
+            xy = c("2.6092056","3.9811536"), 
+            color = "Hippurate", 
+            shape = "Citrate")
+```
+
 
 ## Formula
 
@@ -113,6 +131,13 @@ pander(head(UCH$design))
 table(UCH$design$Hippurate,UCH$design$Citrate,UCH$design$Time)
 
 ```
+
+```{r}
+PlotDesign(data = UCH$design, x = "Hippurate", 
+           y = "Citrate",rows = "Day", 
+           title = "Design of the UCH dataset")
+```
+
 
 ## Principal Component Analysis
 
@@ -139,11 +164,14 @@ ggplot2::ggplot(data=as.data.frame(eig.res[1,]),ggplot2::aes(x=colnames(eig.res)
 
 # ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
 
-DrawScores(ResPCA, type.obj = "PCA", drawNames = TRUE, createWindow = F, 
-    main = "Reponse matrix score plot", color = UCH$design$Citrate, pch = UCH$design$Hippurate, 
-    axes = c(1, 2), size = 2.5) + ggplot2::scale_color_discrete(name = "Citrate") + ggplot2::scale_shape_discrete(name = "Hippurate")
+PCAScorePlot(ResSVDforPCA = ResPCA, axes = c(1,2), 
+             title = "Reponse matrix scores plot", 
+             design = UCH$design,
+             color = "Hippurate", shape = "Citrate",
+             points_labs_rn = TRUE)
 
 ```
+
 
 ```{r Loadings}
 DrawLoadings(ResPCA,type.obj = "PCA", main="Loadings from the two first component")

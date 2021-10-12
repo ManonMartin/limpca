@@ -6,8 +6,8 @@
 \usage{
 ScatterPlot(
   X,
-  design,
   xy,
+  design = NULL,
   color = NULL,
   shape = NULL,
   points_labs = NULL,
@@ -18,7 +18,7 @@ ScatterPlot(
   size_lab = 3,
   drawShapes = c("none", "ellipse", "polygon", "segment"),
   theme = theme_bw(),
-  typeEl = "norm",
+  typeEl = c("norm", "t", "euclid"),
   levelEl = 0.9,
   alphaPoly = 0.4
 )
@@ -26,9 +26,9 @@ ScatterPlot(
 \arguments{
 \item{X}{A nxm matrix with n observations and m variables.}
 
-\item{design}{A nxk "free encoded" experimental design data frame.}
-
 \item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the X matrix to plot (character) or the index position(s).}
+
+\item{design}{A nxk "free encoded" experimental design data frame.}
 
 \item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color.}
 
@@ -46,7 +46,7 @@ ScatterPlot(
 
 \item{size_lab}{The size of points labels.}
 
-\item{drawShapes}{Mulitple shapes can be drawn based on the \code{color}: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).}
+\item{drawShapes}{Multiple shapes can be drawn based on the \code{color}: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).}
 
 \item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 
@@ -57,7 +57,7 @@ ScatterPlot(
 \item{alphaPoly}{The degree of transparency for polygons.}
 }
 \value{
-A scatterplot in the current device.
+A scatterplot.
 }
 \description{
 Draws a scatter plot.
@@ -66,9 +66,14 @@ Draws a scatter plot.
 
 data("UCH")
 
+# Without design 
+ScatterPlot(X = UCH$outcomes, xy = c(453, 369))
+
+
 # With color and shape
 ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-xy = c(453, 369), color = "Hippurate",  shape = "Citrate")
+            xy = c(453, 369), color = "Hippurate",  
+            shape = "Citrate")
 
 # With color and drawShapes
 ScatterPlot(X = UCH$outcomes, design = UCH$design, 
@@ -83,7 +88,7 @@ ScatterPlot(X = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate", 
             drawShapes = "segment") 
 
-# customize shapes
+# Customize shapes
 ScatterPlot(X = UCH$outcomes, design = UCH$design, 
             xy = c(453, 369), shape = "Hippurate", size = 3) + 
   scale_discrete_identity(aesthetics = 'shape', 
@@ -97,8 +102,8 @@ ScatterPlot(X = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), shape = "Hippurate") + 
   scale_shape_manual(values = c(15,16,17))
 
-# with labels
+# With labels
 ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-xy = c(453, 369), points_labs = rownames(UCH$design))
+            xy = c(453, 369), points_labs = rownames(UCH$design))
 
 }

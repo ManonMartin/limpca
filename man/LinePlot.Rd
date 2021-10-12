@@ -18,7 +18,8 @@ LinePlot(
   hline = 0,
   size = 0.5,
   color = NULL,
-  shape = 1
+  shape = 1,
+  theme = theme_bw()
 )
 }
 \arguments{
@@ -49,6 +50,8 @@ LinePlot(
 \item{color}{If not \code{NULL}, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.}
 
 \item{shape}{The points shape if \code{type} == "p" (argument of length 1).}
+
+\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
 A line plot.

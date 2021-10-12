@@ -1,10 +1,10 @@
 checkArg = function(arg, checks, can.be.null = FALSE){
   check.list <- list(bool = c(is.logical, "a boolean"),
-                     int = c(function(x) x == round(x), "an integer"),
+                     int = c(function(x) identical(as.numeric(x),round(as.numeric(x))), "an integer"),
                      num = c(is.numeric, "a numeric"),
                      str = c(is.character, "a character string"),
-                     pos = c(function(x) {x > 0 }, "positive"),
-                     pos0 = c(function(x) {x >= 0}, "positive or zero"),
+                     pos = c(function(x) {min(x)>0}, "positive"),
+                     pos0 = c(function(x) {min(x) >= 0}, "positive or zero"),
                      formula = c(plyr::is.formula,"a formula"),
                      data.frame = c(is.data.frame,"a dataframe"),
                      matrix = c(is.matrix,"a matrix"),

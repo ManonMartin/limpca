@@ -4,28 +4,61 @@
 \alias{PlotDesign}
 \title{Plot the design matrix}
 \usage{
-PlotDesign(design, var1_name, var2_name, var3_name)
+PlotDesign(
+  design,
+  x,
+  y,
+  rows = NULL,
+  cols = NULL,
+  title = "Plot of the design"
+)
 }
 \arguments{
-\item{design}{Design matrix of the data}
+\item{design}{A nxk "free encoded" experimental design data frame.}
 
-\item{var1_name}{Variable for the X axis}
+\item{x}{A character string giving the column name of \code{design} to be used for the x axis.}
 
-\item{var2_name}{Variable for the Y axis}
+\item{y}{A character string giving the column name of \code{design} to be used for the y axis.}
 
-\item{var3_name}{Variable used for the color, the size and the shape}
+\item{rows}{If not \code{NULL},  a character vector with one or several column name(s) of \code{design} to be used for facetting along the rows.}
+
+\item{cols}{If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for facetting along the columns}
+
+\item{title}{Plot title.}
 }
 \value{
-A ggplot of the design
+A plot of the design.
 }
 \description{
 Plot the experimental design of the data
 }
 \examples{
-data("UCH")
-PlotDesign(design=UCH$design,var1_name="Hippurate",var2_name="Citrate",var3_name="Day")
 
-}
-\author{
-Sebastien Franceschini
+### mtcars
+data(mtcars)
+df <-  mtcars \%>\% 
+  select(cyl, vs, am, gear, carb) \%>\%
+  as.data.frame() \%>\% 
+  mutate(across(everything(), as.factor))
+  
+# 2 factors
+PlotDesign(data = df, x = "cyl", y = "vs",rows = NULL,
+          cols = NULL)
+# 3 factors
+PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am"),
+          cols = NULL)
+# 4 factors
+PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am"),
+          cols = c("gear"))
+# 5 factors
+PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+          cols = c("gear"))
+
+PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+         cols = c("vs"))
+
+### UCH
+data("UCH")
+PlotDesign(data = UCH$design, x = "Hippurate", y = "Citrate",rows = "Day")
+
 }

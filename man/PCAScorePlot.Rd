@@ -13,7 +13,7 @@ PCAScorePlot(ResSVDforPCA, axes = c(1, 2), title = "PCA scores plot", ...)
 
 \item{title}{Plot title.}
 
-\item{...}{additional arguments to be passed to \code{\link{ScatterPlot}}.}
+\item{...}{Additional arguments to be passed to \code{\link{ScatterPlot}}.}
 }
 \value{
 A PCA scores plot.

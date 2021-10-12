@@ -18,7 +18,7 @@
 #' @param size Argument of length 1 giving the points size (if `type` == "p") or the line size (if `type` == "l" or "s").
 #' @param color If not `NULL`, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.
 #' @param shape The points shape if `type` == "p" (argument of length 1).
-#'  
+#' @param theme ggplot theme, see `?ggtheme` for more info. 
 #'
 #' @return A line plot.
 #'
@@ -50,7 +50,7 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
                      type = c("l", "p", "s"), xlab = NULL, ylab = NULL,
                      xaxis_type = c("numeric", "character"), stacked = FALSE,
                      ncol = 1, nrow = NULL, hline = 0, size = 0.5,
-                     color = NULL, shape = 1) {
+                     color = NULL, shape = 1, theme = theme_bw()) {
   
   # checks =========================
   checkArg(X,"matrix",can.be.null = FALSE)
@@ -71,6 +71,10 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
   
   type <- match.arg(type)
   xaxis_type <- match.arg(xaxis_type)
+  
+  if(is.numeric(rows)){
+    checkArg(rows, c("pos","int"), can.be.null = FALSE)
+  }
   
   if (!is.numeric(rows) & !is.character(rows)){
     stop("rows is neither numeric or character")
@@ -102,19 +106,22 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
   }
   
   if (!is.null(color)){
-    if (color == "rows"){ 
+    if (color == "rows"){
       fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value, 
                                                          group = rownames, color = rownames)) 
       color <- NULL
+    } else {
+      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value, 
+                                                         group = rownames))
     }
-    else {
+  } else {
       fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value, 
                                                          group = rownames)) 
-    }
   }
   
   
-  fig <- fig + ggplot2::xlab(xlab) + ggplot2::ylab(ylab)
+  fig <- fig + ggplot2::xlab(xlab) + ggplot2::ylab(ylab) +
+    theme
   
   # revert x axis if necessary 
   if (xaxis_type == "numeric")  {
