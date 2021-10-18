@@ -133,8 +133,8 @@ table(UCH$design$Hippurate,UCH$design$Citrate,UCH$design$Time)
 ```
 
 ```{r}
-PlotDesign(data = UCH$design, x = "Hippurate", 
-           y = "Citrate",rows = "Day", 
+PlotDesign(design = UCH$design, x = "Hippurate", 
+           y = "Citrate", rows = "Day", 
            title = "Design of the UCH dataset")
 ```
 
@@ -174,7 +174,9 @@ PCAScorePlot(ResSVDforPCA = ResPCA, axes = c(1,2),
 
 
 ```{r Loadings}
-DrawLoadings(ResPCA,type.obj = "PCA", main="Loadings from the two first component")
+# DrawLoadings(ResPCA,type.obj = "PCA", main="Loadings from the two first component")
+PCALoadingPlot(ResSVDforPCA = ResPCA, axes = c(1,2), 
+               title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Values")
 ```
 
 # GLM decomposition

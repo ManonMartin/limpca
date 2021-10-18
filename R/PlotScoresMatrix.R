@@ -9,7 +9,7 @@
 #' @param alleffect A logical whether to plot every effect
 #' @param PCdim A numeric vector with the same length than EffectNames and indicating the number of component to plot
 #' @param varname.colorup A character with the name of variable used to color the upper triangle
-#' @param varname.colordown A character with the name of variable used to color the upper triangle
+#' @param varname.colordown A character with the name of variable used to color the lower triangle
 #' @param varname.pchup A character with the name of variable used to mark points from the upper triangle
 #' @param varname.pchdown A character with the name of variable used to mark points from the lower triangle
 #' @param vec.colorup A color vector with a length equivalent to the number of levels from varname.colorup
