@@ -4,7 +4,13 @@
 \alias{PCAScorePlot}
 \title{Scores plots}
 \usage{
-PCAScorePlot(ResSVDforPCA, axes = c(1, 2), title = "PCA scores plot", ...)
+PCAScorePlot(
+  ResSVDforPCA,
+  axes = c(1, 2),
+  title = "PCA scores plot",
+  points_labs_rn = FALSE,
+  ...
+)
 }
 \arguments{
 \item{ResSVDforPCA}{A list corresponding to the output value of \code{\link{SVDforPCA}}.}
@@ -12,6 +18,8 @@ PCAScorePlot(ResSVDforPCA, axes = c(1, 2), title = "PCA scores plot", ...)
 \item{axes}{A numerical vector with the 2 Principal Components axes to be drawn.}
 
 \item{title}{Plot title.}
+
+\item{points_labs_rn}{Boolean indicating if the rownames of the scores matrix should be plotted.}
 
 \item{...}{Additional arguments to be passed to \code{\link{ScatterPlot}}.}
 }

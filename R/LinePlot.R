@@ -14,6 +14,7 @@
 #' @param stacked Logical. If `TRUE`, will draw stacked plots, otherwise will draw separate plots.
 #' @param ncol If stacked is `FALSE`, the number of columns to represent the separate plots.
 #' @param nrow If stacked is `FALSE`, the number of rows to represent the separate plots.
+#' @param facet_label If stacked is `FALSE`, the labels of the separate plots.
 #' @param hline If not \code{NULL}, draws (a) horizontal line(s).
 #' @param size Argument of length 1 giving the points size (if `type` == "p") or the line size (if `type` == "l" or "s").
 #' @param color If not `NULL`, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.
@@ -49,8 +50,8 @@
 LinePlot <- function(X, title = "Line plot",  rows = 1,
                      type = c("l", "p", "s"), xlab = NULL, ylab = NULL,
                      xaxis_type = c("numeric", "character"), stacked = FALSE,
-                     ncol = 1, nrow = NULL, hline = 0, size = 0.5,
-                     color = NULL, shape = 1, theme = theme_bw()) {
+                     ncol = 1, nrow = NULL, facet_label = NULL, hline = 0,
+                     size = 0.5, color = NULL, shape = 1, theme = theme_bw()) {
 
   # checks =========================
   checkArg(X,"matrix",can.be.null = FALSE)
@@ -68,6 +69,7 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
   checkArg(color, "length1", can.be.null = TRUE)
   checkArg(shape, "length1", can.be.null = FALSE)
   checkArg(stacked, "bool", can.be.null = FALSE)
+  checkArg(facet_label, c("str"), can.be.null = TRUE)
 
   type <- match.arg(type)
   xaxis_type <- match.arg(xaxis_type)
@@ -80,6 +82,10 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
     stop("rows is neither numeric or character")
   }
 
+  if (!is.null(facet_label) && length(rows) != length(facet_label)){
+    stop(paste0("the number of facet_label differs from the number of rows"))
+  }
+
   # prepare the arguments  ==============================
 
   if (is.numeric(rows)){
@@ -88,13 +94,12 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
 
   X <- t(X[rows,, drop=FALSE])
 
-  # mn_xy <- make.names(rows) # correct the naming of variables
+  mn_xy <- make.names(rows) # correct the naming of variables
 
   X <- X %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "x_axis")
 
-  # changed mn_xy to rows to add the % of var in PLALoadingPlot
-  X_long <-  X %>% tidyr::pivot_longer(all_of(rows), names_to = "rownames")
+  X_long <-  X %>% tidyr::pivot_longer(all_of(mn_xy), names_to = "rownames")
 
   if (xaxis_type == "numeric") {
     rn <- X_long$x_axis
@@ -168,8 +173,15 @@ LinePlot <- function(X, title = "Line plot",  rows = 1,
 
   if(! stacked){
     # facet_wrap
-    fig <- fig +
-      ggplot2::facet_wrap(~ rownames, ncol = ncol, nrow = nrow)
+    if(is.null(facet_label)){
+      fig <- fig +
+        ggplot2::facet_wrap(~ rownames, ncol = ncol, nrow = nrow)
+    } else{
+      names(facet_label) <- rows
+      fig <- fig +
+        ggplot2::facet_wrap(~ rownames, ncol = ncol, nrow = nrow,
+                            labeller = labeller(rownames = facet_label))
+    }
   }
 
   return(fig)

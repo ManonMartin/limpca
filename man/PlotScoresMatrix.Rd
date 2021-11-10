@@ -36,7 +36,7 @@ PlotScoresMatrix(
 
 \item{varname.colorup}{A character with the name of variable used to color the upper triangle}
 
-\item{varname.colordown}{A character with the name of variable used to color the upper triangle}
+\item{varname.colordown}{A character with the name of variable used to color the lower triangle}
 
 \item{varname.pchup}{A character with the name of variable used to mark points from the upper triangle}
 

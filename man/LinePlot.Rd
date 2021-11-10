@@ -15,6 +15,7 @@ LinePlot(
   stacked = FALSE,
   ncol = 1,
   nrow = NULL,
+  facet_label = NULL,
   hline = 0,
   size = 0.5,
   color = NULL,
@@ -43,6 +44,8 @@ LinePlot(
 
 \item{nrow}{If stacked is \code{FALSE}, the number of rows to represent the separate plots.}
 
+\item{facet_label}{If stacked is \code{FALSE}, the labels of the separate plots.}
+
 \item{hline}{If not \code{NULL}, draws (a) horizontal line(s).}
 
 \item{size}{Argument of length 1 giving the points size (if \code{type} == "p") or the line size (if \code{type} == "l" or "s").}
@@ -67,12 +70,12 @@ LinePlot(X = UCH$outcomes)
 LinePlot(X = UCH$outcomes, rows = c(1:4), hline = NULL)
 LinePlot(X = UCH$outcomes, rows = c(1:4), color = 2)
 LinePlot(X = UCH$outcomes, rows = c(1:8), ncol=2)
-LinePlot(X = UCH$outcomes, type = "p", 
+LinePlot(X = UCH$outcomes, type = "p",
          rows = c(1:8), ncol=2)
 
 # stacked plots
-LinePlot(X = UCH$outcomes, rows = c(1:4), 
-         stacked = TRUE, color = "rows") + 
+LinePlot(X = UCH$outcomes, rows = c(1:4),
+         stacked = TRUE, color = "rows") +
          scale_color_brewer(palette="Set1")
 
 

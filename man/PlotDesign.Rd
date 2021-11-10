@@ -36,29 +36,29 @@ Plot the experimental design of the data
 
 ### mtcars
 data(mtcars)
-df <-  mtcars \%>\% 
+df <-  mtcars \%>\%
   select(cyl, vs, am, gear, carb) \%>\%
-  as.data.frame() \%>\% 
+  as.data.frame() \%>\%
   mutate(across(everything(), as.factor))
-  
+
 # 2 factors
-PlotDesign(data = df, x = "cyl", y = "vs",rows = NULL,
+PlotDesign(design = df, x = "cyl", y = "vs",rows = NULL,
           cols = NULL)
 # 3 factors
-PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am"),
+PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
           cols = NULL)
 # 4 factors
-PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am"),
+PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
           cols = c("gear"))
 # 5 factors
-PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
           cols = c("gear"))
 
-PlotDesign(data = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
          cols = c("vs"))
 
 ### UCH
 data("UCH")
-PlotDesign(data = UCH$design, x = "Hippurate", y = "Citrate",rows = "Day")
+PlotDesign(design = UCH$design, x = "Hippurate", y = "Citrate",rows = "Day")
 
 }

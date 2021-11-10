@@ -14,22 +14,22 @@
 
 
 
-LMSS = function(ResLMEffectMatrices){
+LMSS = function(ResLMWEffectMatrices){
 
-  #Check the ResLMEffectMatrices
+  #Check the ResLMWEffectMatrices
 
-  if(!is.list(ResLMEffectMatrices)){stop("ResLMEffectMatrices argument is not a list")}
-  if(length(ResLMEffectMatrices)!=11)(stop("Length of ResLMEffectMatrices has not a length of 11."))
-  if(!all(names(ResLMEffectMatrices)==c("formula","design","ModelMatrix","outcomes","effectMatrices","modelMatrixByEffect","predictedvalues","residuals","parameters","covariateEffectsNamesUnique","covariateEffectsNames"))){stop("Object is not a ResLMEffectMatrices list from LMEffectMatrices")}
+  if(!is.list(ResLMWEffectMatrices)){stop("ResLMWEffectMatrices argument is not a list")}
+  if(length(ResLMWEffectMatrices)!=9)(stop("Length of ResLMWEffectMatrices has not a length of 9."))
+  if(!all(names(ResLMWEffectMatrices)==c("LMWiRe_data_list","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames","covariateEffectsNamesUnique","effectMatrices","predictedvalues","residuals","parameters"))){stop("Object is not a ResLMWEffectMatrices list from LMWEffectMatrices")}
 
   #Getting needed variables
-  nEffect = length(ResLMEffectMatrices$effectMatrices)
-  covariateEffectsNamesUnique = ResLMEffectMatrices$covariateEffectsNamesUnique
-  covariateEffectsNames = ResLMEffectMatrices$covariateEffectsNames
-  modelMatrix = ResLMEffectMatrices$ModelMatrix
-  outcomes=ResLMEffectMatrices$outcomes
-  residuals = ResLMEffectMatrices$residuals
-  effectMatrices = ResLMEffectMatrices$effectMatrices
+  nEffect = length(ResLMWEffectMatrices$effectMatrices)
+  covariateEffectsNamesUnique = ResLMWEffectMatrices$covariateEffectsNamesUnique
+  covariateEffectsNames = ResLMWEffectMatrices$covariateEffectsNames
+  modelMatrix = ResLMWEffectMatrices$ModelMatrix
+  outcomes=ResLMWEffectMatrices$LMWiRe_data_list$outcomes
+  residuals = ResLMWEffectMatrices$residuals
+  effectMatrices = ResLMWEffectMatrices$effectMatrices
 
   #Creating empty list with type 3 residuals
   Type3Residuals <- list()

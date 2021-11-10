@@ -58,12 +58,10 @@ PCALoadingPlot <- function(ResSVDforPCA, axes = c(1,2),
 
   pc_var_char <- paste0("PC", axes, " (",pc_var_char[axes], "%)")
 
-  rownames(loadings)[axes] <- pc_var_char
-
   # Loadings plot  ===================
 
   fig <- LinePlot(X = loadings, title = title,
-                       rows = axes,
+                       rows = axes, facet_label = pc_var_char,
                        ...)
 
 

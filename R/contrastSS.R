@@ -1,4 +1,4 @@
-contrastSS = function(ResLMModelMatrix){
+contrastSS = function(ResLMWModelMatrix){
 
   # Checking argument
 
@@ -6,10 +6,10 @@ contrastSS = function(ResLMModelMatrix){
 
   # Attributing name
 
-  design = ResLMModelMatrix$design
-  ModelMatrixByEffect = ResLMModelMatrix$ModelMatrixByEffect
-  covariateEffectsNamesUnique = ResLMModelMatrix$covariateEffectsNamesUnique
-  covariateEffectsNames = ResLMModelMatrix$covariateEffectsNames
+  design = ResLMWModelMatrix$LMWiRe_data_list$design
+  ModelMatrixByEffect = ResLMWModelMatrix$ModelMatrixByEffect
+  covariateEffectsNamesUnique = ResLMWModelMatrix$covariateEffectsNamesUnique
+  covariateEffectsNames = ResLMWModelMatrix$covariateEffectsNames
   neffect = length(covariateEffectsNamesUnique)
   nparam = length(covariateEffectsNames)
 
@@ -34,4 +34,4 @@ contrastSS = function(ResLMModelMatrix){
   return(L)
 }
 
-# L = contrastSS(ResLMModelMatrix)
+# L = contrastSS(ResLMWModelMatrix)
