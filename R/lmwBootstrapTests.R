@@ -1,9 +1,10 @@
-#' @export LMWBootstrapTest
-#' @md
-#' @title Perform a test on the effects from the model
-#' @description Compute a partial model without the tested effects then estimate the residuals. Next, compute new outcomes from the predicted values of the partial model and sampled residuals. Finally, compute the Sum of Squares and the test statistic.
+#' @export lmwBootstrapTests
+#' @title Performs a test on the effects from the model
 #'
-#' @param ResLMWEffectMatrices A list of 11 from \code{\link{LMWEffectMatrices}}
+#' @description
+#' Computes a partial model without the tested effects then estimates the residuals. Next, computes new outcomes from the predicted values of the partial model and sampled residuals. Finally, computes the Sum of Squares and the test statistics.
+#'
+#' @param resLmwEffectMatrices A list of 11 from \code{\link{lmwEffectMatrices}}
 #' @param nboot A integer with the number of iterations to perform (by default: 100)
 #'
 #' @return A list with the following elements:
@@ -11,6 +12,7 @@
 #'    \item{\code{Fobs}}{A vector with the F statistics observed with the data}
 #'    \item{\code{Fboot}}{A matrix with the F statistics observed with the bootstrap}
 #'    \item{\code{Pvalues}}{A vector with the pvalue for every effect}
+#'    \item{\code{ResultsTable}}{A results matrix with the pvalue and the variation percentage for every effect}
 #'  }
 #'
 #' @details
@@ -20,10 +22,10 @@
 #'
 #' @examples
 #'  data('UCH')
-#'  ResLMWModelMatrix <- LMWModelMatrix(UCH)
-#'  ResLMWEffectMatrices <- LMWEffectMatrices(ResLMWModelMatrix = ResLMWModelMatrix)
+#'  resLmwModelMatrix <- lmwModelMatrix(UCH)
+#'  resLmwEffectMatrices <- lmwEffectMatrices(resLmwModelMatrix = resLmwModelMatrix)
 #'
-#'  result <- LMWBootstrapTest(ResLMWEffectMatrices = ResLMWEffectMatrices, nboot=10)
+#'  res <- lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=10)
 #'
 #' @references
 #' Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
@@ -35,39 +37,45 @@
 
 
 
-LMWBootstrapTest = function(ResLMWEffectMatrices,nboot=100){
+lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100){
 
-  # Checking the ResLMWEffectMatrices list
+  # Checking the resLmwEffectMatrices list
 
-  checkname = c("LMWiRe_data_list","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames",
+  checkname = c("lmwDataList","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames",
                 "covariateEffectsNamesUnique","effectMatrices",
                 "predictedvalues","residuals","parameters",
                 "SS","variationPercentages")
 
 
-  if(!is.list(ResLMWEffectMatrices)){stop("Argument ResLMWEffectMatrices is not a list")}
-  if(length(ResLMWEffectMatrices)!=11){stop("List does not contain 11 arguments")}
-  if(!all(names(ResLMWEffectMatrices)==checkname)){stop("Argument is not a ResLMWEffectMatrices object")}
-  if(length(ResLMWEffectMatrices$effectMatrices)!=length(ResLMWEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices differs from the number of effects")}
+  if(!is.list(resLmwEffectMatrices)){stop("Argument resLmwEffectMatrices is not a list")}
+  if(length(resLmwEffectMatrices)!=11){stop("List does not contain 11 arguments")}
+  if(!all(names(resLmwEffectMatrices)==checkname)){stop("Argument is not a resLmwEffectMatrices object")}
+  if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices differs from the number of effects")}
+
+  # check if SS = TRUE
+
+  if(all(is.na(resLmwEffectMatrices$SS)) & all(is.na(resLmwEffectMatrices$variationPercentages))){
+    stop("lmwBootstrapTests can't be performed if resLmwEffectMatrices doesn't include the effect percentage variations (SS=FALSE)")
+  }
 
   # Attributing names
   start_time = Sys.time()
-  design = ResLMWEffectMatrices$LMWiRe_data_list$design
-  formula_complete = ResLMWEffectMatrices$LMWiRe_data_list$formula
-  outcomes = ResLMWEffectMatrices$LMWiRe_data_list$outcomes
-  modelMatrix=ResLMWEffectMatrices$ModelMatrix
-  ModelMatrixByEffect = ResLMWEffectMatrices$ModelMatrixByEffect
-  covariateEffectsNames = ResLMWEffectMatrices$covariateEffectsNames
-  covariateEffectsNamesUnique = ResLMWEffectMatrices$covariateEffectsNamesUnique
+  design = resLmwEffectMatrices$lmwDataList$design
+  formula_complete = resLmwEffectMatrices$lmwDataList$formula
+  outcomes = resLmwEffectMatrices$lmwDataList$outcomes
+  modelMatrix = resLmwEffectMatrices$ModelMatrix
+  ModelMatrixByEffect = resLmwEffectMatrices$ModelMatrixByEffect
+  covariateEffectsNames = resLmwEffectMatrices$covariateEffectsNames
+  covariateEffectsNamesUnique = resLmwEffectMatrices$covariateEffectsNamesUnique
   nEffect <- length(covariateEffectsNamesUnique)
-  SS_complete = ResLMWEffectMatrices$SS
-  SSE_complete = ResLMWEffectMatrices$SS[which(names(SS_complete)=="Residuals")]
+  SS_complete = resLmwEffectMatrices$SS
+  SSE_complete = resLmwEffectMatrices$SS[which(names(SS_complete)=="Residuals")]
   nObs = nrow(outcomes)
   nParam = length(covariateEffectsNames)
 
-  # Recreate ResLMWModelMatrix
+  # Recreate resLmwModelMatrix
 
-  ResLMWModelMatrix = ResLMWEffectMatrices[1:5]
+  resLmwModelMatrix = resLmwEffectMatrices[1:5]
 
   #### Estimating the partial model for each effect ####
 
@@ -112,13 +120,13 @@ LMWBootstrapTest = function(ResLMWEffectMatrices,nboot=100){
     temp = paste0("outcomes~",temp)
     formula_temp = as.formula(temp)
 
-    data_list_temp = list(design=design,
+    dataListTemp = list(design=design,
                           outcomes=outcomes,
                           formule=formula_temp)
 
     # Create pseudo ResLMModelMatrix
 
-    Pseudo_ResLMWModelMatrix = list(LMWiRe_data_list=data_list_temp,
+    Pseudo_resLmwModelMatrix = list(lmwDataList=dataListTemp,
                                    ModelMatrix=ModelMatrixPartial,
                                    ModelMatrixByEffect=listModelMatrixByEffectPartial_temp,
                                    covariateEffectsNames=covariateEffectsNamesPartial,
@@ -126,7 +134,7 @@ LMWBootstrapTest = function(ResLMWEffectMatrices,nboot=100){
 
     # Compute the partial models
 
-    listResultPartial[[iEffect]] = LMWEffectMatrices(Pseudo_ResLMWModelMatrix,SS=TRUE)
+    listResultPartial[[iEffect]] = lmwEffectMatrices(Pseudo_resLmwModelMatrix,SS=TRUE)
 
     # Compute Fobs
 
@@ -145,20 +153,20 @@ LMWBootstrapTest = function(ResLMWEffectMatrices,nboot=100){
   doParallel::registerDoParallel(cores=2)
 
   # Function to compute the F statistic for every effect
-  ComputeFboot = function(ResLMWObject,ResLMWEffectMatrices,nObs,ResLMWModelMatrix,nParam,E_sample){
+  ComputeFboot = function(resLmwObject,resLmwEffectMatrices,nObs,resLmwModelMatrix,nParam,E_sample){
 
     # Find the tested effect and its number of parameters
-    effect = names(ResLMWEffectMatrices$effectMatrices)[!(names(ResLMWEffectMatrices$effectMatrices)%in%names(ResLMWObject$ModelMatrixByEffect))]
-    npar <- ncol(ResLMWEffectMatrices$ModelMatrixByEffect[[which(names(ResLMWEffectMatrices$effectMatrices) == effect)]])
+    effect = names(resLmwEffectMatrices$effectMatrices)[!(names(resLmwEffectMatrices$effectMatrices)%in%names(resLmwObject$ModelMatrixByEffect))]
+    npar <- ncol(resLmwEffectMatrices$ModelMatrixByEffect[[which(names(resLmwEffectMatrices$effectMatrices) == effect)]])
 
     # Compute the Y_boot value
-    E_boot = ResLMWObject$residuals[E_sample,]
-    Y_boot = ResLMWObject$predictedvalues + E_boot
+    E_boot = resLmwObject$residuals[E_sample,]
+    Y_boot = resLmwObject$predictedvalues + E_boot
 
-    ResLMWModelMatrix$LMWiRe_data_list$outcomes = Y_boot
+    resLmwModelMatrix$lmwDataList$outcomes = Y_boot
 
     # Estimate the model then
-    result_boot = LMWiRe::LMWEffectMatrices(ResLMWModelMatrix = ResLMWModelMatrix)
+    result_boot = LMWiRe::lmwEffectMatrices(resLmwModelMatrix = resLmwModelMatrix)
     Fboot = (result_boot$SS[which(names(result_boot$SS)==effect)]/npar)/(result_boot$SS[which(names(result_boot$SS)=="Residuals")]/(nObs - nParam ))
     return(Fboot)
   }
@@ -169,7 +177,7 @@ LMWBootstrapTest = function(ResLMWEffectMatrices,nboot=100){
   # Loop for every iteration (nboot)
   for(j in 1:nboot){
   E_sample = sample(c(1:nObs),nObs,replace=TRUE)
-  Fboot[j,]=  plyr::laply(listResultPartial[2:nEffect],ComputeFboot,E_sample=E_sample,ResLMWEffectMatrices=ResLMWEffectMatrices,nParam=nParam,nObs=nObs,ResLMWModelMatrix=ResLMWModelMatrix,.parallel = TRUE)
+  Fboot[j,]=  plyr::laply(listResultPartial[2:nEffect],ComputeFboot,E_sample=E_sample,resLmwEffectMatrices=resLmwEffectMatrices,nParam=nParam,nObs=nObs,resLmwModelMatrix=resLmwModelMatrix,.parallel = TRUE)
   }
 
   # Compute the pvalue
@@ -181,14 +189,21 @@ LMWBootstrapTest = function(ResLMWEffectMatrices,nboot=100){
     return(result)
   }
 
+  # Outputs genration
   result = apply(X=matrix_temp,FUN = ComputePval,MARGIN = 2)
+  result = signif(result, digits = 2)
   colnames(Fboot) = names(Fobs)
 
-  resultsTable = rbind(result, ResLMWEffectMatrices$variationPercentages)
-  rownames(resultsTable) = c("p-values", "Variation percentages")
+  result <- replace(result, result == 0, paste0("< ", format(1/nboot, digits = 1, scientific = FALSE)))
 
-  ResLMWBootstrapTest = list(Fobs=Fobs,Fboot=Fboot,Pvalues = result, ResultsTable = resultsTable)
+  resultsTable = rbind(result,
+                       round(resLmwEffectMatrices$variationPercentages[1:length(Fobs)], log10(nboot)))
+  rownames(resultsTable) = c("Observed p-values", "Variation percentages")
+
+  resLmwBootstrapTests = list(Fobs=Fobs,Fboot=Fboot,Pvalues=result,ResultsTable=resultsTable)
+
   doParallel::stopImplicitCluster
   print(Sys.time() - start_time)
-  return(ResLMWBootstrapTest)
+
+  return(resLmwBootstrapTests)
   }

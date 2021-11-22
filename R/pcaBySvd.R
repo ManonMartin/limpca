@@ -1,4 +1,4 @@
-#' @export SVDforPCA
+#' @export pcaBySvd
 #' @title Singular value decomposition for PCA analysis
 #'
 #' @description
@@ -21,11 +21,12 @@
 #' }
 #'
 #' @examples
+#'
 #' data('UCH')
-#' PCA.res = SVDforPCA(UCH$outcomes)
+#' PCA.res = pcaBySvd(UCH$outcomes)
 
 
-SVDforPCA <- function(outcomes, ncomp = min(dim(outcomes))) {
+pcaBySvd <- function(outcomes, ncomp = min(dim(outcomes))) {
 
 
   original.dataset <- outcomes
@@ -79,9 +80,9 @@ SVDforPCA <- function(outcomes, ncomp = min(dim(outcomes))) {
 
 
 
-  res <- list(scores = outcomes.scores, loadings = outcomes.loadings, 
+  res <- list(scores = outcomes.scores, loadings = outcomes.loadings,
               eigval = outcomes.eigval, pcu = outcomes.normscores,
-              pcd = outcomes.singularval, var = outcomes.variances, 
+              pcd = outcomes.singularval, var = outcomes.variances,
               cumvar = outcomes.cumvariances,
               original.dataset = original.dataset)
 

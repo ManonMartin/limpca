@@ -1,17 +1,19 @@
-#' @export LMWEffectMatrices
-#' @title Computing the Effect Matrices
-#' @description Runs a GLM model and decomposes the outcomes into effect matrices for each model terms
+#' @export lmwEffectMatrices
+#' @title Computes the effect matrices
 #'
-#' @param ResLMWModelMatrix A list of 5 elements from \code{\link{LMWModelMatrix}}.
+#' @description
+#' Runs a GLM model and decomposes the outcomes into effect matrices for each model terms.
+#'
+#' @param resLmwModelMatrix A list of 5 elements from \code{\link{lmwModelMatrix}}.
 #' @param SS Logical. If `FALSE`, won't compute the effect percentage variations.
-#' @param newSSmethod A logical whether to use the new optimized method to compute SS.
-#' @param contrastList A list of contrast for each parameter. The function creates automatically the list by default.
+#' @param newSSmethod Logical.If `FALSE`, the new optimized method to compute SS is not used.
+#' @param contrastList A list of contrast for each parameter. If `NA`, the function creates automatically the list by default.
 #'
 #' @return A list with the following elements:
 #'  \describe{
-#'    \item{\code{LMWiRe_data_list}}{A list containing the outcomes, the experimental design and the formula.}
+#'    \item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
 #'    \item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-#'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
+#'    \item{\code{ModelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
 #'    \item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients.}
 #'    \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
 #'    \item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model terms.}
@@ -24,35 +26,34 @@
 #'
 #' @examples
 #'  data('UCH')
-#'  ResLMWModelMatrix <- LMWModelMatrix(UCH)
-#'  LMWEffectMatrices(ResLMWModelMatrix)
+#'  resLmwModelMatrix <- lmwModelMatrix(UCH)
+#'  lmwEffectMatrices(resLmwModelMatrix)
 #'
 #' @import stringr
 #' @import plyr
 
 
 
-LMWEffectMatrices = function(ResLMWModelMatrix, SS=TRUE, newSSmethod=TRUE, contrastList=NA){
+lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contrastList=NA){
 
   #Checking the object
-  if(!is.list(ResLMWModelMatrix)){stop("Argument ResLMWModelMatrix is not a list")}
-  if(length(ResLMWModelMatrix)!=5){stop("List does not contain 5 elements")}
-  if(names(ResLMWModelMatrix)[1]!="LMWiRe_data_list"|
-     names(ResLMWModelMatrix)[2]!="ModelMatrix"|
-     names(ResLMWModelMatrix)[3]!="ModelMatrixByEffect"|
-     names(ResLMWModelMatrix)[4]!="covariateEffectsNames"|
-     names(ResLMWModelMatrix)[5]!="covariateEffectsNamesUnique"){stop("Argument is not a ResLMWModelMatrix object")}
+  if(!is.list(resLmwModelMatrix)){stop("Argument resLmwModelMatrix is not a list")}
+  if(length(resLmwModelMatrix)!=5){stop("List does not contain 5 elements")}
+  if(names(resLmwModelMatrix)[1]!="lmwDataList"|
+     names(resLmwModelMatrix)[2]!="ModelMatrix"|
+     names(resLmwModelMatrix)[3]!="ModelMatrixByEffect"|
+     names(resLmwModelMatrix)[4]!="covariateEffectsNames"|
+     names(resLmwModelMatrix)[5]!="covariateEffectsNamesUnique"){stop("Argument is not a resLmwModelMatrix object")}
 
   #Attribute a name in the function environment
-
-  formula = ResLMWModelMatrix$LMWiRe_data_list$formula
-  design = ResLMWModelMatrix$LMWiRe_data_list$design
-  outcomes = ResLMWModelMatrix$LMWiRe_data_list$outcomes
-  LMWiRe_data_list = ResLMWModelMatrix$LMWiRe_data_list
-  modelMatrix = ResLMWModelMatrix$ModelMatrix
-  ModelMatrixByEffect = ResLMWModelMatrix$ModelMatrixByEffect
-  covariateEffectsNames = ResLMWModelMatrix$covariateEffectsNames
-  covariateEffectsNamesUnique = ResLMWModelMatrix$covariateEffectsNamesUnique
+  formula = resLmwModelMatrix$lmwDataList$formula
+  design = resLmwModelMatrix$lmwDataList$design
+  outcomes = resLmwModelMatrix$lmwDataList$outcomes
+  lmwDataList = resLmwModelMatrix$lmwDataList
+  modelMatrix = resLmwModelMatrix$ModelMatrix
+  ModelMatrixByEffect = resLmwModelMatrix$ModelMatrixByEffect
+  covariateEffectsNames = resLmwModelMatrix$covariateEffectsNames
+  covariateEffectsNamesUnique = resLmwModelMatrix$covariateEffectsNamesUnique
   nEffect <- length(covariateEffectsNamesUnique)
 
   #Creating empty effects matrices
@@ -81,7 +82,7 @@ LMWEffectMatrices = function(ResLMWModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
     }
 
 
-  ResLMWEffectMatrices = list(LMWiRe_data_list = LMWiRe_data_list,
+  resLmwEffectMatrices = list(lmwDataList = lmwDataList,
                              ModelMatrix = modelMatrix,
                              ModelMatrixByEffect = ModelMatrixByEffect,
                              covariateEffectsNames = covariateEffectsNames,
@@ -94,16 +95,16 @@ LMWEffectMatrices = function(ResLMWModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
   # Compute the Sum of Squares Type 3
   if(SS==TRUE){
     if(newSSmethod){
-      if(is.na(contrastList)){L = contrastSS(ResLMWModelMatrix)}else{L = contrastList}
-      ResLMSS = LMSSv2(ResLMWEffectMatrices,L)
+      if(is.na(contrastList)){L = contrastSS(resLmwModelMatrix)}else{L = contrastList}
+      ResLMSS = LMSSv2(resLmwEffectMatrices,L)
     }else{
-      ResLMSS = LMSS(ResLMWEffectMatrices)
+      ResLMSS = LMSS(resLmwEffectMatrices)
     }
-    ResLMWEffectMatrices = c(ResLMWEffectMatrices,ResLMSS)
+    resLmwEffectMatrices = c(resLmwEffectMatrices,ResLMSS)
   }else{
-    ResLMWEffectMatrices = c(ResLMWEffectMatrices,SS=NA,variationPercentages=NA)
+    resLmwEffectMatrices = c(resLmwEffectMatrices,SS=NA,variationPercentages=NA)
   }
 
 
-  return(ResLMWEffectMatrices)
+  return(resLmwEffectMatrices)
 }

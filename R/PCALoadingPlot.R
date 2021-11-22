@@ -1,44 +1,42 @@
-#' @export PCALoadingPlot
+#' @export pcaLoadingPlot
 #' @title Loadings plots
 #'
 #' @description
-#' Draws loadings plots for the SVDforPCA function.
+#' Draws loadings plots for the pcaBySvd function.
 #'
-#' @param ResSVDforPCA A list corresponding to the output value of \code{\link{SVDforPCA}}.
+#' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param title Plot title.
-#' @param ... Additional arguments to be passed to \code{\link{LinePlot}}.
+#' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
 #'
 #' @return A PCA loadings plot.
 #'
 #' @details
-#' `PCALoadingPlot` is a wrapper of \code{\link{LinePlot}}.
+#' `pcaLoadingPlot` is a wrapper of \code{\link{plotLine}}.
 #'
 #'
 #' @examples
 #'
 #' data('UCH')
-#' ResPCA = SVDforPCA(UCH$outcomes)
+#' ResPCA = pcaBySvd(UCH$outcomes)
 #'
-#' PCALoadingPlot(ResSVDforPCA = ResPCA, axes = c(1,2),
+#' pcaLoadingPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 #' title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Values")
-#'
 
-PCALoadingPlot <- function(ResSVDforPCA, axes = c(1,2),
+pcaLoadingPlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA loadings plot", ...) {
 
   # checks   ===================
-
-  checkArg(ResSVDforPCA,c("list"),can.be.null = FALSE)
+  checkArg(resPcaBySvd,c("list"),can.be.null = FALSE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
   checkArg(title,c("str", "length1"),can.be.null = FALSE)
 
-  if (!identical(names(ResSVDforPCA),c("scores","loadings","eigval","pcu",
+  if (!identical(names(resPcaBySvd),c("scores","loadings","eigval","pcu",
                                        "pcd", "var","cumvar","original.dataset"))){
-    stop("ResSVDforPCA is not an output value of SVDforPCA")}
+    stop("resPcaBySvd is not an output value of pcaBySvd")}
 
   # loadings
-  loadings <- t(ResSVDforPCA$loadings)
+  loadings <- t(resPcaBySvd$loadings)
   checkArg(loadings,c("matrix"),can.be.null = FALSE)
 
   if (max(axes) > nrow(loadings)){
@@ -47,8 +45,7 @@ PCALoadingPlot <- function(ResSVDforPCA, axes = c(1,2),
   }
 
   # percentage of explained variance   ===================
-
-  pc_var <- ResSVDforPCA$var
+  pc_var <- resPcaBySvd$var
   pc_var_x <- format(pc_var[pc_var>=0.1],digits = 2, trim=TRUE)
   pc_var_y <- format(pc_var[pc_var<0.1],digits = 2,
                      scientific = TRUE, trim=TRUE)
@@ -59,11 +56,9 @@ PCALoadingPlot <- function(ResSVDforPCA, axes = c(1,2),
   pc_var_char <- paste0("PC", axes, " (",pc_var_char[axes], "%)")
 
   # Loadings plot  ===================
-
-  fig <- LinePlot(X = loadings, title = title,
-                       rows = axes, facet_label = pc_var_char,
-                       ...)
-
+  fig <- plotLine(X = loadings, title = title,
+                  rows = axes, facet_label = pc_var_char,
+                  ...)
 
   return(fig)
 

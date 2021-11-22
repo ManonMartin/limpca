@@ -1,12 +1,14 @@
-#' @export PlotDesign
+#' @export plotDesign
 #' @title Plot the design matrix
-#' @description Plot the experimental design of the data
+#'
+#' @description
+#' Plot the experimental design of the data.
 #'
 #' @param design A nxk "free encoded" experimental design data frame.
 #' @param x A character string giving the column name of `design` to be used for the x axis.
 #' @param y A character string giving the column name of `design` to be used for the y axis.
 #' @param rows If not `NULL`,  a character vector with one or several column name(s) of `design` to be used for facetting along the rows.
-#' @param cols If not `NULL`, a character vector with one or several column name(s) of `design` to be used for facetting along the columns
+#' @param cols If not `NULL`, a character vector with one or several column name(s) of `design` to be used for facetting along the columns.
 #' @param title Plot title.
 #'
 #' @return A plot of the design.
@@ -21,32 +23,33 @@
 #'   mutate(across(everything(), as.factor))
 #'
 #' # 2 factors
-#' PlotDesign(design = df, x = "cyl", y = "vs",rows = NULL,
+#' plotDesign(design = df, x = "cyl", y = "vs",rows = NULL,
 #'           cols = NULL)
 #' # 3 factors
-#' PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
+#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
 #'           cols = NULL)
 #' # 4 factors
-#' PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
+#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
 #'           cols = c("gear"))
 #' # 5 factors
-#' PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
 #'           cols = c("gear"))
 #'
-#' PlotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
 #'          cols = c("vs"))
 #'
 #' ### UCH
 #' data("UCH")
-#' PlotDesign(design = UCH$design, x = "Hippurate", y = "Citrate",rows = "Day")
+#' plotDesign(design = UCH$design, x = "Hippurate", y = "Citrate", rows = "Day")
 #'
 #' @import ggplot2
 #' @import dplyr
 
-PlotDesign <- function(design, x, y, rows = NULL,
+plotDesign <- function(design, x, y, rows = NULL,
                        cols = NULL, title = "Plot of the design"){
 
   # checks ===================
+
   checkArg(design,"data.frame",can.be.null = FALSE)
   checkArg(x,c("str","length1"),can.be.null = TRUE)
   checkArg(y,c("str","length1"),can.be.null = TRUE)

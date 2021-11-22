@@ -1,5 +1,5 @@
-#' @export ScatterPlot
-#' @title ScatterPlot
+#' @export plotScatter
+#' @title Scatter plot
 #'
 #' @description
 #' Draws a scatter plot.
@@ -20,51 +20,51 @@
 #' @param typeEl The type of ellipse, either `norm` (multivariate normal distribution), `t` (multivariate t-distribution) or `euclid` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
 #' @param levelEl The confidence level at which to draw an ellipse.
 #' @param alphaPoly The degree of transparency for polygons.
-#' 
-#' @return A scatterplot.
-#' 
+#'
+#' @return A scatter plot.
+#'
 #' @examples
 #'
 #' data("UCH")
-#' 
-#' # Without design 
-#' ScatterPlot(X = UCH$outcomes, xy = c(453, 369))
-#' 
-#' 
+#'
+#' # Without design
+#' plotScatter(X = UCH$outcomes, xy = c(453, 369))
+#'
+#'
 #' # With color and shape
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), color = "Hippurate",  
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), color = "Hippurate",
 #'             shape = "Citrate")
-#' 
+#'
 #' # With color and drawShapes
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), color = "Hippurate", 
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "ellipse")
-#' 
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), color = "Hippurate", 
+#'
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "polygon")
-#' 
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), color = "Hippurate", 
-#'             drawShapes = "segment") 
-#' 
+#'
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), color = "Hippurate",
+#'             drawShapes = "segment")
+#'
 #' # Customize shapes
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), shape = "Hippurate", size = 3) + 
-#'   scale_discrete_identity(aesthetics = 'shape', 
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), shape = "Hippurate", size = 3) +
+#'   scale_discrete_identity(aesthetics = 'shape',
 #'                           guide = 'legend')
-#' 
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), shape = "Hippurate") + 
+#'
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), shape = "Hippurate") +
 #'   scale_shape_discrete(solid=FALSE)
-#' 
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
-#'             xy = c(453, 369), shape = "Hippurate") + 
+#'
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#'             xy = c(453, 369), shape = "Hippurate") +
 #'   scale_shape_manual(values = c(15,16,17))
 #'
 #' # With labels
-#' ScatterPlot(X = UCH$outcomes, design = UCH$design, 
+#' plotScatter(X = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), points_labs = rownames(UCH$design))
 #'
 #' @import ggplot2
@@ -72,16 +72,16 @@
 #' @import dplyr
 #' @importFrom plyr ddply
 
-ScatterPlot <- function(X, xy, design = NULL, color = NULL, 
+plotScatter <- function(X, xy, design = NULL, color = NULL,
                         shape = NULL, points_labs = NULL,
-                        title = "scatterplot", xlab = NULL, 
-                        ylab = NULL, size = 2,  size_lab = 3, 
-                        drawShapes = c("none", "ellipse", 
-                                       "polygon", "segment"), 
-                        theme = theme_bw(), 
-                        typeEl = c("norm", "t","euclid"), 
+                        title = "Scatter plot", xlab = NULL,
+                        ylab = NULL, size = 2,  size_lab = 3,
+                        drawShapes = c("none", "ellipse",
+                                       "polygon", "segment"),
+                        theme = theme_bw(),
+                        typeEl = c("norm", "t","euclid"),
                         levelEl = 0.9, alphaPoly = 0.4) {
-  
+
   # checks ==============================
   checkArg(design,"data.frame",can.be.null = TRUE)
   checkArg(X,"matrix",can.be.null = FALSE)
@@ -91,97 +91,97 @@ ScatterPlot <- function(X, xy, design = NULL, color = NULL,
   checkArg(title,c("str","length1"),can.be.null = TRUE)
   checkArg(xlab,c("str","length1"),can.be.null = TRUE)
   checkArg(ylab,c("str","length1"),can.be.null = TRUE)
-  checkArg(size,c("num", "pos","length1"),can.be.null = FALSE)  
+  checkArg(size,c("num", "pos","length1"),can.be.null = FALSE)
   checkArg(size_lab,c("num", "pos","length1"),can.be.null = FALSE)
   checkArg(levelEl,c("num", "pos","length1"),can.be.null = FALSE)
   checkArg(alphaPoly,c("num", "pos","length1"),can.be.null = FALSE)
-  
+
   typeEl <- match.arg(typeEl)
   drawShapes <- match.arg(drawShapes)
-  
+
   if (drawShapes != "none"){
     if (is.null(color)){
       stop(paste0("drawShapes is set to ",drawShapes," but color is NULL"))
     }
   }
-  
-  
+
+
   if (!is.null(design)){
     match.arg(color, choices = c(colnames(design), NULL))
     match.arg(shape, choices = c(colnames(design), NULL))
   }
-  
+
   if (!is.null(color) | !is.null(shape)){
     if (is.null(design)){
       stop("color or shape is specified but design is NULL")
     }
   }
-  
-  
+
+
   if (length(xy) !=2){
     stop("xy is not of length 2")
   }
-  
+
   if(is.numeric(xy)){
     checkArg(xy, c("pos","int"), can.be.null = FALSE)
   }
-  
-  
+
+
   if (!is.numeric(xy) & !is.character(xy)){
     stop("xy is neither numeric or character")
   }
-  
+
   if (!is.null(design)){
     if(length(points_labs) != nrow(design) & !is.null(points_labs)){
       stop("length of points_labs is different than the number of observations")
     }
   }
-  
+
   # prepare the arguments  ==============================
   if (is.numeric(xy)){
     xy <- colnames(X)[xy]
   }
   mn_xy <- make.names(xy) # correct the naming of variables
-  
+
   if (is.null(xlab)) {
     xlab <- xy[1]
   }
   if (is.null(ylab)) {
     ylab <- xy[2]
   }
-  
+
   out_df <- X[,c(xy)]
   colnames(out_df) <- mn_xy
-  
+
   if (!is.null(design)){
     design_df <- design[,c(color, shape), drop = FALSE]
     design_df <- design_df %>% mutate_all(as.factor)
     df_tot <- cbind(out_df, design_df)
   } else {df_tot = data.frame(out_df)}
-  
+
   df_tot$points_labs <- points_labs
-  
+
   # ScatterPlot  ==============================
-  
+
   # ggplot ++++
-  fig <- ggplot2::ggplot(data=df_tot, 
+  fig <- ggplot2::ggplot(data=df_tot,
                          ggplot2::aes_string(x=mn_xy[1],y=mn_xy[2],
                                              label = "points_labs",
-                                             color = color, 
-                                             shape = shape)) + 
+                                             color = color,
+                                             shape = shape)) +
     ggplot2::geom_point(size=size) +
     labs(x = xlab, y = ylab, title = title) +
     theme
-  
+
   # points_labs ++++
   if (!is.null(points_labs)) {
-    fig <- fig + 
-      ggrepel::geom_text_repel(show.legend = F, 
+    fig <- fig +
+      ggrepel::geom_text_repel(show.legend = F,
                                size = size_lab)
   }
 
   # drawShapes   ++++
-  
+
   if (drawShapes !="none"){
     if (drawShapes == "ellipse"){
       fig <- fig + ggplot2::stat_ellipse(type = typeEl, level = levelEl)
@@ -189,30 +189,30 @@ ScatterPlot <- function(X, xy, design = NULL, color = NULL,
         #getting the convex hull of each unique point set
         find_hull <- function(df) df[chull(df[,mn_xy[1]], df[,mn_xy[2]]), ]
         hulls <- plyr::ddply(df_tot, color, find_hull)
-        
-        fig <- fig + ggplot2::geom_polygon(data = hulls, 
-                                    aes_string(fill=color, color = color), 
-                           alpha = alphaPoly) 
+
+        fig <- fig + ggplot2::geom_polygon(data = hulls,
+                                    aes_string(fill=color, color = color),
+                           alpha = alphaPoly)
     } else if (drawShapes == "segment"){
 
-      centroids <- df_tot %>% 
-        dplyr::group_by(dplyr::across(dplyr::all_of(color))) %>% 
+      centroids <- df_tot %>%
+        dplyr::group_by(dplyr::across(dplyr::all_of(color))) %>%
         dplyr::summarise(across(dplyr::all_of(mn_xy),mean))
-        
-        df_tot_centr <- df_tot %>% dplyr::left_join(centroids, by = color, 
+
+        df_tot_centr <- df_tot %>% dplyr::left_join(centroids, by = color,
                                              suffix = c("", ".centroid"))
-        
+
         centr_name <- paste0(mn_xy, ".centroid")
         fig <- fig +
           ggplot2::geom_segment(data = df_tot_centr,
-                       aes_string(x = centr_name[1], y = centr_name[2], 
-                                  xend = mn_xy[1], yend = mn_xy[2], 
+                       aes_string(x = centr_name[1], y = centr_name[2],
+                                  xend = mn_xy[1], yend = mn_xy[2],
                                   color = color))
     }
   }
- 
+
 
   return(fig)
-  
+
 }
 

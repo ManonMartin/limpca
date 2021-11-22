@@ -1,20 +1,21 @@
-#' @export LMWModelMatrix
-#' @title Creating the model matrix
-#' @description Create the specific model matrix from the design for the ASCA-GLM method.
+#' @export lmwModelMatrix
+#' @title Creates the model matrix
 #'
-#' @param LMWiRe_data_list A list containing the outcomes, the experimental design and the formula.
+#' @description
+#' Creates the specific model matrix from the design for the ASCA-GLM method.
+#'
+#' @param lmwDataList A list containing the outcomes, the experimental design and the formula.
 #'
 #' @return A list with the 5 following named elements :
 #' \describe{
-#'    \item{\code{LMWiRe_data_list}}{A \emph{nxk} data frame with the "free encoded" experimental design.}
+#'    \item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
 #'    \item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-#'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
+#'    \item{\code{ModelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
 #'    \item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients.}
 #'    \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
 #' }
 #'
 #' @details
-#'
 #' In typical ASCA-GLM analysis, the GLM model needs the design to be re-encoded with the commonly used in industrial experimental design \emph{sum coding}. The result is the model matrix.
 #' Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors. After the transformation the model matrix
 #' will be \emph{nxK}. For a parameter with a levels the re-encoding is \emph{a-1} colums with 0 and 1 for \emph{a-1} first levels and -1 for the last.
@@ -24,13 +25,13 @@
 #'
 #' More information about the specific encoding is available in the article from (\emph{Thiel et al}, 2017)
 #'
+#'
 #' @examples
 #'
 #' data('UCH')
+#' resLmwModelMatrix <- lmwModelMatrix(UCH)
 #'
-#' ResLMWModelMatrix <- LMWModelMatrix(UCH)
-#'
-#' head(ResLMWModelMatrix$ModelMatrix)
+#' head(resLmwModelMatrix$ModelMatrix)
 #'
 #' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
@@ -40,12 +41,10 @@
 #' @import stats
 
 
+lmwModelMatrix <- function(lmwDataList) {
 
-
-LMWModelMatrix <- function(LMWiRe_data_list) {
-
-  formula = as.formula(LMWiRe_data_list$formula)
-  design = LMWiRe_data_list$design
+  formula = as.formula(lmwDataList$formula)
+  design = lmwDataList$design
 
   # Checking no missing argument and the class of the object
 
@@ -127,10 +126,11 @@ LMWModelMatrix <- function(LMWiRe_data_list) {
 
   }
 
-  ResLMWModelMatrix = list(LMWiRe_data_list = LMWiRe_data_list,
-                          ModelMatrix = modelMatrix, ModelMatrixByEffect=modelMatrixByEffect,
-                          covariateEffectsNames=covariateEffectsNames,
-                          covariateEffectsNamesUnique=covariateEffectsNamesUnique)
+  resLmwModelMatrix = list(lmwDataList = lmwDataList,
+                          ModelMatrix = modelMatrix,
+                          ModelMatrixByEffect = modelMatrixByEffect,
+                          covariateEffectsNames = covariateEffectsNames,
+                          covariateEffectsNamesUnique = covariateEffectsNamesUnique)
 
-  return(ResLMWModelMatrix)
+  return(resLmwModelMatrix)
 }

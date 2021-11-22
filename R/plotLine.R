@@ -1,5 +1,5 @@
-#' @export LinePlot
-#' @title Line plots
+#' @export plotLine
+#' @title Line plot
 #'
 #' @description
 #' Draws Line plot(s).
@@ -25,21 +25,19 @@
 #'
 #' @examples
 #'
-#'LinePlot(X = UCH$outcomes)
+#' plotLine(X = UCH$outcomes)
 #'
 #' # separate plots
-#' LinePlot(X = UCH$outcomes, rows = c(1:4), hline = NULL)
-#' LinePlot(X = UCH$outcomes, rows = c(1:4), color = 2)
-#' LinePlot(X = UCH$outcomes, rows = c(1:8), ncol=2)
-#' LinePlot(X = UCH$outcomes, type = "p",
+#' plotLine(X = UCH$outcomes, rows = c(1:4), hline = NULL)
+#' plotLine(X = UCH$outcomes, rows = c(1:4), color = 2)
+#' plotLine(X = UCH$outcomes, rows = c(1:8), ncol=2)
+#' plotLine(X = UCH$outcomes, type = "p",
 #'          rows = c(1:8), ncol=2)
 #'
 #' # stacked plots
-#' LinePlot(X = UCH$outcomes, rows = c(1:4),
+#' plotLine(X = UCH$outcomes, rows = c(1:4),
 #'          stacked = TRUE, color = "rows") +
 #'          scale_color_brewer(palette="Set1")
-#'
-#'
 #'
 #' @import tidyr
 #' @import ggplot2
@@ -47,7 +45,7 @@
 #' @import tibble
 
 
-LinePlot <- function(X, title = "Line plot",  rows = 1,
+plotLine <- function(X, title = "Line plot",  rows = 1,
                      type = c("l", "p", "s"), xlab = NULL, ylab = NULL,
                      xaxis_type = c("numeric", "character"), stacked = FALSE,
                      ncol = 1, nrow = NULL, facet_label = NULL, hline = 0,
