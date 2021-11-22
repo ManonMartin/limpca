@@ -67,7 +67,7 @@ lmwModelMatrix <- function(lmwDataList) {
   varNames <- all.vars(formulaDesignMatrix)
   matchesVarNames <- varNames %in% names(design)
   if (!all(matchesVarNames, na.rm = FALSE)) {
-    stop("Some of the variable names, present in the formula argument, do not correspond to one of the column names of the design argument. Please   adapt either one of both arguments.")
+    stop("Some of the variable names, present in the formula argument, do not correspond to one of the column names of the design argument. Please adapt either one of both arguments.")
   }
 
   # Checking if all avariables are factors
