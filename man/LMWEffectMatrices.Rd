@@ -23,19 +23,17 @@ lmwEffectMatrices(
 \value{
 A list with the following elements:
 \describe{
-\item{{lmwDataList} {A list containing the outcomes, the experimental design and the formula.}}
-
-\item{ModelMatrix} {A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-
-\item{\code{ModelMatrixByEffect} {A list of \emph{p} model matrices by models terms.}}
-\item{\code{covariateEffectsNames} {A character vector with \emph{K} names of the coefficients.}}
-\item{\code{covariateEffectsNamesUnique} {A character vector with the \emph{p} unique names of the model terms.}}
-\item{\code{effectMatrices} {A list of \emph{p} effect matrices for each model terms.}}
-\item{\code{predictedvalues} {A \emph{nxm} matrix with the predicted values.}}
-\item{\code{residuals} {A \emph{nxm} matrix with the residuals.}}
-\item{\code{parameters} {A \emph{pxm} matrix with the coefficients of every parameters by response variables.}}
-\item{\code{SS} {A vector with the type III residuals for each model terms.}}
-\item{\code{variationPercentages} {A \emph{p} named vector with the variation percentages of each model terms.}}
+\item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
+\item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
+\item{\code{ModelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
+\item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients.}
+\item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
+\item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model terms.}
+\item{\code{predictedvalues}}{A \emph{nxm} matrix with the predicted values.}
+\item{\code{residuals}}{A \emph{nxm} matrix with the residuals.}
+\item{\code{parameters}}{A \emph{pxm} matrix with the coefficients of every parameters by response variables.}
+\item{\code{SS}}{A vector with the type III residuals for each model terms.}
+\item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms.}
 }
 }
 \description{

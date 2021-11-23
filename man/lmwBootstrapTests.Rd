@@ -4,12 +4,14 @@
 \alias{lmwBootstrapTests}
 \title{Performs a test on the effects from the model}
 \usage{
-lmwBootstrapTests(resLmwEffectMatrices, nboot = 100)
+lmwBootstrapTests(resLmwEffectMatrices, nboot = 100, nCores = 2)
 }
 \arguments{
 \item{resLmwEffectMatrices}{A list of 11 from \code{\link{lmwEffectMatrices}}}
 
-\item{nboot}{A integer with the number of iterations to perform (by default: 100)}
+\item{nboot}{A integer with the number of iterations to perform.}
+
+\item{nCores}{The number of cores to use for parallel execution.}
 }
 \value{
 A list with the following elements:
@@ -33,7 +35,7 @@ To be written again
  resLmwModelMatrix <- lmwModelMatrix(UCH)
  resLmwEffectMatrices <- lmwEffectMatrices(resLmwModelMatrix = resLmwModelMatrix)
 
- res <- lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=10)
+ res <- lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=10, nCores=2)
 
 }
 \references{
