@@ -29,11 +29,12 @@ A list of PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those 
 \item{\code{cumvar}}{Cumulated explained variance of each of the n components.}
 \item{\code{original.dataset}}{Original dataset}
 }
+
 There are also others outputs :
 \describe{
 \item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
 \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
-\item{\code{method}}{The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E").}
+\item{\code{method}}{The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.}
 \item{\code{SS}}{A list of matrices with the type III residuals for each model terms.}
 \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms.}
 }
@@ -56,7 +57,4 @@ data('UCH')
 resLmwModelMatrix = lmwModelMatrix(UCH)
 resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 resLmwPcaEffects = lmwPcaEffects(resLmwEffectMatrices, method="ASCA-E")
-
-PlotScoresXY(resLmwPcaEffects, UCH$design, EffectVector=c("Hippurate"),
-             varname.color=c("Citrate"), varname.pch=c("Time"))
 }

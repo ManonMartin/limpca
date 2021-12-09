@@ -30,7 +30,7 @@
 #'  lmwEffectMatrices(resLmwModelMatrix)
 #'
 #' @import stringr
-#' @import plyr
+#' @importFrom plyr laply aaply
 
 
 

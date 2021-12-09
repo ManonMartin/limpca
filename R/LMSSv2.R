@@ -30,16 +30,3 @@ names(var_percentage) = c(resLmwEffectMatrices$covariateEffectsNamesUnique[2:len
 LMSS = list(SS=result,variationPercentages=var_percentage)
 return(LMSS)
 }
-
-# L = list(
-#   c(1,rep(0,17)),
-#   rbind(c(0,1,rep(0,16)),c(0,0,1,rep(0,15))),
-#   rbind(c(0,0,0,1,rep(0,14)),c(rep(0,4),1,rep(0,13))),
-#   c(rep(0,5),1,rep(0,12)),
-#   rbind(c(rep(0,6),1,rep(0,11)),c(rep(0,7),1,rep(0,10)),c(rep(0,8),1,rep(0,9)),c(rep(0,9),1,rep(0,8))),
-#   rbind(c(rep(0,10),1,rep(0,7)),c(rep(0,11),1,rep(0,6))),
-#   rbind(c(rep(0,12),1,rep(0,5)),c(rep(0,13),1,rep(0,4))),
-#   rbind(c(rep(0,14),1,rep(0,3)),c(rep(0,15),1,rep(0,2)),c(rep(0,17),1))
-# )
-# L = contrastSS(ResLMWEffectMatrices)
-# LMSS(ResLMWEffectMatrices,L)

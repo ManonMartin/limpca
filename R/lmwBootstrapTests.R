@@ -32,9 +32,9 @@
 #' Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
 #'
-#' @import plyr
 #' @import doParallel
 #' @import parallel
+#' @importFrom plyr laply llply
 
 lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
 

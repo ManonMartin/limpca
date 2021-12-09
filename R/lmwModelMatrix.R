@@ -38,12 +38,12 @@
 #'
 #'
 #' @import grDevices
-#' @import stats
+#' @importFrom stats as.formula
 
 
 lmwModelMatrix <- function(lmwDataList) {
 
-  formula = as.formula(lmwDataList$formula)
+  formula = stats::as.formula(lmwDataList$formula)
   design = lmwDataList$design
 
   # Checking no missing argument and the class of the object
@@ -55,14 +55,14 @@ lmwModelMatrix <- function(lmwDataList) {
 
   formulaChar = as.character(formula)
   if (length(formulaChar) == 3) {
-    formulaDesignMatrix <- as.formula(paste(formulaChar[1], formulaChar[3]))
+    formulaDesignMatrix <- stats::as.formula(paste(formulaChar[1], formulaChar[3]))
   } else if (length(formulaChar) == 2) {
     formulaDesignMatrix = formula
   } else {
     stop("Please put the formula argument in its right form")
   }
 
-  # Checking correspondance between formula names and design names
+  # Checking correspondence between formula names and design names
 
   varNames <- all.vars(formulaDesignMatrix)
   matchesVarNames <- varNames %in% names(design)
@@ -70,7 +70,7 @@ lmwModelMatrix <- function(lmwDataList) {
     stop("Some of the variable names, present in the formula argument, do not correspond to one of the column names of the design argument. Please adapt either one of both arguments.")
   }
 
-  # Checking if all avariables are factors
+  # Checking if all variables are factors
 
   if(all(names(Filter(is.factor, design))!=colnames(design))){
     NoFactor = vector()

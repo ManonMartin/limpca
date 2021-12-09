@@ -1,7 +1,7 @@
 # @title Linear Model Sum of Squares
-# @description Compute the type III sum of squares from a ResLMEffectMatrices list and return the variation percentages
+# @description Compute the type III sum of squares from a resLmwEffectMatrices list and return the variation percentages
 #
-# @param ResLMEffectMatrices a ResLMEffectMatrices list from \code{\link{LMEffectMatrices}}
+# @param resLmwEffectMatrices A resLmwEffectMatrices list from \code{\link{lmwEffectMatrices}}
 #
 # @return A list with the following elements :
 #  \describe{
@@ -9,20 +9,17 @@
 #   \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms}
 # }
 #
-# @import plyr
-
-
-
+# @importfrom plyr alply laply llply
 
 LMSS = function(resLmwEffectMatrices){
 
-  #Check the resLmwEffectMatrices
+  # check the resLmwEffectMatrices
 
   if(!is.list(resLmwEffectMatrices)){stop("resLmwEffectMatrices argument is not a list")}
   if(length(resLmwEffectMatrices)!=9)(stop("Length of resLmwEffectMatrices has not a length of 9."))
   if(!all(names(resLmwEffectMatrices)==c("lmwDataList","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames","covariateEffectsNamesUnique","effectMatrices","predictedvalues","residuals","parameters"))){stop("Object is not a resLmwEffectMatrices list from lmwEffectMatrices")}
 
-  #Getting needed variables
+  # getting needed variables
   nEffect = length(resLmwEffectMatrices$effectMatrices)
   covariateEffectsNamesUnique = resLmwEffectMatrices$covariateEffectsNamesUnique
   covariateEffectsNames = resLmwEffectMatrices$covariateEffectsNames
@@ -31,22 +28,22 @@ LMSS = function(resLmwEffectMatrices){
   residuals = resLmwEffectMatrices$residuals
   effectMatrices = resLmwEffectMatrices$effectMatrices
 
-  #Creating empty list with type 3 residuals
+  # creating empty list with type 3 residuals
   Type3Residuals <- list()
   length(Type3Residuals) <- nEffect
   names(Type3Residuals) <- covariateEffectsNamesUnique
 
-  #Creating empty list with Frobenius norms
+  # creating empty list with Frobenius norms
   matrixVolume <- list()
   length(matrixVolume) <- nEffect + 2
   names(matrixVolume) <- c(covariateEffectsNamesUnique, "outcomes", "residuals")
 
-  #Creating empty list with variation percentages
+  # creating empty list with variation percentages
   variationPercentages <- list()
   length(variationPercentages) <- nEffect
   names(variationPercentages) <- c(covariateEffectsNamesUnique[covariateEffectsNamesUnique != 'Intercept'], 'residuals')
 
-  #Computing SS
+  # computing SS
 
   for(iEffect in 1:nEffect){
     selection <- which(covariateEffectsNames == covariateEffectsNamesUnique[iEffect])
@@ -70,7 +67,8 @@ LMSS = function(resLmwEffectMatrices){
   denominatorSSType3 <- norm(outcomes - effectMatrices[['Intercept']], "F")^2
   numeratorFullModelSSType3 <- norm(residuals, "F")^2
   variationPercentages[1:nEffect-1] <- plyr::llply(Type3Residuals[-1], function(xx) 100*(norm(xx, "F")^2 - numeratorFullModelSSType3)/denominatorSSType3)
-  #Variation percentages
+
+  # variation percentages
   variationPercentages[[nEffect]] <- 100*numeratorFullModelSSType3/denominatorSSType3
 
   variationPercentages = unlist(variationPercentages)

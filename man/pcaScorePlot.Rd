@@ -40,4 +40,5 @@ ResPCA = pcaBySvd(UCH$outcomes)
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
 title = "PCA scores plot UCH", design = UCH$design,
 color = "Hippurate", shape = "Citrate")
+
 }

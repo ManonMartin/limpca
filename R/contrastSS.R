@@ -1,11 +1,6 @@
 contrastSS = function(resLmwModelMatrix){
 
-  # Checking argument
-
-
-
   # Attributing name
-
   design = resLmwModelMatrix$lmwDataList$design
   ModelMatrixByEffect = resLmwModelMatrix$ModelMatrixByEffect
   covariateEffectsNamesUnique = resLmwModelMatrix$covariateEffectsNamesUnique
@@ -14,7 +9,6 @@ contrastSS = function(resLmwModelMatrix){
   nparam = length(covariateEffectsNames)
 
   # Creating empy list
-
   L= list()
 
   # Filling the list for every effect
@@ -33,5 +27,3 @@ contrastSS = function(resLmwModelMatrix){
   }
   return(L)
 }
-
-# L = contrastSS(resLmwModelMatrix)

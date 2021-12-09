@@ -24,6 +24,8 @@
 #' pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
 #' title = "PCA scores plot UCH", design = UCH$design,
 #' color = "Hippurate", shape = "Citrate")
+#'
+#' @import ggplot2
 
 pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA scores plot",
@@ -85,7 +87,7 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
   }
 
   # Scores plot  ===================
-  fig <- fig + xlim(xlim_val) + ylim(ylim_val)
+  fig <- fig + ggplot2::xlim(xlim_val) + ggplot2::ylim(ylim_val)
 
   return(fig)
 
