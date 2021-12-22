@@ -54,11 +54,11 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   checkname = c("lmwDataList","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames",
                 "covariateEffectsNamesUnique","effectMatrices",
                 "predictedvalues","residuals","parameters",
-                "SS","variationPercentages")
+                "SS","variationPercentages", "varPercentagesPlot")
 
 
   if(!is.list(resLmwEffectMatrices)){stop("Argument resLmwEffectMatrices is not a list")}
-  if(length(resLmwEffectMatrices)!=11){stop("List does not contain 11 arguments")}
+  if(length(resLmwEffectMatrices)!=12){stop("List does not contain 12 arguments")}
   if(!all(names(resLmwEffectMatrices)==checkname)){stop("Argument is not a resLmwEffectMatrices object")}
   if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
   if(method %in% c("ASCA","APCA","ASCA-E")){}else{stop("Method must be one of the 3 : ASCA, ASCA-E, APCA")}

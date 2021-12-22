@@ -7,7 +7,7 @@
 lmwBootstrapTests(resLmwEffectMatrices, nboot = 100, nCores = 2)
 }
 \arguments{
-\item{resLmwEffectMatrices}{A list of 11 from \code{\link{lmwEffectMatrices}}}
+\item{resLmwEffectMatrices}{A list of 12 from \code{\link{lmwEffectMatrices}}}
 
 \item{nboot}{A integer with the number of iterations to perform.}
 

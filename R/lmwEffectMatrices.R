@@ -79,6 +79,7 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
     selectionComplement <- which(covariateEffectsNames != covariateEffectsNamesUnique[iEffect])
     #Effect matrices
     effectMatrices[[iEffect]] <- t(plyr::aaply(parameters, 2, function(xx) as.matrix(modelMatrix[, selection])%*%xx[selection]))
+    colnames(effectMatrices[[iEffect]]) <- colnames(outcomes)
     }
 
 
@@ -100,9 +101,23 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
     }else{
       ResLMSS = LMSS(resLmwEffectMatrices)
     }
-    resLmwEffectMatrices = c(resLmwEffectMatrices,ResLMSS)
+
+    # Plot of the total contribution
+    contrib <- as.data.frame(ResLMSS$variationPercentages)
+    rownames(contrib) = ModelAbbrev(rownames(contrib))
+
+    plot <- ggplot2::ggplot(data=contrib,
+                                          ggplot2::aes(x=reorder(rownames(contrib), -contrib[,1]),
+                                                       y=contrib[,1]))+
+      ggplot2::geom_bar(stat="identity")+
+      ggplot2::xlab("Effects")+
+      ggplot2::ylab("Variation Percentage")
+
+    resLmwEffectMatrices = c(resLmwEffectMatrices,ResLMSS,
+                             varPercentagesPlot = list(plot))
   }else{
-    resLmwEffectMatrices = c(resLmwEffectMatrices,SS=NA,variationPercentages=NA)
+    resLmwEffectMatrices = c(resLmwEffectMatrices,SS=NA,
+                             variationPercentages=NA,varPercentagesPlot=NA)
   }
 
 

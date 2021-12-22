@@ -73,6 +73,6 @@ LMSS = function(resLmwEffectMatrices){
 
   variationPercentages = unlist(variationPercentages)
 
-  ResLMSS = list(Type3Residuals=Type3Residuals,variationPercentages=variationPercentages)
+  ResLMSS = list(SS=Type3Residuals,variationPercentages=variationPercentages)
   return(ResLMSS)
 }

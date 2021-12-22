@@ -4,7 +4,7 @@
 #' @description
 #' Computes a partial model without the tested effects then estimates the residuals. Next, computes new outcomes from the predicted values of the partial model and sampled residuals. Finally, computes the Sum of Squares and the test statistics.
 #'
-#' @param resLmwEffectMatrices A list of 11 from \code{\link{lmwEffectMatrices}}
+#' @param resLmwEffectMatrices A list of 12 from \code{\link{lmwEffectMatrices}}
 #' @param nboot A integer with the number of iterations to perform.
 #' @param nCores The number of cores to use for parallel execution.
 #'
@@ -43,11 +43,11 @@ lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
   checkname = c("lmwDataList","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames",
                 "covariateEffectsNamesUnique","effectMatrices",
                 "predictedvalues","residuals","parameters",
-                "SS","variationPercentages")
+                "SS","variationPercentages","varPercentagesPlot")
 
 
   if(!is.list(resLmwEffectMatrices)){stop("Argument resLmwEffectMatrices is not a list")}
-  if(length(resLmwEffectMatrices)!=11){stop("List does not contain 11 arguments")}
+  if(length(resLmwEffectMatrices)!=12){stop("List does not contain 12 arguments")}
   if(!all(names(resLmwEffectMatrices)==checkname)){stop("Argument is not a resLmwEffectMatrices object")}
   if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices differs from the number of effects")}
 
@@ -331,16 +331,16 @@ lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
     return(result)
   }
 
-  # Outputs genration
+  # Outputs generation
   result = apply(X=matrix_temp,FUN = ComputePval,MARGIN = 2)
-  result = signif(result, digits = 2)
+  result = signif(result, digits = log10(nboot))
   colnames(Fboot) = names(Fobs)
 
   result <- replace(result, result == 0, paste0("< ", format(1/nboot, digits = 1, scientific = FALSE)))
 
   resultsTable = rbind(result,
-                       round(resLmwEffectMatrices$variationPercentages[1:length(Fobs)], log10(nboot)))
-  rownames(resultsTable) = c("Observed p-values", "Variation percentages")
+                       round(resLmwEffectMatrices$variationPercentages[1:length(Fobs)], 2))
+  rownames(resultsTable) = c("Bootstrap p-values", "% of variance (T III)")
 
   resLmwBootstrapTests = list(Fobs=Fobs,Fboot=Fboot,Pvalues=result,ResultsTable=resultsTable)
 
