@@ -5,10 +5,11 @@
 \title{Scatter plot matrix}
 \usage{
 plotScatterM(
-  X,
-  rows,
+  Y,
+  cols,
   design,
   labelVector = NULL,
+  title = "Scatterplot matrix",
   varname.colorup = NULL,
   varname.colordown = NULL,
   varname.pchup = NULL,
@@ -20,13 +21,13 @@ plotScatterM(
 )
 }
 \arguments{
-\item{X}{nxm matrix with n observations and m variables.}
+\item{Y}{nxm matrix with n observations and m variables.}
 
-\item{rows}{A vector with either the row names of the X matrix to plot (character) or the row index positions.}
+\item{cols}{A vector with either the col names of the Y matrix to plot (character) or the col index positions.}
 
 \item{design}{A nxk "free encoded" experimental design data frame.}
 
-\item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the \code{rows} names are used.}
+\item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the \code{cols} names are used.}
 
 \item{varname.colorup}{A character with the name of variable used to color the upper triangle}
 

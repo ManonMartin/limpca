@@ -7,9 +7,10 @@
 #' @param design A nxk "free encoded" experimental design data frame.
 #' @param x A character string giving the column name of `design` to be used for the x axis.
 #' @param y A character string giving the column name of `design` to be used for the y axis.
-#' @param rows If not `NULL`,  a character vector with one or several column name(s) of `design` to be used for facetting along the rows.
-#' @param cols If not `NULL`, a character vector with one or several column name(s) of `design` to be used for facetting along the columns.
+#' @param rows If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the rows.
+#' @param cols If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the columns.
 #' @param title Plot title.
+#' @param theme ggplot theme, see `?ggtheme` for more info.
 #'
 #' @return A plot of the design.
 #'
@@ -23,20 +24,20 @@
 #'   mutate(across(everything(), as.factor))
 #'
 #' # 2 factors
-#' plotDesign(design = df, x = "cyl", y = "vs",rows = NULL,
+#' plotDesign(design = df, x = "cyl", y = "vs", rows = NULL,
 #'           cols = NULL)
 #' # 3 factors
-#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
+#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
 #'           cols = NULL)
 #' # 4 factors
-#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
+#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
 #'           cols = c("gear"))
 #' # 5 factors
-#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
 #'           cols = c("gear"))
 #'
-#' plotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
-#'          cols = c("vs"))
+#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
+#'           cols = c("vs"))
 #'
 #' ### UCH
 #' data("UCH")
@@ -45,8 +46,8 @@
 #' @import ggplot2
 #' @import dplyr
 
-plotDesign <- function(design, x, y, rows = NULL,
-                       cols = NULL, title = "Plot of the design"){
+plotDesign <- function(design, x, y, rows = NULL, cols = NULL,
+                       title = "Plot of the design", theme = theme_bw()){
 
   # checks ===================
 
@@ -102,7 +103,7 @@ plotDesign <- function(design, x, y, rows = NULL,
                         labeller = label_both)
 
   }
-  p <- p + ggplot2::ggtitle(title)
+  p <- p + ggplot2::ggtitle(title) + theme
   return(p)
 
 }

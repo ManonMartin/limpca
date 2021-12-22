@@ -4,12 +4,12 @@
 \alias{pcaBySvd}
 \title{Singular value decomposition for PCA analysis}
 \usage{
-pcaBySvd(outcomes, ncomp = min(dim(outcomes)))
+pcaBySvd(Y, nPC = min(dim(Y)))
 }
 \arguments{
-\item{outcomes}{The nxm matrix with n observations and m response variables.}
+\item{Y}{The nxm matrix with n observations and m response variables.}
 
-\item{ncomp}{Number of Principal Components.}
+\item{nPC}{Number of Principal Components.}
 }
 \value{
 A list with the following elements:

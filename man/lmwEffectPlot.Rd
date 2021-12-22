@@ -7,7 +7,7 @@
 lmwEffectPlot(
   resASCA,
   effectName,
-  nPC = 1,
+  axes = 1,
   x,
   z = NULL,
   w = NULL,
@@ -20,7 +20,7 @@ lmwEffectPlot(
 
 \item{effectName}{Name of the effect matrix used for the scores.}
 
-\item{nPC}{A numerical vector with the Principal Components axes to be drawn.}
+\item{axes}{A numerical vector with the Principal Components axes to be drawn.}
 
 \item{x}{A character string giving the \code{design} factor whose levels will form the x axis.}
 

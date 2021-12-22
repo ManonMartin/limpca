@@ -4,8 +4,8 @@
 #' @description
 #' Draws a scatter plot.
 #'
-#' @param X A nxm matrix with n observations and m variables.
-#' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the X matrix to plot (character) or the index position(s).
+#' @param Y A nxm matrix with n observations and m variables.
+#' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the Y matrix to plot (character) or the index position(s).
 #' @param design A nxk "free encoded" experimental design data frame.
 #' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color.
 #' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape.
@@ -16,10 +16,10 @@
 #' @param size The points size.
 #' @param size_lab The size of points labels.
 #' @param drawShapes Multiple shapes can be drawn based on the `color`: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).
-#' @param theme ggplot theme, see `?ggtheme` for more info.
 #' @param typeEl The type of ellipse, either `norm` (multivariate normal distribution), `t` (multivariate t-distribution) or `euclid` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
 #' @param levelEl The confidence level at which to draw an ellipse.
 #' @param alphaPoly The degree of transparency for polygons.
+#' @param theme ggplot theme, see `?ggtheme` for more info.
 #'
 #' @return A scatter plot.
 #'
@@ -28,43 +28,42 @@
 #' data("UCH")
 #'
 #' # Without design
-#' plotScatter(X = UCH$outcomes, xy = c(453, 369))
-#'
+#' plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 #'
 #' # With color and shape
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), color = "Hippurate",
 #'             shape = "Citrate")
 #'
 #' # With color and drawShapes
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "ellipse")
 #'
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "polygon")
 #'
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "segment")
 #'
 #' # Customize shapes
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), shape = "Hippurate", size = 3) +
 #'   scale_discrete_identity(aesthetics = 'shape',
 #'                           guide = 'legend')
 #'
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), shape = "Hippurate") +
 #'   scale_shape_discrete(solid=FALSE)
 #'
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), shape = "Hippurate") +
 #'   scale_shape_manual(values = c(15,16,17))
 #'
 #' # With labels
-#' plotScatter(X = UCH$outcomes, design = UCH$design,
+#' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), points_labs = rownames(UCH$design))
 #'
 #' @import ggplot2
@@ -72,19 +71,19 @@
 #' @import dplyr
 #' @importFrom plyr ddply
 
-plotScatter <- function(X, xy, design = NULL, color = NULL,
+plotScatter <- function(Y, xy, design = NULL, color = NULL,
                         shape = NULL, points_labs = NULL,
                         title = "Scatter plot", xlab = NULL,
                         ylab = NULL, size = 2,  size_lab = 3,
                         drawShapes = c("none", "ellipse",
                                        "polygon", "segment"),
-                        theme = theme_bw(),
-                        typeEl = c("norm", "t","euclid"),
-                        levelEl = 0.9, alphaPoly = 0.4) {
+                        typeEl = c("norm","t","euclid"),
+                        levelEl = 0.9, alphaPoly = 0.4,
+                        theme = theme_bw()) {
 
   # checks ==============================
   checkArg(design,"data.frame",can.be.null = TRUE)
-  checkArg(X,"matrix",can.be.null = FALSE)
+  checkArg(Y,"matrix",can.be.null = FALSE)
   checkArg(color,c("str","length1"),can.be.null = TRUE)
   checkArg(shape,c("str","length1"),can.be.null = TRUE)
   checkArg(points_labs,"str", can.be.null = TRUE)
@@ -139,7 +138,7 @@ plotScatter <- function(X, xy, design = NULL, color = NULL,
 
   # prepare the arguments  ==============================
   if (is.numeric(xy)){
-    xy <- colnames(X)[xy]
+    xy <- colnames(Y)[xy]
   }
   mn_xy <- make.names(xy) # correct the naming of variables
 
@@ -150,7 +149,7 @@ plotScatter <- function(X, xy, design = NULL, color = NULL,
     ylab <- xy[2]
   }
 
-  out_df <- X[,c(xy)]
+  out_df <- Y[,c(xy)]
   colnames(out_df) <- mn_xy
 
   if (!is.null(design)){

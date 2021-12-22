@@ -77,12 +77,12 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
   ylim_val <-  c(-ylim1,ylim1)
 
   if (points_labs_rn){
-    fig <- plotScatter(X = scores, title = title,
+    fig <- plotScatter(Y = scores, title = title,
                        xy = axes, xlab = xlab, ylab = ylab,
                        points_labs = rownames(scores),
                        ...)
   } else {
-    fig <- plotScatter(X = scores, title = title,
+    fig <- plotScatter(Y = scores, title = title,
                        xy = axes, xlab = xlab, ylab = ylab, ...)
   }
 

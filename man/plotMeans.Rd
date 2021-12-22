@@ -7,7 +7,7 @@
 plotMeans(
   Y,
   design,
-  columns = NULL,
+  cols = NULL,
   x,
   z = NULL,
   w = NULL,
@@ -15,9 +15,9 @@ plotMeans(
   xlab = NULL,
   ylab = NULL,
   color = NULL,
-  shape = 16,
+  shape = NULL,
+  linetype = NULL,
   size = 2,
-  linetype = 1,
   hline = NULL,
   theme = theme_bw()
 )
@@ -27,7 +27,7 @@ plotMeans(
 
 \item{design}{A nxk "free encoded" experimental design data frame.}
 
-\item{columns}{A vector with either the column name(s) of the Y matrix to plot (character) or the column index position(s).}
+\item{cols}{A vector with either the column name(s) of the Y matrix to plot (character) or the column index position(s).}
 
 \item{x}{A character string giving the \code{design} factor whose levels will form the x axis.}
 
@@ -41,13 +41,13 @@ plotMeans(
 
 \item{ylab}{If not \code{NULL}, label for the y-axis.}
 
-\item{color}{If \code{z} is \code{NULL}, argument of length 1 giving the color of the points and the line.}
+\item{color}{If not \code{NULL}, argument giving the color of the points and the line.}
 
-\item{shape}{Argument of length 1 giving the points shape.}
+\item{shape}{If not \code{NULL}, argument giving the points shape.}
+
+\item{linetype}{If not \code{NULL}, argument giving the line type.}
 
 \item{size}{Argument of length 1 giving the points size.}
-
-\item{linetype}{Argument of length 1 giving the line type.}
 
 \item{hline}{If not \code{NULL}, draws (a) horizontal line(s).}
 
@@ -62,15 +62,15 @@ Draws means plot.
 \examples{
 
 # 1 factor
-plotMeans(Y = UCH$outcomes, design = UCH$design, columns = "4.0628702",
+plotMeans(Y = UCH$outcomes, design = UCH$design, cols = "4.0628702",
           x = "Hippurate", color = "blue")
 
 # 2 factors
-plotMeans(Y = UCH$outcomes, design = UCH$design, columns = c(364,365),
+plotMeans(Y = UCH$outcomes, design = UCH$design, cols = c(364,365),
           x = "Hippurate", z = "Time", shape = 15)
 
 # 3 factors
-plotMeans(Y = UCH$outcomes, design = UCH$design, columns = c(364,365),
+plotMeans(Y = UCH$outcomes, design = UCH$design, cols = c(364,365),
           x = "Hippurate", z = "Time", w = "Citrate", linetype = 3)
 
 }

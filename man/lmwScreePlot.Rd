@@ -8,7 +8,7 @@ lmwScreePlot(
   resLmwPcaEffects,
   effectName,
   title = paste0("Scree plot of the ", effectName, " effect"),
-  PCnumber = 5
+  nPC = 5
 )
 }
 \arguments{
@@ -18,7 +18,7 @@ lmwScreePlot(
 
 \item{title}{Plot title.}
 
-\item{PCnumber}{An integer with the number of components to plot.}
+\item{nPC}{An integer with the number of components to plot.}
 }
 \value{
 A scree plot
@@ -32,6 +32,6 @@ Draws scree plots for the lmwPcaEffects function.
  resLmwModelMatrix = lmwModelMatrix(UCH)
  resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
  resLmwPcaEffects = lmwPcaEffects(resLmwEffectMatrices,method="ASCA-E")
- lmwScreePlot(resLmwPcaEffects,"Hippurate:Citrate",PCnumber=4)
+ lmwScreePlot(resLmwPcaEffects,"Hippurate:Citrate",nPC=4)
 
 }

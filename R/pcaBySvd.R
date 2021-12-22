@@ -4,8 +4,8 @@
 #' @description
 #' PCA by singular value decomposition, the preprocessing involves the mean-centering of X.
 #'
-#' @param outcomes The nxm matrix with n observations and m response variables.
-#' @param ncomp  Number of Principal Components.
+#' @param Y The nxm matrix with n observations and m response variables.
+#' @param nPC Number of Principal Components.
 #'
 #' @return A list with the following elements:
 #' \describe{
@@ -16,7 +16,7 @@
 #'   \item{\code{pcu}}{Normalized scores}
 #'   \item{\code{var}}{Explained variance}
 #'   \item{\code{cumvar}}{Cumulated explained variance}
-#'  \item{\code{original.dataset}}{Original dataset}
+#'   \item{\code{original.dataset}}{Original dataset}
 #'
 #' }
 #'
@@ -26,10 +26,11 @@
 #' PCA.res = pcaBySvd(UCH$outcomes)
 
 
-pcaBySvd <- function(outcomes, ncomp = min(dim(outcomes))) {
+pcaBySvd <- function(Y, nPC = min(dim(Y))) {
 
 
-  original.dataset <- outcomes
+  original.dataset <- Y
+  outcomes <- Y
   # column centering of outcomes
   outcomes <- outcomes - matrix(apply(outcomes, 2, mean), nrow = dim(outcomes)[1], ncol = dim(outcomes)[2], byrow = TRUE)  # centring of outcomes over the columns
 
@@ -64,19 +65,18 @@ pcaBySvd <- function(outcomes, ncomp = min(dim(outcomes))) {
   dimnames(outcomes.normscores) <- list(rownames(outcomes), paste0("PC", 1:ncol(outcomes.normscores)))
 
   outcomes.loadings <- as.matrix(outcomes.loadings)
-
   dimnames(outcomes.loadings) <- list(colnames(outcomes), paste0("PC", 1:ncol(outcomes.loadings)))
 
 
   # selection of the first n components
 
-  outcomes.scores <- outcomes.scores[, 1:ncomp]
-  outcomes.normscores <- outcomes.normscores[, 1:ncomp]
-  outcomes.loadings <- outcomes.loadings[, 1:ncomp]
-  outcomes.singularval <- outcomes.singularval[1:ncomp]
+  outcomes.scores <- outcomes.scores[, 1:nPC]
+  outcomes.normscores <- outcomes.normscores[, 1:nPC]
+  outcomes.loadings <- outcomes.loadings[, 1:nPC]
+  outcomes.singularval <- outcomes.singularval[1:nPC]
 
-  outcomes.variances <- outcomes.variances[1:ncomp]
-  outcomes.cumvariances <- outcomes.cumvariances[1:ncomp]
+  outcomes.variances <- outcomes.variances[1:nPC]
+  outcomes.cumvariances <- outcomes.cumvariances[1:nPC]
 
 
 

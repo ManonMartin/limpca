@@ -5,10 +5,10 @@
 \title{Line plot}
 \usage{
 plotLine(
-  X,
-  title = "Line plot",
+  Y,
   rows = 1,
   type = c("l", "p", "s"),
+  title = "Line plot",
   xlab = NULL,
   ylab = NULL,
   xaxis_type = c("numeric", "character"),
@@ -24,13 +24,13 @@ plotLine(
 )
 }
 \arguments{
-\item{X}{A numerical matrix containing the rows to be drawn.}
+\item{Y}{A numerical matrix containing the rows to be drawn.}
 
-\item{title}{Plot title.}
-
-\item{rows}{A vector with either the row name(s) of the X matrix to plot (character) or the row index position(s).}
+\item{rows}{A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s).}
 
 \item{type}{Type of graph to be drawn: "p" for point, "l" for line or "s" for segment.}
+
+\item{title}{Plot title.}
 
 \item{xlab}{If not \code{NULL}, label for the x-axis.}
 
@@ -64,17 +64,17 @@ Draws Line plot(s).
 }
 \examples{
 
-plotLine(X = UCH$outcomes)
+plotLine(Y = UCH$outcomes)
 
 # separate plots
-plotLine(X = UCH$outcomes, rows = c(1:4), hline = NULL)
-plotLine(X = UCH$outcomes, rows = c(1:4), color = 2)
-plotLine(X = UCH$outcomes, rows = c(1:8), ncol=2)
-plotLine(X = UCH$outcomes, type = "p",
+plotLine(Y = UCH$outcomes, rows = c(1:4), hline = NULL)
+plotLine(Y = UCH$outcomes, rows = c(1:4), color = 2)
+plotLine(Y = UCH$outcomes, rows = c(1:8), ncol=2)
+plotLine(Y = UCH$outcomes, type = "p",
          rows = c(1:8), ncol=2)
 
 # stacked plots
-plotLine(X = UCH$outcomes, rows = c(1:4),
+plotLine(Y = UCH$outcomes, rows = c(1:4),
          stacked = TRUE, color = "rows") +
          scale_color_brewer(palette="Set1")
 

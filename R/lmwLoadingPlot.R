@@ -74,7 +74,7 @@ lmwLoadingPlot <- function(resLmwPcaEffects, effectNames = NULL,
   buildFig <- function(effect){
     title = paste(effect, ": loadings plot")
 
-    plotLine(X = loadings[[effect]], title = title, rows = axes, facet_label = lab[[effect]], ...)
+    plotLine(Y = loadings[[effect]], title = title, rows = axes, facet_label = lab[[effect]], ...)
   }
 
   fig <- lapply(effectNames, buildFig)

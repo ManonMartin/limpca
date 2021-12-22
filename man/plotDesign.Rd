@@ -10,7 +10,8 @@ plotDesign(
   y,
   rows = NULL,
   cols = NULL,
-  title = "Plot of the design"
+  title = "Plot of the design",
+  theme = theme_bw()
 )
 }
 \arguments{
@@ -20,11 +21,13 @@ plotDesign(
 
 \item{y}{A character string giving the column name of \code{design} to be used for the y axis.}
 
-\item{rows}{If not \code{NULL},  a character vector with one or several column name(s) of \code{design} to be used for facetting along the rows.}
+\item{rows}{If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
 
-\item{cols}{If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for facetting along the columns.}
+\item{cols}{If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
 
 \item{title}{Plot title.}
+
+\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
 A plot of the design.
@@ -42,20 +45,20 @@ df <-  mtcars \%>\%
   mutate(across(everything(), as.factor))
 
 # 2 factors
-plotDesign(design = df, x = "cyl", y = "vs",rows = NULL,
+plotDesign(design = df, x = "cyl", y = "vs", rows = NULL,
           cols = NULL)
 # 3 factors
-plotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
+plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
           cols = NULL)
 # 4 factors
-plotDesign(design = df, x = "cyl", y = "vs",rows = c("am"),
+plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
           cols = c("gear"))
 # 5 factors
-plotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
+plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
           cols = c("gear"))
 
-plotDesign(design = df, x = "cyl", y = "vs",rows = c("am", "carb"),
-         cols = c("vs"))
+plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
+          cols = c("vs"))
 
 ### UCH
 data("UCH")

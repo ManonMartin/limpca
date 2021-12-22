@@ -106,7 +106,7 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
     }
 
     # Building plots
-    fig <- plotScatter(X = scores[[effect]], xy = axes,
+    fig <- plotScatter(Y = scores[[effect]], xy = axes,
                        xlab = xlab, ylab = ylab,
                        design = resLmwPcaEffects$lmwDataList$design, ...)
 

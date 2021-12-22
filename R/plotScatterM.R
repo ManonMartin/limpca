@@ -4,10 +4,10 @@
 #' @description
 #' Plots a matrix of scatter plots.
 #'
-#' @param X nxm matrix with n observations and m variables.
-#' @param rows A vector with either the row names of the X matrix to plot (character) or the row index positions.
+#' @param Y nxm matrix with n observations and m variables.
+#' @param cols A vector with either the col names of the Y matrix to plot (character) or the col index positions.
 #' @param design A nxk "free encoded" experimental design data frame.
-#' @param labelVector Labels to display on the diagonal. If `NULL`, the `rows` names are used.
+#' @param labelVector Labels to display on the diagonal. If `NULL`, the `cols` names are used.
 #' @param varname.colorup A character with the name of variable used to color the upper triangle
 #' @param varname.colordown A character with the name of variable used to color the lower triangle
 #' @param varname.pchup A character with the name of variable used to mark points from the upper triangle
@@ -30,27 +30,26 @@
 #' @import graphics grDevices
 
 
-plotScatterM <- function(X,
-                         rows,
-                         design,
-                         labelVector = NULL,
-                         varname.colorup = NULL,
-                         varname.colordown = NULL,
-                         varname.pchup = NULL,
-                         varname.pchdown = NULL,
-                         vec.colorup = NULL,
-                         vec.colordown = NULL,
-                         vec.pchup = NULL,
-                         vec.pchdown = NULL){
+plotScatterM <- function(Y, cols, design, labelVector = NULL, title = "Scatterplot matrix",
+                         varname.colorup = NULL, varname.colordown = NULL,
+                         varname.pchup = NULL, varname.pchdown = NULL,
+                         vec.colorup = NULL, vec.colordown = NULL,
+                         vec.pchup = NULL, vec.pchdown = NULL){
 
   # Check arguments - add title
 
+
+
+  # if(is.null(colnames(Y))){
+  #   colnames(Y) <- colnames(Y, do.NULL = FALSE, prefix = "X.")
+  # }
+
   if(is.null(labelVector)){
-    labelVector = rownames(X[rows,])
+    labelVector = colnames(Y[,cols])
   }
 
-  if(length(labelVector) != length(rows)){
-    stop("labelVector must have the same length as rows")
+  if(length(labelVector) != length(cols)){
+    stop("labelVector must have the same length as cols")
   }
 
 
@@ -66,10 +65,10 @@ plotScatterM <- function(X,
     }else if(!is.null(varname.pchup)){
       varname.colordown=varname.pchup
       varname.colorup=varname.pchup
-      }else if(!is.null(varname.pchdown)){
-        varname.colordown=varname.pchdown
-        varname.colorup=varname.pchdown
-        }
+    }else if(!is.null(varname.pchdown)){
+      varname.colordown=varname.pchdown
+      varname.colorup=varname.pchdown
+    }
   }
 
   if(is.null(varname.pchdown) & is.null(varname.pchup)){
@@ -92,7 +91,8 @@ plotScatterM <- function(X,
     }else{
       varname.colorup=varname.colordown
       if(is.null(vec.colordown)){
-        vec.colorup=grDevices::heat.colors(length(levels(design[,which(names(design)==varname.colorup)])),alpha=1)
+        vec.colorup=ggsci::pal_ucscgb("default")(length(levels(design[,which(names(design)==varname.colorup)])))
+        #vec.colorup=grDevices::rainbow(length(levels(design[,which(names(design)==varname.colorup)])),alpha=1)
       }else{
         vec.colorup=vec.colordown
       }
@@ -102,13 +102,11 @@ plotScatterM <- function(X,
       varname.colordown=varname.colorup}
     if(is.null(vec.colorup)){ # Default
       if(is.null(vec.colordown)){
-        vec.colorup = grDevices::heat.colors(length(levels(design[,which(names(design)==varname.colorup)])),alpha=1)
+        vec.colorup=ggsci::pal_ucscgb("default")(length(levels(design[,which(names(design)==varname.colorup)])))
+        #vec.colorup=grDevices::heat.colors(length(levels(design[,which(names(design)==varname.colorup)])),alpha=1)
       }else if(varname.colordown == varname.colorup){
-        vec.colorup = vec.colordown
+        vec.colorup=vec.colordown
       }
-
-    }else{
-      # OK
     }
   }
 
@@ -119,7 +117,8 @@ plotScatterM <- function(X,
     }else{ # Copied
       varname.colordown = varname.colorup
       if(is.null(vec.colorup)){
-        vec.colordown = grDevices::topo.colors(length(levels(design[,which(names(design)==varname.colordown)])),alpha=1)
+        vec.colordown=ggsci::pal_igv("default")(length(levels(design[,which(names(design)==varname.colordown)])))
+        #vec.colordown = grDevices::topo.colors(length(levels(design[,which(names(design)==varname.colordown)])),alpha=1)
       }else{
         vec.colordown = vec.colorup
       }
@@ -134,11 +133,9 @@ plotScatterM <- function(X,
       if(varname.colorup == varname.colordown){
         vec.colordown=vec.colorup
       }else{
-        vec.colordown = grDevices::topo.colors(length(levels(design[,which(names(design)==varname.colordown)])),alpha=1)
+        vec.colordown=ggsci::pal_igv("default")(length(levels(design[,which(names(design)==varname.colordown)])))
+        #vec.colordown = grDevices::topo.colors(length(levels(design[,which(names(design)==varname.colordown)])),alpha=1)
       }
-
-    }else{
-      # OK
     }
   }
 
@@ -162,8 +159,6 @@ plotScatterM <- function(X,
       }else{
         vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))##############################
       }
-    }else{
-      #OK
     }
   }
 
@@ -188,9 +183,6 @@ plotScatterM <- function(X,
       }else{
         vec.pchup = c(20:(20+(length(levels(design[,which(names(design)==varname.pchup)])))))
       }
-
-    }else{
-      #OK
     }
   }
 
@@ -303,20 +295,22 @@ plotScatterM <- function(X,
   # Building of the pairs plot
 
   if(!plot_type_colored & !plot_type_pch){
-    graphics::pairs(t(X[rows,]),
+    graphics::pairs(Y[,cols],
                     gap = 0.3,
                     labels = labelVector)
+    graphics::title(main = title, font.main = 1, adj = 0, line = 3)
+
   }else if(plot_type_colored & plot_type_pch){
-    graphics::pairs(t(X[rows,]),
+    graphics::pairs(Y[,cols],
                     upper.panel = panelup,
                     lower.panel = paneldown,
                     gap = 0.3,
                     oma = c(3, 3, 5, 10),
                     labels = labelVector)
+    graphics::title(main = title, font.main = 1, adj = 0, line = 3)
     graphics::par(xpd=TRUE)
     Legend()
     graphics::par(xpd=FALSE)
   }
-
 
 }

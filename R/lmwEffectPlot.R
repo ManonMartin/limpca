@@ -6,7 +6,7 @@
 #'
 #' @param resASCA A list corresponding to the ASCA output value of \code{\link{lmwPcaEffects}}.
 #' @param effectName Name of the effect matrix used for the scores.
-#' @param nPC A numerical vector with the Principal Components axes to be drawn.
+#' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param x A character string giving the `design` factor whose levels will form the x axis.
 #' @param z A character string giving the `design` factor whose levels will form the traces.
 #' @param w A character string giving the `design` factor whose levels will be used for the facet.
@@ -23,7 +23,7 @@
 
 lmwEffectPlot <- function(resASCA,
                           effectName,
-                          nPC = 1,
+                          axes = 1,
                           x,
                           z = NULL,
                           w = NULL,
@@ -34,7 +34,7 @@ lmwEffectPlot <- function(resASCA,
 
   checkArg(resASCA,c("list"),can.be.null = FALSE)
   checkArg(effectName, c("str", "length1"), can.be.null = FALSE)
-  checkArg(nPC,c("int","pos"),can.be.null = FALSE)
+  checkArg(axes,c("int","pos"),can.be.null = FALSE)
   checkArg(x,c("str", "length1"), can.be.null = FALSE)
   checkArg(z,c("str", "length1"), can.be.null = TRUE)
   checkArg(w,c("str", "length1"), can.be.null = TRUE)
@@ -48,8 +48,8 @@ lmwEffectPlot <- function(resASCA,
     stop(paste0(effectName," is not an effect of resASCA"))
   }
 
-  if(max(nPC) > ncol(resASCA[[effectName]][["scores"]])){
-    stop(paste0("PC (",paste0(nPC, collapse = ",")
+  if(max(axes) > ncol(resASCA[[effectName]][["scores"]])){
+    stop(paste0("PC (",paste0(axes, collapse = ",")
                 ,") is beyond the number of PC of scores (",ncol(scores),")"))
   }
 
@@ -74,12 +74,12 @@ lmwEffectPlot <- function(resASCA,
 
   matEffect <- resASCA[[effectName]][["scores"]]
 
-  title = paste0(effectName, " scores as a function of ",x, ": PC",nPC)
-  ylab = paste0("Scores (",round(resASCA[[effectName]][["var"]][nPC], 2),"% of variation explained)")
+  title = paste0(effectName, " scores as a function of ",x, ": PC",axes)
+  ylab = paste0("Scores (",round(resASCA[[effectName]][["var"]][axes], 2),"% of variation explained)")
 
   fig <- plotMeans(Y = matEffect,
             design = resASCA$lmwDataList$design,
-            columns = nPC,
+            cols = axes,
             x = x,
             z = z,
             w = w,

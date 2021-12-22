@@ -5,7 +5,7 @@
 \title{Scatter plot}
 \usage{
 plotScatter(
-  X,
+  Y,
   xy,
   design = NULL,
   color = NULL,
@@ -17,16 +17,16 @@ plotScatter(
   size = 2,
   size_lab = 3,
   drawShapes = c("none", "ellipse", "polygon", "segment"),
-  theme = theme_bw(),
   typeEl = c("norm", "t", "euclid"),
   levelEl = 0.9,
-  alphaPoly = 0.4
+  alphaPoly = 0.4,
+  theme = theme_bw()
 )
 }
 \arguments{
-\item{X}{A nxm matrix with n observations and m variables.}
+\item{Y}{A nxm matrix with n observations and m variables.}
 
-\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the X matrix to plot (character) or the index position(s).}
+\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the Y matrix to plot (character) or the index position(s).}
 
 \item{design}{A nxk "free encoded" experimental design data frame.}
 
@@ -48,13 +48,13 @@ plotScatter(
 
 \item{drawShapes}{Multiple shapes can be drawn based on the \code{color}: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).}
 
-\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
-
 \item{typeEl}{The type of ellipse, either \code{norm} (multivariate normal distribution), \code{t} (multivariate t-distribution) or \code{euclid} (draws a circle with the radius equal to level, representing the euclidean distance from the center).}
 
 \item{levelEl}{The confidence level at which to draw an ellipse.}
 
 \item{alphaPoly}{The degree of transparency for polygons.}
+
+\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
 A scatter plot.
@@ -67,43 +67,42 @@ Draws a scatter plot.
 data("UCH")
 
 # Without design
-plotScatter(X = UCH$outcomes, xy = c(453, 369))
-
+plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 
 # With color and shape
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             shape = "Citrate")
 
 # With color and drawShapes
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             drawShapes = "ellipse")
 
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             drawShapes = "polygon")
 
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             drawShapes = "segment")
 
 # Customize shapes
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), shape = "Hippurate", size = 3) +
   scale_discrete_identity(aesthetics = 'shape',
                           guide = 'legend')
 
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), shape = "Hippurate") +
   scale_shape_discrete(solid=FALSE)
 
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), shape = "Hippurate") +
   scale_shape_manual(values = c(15,16,17))
 
 # With labels
-plotScatter(X = UCH$outcomes, design = UCH$design,
+plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), points_labs = rownames(UCH$design))
 
 }

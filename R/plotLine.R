@@ -4,10 +4,10 @@
 #' @description
 #' Draws Line plot(s).
 #'
-#' @param X A numerical matrix containing the rows to be drawn.
-#' @param title Plot title.
-#' @param rows A vector with either the row name(s) of the X matrix to plot (character) or the row index position(s).
+#' @param Y A numerical matrix containing the rows to be drawn.
+#' @param rows A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s).
 #' @param type Type of graph to be drawn: "p" for point, "l" for line or "s" for segment.
+#' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
 #' @param ylab If not \code{NULL}, label for the y-axis.
 #' @param xaxis_type The data type of the x axis: either "numeric" or "character".
@@ -25,17 +25,17 @@
 #'
 #' @examples
 #'
-#' plotLine(X = UCH$outcomes)
+#' plotLine(Y = UCH$outcomes)
 #'
 #' # separate plots
-#' plotLine(X = UCH$outcomes, rows = c(1:4), hline = NULL)
-#' plotLine(X = UCH$outcomes, rows = c(1:4), color = 2)
-#' plotLine(X = UCH$outcomes, rows = c(1:8), ncol=2)
-#' plotLine(X = UCH$outcomes, type = "p",
+#' plotLine(Y = UCH$outcomes, rows = c(1:4), hline = NULL)
+#' plotLine(Y = UCH$outcomes, rows = c(1:4), color = 2)
+#' plotLine(Y = UCH$outcomes, rows = c(1:8), ncol=2)
+#' plotLine(Y = UCH$outcomes, type = "p",
 #'          rows = c(1:8), ncol=2)
 #'
 #' # stacked plots
-#' plotLine(X = UCH$outcomes, rows = c(1:4),
+#' plotLine(Y = UCH$outcomes, rows = c(1:4),
 #'          stacked = TRUE, color = "rows") +
 #'          scale_color_brewer(palette="Set1")
 #'
@@ -45,14 +45,14 @@
 #' @import tibble
 
 
-plotLine <- function(X, title = "Line plot",  rows = 1,
-                     type = c("l", "p", "s"), xlab = NULL, ylab = NULL,
+plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
+                     title = "Line plot", xlab = NULL, ylab = NULL,
                      xaxis_type = c("numeric", "character"), stacked = FALSE,
                      ncol = 1, nrow = NULL, facet_label = NULL, hline = 0,
                      size = 0.5, color = NULL, shape = 1, theme = theme_bw()) {
 
   # checks =========================
-  checkArg(X,"matrix",can.be.null = FALSE)
+  checkArg(Y,"matrix",can.be.null = FALSE)
   checkArg(title, c("str", "length1"), can.be.null = TRUE)
   checkArg(xlab, c("str", "length1"), can.be.null = TRUE)
   checkArg(ylab, c("str", "length1"), can.be.null = TRUE)
@@ -86,40 +86,44 @@ plotLine <- function(X, title = "Line plot",  rows = 1,
 
   # prepare the arguments  ==============================
 
-  if (is.numeric(rows)){
-    rows <- rownames(X)[rows]
+  if(is.null(rownames(Y))){
+    rownames(Y) <- rownames(Y, do.NULL = FALSE, prefix = "X.")
   }
 
-  X <- t(X[rows,, drop=FALSE])
+  if (is.numeric(rows)){
+    rows <- rownames(Y)[rows]
+  }
+
+  Y <- t(Y[rows,, drop=FALSE])
 
   mn_xy <- make.names(rows) # correct the naming of variables
 
-  X <- X %>% as.data.frame() %>%
+  Y <- Y %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "x_axis")
 
-  X_long <-  X %>% tidyr::pivot_longer(all_of(mn_xy), names_to = "rownames")
+  Y_long <-  Y %>% tidyr::pivot_longer(all_of(mn_xy), names_to = "rownames")
 
   if (xaxis_type == "numeric") {
-    rn <- X_long$x_axis
+    rn <- Y_long$x_axis
     rn <- as.numeric(rn)
     if(sum(is.na(rn))>0){
       stop("cannot convert column names to numerical, change xaxis_type from numeric to character")
     } else{
-      X_long$x_axis <- rn
+      Y_long$x_axis <- rn
     }
   }
 
   if (!is.null(color)){
     if (color == "rows"){
-      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value,
+      fig <- ggplot2::ggplot(data = Y_long, ggplot2::aes(x = x_axis, y = value,
                                                          group = rownames, color = rownames))
       color <- NULL
     } else {
-      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value,
+      fig <- ggplot2::ggplot(data = Y_long, ggplot2::aes(x = x_axis, y = value,
                                                          group = rownames))
     }
   } else {
-      fig <- ggplot2::ggplot(data = X_long, ggplot2::aes(x = x_axis, y = value,
+      fig <- ggplot2::ggplot(data = Y_long, ggplot2::aes(x = x_axis, y = value,
                                                          group = rownames))
   }
 
@@ -129,7 +133,7 @@ plotLine <- function(X, title = "Line plot",  rows = 1,
 
   # revert x axis if necessary
   if (xaxis_type == "numeric")  {
-    if ((X_long$x_axis[1] - X_long$x_axis[nrow(X_long)]) > 0) {
+    if ((Y_long$x_axis[1] - Y_long$x_axis[nrow(Y_long)]) > 0) {
       fig <- fig + ggplot2::scale_x_reverse()
     }
   }

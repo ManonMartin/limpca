@@ -56,7 +56,7 @@ pcaLoadingPlot <- function(resPcaBySvd, axes = c(1,2),
   pc_var_char <- paste0("PC", axes, " (",pc_var_char[axes], "%)")
 
   # Loadings plot  ===================
-  fig <- plotLine(X = loadings, title = title,
+  fig <- plotLine(Y = loadings, title = title,
                   rows = axes, facet_label = pc_var_char,
                   ...)
 

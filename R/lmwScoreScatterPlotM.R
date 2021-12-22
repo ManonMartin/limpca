@@ -150,8 +150,8 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
 
   # Plotting the graph
 
-  plotScatterM(X = t(coomatrix),
-               rows = 1:ncol(coomatrix),
+  plotScatterM(Y = coomatrix,
+               cols = 1:ncol(coomatrix),
                design = resLmwPcaEffects$lmwDataList$design,
                labelVector = labelvector, ...)
 
