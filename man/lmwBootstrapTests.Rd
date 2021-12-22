@@ -7,28 +7,23 @@
 lmwBootstrapTests(resLmwEffectMatrices, nboot = 100, nCores = 2)
 }
 \arguments{
-\item{resLmwEffectMatrices}{A list of 12 from \code{\link{lmwEffectMatrices}}}
+\item{resLmwEffectMatrices}{A list of 12 from \code{\link{lmwEffectMatrices}}.}
 
-\item{nboot}{A integer with the number of iterations to perform.}
+\item{nboot}{An integer with the number of iterations to perform.}
 
 \item{nCores}{The number of cores to use for parallel execution.}
 }
 \value{
 A list with the following elements:
 \describe{
-\item{\code{Fobs}}{A vector with the F statistics observed with the data}
-\item{\code{Fboot}}{A matrix with the F statistics observed with the bootstrap}
-\item{\code{Pvalues}}{A vector with the pvalue for every effect}
-\item{\code{ResultsTable}}{A results matrix with the pvalue and the variation percentage for every effect}
+\item{\code{f.obs}}{A vector of size F with the F statistics calculated on the initial data for each model term.}
+\item{\code{f.boot}}{A b × F matrix with the F statistics calculated for the bootstrap samples.}
+\item{\code{p.values}}{A vector of size F with the p-value for each model effect.}
+\item{\code{resultsTable}}{A 2 × F matrix with the p-value and the variance percentage for each model effect.}
 }
 }
 \description{
 Computes a partial model without the tested effects then estimates the residuals. Next, computes new outcomes from the predicted values of the partial model and sampled residuals. Finally, computes the Sum of Squares and the test statistics.
-}
-\details{
-The function works as follow:
-
-To be written again
 }
 \examples{
  data('UCH')

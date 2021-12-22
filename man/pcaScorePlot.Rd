@@ -24,7 +24,7 @@ pcaScorePlot(
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
 \value{
-A PCA scores plot.
+A PCA scores plot (ggplot).
 }
 \description{
 Draws scores plots for the pcaBySvd function.

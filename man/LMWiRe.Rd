@@ -1,9 +1,9 @@
 \name{LMWiRe}
 \alias{LMWiRe}
-\title{R Routines for Linear Model With Wide Response}
+\title{R Routines for Linear Modelling With Wide Responses}
 
 \description{
-This package has for objectives to provide a method to make Linear Model for Wide Response data. This method handles unbalanced design. At this development stage, the package can only perform one or two-way ANOVA of class I. More possibilities should be included in the future. The principal functions of the package are:
+This package has for objectives to provide a method to make Linear Models for Wide Responses data. This method handles unbalanced design. At this development stage, the package can only perform one or two-way ANOVA of class I. More possibilities should be included in the future. The principal functions of the package are:
 
 \describe{
   \item{\code{\link{LMModelMatrix}}}{Create a model matrix from the design matrix}

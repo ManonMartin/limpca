@@ -1,7 +1,7 @@
 ---
-title: "Application of LMWiRe on the UCH dataset"
-author: "Franceschini Sébastien"
-date: "`r Sys.Date()`"
+title: "Application of the LMWiRe package on the UCH dataset"
+author: "Benaiche Nadia"
+date: 2022-01-09
 package: LMWiRe
 output:
   BiocStyle::html_document:
@@ -46,23 +46,25 @@ references:
 ```{r Setup,include=FALSE}
 require(knitr)
 require(pander)
-knitr::opts_chunk$set(message=FALSE,warning=FALSE)
+require(patchwork)
+require(ggplot2)
+knitr::opts_chunk$set(message=FALSE,warning=FALSE,comment=NA)
 
 ```
 
 
 # Introduction
 
-The main aim of this vignette is to give a brief example of the LMWiRe package. This package has been created to analyze models with wide response and categorical parameters. The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual step of the analysis starting from the data importation to the results visualisation. The methods used come from the article of M. Thiel @Thiel2017 and S. Guisset @Guisset2019.
+The purpose of this vignette is to show the possibilities offered by the LMWiRe package. LMWiRe stands for Linear Models for Wide Responses. This package was created to analyse models with wide responses and a multi-factor design of experiment. The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results. The methods used come from the articles of @Thiel2017 and @Guisset2019.
 
 # Installation
 
-The package is actually in its developping stage and is available on GitHub at the url : <https://github.com/FranceschiniS/LMWiRe>. It can be installed via the `devtools::install_github()` function. The package needs to be loaded afterwards.
+The package is actually in its development stage and is available on GitHub at the url: <https://github.com/bgovaerts/LMWiRe/tree/develop>. It can be installed via the `devtools::install_github()` function. The package needs to be loaded afterwards.
 
 
 ```{r Install, results=FALSE, message=FALSE}
 
-# devtools::install_github("FranceschiniS/LMWiRe")
+# devtools::install_github("bgovaerts/LMWiRe@develop", force = TRUE)
 
 library("LMWiRe")
 
@@ -70,7 +72,7 @@ library("LMWiRe")
 
 # Data importation
 
-Before any analysis the `UCH data` needs to be loaded. The LMWiRe package contains the dataset and it can be load with the `data()` function. The `load()` function is also useful to import your own data.
+Before any analysis, the `UCH` data set needs to be loaded. The LMWiRe package contains the data set and it can be loaded with the `data()` function. The `load()` function is also useful to import your own data.
 
 ```{r Data Importation}
 
@@ -78,308 +80,339 @@ data("UCH")
 
 ```
 
-# Data visualisation
+# Data exploration
 
-The UCH dataset stands for Urine-Citrate-Hippurate and comes from \textit{Rousseau et al.} It contains 3 elements : a matrix `outcomes` with 34 observations of 600 response variables representing the spectra from the H-NMR spectroscopy, a formula for the GLM model used and `design` matrix with 34 observations and 5 explanatory variables.
-
-## Spectrum Visualization (= Outcomes)
-
-The 600 response variables are the spectrum of the H-NMR for each observations. 
-
-```{r Spectrum visualization}
-
-LinePlot(UCH$outcomes, title="H-NMR spectrum", rows = c(1,2))
-
-```
-
-
-Variables (ppm) Visualization
-
-```{r}
-# xy corresponds to citrate (453) and hippurate peaks (369)
-
-ScatterPlot(X = UCH$outcomes, 
-            design = UCH$design, 
-            xy = c(453, 369),
-            color = "Hippurate", 
-            shape = "Citrate")
-# Or
-ScatterPlot(X = UCH$outcomes, 
-            design = UCH$design, 
-            xy = c("2.6092056","3.9811536"), 
-            color = "Hippurate", 
-            shape = "Citrate")
-```
-
-
-## Formula
-
-The formula is the formula of the ANOVA-GLM model used in this analysis.
-
-```{r Formula}
-
-UCH$formula
-
-```
+The UCH (Urine-Citrate-Hippurate) data set comes from \textit{Rousseau et al.}. It contains 3 elements: an `outcomes` matrix with 34 observations of 600 response variables representing the spectra from the H-NMR spectroscopy, a `design` matrix with 34 observations and 4 explanatory variables and a formula for the GLM model used. For the purpose of this example, only 3 variables will be studied.
 
 ## Design
 
-The design matrix contains the information about each observation for the five variables: Hippurate, Citrate, Dilution, Day and Time. Only 3 of these variables are used in the model. The function `table` is useful to observe the design.
+The design matrix contains the information about each observation for the four variables: Hippurate, Citrate, Day and Time. Only 3 of these variables are used in the model. The function `plotDesign` is useful to observe the design.
 
 ```{r Design}
 
 pander(head(UCH$design))
 
-PlotDesign(design = UCH$design, x = "Hippurate", 
-           y = "Citrate", rows = "Time", 
+plotDesign(design = UCH$design, x = "Hippurate", 
+           y = "Citrate", rows = "Time",
            title = "Design of the UCH dataset")
 
 ```
 
 
-## Principal Component Analysis
+## Outcomes visualisation
 
-The function `SVDforPCA` is useful to compute a PCA decomposition of the `outcomes` matrix. The `scores` and `loadings` can then be plotted with the function `DrawScores` and `DrawLoadings`.
+The 600 response variables are the spectrum of the H-NMR for each observations. 
 
-```{r PCA}
-
-ResPCA = SVDforPCA(UCH$outcomes)
+```{r Spectrum visualization}
+p1 <- plotLine(Y = UCH$outcomes,
+         title = "H-NMR spectrum",
+         rows = c(3),
+         xlab = "ppm",
+         ylab = "Intensity")
+p1 + annotate("rect", xmin=7.458, xmax=7.935, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen")+
+  annotate("rect", xmin=3.881, xmax=4.041, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen")+
+  annotate("rect", xmin=2.509, xmax=2.709, ymin=-Inf, ymax=Inf, alpha=0.2, fill="tomato") 
 
 ```
 
-```{r VariancesPercentages}
 
-eig.res = rbind(ResPCA$var[1:6], ResPCA$cumvar[1:6])
-rownames(eig.res) = c("Variances", "Cum Var Values")
-pander::pander(eig.res)
+Variables (ppm) visualisation
 
-ggplot2::ggplot(data=as.data.frame(eig.res[1,]),ggplot2::aes(x=colnames(eig.res),y=eig.res[1,]))+
-    ggplot2::geom_bar(stat="identity")+
-    ggplot2::xlab("Principal Components")+
-    ggplot2::ylab("Variance Percentage")
+```{r}
+# xy corresponds to citrate (453) and hippurate peaks (369)
+
+plotScatter(Y = UCH$outcomes,
+            xy = c(453, 369),
+            design = UCH$design,
+            color = "Hippurate", 
+            shape = "Citrate")
+# Or
+plotScatter(Y = UCH$outcomes,
+            xy = c("2.6092056","3.9811536"),
+            design = UCH$design,
+            color = "Hippurate", 
+            shape = "Citrate")
+```
+
+```{r}
+plotScatterM(Y = UCH$outcomes, cols = c(133, 145, 150, 369, 453), design = UCH$design,
+             varname.colorup = "Hippurate", varname.colordown = "Citrate")
+```
+
+```{r}
+plotMeans(Y = UCH$outcomes,
+          design = UCH$design,
+          cols = c(453,396),
+          x = "Hippurate",
+          z = "Time",
+          w = "Citrate",
+          ylab = "Intensity")
+```
+
+## Principal Component Analysis
+
+The function `pcaBySvd` is useful to compute a PCA decomposition of the `outcomes` matrix. The `scores` and `loadings` can then be plotted with the functions `pcaScorePlot` and `pcaLoadingPlot`.
+
+```{r PCA}
+
+ResPCA = pcaBySvd(UCH$outcomes)
+pcaScreePlot(ResPCA, nPC = 6) + ggplot2::geom_bar(stat = "identity", fill = "cadetblue4")
 
 ```
 
 ```{r Scores}
 
-# ScatterPlot(ResPCA$scores[,1],ResPCA$scores[,2])
-
-PCAScorePlot(ResSVDforPCA = ResPCA, axes = c(1,2), 
-             title = "Reponse matrix scores plot", 
+pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
+             title = "PCA scores plot: PC1 and PC2", 
              design = UCH$design,
              color = "Hippurate", shape = "Citrate",
-             points_labs_rn = TRUE)
+             points_labs_rn = FALSE)
+
+pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
+             title = "PCA scores plot: PC1 and PC2", 
+             design = UCH$design,
+             color = "Time", shape = "Hippurate",
+             points_labs_rn = FALSE)
+
+pcaScorePlot(resPcaBySvd = ResPCA, axes = c(3,4), 
+             title = "PCA scores plot: PC3 and PC4", 
+             design = UCH$design,
+             color = "Time", shape = "Citrate",
+             points_labs_rn = FALSE)
 
 ```
 
-
 ```{r Loadings}
-# DrawLoadings(ResPCA,type.obj = "PCA", main="Loadings from the two first component")
 
-PCALoadingPlot(ResSVDforPCA = ResPCA, axes = c(1,2), 
-               title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Values")
+p2 <- pcaLoadingPlot(resPcaBySvd = ResPCA, axes = c(1,2), 
+               title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Intensity")
+
+p2 + annotate("rect", xmin=7.458, xmax=7.935, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") +
+ annotate("rect", xmin=3.881, xmax=4.041, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") +
+ annotate("rect", xmin=2.509, xmax=2.709, ymin=-Inf, ymax=Inf, alpha=0.2, fill="tomato") 
+
 ```
 
 # GLM decomposition
 
-The analysis consists in decomposing the model matrix into effect matrices and performing a PCA on each of the effect matrices. Here, we have 34 observations, 5 categorical explanatory variables, 600 response variables and 8 model terms.
+The formula of the ANOVA-GLM model used in this analysis is:
 
-The first step is to make the model matrix from the matrix of the experimental design. Each explanatory variavle is reencoded with multiple binary variables. The model matrix is a \emph(34xK) with K being the total number of new binary variables.
+```{r Formula}
+UCH$formula
+```
 
-The function `LMModelMatrix()` encodes the design matrix as a model matrix.
+The analysis consists of decomposing the model matrix into effect matrices and performing a PCA on each of the effect matrices. Here we have 34 observations, 3 categorical explanatory variables, 600 response variables and 8 model terms.
+
+The first step is to make the model matrix from the matrix of the experimental design. Each explanatory variable is reencoded with multiple binary variables. The model matrix is a \emph(34xK) with K being the total number of new binary variables.
+
+The function `lmwModelMatrix()` encodes the design matrix as a model matrix.
 
 ```{r ModelMatrix}
 
-ResLMWModelMatrix = LMWModelMatrix(UCH)
-pander::pander(head(ResLMWModelMatrix$ModelMatrix))
+resLmwModelMatrix = lmwModelMatrix(UCH)
+pander::pander(head(resLmwModelMatrix$modelMatrix))
 ```
 
-The model matrix can then be decompose into effect matrices for every model terms with the function `LMEffectMatrices()`
+The model matrix can then be decomposed into effect matrices for every model terms with the function `lmwEffectMatrices()`.
 
 ```{r EffectMatrices}
 
-ResLMWEffectMatrices = LMWEffectMatrices(ResLMWModelMatrix)
+resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
+
+# Print effect contributions
+pander(resLmwEffectMatrices$variationPercentages)
+resLmwEffectMatrices$varPercentagesPlot + ggplot2::geom_bar(stat = "identity", fill = "cadetblue4")
 
 ```
 
-## Bootstrap test and quantification of effects importance
+## Bootstrap tests and quantification of effects importance
 
-We can use bootstrap to determine whether an effect is significant. We suggest the function `LMBootstrapTest()`. The type III SS represents the percentage of variation of the response matrix Y explained by each model effect in the GLM decomposition.
+We can use a parametric bootstrap test to determine whether an effect is significant or not. We suggest the function `lmwBootstrapTests()`. The type III SS represents the percentage of variation of the response matrix Y explained by each model effect in the GLM decomposition.
 
 ```{r Bootstrap}
 
-
-ResLMWBootstrapTest= LMWBootstrapTest(ResLMWEffectMatrices = ResLMWEffectMatrices, nboot=100)
+resLmwBootstrapTests = lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=100)
 
 # Print Pvalue
-
-pander::pander(t(ResLMWBootstrapTest$ResultsTable))
+pander::pander(t(resLmwBootstrapTests$resultsTable))
 
 ```
 
 # ASCA/ASCA-E/APCA
 
-These methods allow to represent the information from the effect matrices in a space of reduced dimensions. The function `PCALMEffects()` have a method argument to define which method to use.
+These methods allow to represent the information from the effect matrices in a space of reduced dimensions. The function `lmwPcaEffects()` have a method argument to define which method to use.
 
 ## ASCA
 
-The ASCA method realises PCAs on the effect matrices.
+The ASCA method performs PCAs on the pure effect matrices.
 
 ```{r ASCA PCA}
-ResASCA = LMWtoPCAEffects(ResLMWEffectMatrices = ResLMWEffectMatrices, method="ASCA")
+resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, method="ASCA",
+                        combineEffects = list(c("Hippurate", "Time", "Hippurate:Time")))
 ```
 
 ### Contributions
 
-The contributions from each effect and their component are estimated and reported in tables with the function `PrintContributions()`. Moreover the function also output a barplot with the ordered contributions.
+The contributions from each effect and their components are estimated and reported in tables with the function `lmwContributions()`. Moreover the function also output barplots with the ordered contributions.
 
 ```{r ASCA Contrib}
-ResLMWContributions = LMWContributions(ResASCA)
+resLmwContributions = lmwContributions(resASCA)
 
-pander::pander(ResLMWContributions$TotalContribTable)
-pander::pander(ResLMWContributions$EffectTable)
-pander::pander(ResLMWContributions$ContribTable)
+pander::pander(resLmwContributions$totalContribTable)
+pander::pander(resLmwContributions$effectTable)
+pander::pander(resLmwContributions$contribTable)
+pander::pander(resLmwContributions$combinedEffectTable)
 
-ResLMWContributions$Barplot
+resLmwContributions$plotContrib + ggplot2::geom_bar(stat = "identity", fill = "cadetblue4")
 ```
 
 ### Scores Plot
 
-The score matrices are then represented on two components with the function `LMWPlotScore()`.
+The score matrices are then represented on two components with the function `lmwScorePlot()`.
 
 ```{r ASCA ScoresXY}
-LMWScorePlot(ResASCA, effectNames = "Hippurate", color = "Hippurate", shape = "Hippurate")
-LMWScorePlot(ResASCA, effectNames = "Citrate", color = "Citrate", shape = "Citrate")
-LMWScorePlot(ResASCA, effectNames = "Time", color = "Time", shape = "Time")
-LMWScorePlot(ResASCA, effectNames = "Hippurate:Time", color = "Hippurate", shape = "Time")
+lmwScorePlot(resASCA, effectNames = "Hippurate", color = "Hippurate", shape = "Hippurate")
+lmwScorePlot(resASCA, effectNames = "Citrate", color = "Citrate", shape = "Citrate")
+lmwScorePlot(resASCA, effectNames = "Time", color = "Time", shape = "Time")
+lmwScorePlot(resASCA, effectNames = "Hippurate:Time", color = "Hippurate", shape = "Time")
+lmwScorePlot(resASCA, effectNames = "Hippurate+Time+Hippurate:Time", color = "Hippurate", shape = "Time")
+lmwScorePlot(resASCA, effectNames = "Hippurate+Time+Hippurate:Time", color = "Hippurate", shape = "Time", axes = c(3,4))
 ```
 
 Finally we can represent the scores with a matrix of plots. This graph allows to observe multiple variables simultaneously.
 
 ```{r ASCA ScoresMatrix}
-
-# PlotScoresMatrix(ResASCA,
-#                 alleffect = FALSE,
-#                 EffectNames = c("Hippurate","Citrate","Time","Hippurate:Citrate","Hippurate:Time","Citrate:Time","Hippurate:Citrate:Time","Residuals"),
-#                 ModelAbbrev = TRUE,
-#                 PCdim=c(1,1,1,1,1,1,1,2),
-#                 design=UCH$design,
-#                 varname.colorup = "Citrate",
-#                 vec.colorup = c("blue","forestgreen","red"),
-#                 varname.colordown  = "Time",
-#                 vec.colordown = c("orange","black"),
-#                 varname.pchup="Hippurate",
-#                 vec.pchup = c(4,16,2),
-#                 varname.pchdown="Time",
-#                 vec.pchdown = c(1,3))
-
+lmwScoreScatterPlotM(resASCA,
+                     modelAbbrev = TRUE,
+                     varname.colorup = "Citrate",
+                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
+                     varname.colordown  = "Time",
+                     vec.colordown = c("cadetblue4","deeppink4"),
+                     varname.pchup="Hippurate",
+                     vec.pchup = c(4,16,2),
+                     varname.pchdown="Time",
+                     vec.pchdown = c(1,3), title = "ASCA scores scatterplot matrix")
 ```
+
+### Effects plot
+
+```{r ASCA effects}
+lmwEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
+lmwEffectPlot(resASCA, effectName = "Citrate", x = "Citrate")
+lmwEffectPlot(resASCA, effectName = "Time", x = "Time")
+lmwEffectPlot(resASCA, effectName = "Hippurate:Time", x = "Hippurate", z = "Time")
+lmwEffectPlot(resASCA, effectName = "Hippurate:Time", x = "Time", z = "Hippurate")
+lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", x = "Hippurate", z = "Time")
+lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", axes = c(1:3), x = "Time", z = "Hippurate")
+```
+
 
 ### Loadings plot
 
 ```{r ASCA loadings}
 
-LMWLoadingPlot(ResASCA, effectNames = c("Hippurate", "Citrate"))
+resLoadASCA <- lmwLoadingPlot(resASCA, effectNames = c("Hippurate", "Citrate","Time",
+                                        "Hippurate:Time","Hippurate+Time+Hippurate:Time"), 
+                              axes = 1, xlab = "ppm")
+resLoadASCA[[1]] + annotate("rect", xmin=7.458, xmax=7.935, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") + annotate("rect", xmin=3.881, xmax=4.041, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen")
+
+resLoadASCA[[2]] + annotate("rect", xmin=2.509, xmax=2.709, ymin=-Inf, ymax=Inf, alpha=0.2, fill="tomato")
+
+resLoadASCA[[3]] + annotate("rect", xmin=5.955364, xmax=6.155364, ymin=-Inf, ymax=Inf, alpha=0.2, fill="royalblue")
+
+resLoadASCA[[4]] + annotate("rect", xmin=5.955364, xmax=6.155364, ymin=-Inf, ymax=Inf, alpha=0.2, fill="royalblue") + annotate("rect", xmin=7.458, xmax=7.935, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") + annotate("rect", xmin=3.881, xmax=4.041, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen")
+
+resLoadASCA[[5]] + annotate("rect", xmin=5.955364, xmax=6.155364, ymin=-Inf, ymax=Inf, alpha=0.2, fill="royalblue") + annotate("rect", xmin=7.458, xmax=7.935, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") + annotate("rect", xmin=3.881, xmax=4.041, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen")
 
 ```
 
+### Residuals plot
+
+```{r Plot Residuals}
+
+lmwScorePlot(resASCA, effectNames = "Residuals", color = "Day", shape = "Day", drawShapes = "ellipse")
+
+```
 
 ## ASCA-E
 
-The ASCA-E method realises PCAs on the effect matrices then add the residuals. The same functions are used.
+The ASCA-E method performs PCAs on the effect matrices then add the residuals. The same functions are used.
 
 ```{r ASCAE PCA}
-ResASCAE = LMWtoPCAEffects(ResLMWEffectMatrices = ResLMWEffectMatrices, method="ASCA-E")
+resASCAE = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, method="ASCA-E")
 ```
 
-### Contributions
-
-```{r ASCAE Contrib}
-ResLMWContributions = LMWContributions(ResASCAE)
-
-pander::pander(ResLMWContributions$EffectTable)
-pander::pander(ResLMWContributions$ContribTable)
-
-ResLMWContributions$Barplot
-```
+Contributions and loadings are identical to the ASCA results.
 
 ### Scores Plot
 
 ```{r ASCAE ScoresXY}
-LMWScorePlot(ResASCAE, effectNames = "Hippurate", color = "Hippurate", shape = "Hippurate")
-LMWScorePlot(ResASCAE, effectNames = "Citrate", color = "Citrate", shape = "Citrate")
-LMWScorePlot(ResASCAE, effectNames = "Time", color = "Time", shape = "Time")
-LMWScorePlot(ResASCAE, effectNames = "Hippurate:Time", color = "Hippurate", shape = "Time")
+lmwScorePlot(resASCAE, effectNames = "Hippurate", color = "Hippurate", shape = "Hippurate")
+lmwScorePlot(resASCAE, effectNames = "Citrate", color = "Citrate", shape = "Citrate")
+lmwScorePlot(resASCAE, effectNames = "Time", color = "Time", shape = "Time")
+lmwScorePlot(resASCAE, effectNames = "Hippurate:Time", color = "Hippurate", shape = "Time")
 ```
 
 ```{r ASCAE ScoresMatrix}
-# PlotScoresMatrix(ResASCAE,
-#                 alleffect = FALSE,
-#                 EffectNames = c("Hippurate","Citrate","Time","Hippurate:Citrate","Hippurate:Time","Citrate:Time","Hippurate:Citrate:Time","Residuals"),
-#                 ModelAbbrev = TRUE,
-#                 PCdim=c(1,1,1,1,1,1,1,2),
-#                 design=UCH$design,
-#                 varname.colorup = "Citrate",
-#                 vec.colorup = c("blue","forestgreen","red"),
-#                 varname.colordown  = "Time",
-#                 vec.colordown = c("orange","black"),
-#                 varname.pchup="Hippurate",
-#                 vec.pchup = c(4,16,2),
-#                 varname.pchdown="Time",
-#                 vec.pchdown = c(1,3))
+lmwScoreScatterPlotM(resASCAE,
+                     modelAbbrev = TRUE,
+                     effectNames = c("Hippurate", "Citrate", "Time",
+                                     "Hippurate:Time"),
+                     varname.colorup = "Citrate",
+                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
+                     varname.colordown  = "Time",
+                     vec.colordown = c("cadetblue4","deeppink4"),
+                     varname.pchup="Hippurate",
+                     vec.pchup = c(4,16,2),
+                     varname.pchdown="Time",
+                     vec.pchdown = c(1,3), title = "ASCA-E scores scatterplot matrix")
 ```
-
 
 ## APCA
 
-The APCA method realises PCAs on the effect matrices augmented by the residuals. The same functions are used.
+The APCA method performs PCAs on the effect matrices augmented by the residuals. The same functions are used.
 
 ```{r APCA PCA}
-ResAPCA = LMWtoPCAEffects(ResLMWEffectMatrices = ResLMWEffectMatrices,method="APCA")
+resAPCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, method="APCA")
 ```
 
 ### Contributions
 
 ```{r APCA Contrib}
-ResLMWContributions = LMWContributions(ResAPCA)
+resLmwContributions = lmwContributions(resAPCA)
 
-pander::pander(ResLMWContributions$EffectTable)
-pander::pander(ResLMWContributions$ContribTable)
-
-ResLMWContributions$Barplot
+pander::pander(resLmwContributions$effectTable)
 ```
 
 ### Scores Plot
 
 ```{r APCA ScoresXY}
-LMWScorePlot(ResAPCA, effectNames = "Hippurate", color = "Hippurate", shape = "Hippurate")
-LMWScorePlot(ResAPCA, effectNames = "Citrate", color = "Citrate", shape = "Citrate")
-LMWScorePlot(ResAPCA, effectNames = "Time", color = "Time", shape = "Time")
-LMWScorePlot(ResAPCA, effectNames = "Hippurate:Time", color = "Hippurate", shape = "Time")
+lmwScorePlot(resAPCA, effectNames = "Hippurate", color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
+lmwScorePlot(resAPCA, effectNames = "Citrate", color = "Citrate", shape = "Citrate")
+lmwScorePlot(resAPCA, effectNames = "Time", color = "Time", shape = "Time")
+lmwScorePlot(resAPCA, effectNames = "Hippurate:Time", color = "Hippurate", shape = "Time")
 ```
 
 ```{r APCA ScoresMatrix}
-# PlotScoresMatrix(ResAPCA,
-#                 alleffect = FALSE,
-#                 EffectNames = c("Hippurate","Citrate","Time","Hippurate:Citrate","Hippurate:Time","Citrate:Time","Hippurate:Citrate:Time","Residuals"),
-#                 ModelAbbrev = TRUE,
-#                 PCdim=c(1,1,1,1,1,1,1,2),
-#                 design=UCH$design,
-#                 varname.colorup = "Citrate",
-#                 vec.colorup = c("blue","forestgreen","red"),
-#                 varname.colordown  = "Time",
-#                 vec.colordown = c("orange","black"),
-#                 varname.pchup="Hippurate",
-#                 vec.pchup = c(4,16,2),
-#                 varname.pchdown="Time",
-#                 vec.pchdown = c(1,3))
+lmwScoreScatterPlotM(resAPCA,
+                     effectNames = c("Hippurate", "Citrate", "Time",
+                                     "Hippurate:Time"),
+                     modelAbbrev = TRUE,
+                     varname.colorup = "Citrate",
+                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
+                     varname.colordown  = "Time",
+                     vec.colordown = c("cadetblue4","deeppink4"),
+                     varname.pchup="Hippurate",
+                     vec.pchup = c(4,16,2),
+                     varname.pchdown="Time",
+                     vec.pchdown = c(1,3), title = "APCA scores scatterplot matrix")
 ```
 
 ### Loadings plot
 
 ```{r APCA loadings}
 
-LMWLoadingPlot(ResAPCA, effectNames = c("Hippurate", "Citrate"))
+lmwLoadingPlot(resAPCA, effectNames = c("Hippurate", "Citrate", "Time", "Hippurate:Time"), axes = 1)
 
 ```
 

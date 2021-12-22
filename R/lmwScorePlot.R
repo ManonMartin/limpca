@@ -2,14 +2,14 @@
 #' @title Scores plots
 #'
 #' @description
-#' Draws scores plots for the lmwPcaEffects function.
+#' Draws scores plots for the \code{\link{lmwPcaEffects}} function.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
-#' @return A list of scores plots.
+#' @return A list of scores plots (ggplot).
 #'
 #' @details
 #' `lmwScorePlot` is a wrapper of \code{\link{plotScatter}}.
@@ -39,18 +39,17 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   if(!all(effectNames%in%names(resLmwPcaEffects))){stop("One of the effects from effectNames is not in resLmwPcaEffects.")}
 
-
-  ### Add a check to verify that the first argument is a ResLMWtoPCA !
+  if (!identical(names(resLmwPcaEffects[(length(resLmwPcaEffects)-5):length(resLmwPcaEffects)]),
+                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
 
   if(is.null(effectNames)){
-    effectNames <- c(resLmwPcaEffects$covariateEffectsNamesUnique)[-1] #Ajouter combinedEffects
+    effectNames <- c(resLmwPcaEffects$effectsNamesUnique)[-1]
   }
 
   # scores
   scores <- lapply(effectNames, function(x) resLmwPcaEffects[[x]][["scores"]])
   names(scores) <- effectNames
-
-  # checkArg(scores[[effectNames]],c("matrix"),can.be.null = FALSE)
 
   if (length(axes) !=2){
     stop("axes is not of length 2")
@@ -96,10 +95,15 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
                  1.4*max(resLmwPcaEffects[[effect]][["scores"]][,axes[1]]))
 
     # Checking the second component
-    if(resLmwPcaEffects[[effect]][["var"]][axes[2]]<1){
-      warning("The variance of PC2 is inferior to 1%. Graph scaled")
-      ylim_val = c(100*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
-                   100*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))
+    if(resLmwPcaEffects$method != "APCA"){
+      if(resLmwPcaEffects[[effect]][["var"]][axes[2]]<1){
+        warning("The variance of PC2 is inferior to 1%. Graph scaled")
+        ylim_val = c(100*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
+                     100*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))
+      }else{
+        ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
+                     1.4*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))
+      }
     }else{
       ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
                    1.4*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))

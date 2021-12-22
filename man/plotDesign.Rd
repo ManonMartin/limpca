@@ -2,7 +2,7 @@
 % Please edit documentation in R/plotDesign.R
 \name{plotDesign}
 \alias{plotDesign}
-\title{Plot the design matrix}
+\title{Plot of the design matrix}
 \usage{
 plotDesign(
   design,
@@ -30,10 +30,10 @@ plotDesign(
 \item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A plot of the design.
+A plot of the design (ggplot).
 }
 \description{
-Plot the experimental design of the data.
+Plots the experimental design of the data.
 }
 \examples{
 

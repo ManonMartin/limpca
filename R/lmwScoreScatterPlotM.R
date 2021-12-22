@@ -1,13 +1,13 @@
 #' @export lmwScoreScatterPlotM
-#' @title Plotting a Scores Matrix
+#' @title Scores scatter plot matrix
 #'
 #' @description
-#' Plots a matrix of scores graphs
+#' Plots a matrix of scores plots.
 #'
-#' @param resLmwPcaEffects A list of p+3 elements depending of the model terms from \code{\link{PCALMEffects}}
-#' @param effectNames A character vector with the name of the effects to plot
-#' @param PCdim A numeric vector with the same length than effectNames and indicating the number of component to plot
-#' @param modelAbbrev A logical whether to abbreviate the interaction terms
+#' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
+#' @param effectNames A character vector with the name of the effects to plot.
+#' @param PCdim A numeric vector with the same length than effectNames and indicating the number of component to plot.
+#' @param modelAbbrev A logical whether to abbreviate the interaction terms or not.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatterM}}.
 #'
 #' @return A matrix of graphs
@@ -50,13 +50,15 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
   }
 
   # Checking arguments ===============
-  checkArg(resLmwPcaEffects,"list",can.be.null = FALSE)
-  checkArg(PCdim,"num",can.be.null = TRUE)
-  checkArg(effectNames,"str",can.be.null = TRUE)
+  checkArg(resLmwPcaEffects,"list",can.be.null=FALSE)
+  checkArg(PCdim,"num",can.be.null=TRUE)
+  checkArg(effectNames,"str",can.be.null=TRUE)
+  checkArg(modelAbbrev,"bool",can.be.null=FALSE)
 
   #Checking resLmwPcaEffects object and match with effectNames
-  if(names(resLmwPcaEffects[length(resLmwPcaEffects)-2])!= "method"){
-    stop("Argument is not a resLmwPcaEffects object")}
+  if (!identical(names(resLmwPcaEffects[(length(resLmwPcaEffects)-5):length(resLmwPcaEffects)]),
+                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
 
     if(allEffect==FALSE){
       for(i in 1:length(effectNames)){

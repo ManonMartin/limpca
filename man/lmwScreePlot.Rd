@@ -5,33 +5,32 @@
 \title{Scree Plot}
 \usage{
 lmwScreePlot(
-  resLmwPcaEffects,
-  effectName,
-  title = paste0("Scree plot of the ", effectName, " effect"),
-  nPC = 5
+  resLmwContributions,
+  effectNames = NULL,
+  nPC = 5,
+  theme = theme_bw()
 )
 }
 \arguments{
-\item{resLmwPcaEffects}{A resLmwPcaEffects list from the function \code{\link{lmwPcaEffects}}.}
+\item{resLmwContributions}{A resLmwContributions list from the function \code{\link{lmwContributions}}.}
 
-\item{effectName}{The name of the effect to be plotted.}
-
-\item{title}{Plot title.}
+\item{effectNames}{Names of the effects to be plotted. if \code{NULL}, all the effects are plotted.}
 
 \item{nPC}{An integer with the number of components to plot.}
 }
 \value{
-A scree plot
+A scree plot (ggplot).
 }
 \description{
-Draws scree plots for the lmwPcaEffects function.
+Draws scree plots for the \code{\link{lmwContributions}} function.
 }
 \examples{
 
  data('UCH')
  resLmwModelMatrix = lmwModelMatrix(UCH)
  resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
- resLmwPcaEffects = lmwPcaEffects(resLmwEffectMatrices,method="ASCA-E")
- lmwScreePlot(resLmwPcaEffects,"Hippurate:Citrate",nPC=4)
+ resASCAE = lmwPcaEffects(resLmwEffectMatrices, method="ASCA-E")
+ resLmwContributions = lmwContributions(resASCAE)
+ lmwScreePlot(resLmwContributions, effectNames ="Hippurate:Citrate", nPC=4)
 
 }

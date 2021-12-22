@@ -31,10 +31,10 @@ lmwEffectPlot(
 \item{...}{}
 }
 \value{
-An effect plot.
+An effect plot (ggplot).
 }
 \description{
-Draws effects plot for the lmwPcaEffects function.
+Draws effects plot for the \code{\link{lmwPcaEffects}} function.
 }
 \details{
 \code{lmwEffectPlot} is a wrapper of \code{\link{plotMeans}}.

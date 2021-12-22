@@ -16,10 +16,10 @@ lmwScorePlot(resLmwPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
 \value{
-A list of scores plots.
+A list of scores plots (ggplot).
 }
 \description{
-Draws scores plots for the lmwPcaEffects function.
+Draws scores plots for the \code{\link{lmwPcaEffects}} function.
 }
 \details{
 \code{lmwScorePlot} is a wrapper of \code{\link{plotScatter}}.

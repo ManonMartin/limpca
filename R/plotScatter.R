@@ -21,7 +21,7 @@
 #' @param alphaPoly The degree of transparency for polygons.
 #' @param theme ggplot theme, see `?ggtheme` for more info.
 #'
-#' @return A scatter plot.
+#' @return A scatter plot (ggplot).
 #'
 #' @examples
 #'
@@ -82,8 +82,8 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
                         theme = theme_bw()) {
 
   # checks ==============================
-  checkArg(design,"data.frame",can.be.null = TRUE)
   checkArg(Y,"matrix",can.be.null = FALSE)
+  checkArg(design,"data.frame",can.be.null = TRUE)
   checkArg(color,c("str","length1"),can.be.null = TRUE)
   checkArg(shape,c("str","length1"),can.be.null = TRUE)
   checkArg(points_labs,"str", can.be.null = TRUE)
@@ -140,7 +140,7 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
   if (is.numeric(xy)){
     xy <- colnames(Y)[xy]
   }
-  mn_xy <- make.names(xy) # correct the naming of variables
+  mn_xy <- make.names(xy) # corrects the naming of variables
 
   if (is.null(xlab)) {
     xlab <- xy[1]

@@ -1,15 +1,15 @@
 #' @export lmwLoadingPlot
-#' @title Loadings plots
+#' @title Loadings plot(s)
 #'
 #' @description
-#' Draws loadings plots for the lmwPcaEffects function.
+#' Draws loadings plots for the \code{\link{lmwPcaEffects}} function.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
 #'
-#' @return A list of loadings plots.
+#' @return A list of loadings plots (ggplot).
 #'
 #' @details
 #' `lmwLoadingPlot` is a wrapper of \code{\link{plotLine}}.
@@ -36,10 +36,12 @@ lmwLoadingPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   if(!all(effectNames%in%names(resLmwPcaEffects))){stop("One of the effects from effectNames is not in resLmwPcaEffects.")}
 
-  ### Add a check to verify that the first argument is a ResLMWtoPCA !
+  if (!identical(names(resLmwPcaEffects[(length(resLmwPcaEffects)-5):length(resLmwPcaEffects)]),
+                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
 
   if(is.null(effectNames)){
-    effectNames <- c(resLmwPcaEffects$covariateEffectsNamesUnique)[-1] #Ajouter combinedEffects
+    effectNames <- c(resLmwPcaEffects$effectsNamesUnique)[-1]
   }
 
   # loadings

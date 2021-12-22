@@ -2,25 +2,28 @@
 % Please edit documentation in R/lmwContributions.R
 \name{lmwContributions}
 \alias{lmwContributions}
-\title{Summary of the contributions from each effect}
+\title{Summary of the contributions of each effect}
 \usage{
 lmwContributions(resLmwPcaEffects, nPC = 5)
 }
 \arguments{
-\item{resLmwPcaEffects}{A resLmwPcaEffects list from \code{\link{lmwPcaEffects}}}
+\item{resLmwPcaEffects}{A list corresponding to the output value of \code{\link{lmwPcaEffects}}.}
 
-\item{nPC}{The number of Principal Components to print in the tables}
+\item{nPC}{The number of Principal Components to display.}
 }
 \value{
-A list of 3 :
+A list of:
 \describe{
-\item{\code{EffectTable}}{A matrix with the variance percentage of each PC for each effect}
-\item{\code{ContribTable}}{A matrix with the contribution of each PC to the total variance}
-\item{\code{Barplot}}{A barplot with the PCs which have the biggest contributions to the total variance}
+\item{\code{totalContribTable}}{Table of the percentage of contribution of each effect to the total variance.}
+\item{\code{effectTable}}{Table of the variance percentage explained by each Principal Component in each model effect decomposition.}
+\item{\code{contribTable}}{Table of the variance percentage explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance.}
+\item{\code{combinedEffectTable}}{Equivalent of the \emph{EffectTable} for combined effects.}
+\item{\code{plotTotal}}{Plot of the ordered contributions of \emph{TotalContribTable}.}
+\item{\code{plotContrib}}{Plot of the ordered contributions of \emph{ContribTable}.}
 }
 }
 \description{
-Creates a summary of the contribution of each effect and each of their Principal Component (PC) on the total variance. Additionally plots a graph with the ordered contributions.
+Creates a summary of the contribution of the different effects to the total variance as well as the contribution of the Principal Components calculated on each model matrix. Additionally provides plots of the ordered contributions.
 }
 \examples{
 data('UCH')

@@ -2,7 +2,7 @@
 #' @title Means plot
 #'
 #' @description
-#' Draws means plot.
+#' Draws means plot(s).
 #'
 #' @param Y A numerical matrix containing the columns to be drawn.
 #' @param design A nxk "free encoded" experimental design data frame.
@@ -20,7 +20,7 @@
 #' @param hline If not \code{NULL}, draws (a) horizontal line(s).
 #' @param theme ggplot theme, see `?ggtheme` for more info.
 #'
-#' @return A means plot.
+#' @return A means plot (ggplot).
 #'
 #' @examples
 #'
@@ -127,14 +127,24 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
   names(dataplot) <- c(x, z, w, colnames(Y)[cols])
 
   if(is.null(title)){
-    title = paste0("Mean response as a function of ",x)
-    title = rep(title, times = length(cols))
+    if(is.null(z)){
+      title = paste0("Mean response as a function of ",x)
+    }else if(!is.null(z) & is.null(w)){
+      title = paste0("Mean response as a function of ",x, " and ", z)
+    }else if(!is.null(w)){
+      title = paste0("Mean response as a function of ",x, ", ", z, " and ", w)
+    }
   }
+  title = rep(title, times = length(cols))
+
   if(is.null(xlab)){
     xlab = x
   }
+
   if(is.null(ylab)){
-    ylab = rep("Values", times = length(cols))
+    ylab = rep(colnames(Y)[cols], times = length(cols))
+  }else{
+    ylab = rep(ylab, times = length(cols))
   }
 
   # Means Plot  ==============================

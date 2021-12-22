@@ -2,7 +2,7 @@
 #' @title Singular value decomposition for PCA analysis
 #'
 #' @description
-#' PCA by singular value decomposition, the preprocessing involves the mean-centering of X.
+#' PCA by singular value decomposition, the pre-processing involves the mean-centering of X.
 #'
 #' @param Y The nxm matrix with n observations and m response variables.
 #' @param nPC Number of Principal Components.
@@ -12,10 +12,9 @@
 #'   \item{\code{scores}}{Scores}
 #'   \item{\code{loadings}}{Loadings}
 #'   \item{\code{eigval}}{Eigenvalues}
-#'   \item{\code{pcd}}{Singular values}
-#'   \item{\code{pcu}}{Normalized scores}
-#'   \item{\code{var}}{Explained variance}
-#'   \item{\code{cumvar}}{Cumulated explained variance}
+#'   \item{\code{singvar}}{Singular values}
+#'   \item{\code{var}}{Explained variances}
+#'   \item{\code{cumvar}}{Cumulated explained variances}
 #'   \item{\code{original.dataset}}{Original dataset}
 #'
 #' }
@@ -28,11 +27,15 @@
 
 pcaBySvd <- function(Y, nPC = min(dim(Y))) {
 
+  # checks =========================
+  checkArg(Y,"matrix",can.be.null = FALSE)
+  checkArg(nPC,c("num","pos","length1"),can.be.null = FALSE)
 
+  # PCA =========================
   original.dataset <- Y
   outcomes <- Y
   # column centering of outcomes
-  outcomes <- outcomes - matrix(apply(outcomes, 2, mean), nrow = dim(outcomes)[1], ncol = dim(outcomes)[2], byrow = TRUE)  # centring of outcomes over the columns
+  outcomes <- outcomes - matrix(apply(outcomes, 2, mean), nrow = dim(outcomes)[1], ncol = dim(outcomes)[2], byrow = TRUE)  # centering of outcomes over the columns
 
   # SVD of outcomes
   outcomes.svd <- svd(outcomes)  # Compute the singular-value decomposition
@@ -81,8 +84,8 @@ pcaBySvd <- function(Y, nPC = min(dim(Y))) {
 
 
   res <- list(scores = outcomes.scores, loadings = outcomes.loadings,
-              eigval = outcomes.eigval, pcu = outcomes.normscores,
-              pcd = outcomes.singularval, var = outcomes.variances,
+              eigval = outcomes.eigval,
+              singvar = outcomes.singularval, var = outcomes.variances,
               cumvar = outcomes.cumvariances,
               original.dataset = original.dataset)
 

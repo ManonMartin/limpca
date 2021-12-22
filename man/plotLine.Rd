@@ -57,10 +57,10 @@ plotLine(
 \item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A line plot.
+A line plot (ggplot).
 }
 \description{
-Draws Line plot(s).
+Draws line plot(s).
 }
 \examples{
 

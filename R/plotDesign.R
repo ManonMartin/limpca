@@ -1,8 +1,8 @@
 #' @export plotDesign
-#' @title Plot the design matrix
+#' @title Plot of the design matrix
 #'
 #' @description
-#' Plot the experimental design of the data.
+#' Plots the experimental design of the data.
 #'
 #' @param design A nxk "free encoded" experimental design data frame.
 #' @param x A character string giving the column name of `design` to be used for the x axis.
@@ -12,7 +12,7 @@
 #' @param title Plot title.
 #' @param theme ggplot theme, see `?ggtheme` for more info.
 #'
-#' @return A plot of the design.
+#' @return A plot of the design (ggplot).
 #'
 #' @examples
 #'
@@ -52,14 +52,14 @@ plotDesign <- function(design, x, y, rows = NULL, cols = NULL,
   # checks ===================
 
   checkArg(design,"data.frame",can.be.null = FALSE)
-  checkArg(x,c("str","length1"),can.be.null = TRUE)
-  checkArg(y,c("str","length1"),can.be.null = TRUE)
+  checkArg(x,c("str","length1"),can.be.null = FALSE)
+  checkArg(y,c("str","length1"),can.be.null = FALSE)
   checkArg(rows,c("str"),can.be.null = TRUE)
   checkArg(cols,c("str"),can.be.null = TRUE)
   checkArg(title,c("str","length1"),can.be.null = TRUE)
 
-  match.arg(x, choices = colnames(design))
-  match.arg(y, choices = colnames(design))
+  x <- match.arg(x, choices = colnames(design))
+  y <- match.arg(y, choices = colnames(design))
 
   if (!is.null(rows)){
     if (!all(rows %in% colnames(design))){

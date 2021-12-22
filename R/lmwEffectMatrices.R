@@ -2,26 +2,26 @@
 #' @title Computes the effect matrices
 #'
 #' @description
-#' Runs a GLM model and decomposes the outcomes into effect matrices for each model terms.
+#' Runs a GLM and decomposes the outcomes into effect matrices for each model effect.
 #'
 #' @param resLmwModelMatrix A list of 5 elements from \code{\link{lmwModelMatrix}}.
-#' @param SS Logical. If `FALSE`, won't compute the effect percentage variations.
-#' @param newSSmethod Logical.If `FALSE`, the new optimized method to compute SS is not used.
+#' @param SS Logical. If `FALSE`, won't compute the percentage of variance for each effect.
 #' @param contrastList A list of contrast for each parameter. If `NA`, the function creates automatically the list by default.
 #'
 #' @return A list with the following elements:
 #'  \describe{
-#'    \item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
-#'    \item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-#'    \item{\code{ModelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
-#'    \item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients.}
-#'    \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
-#'    \item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model terms.}
-#'    \item{\code{predictedvalues}}{A \emph{nxm} matrix with the predicted values.}
-#'    \item{\code{residuals}}{A \emph{nxm} matrix with the residuals.}
-#'    \item{\code{parameters}}{A \emph{pxm} matrix with the coefficients of every parameters by response variables.}
-#'    \item{\code{SS}}{A vector with the type III residuals for each model terms.}
-#'    \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms.}
+#'    \item{\code{lmwDataList}}{The initial object: a list with outcomes, design and formula.}
+#'    \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
+#'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each effect.}
+#'    \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
+#'    \item{\code{effectsNamesAll}}{A character vector with the \emph{K} names of the model effects ordered and repeated as the column names of the model matrix.}
+#'    \item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model effect.}
+#'    \item{\code{predictedvalues}}{The \emph{nxm} matrix of predicted outcome values.}
+#'    \item{\code{residuals}}{The \emph{nxm} matrix of model residuals.}
+#'    \item{\code{parameters}}{The \emph{pxm} matrix of the estimated parameters.}
+#'    \item{\code{type3SS}}{A vector with the type III sum of squares for each model effect \emph{(If SS = TRUE)}.}
+#'    \item{\code{variationPercentages}}{A vector with the percentage of variance for each model effect \emph{(If SS = TRUE)}.}
+#'    \item{\code{varPercentagesPlot}}{A ggplot bar plot of the contributions of each model effect to the total variance \emph{(If SS = TRUE)}.}
 #'  }
 #'
 #' @examples
@@ -34,32 +34,33 @@
 
 
 
-lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contrastList=NA){
+lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
 
   #Checking the object
   if(!is.list(resLmwModelMatrix)){stop("Argument resLmwModelMatrix is not a list")}
   if(length(resLmwModelMatrix)!=5){stop("List does not contain 5 elements")}
   if(names(resLmwModelMatrix)[1]!="lmwDataList"|
-     names(resLmwModelMatrix)[2]!="ModelMatrix"|
-     names(resLmwModelMatrix)[3]!="ModelMatrixByEffect"|
-     names(resLmwModelMatrix)[4]!="covariateEffectsNames"|
-     names(resLmwModelMatrix)[5]!="covariateEffectsNamesUnique"){stop("Argument is not a resLmwModelMatrix object")}
+     names(resLmwModelMatrix)[2]!="modelMatrix"|
+     names(resLmwModelMatrix)[3]!="modelMatrixByEffect"|
+     names(resLmwModelMatrix)[4]!="effectsNamesUnique"|
+     names(resLmwModelMatrix)[5]!="effectsNamesAll"){stop("Argument is not a resLmwModelMatrix object")}
+  checkArg(SS,c("bool","length1"),can.be.null=FALSE)
 
   #Attribute a name in the function environment
   formula = resLmwModelMatrix$lmwDataList$formula
   design = resLmwModelMatrix$lmwDataList$design
   outcomes = resLmwModelMatrix$lmwDataList$outcomes
   lmwDataList = resLmwModelMatrix$lmwDataList
-  modelMatrix = resLmwModelMatrix$ModelMatrix
-  ModelMatrixByEffect = resLmwModelMatrix$ModelMatrixByEffect
-  covariateEffectsNames = resLmwModelMatrix$covariateEffectsNames
-  covariateEffectsNamesUnique = resLmwModelMatrix$covariateEffectsNamesUnique
-  nEffect <- length(covariateEffectsNamesUnique)
+  modelMatrix = resLmwModelMatrix$modelMatrix
+  modelMatrixByEffect = resLmwModelMatrix$modelMatrixByEffect
+  effectsNamesAll = resLmwModelMatrix$effectsNamesAll
+  effectsNamesUnique = resLmwModelMatrix$effectsNamesUnique
+  nEffect <- length(effectsNamesUnique)
 
   #Creating empty effects matrices
   effectMatrices <- list()
   length(effectMatrices) <- nEffect
-  names(effectMatrices) <- covariateEffectsNamesUnique
+  names(effectMatrices) <- effectsNamesUnique
 
   #GLM decomposition calculated by using glm.fit and alply on outcomes
 
@@ -75,8 +76,8 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
 
   #Filling effectMatrices
   for(iEffect in 1:nEffect){
-    selection <- which(covariateEffectsNames == covariateEffectsNamesUnique[iEffect])
-    selectionComplement <- which(covariateEffectsNames != covariateEffectsNamesUnique[iEffect])
+    selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
+    selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
     #Effect matrices
     effectMatrices[[iEffect]] <- t(plyr::aaply(parameters, 2, function(xx) as.matrix(modelMatrix[, selection])%*%xx[selection]))
     colnames(effectMatrices[[iEffect]]) <- colnames(outcomes)
@@ -84,10 +85,10 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
 
 
   resLmwEffectMatrices = list(lmwDataList = lmwDataList,
-                             ModelMatrix = modelMatrix,
-                             ModelMatrixByEffect = ModelMatrixByEffect,
-                             covariateEffectsNames = covariateEffectsNames,
-                             covariateEffectsNamesUnique = covariateEffectsNamesUnique,
+                             modelMatrix = modelMatrix,
+                             modelMatrixByEffect = modelMatrixByEffect,
+                             effectsNamesUnique = effectsNamesUnique,
+                             effectsNamesAll = effectsNamesAll,
                              effectMatrices = effectMatrices,
                              predictedvalues = predictedValues,
                              residuals = residuals,
@@ -95,15 +96,11 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
 
   # Compute the Sum of Squares Type 3
   if(SS==TRUE){
-    if(newSSmethod){
-      if(is.na(contrastList)){L = contrastSS(resLmwModelMatrix)}else{L = contrastList}
-      ResLMSS = LMSSv2(resLmwEffectMatrices,L)
-    }else{
-      ResLMSS = LMSS(resLmwEffectMatrices)
-    }
+    if(is.na(contrastList)){L = contrastSS(resLmwModelMatrix)}else{L = contrastList}
+    resLmwSS = lmwSS(resLmwEffectMatrices,L)
 
     # Plot of the total contribution
-    contrib <- as.data.frame(ResLMSS$variationPercentages)
+    contrib <- as.data.frame(resLmwSS$variationPercentages)
     rownames(contrib) = ModelAbbrev(rownames(contrib))
 
     plot <- ggplot2::ggplot(data=contrib,
@@ -111,15 +108,15 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, newSSmethod=TRUE, contr
                                                        y=contrib[,1]))+
       ggplot2::geom_bar(stat="identity")+
       ggplot2::xlab("Effects")+
-      ggplot2::ylab("Variation Percentage")
+      ggplot2::ylab("Variation Percentage")+
+      ggplot2::theme_bw()
 
-    resLmwEffectMatrices = c(resLmwEffectMatrices,ResLMSS,
+    resLmwEffectMatrices = c(resLmwEffectMatrices,resLmwSS,
                              varPercentagesPlot = list(plot))
   }else{
-    resLmwEffectMatrices = c(resLmwEffectMatrices,SS=NA,
+    resLmwEffectMatrices = c(resLmwEffectMatrices,type3SS=NA,
                              variationPercentages=NA,varPercentagesPlot=NA)
   }
-
 
   return(resLmwEffectMatrices)
 }

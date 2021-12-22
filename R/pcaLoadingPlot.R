@@ -9,7 +9,7 @@
 #' @param title Plot title.
 #' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
 #'
-#' @return A PCA loadings plot.
+#' @return A PCA loadings plot (ggplot).
 #'
 #' @details
 #' `pcaLoadingPlot` is a wrapper of \code{\link{plotLine}}.
@@ -31,8 +31,8 @@ pcaLoadingPlot <- function(resPcaBySvd, axes = c(1,2),
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
   checkArg(title,c("str", "length1"),can.be.null = FALSE)
 
-  if (!identical(names(resPcaBySvd),c("scores","loadings","eigval","pcu",
-                                       "pcd", "var","cumvar","original.dataset"))){
+  if (!identical(names(resPcaBySvd),c("scores","loadings","eigval","singvar",
+                                      "var","cumvar","original.dataset"))){
     stop("resPcaBySvd is not an output value of pcaBySvd")}
 
   # loadings

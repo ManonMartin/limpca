@@ -1,17 +1,20 @@
 #' @export lmwContributions
-#' @title Summary of the contributions from each effect
+#' @title Summary of the contributions of each effect
 #'
 #' @description
-#' Creates a summary of the contribution of each effect and each of their Principal Component (PC) on the total variance. Additionally plots a graph with the ordered contributions.
+#' Creates a summary of the contribution of the different effects to the total variance as well as the contribution of the Principal Components calculated on each model matrix. Additionally provides plots of the ordered contributions.
 #'
-#' @param resLmwPcaEffects A resLmwPcaEffects list from \code{\link{lmwPcaEffects}}
-#' @param nPC The number of Principal Components to print in the tables
+#' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
+#' @param nPC The number of Principal Components to display.
 #'
-#' @return A list of 3 :
+#' @return A list of:
 #' \describe{
-#' \item{\code{EffectTable}}{A matrix with the variance percentage of each PC for each effect}
-#' \item{\code{ContribTable}}{A matrix with the contribution of each PC to the total variance}
-#' \item{\code{Barplot}}{A barplot with the PCs which have the biggest contributions to the total variance}
+#' \item{\code{totalContribTable}}{Table of the percentage of contribution of each effect to the total variance.}
+#' \item{\code{effectTable}}{Table of the variance percentage explained by each Principal Component in each model effect decomposition.}
+#' \item{\code{contribTable}}{Table of the variance percentage explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance.}
+#' \item{\code{combinedEffectTable}}{Equivalent of the \emph{EffectTable} for combined effects.}
+#' \item{\code{plotTotal}}{Plot of the ordered contributions of \emph{TotalContribTable}.}
+#' \item{\code{plotContrib}}{Plot of the ordered contributions of \emph{ContribTable}.}
 #' }
 #'
 #'
@@ -27,7 +30,7 @@
 
 lmwContributions=function(resLmwPcaEffects, nPC=5){
 
-  neffect = length(resLmwPcaEffects$covariateEffectsNamesUnique)
+  neffect = length(resLmwPcaEffects$effectsNamesUnique)
 
   # Effect table with the total contribution ===============
   total_contrib_table = matrix(data=NA,nrow=neffect,ncol=1)
@@ -60,6 +63,8 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   # Effect table with the contribution of each component
   # to the variance of the effect ===============
 
+  if(resLmwPcaEffects$method != "APCA"){
+
   contrib_table = matrix(data=NA,nrow=neffect,(nPC+1))
   rownames(contrib_table) = c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals")
   temp_colnames = c(temp_colnames[1:nPC],"Contrib")
@@ -72,9 +77,10 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
 
   contrib_table[,(nPC+1)] = resLmwPcaEffects$variationPercentages
   contrib_table = round(contrib_table,2)
+  }
 
   # Effect table for combined effects ===============
-  if(length(resLmwPcaEffects)-5 != length(resLmwPcaEffects$covariateEffectsNamesUnique)){
+  if(length(resLmwPcaEffects)-5 != length(resLmwPcaEffects$effectsNamesUnique)){
     neffectTot = length(resLmwPcaEffects)-5
     neffectComb = neffectTot - neffect
 
@@ -105,9 +111,11 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   plotTotal <- ggplot2::ggplot(data=dataTotal, ggplot2::aes(x=reorder(effects, -varPercentage),y=varPercentage))+
     ggplot2::geom_bar(stat="identity")+
     ggplot2::xlab("Effects")+
-    ggplot2::ylab("Variance Percentage")
+    ggplot2::ylab("Variance Percentage")+
+    ggplot2::theme_bw()
 
   # Plot of the contribution of each component to the variance of the effect
+  if(resLmwPcaEffects$method != "APCA"){
   tabname = matrix(data=NA,nrow=neffect,ncol=nPC)
 
   for(j in 1:nPC){
@@ -126,31 +134,38 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
     ggplot2::geom_bar(stat="identity")+
     ggplot2::xlab("Contributions")+
     ggplot2::ylab("Variance Percentage")+
-    ggplot2::scale_x_discrete(limits=rownames(data))
+    ggplot2::scale_x_discrete(limits=rownames(data))+
+    ggplot2::theme_bw()
+  }
 
   # Output
 
-  if(all(is.na(resLmwEffectMatrices$SS)) & all(is.na(resLmwEffectMatrices$variationPercentages))){
+  if(resLmwPcaEffects$method == "APCA"){
+    contrib_table = NULL
+    plotContrib = NULL
+  }
+
+  if(all(is.na(resLmwEffectMatrices$type3SS)) & all(is.na(resLmwEffectMatrices$variationPercentages))){
     if(is.null(combinedEffect_table)){
-      resLmwContributions=list(EffectTable=effect_table)
+      resLmwContributions=list(effectTable=effect_table)
     }else{
-      resLmwContributions=list(EffectTable=effect_table,
-                               CombinedEffectTable=combinedEffect_table)
+      resLmwContributions=list(effectTable=effect_table,
+                               combinedEffectTable=combinedEffect_table)
     }
   }else{
     if(is.null(combinedEffect_table)){
-      resLmwContributions=list(TotalContribTable=total_contrib_table,
-                               EffectTable=effect_table,
-                               ContribTable=contrib_table,
-                               PlotTotal=plotTotal,
-                               PlotContrib=plotContrib)
+      resLmwContributions=list(totalContribTable=total_contrib_table,
+                               effectTable=effect_table,
+                               contribTable=contrib_table,
+                               plotTotal=plotTotal,
+                               plotContrib=plotContrib)
     }else{
-        resLmwContributions=list(TotalContribTable=total_contrib_table,
-                                 EffectTable=effect_table,
-                                 ContribTable=contrib_table,
-                                 CombinedEffectTable=combinedEffect_table,
-                                 PlotTotal=plotTotal,
-                                 PlotContrib=plotContrib)
+        resLmwContributions=list(totalContribTable=total_contrib_table,
+                                 effectTable=effect_table,
+                                 contribTable=contrib_table,
+                                 combinedEffectTable=combinedEffect_table,
+                                 plotTotal=plotTotal,
+                                 plotContrib=plotContrib)
     }
   }
 

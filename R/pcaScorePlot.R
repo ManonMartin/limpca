@@ -10,7 +10,7 @@
 #' @param points_labs_rn Boolean indicating if the rownames of the scores matrix should be plotted.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
-#' @return A PCA scores plot.
+#' @return A PCA scores plot (ggplot).
 #'
 #' @details
 #' `pcaScorePlot` is a wrapper of \code{\link{plotScatter}}.
@@ -37,8 +37,8 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
   checkArg(title,c("str", "length1"),can.be.null = FALSE)
   checkArg(points_labs_rn,c("bool"),can.be.null = FALSE)
 
-  if (!identical(names(resPcaBySvd),c("scores","loadings","eigval","pcu",
-                      "pcd", "var","cumvar","original.dataset"))){
+  if (!identical(names(resPcaBySvd),c("scores","loadings","eigval","singvar",
+                                      "var","cumvar","original.dataset"))){
     stop("resPcaBySvd is not an output value of pcaBySvd")}
 
   # scores

@@ -16,7 +16,7 @@ pcaLoadingPlot(resPcaBySvd, axes = c(1, 2), title = "PCA loadings plot", ...)
 \item{...}{Additional arguments to be passed to \code{\link{plotLine}}.}
 }
 \value{
-A PCA loadings plot.
+A PCA loadings plot (ggplot).
 }
 \description{
 Draws loadings plots for the pcaBySvd function.

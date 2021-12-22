@@ -54,10 +54,10 @@ plotMeans(
 \item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A means plot.
+A means plot (ggplot).
 }
 \description{
-Draws means plot.
+Draws means plot(s).
 }
 \examples{
 

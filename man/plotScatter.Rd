@@ -57,7 +57,7 @@ plotScatter(
 \item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A scatter plot.
+A scatter plot (ggplot).
 }
 \description{
 Draws a scatter plot.

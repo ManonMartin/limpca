@@ -2,48 +2,65 @@
 #' @title Scree Plot
 #'
 #' @description
-#' Draws scree plots for the lmwPcaEffects function.
+#' Draws scree plots for the \code{\link{lmwContributions}} function.
 #'
-#' @param resLmwPcaEffects A resLmwPcaEffects list from the function \code{\link{lmwPcaEffects}}.
-#' @param effectName The name of the effect to be plotted.
-#' @param title Plot title.
+#' @param resLmwContributions A resLmwContributions list from the function \code{\link{lmwContributions}}.
+#' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.
 #' @param nPC An integer with the number of components to plot.
 #'
-#' @return A scree plot
+#' @return A scree plot (ggplot).
 #'
 #' @examples
 #'
 #'  data('UCH')
 #'  resLmwModelMatrix = lmwModelMatrix(UCH)
 #'  resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#'  resLmwPcaEffects = lmwPcaEffects(resLmwEffectMatrices,method="ASCA-E")
-#'  lmwScreePlot(resLmwPcaEffects,"Hippurate:Citrate",nPC=4)
+#'  resASCAE = lmwPcaEffects(resLmwEffectMatrices, method="ASCA-E")
+#'  resLmwContributions = lmwContributions(resASCAE)
+#'  lmwScreePlot(resLmwContributions, effectNames ="Hippurate:Citrate", nPC=4)
 #'
 #' @import ggplot2
 
-lmwScreePlot = function(resLmwPcaEffects,effectName,
-                        title=paste0("Scree plot of the ", effectName, " effect"),
-                        nPC=5){
+lmwScreePlot = function(resLmwContributions, effectNames = NULL,
+                        nPC=5, theme = theme_bw()){
 
   # checks ===================
-  checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
-  checkArg(effectName,c("str"),can.be.null = FALSE)
-  checkArg(nPC,c("num","pos"),can.be.null = FALSE)
+  checkArg(resLmwContributions,c("list"),can.be.null=FALSE)
+  checkArg(effectNames,c("str"),can.be.null=TRUE)
+  checkArg(nPC,c("num","pos"),can.be.null=FALSE)
 
-  if(!(effectName%in%names(resLmwPcaEffects))){stop("effectName is not in resLmwPcaEffects.")}
+  effectTable = resLmwContributions$effectTable
+  if(!nPC < ncol(effectTable)){
+    stop("nPC must be inferior or equal to the nPC chosen in lmwContributions")
+  }
 
-  # if(names(resLmwPcaEffects[length(resLmwPcaEffects)-2])!= "method")
+  if(is.null(effectNames)){
+    effectNames <- c(rownames(resLmwContributions$effectTable))
+  }
+
+  if(!all(effectNames %in% rownames(resLmwContributions$effectTable))){
+    stop("One of the effects from effectNames is not in resLmwContributions.")
+  }
 
   # selecting the effect
-  iEffect_temp=which(names(resLmwPcaEffects)==effectName)
-  iEffect=resLmwPcaEffects[[iEffect_temp]]
 
-  #Plotting the effect
-  ggplot(data=as.data.frame(iEffect$var[1:nPC]),
-         aes(x=names(iEffect$var[1:nPC]),y=iEffect$var[1:nPC]))+
-    geom_bar(stat="identity")+
-    xlab("Principal Components")+
-    ylab("Variance Percentage")+
-    ggtitle(title)
+  resdf = as.data.frame(t(effectTable[,c(1:nPC)]))
 
+  buildFig <- function(x){
+    iEffect=which(colnames(resdf) == effectNames[x])
+
+    #Plotting the effect
+    ggplot(data = resdf,
+           aes(x = rownames(resdf), y = resdf[,iEffect])) +
+      geom_bar(stat = "identity") +
+      xlab("Principal Components") +
+      ylab("Variance Percentage") +
+      ggtitle(paste("Percentage of variance by PC for:", effectNames[x])) +
+      theme
+  }
+
+  fig <- lapply(c(1:length(effectNames)), FUN = buildFig)
+  names(fig) = effectNames
+
+  return(fig)
 }

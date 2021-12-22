@@ -23,40 +23,43 @@ plotScatterM(
 \arguments{
 \item{Y}{nxm matrix with n observations and m variables.}
 
-\item{cols}{A vector with either the col names of the Y matrix to plot (character) or the col index positions.}
+\item{cols}{A vector with either the column names of the Y matrix to plot (character) or the column index positions.}
 
 \item{design}{A nxk "free encoded" experimental design data frame.}
 
 \item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the \code{cols} names are used.}
 
-\item{varname.colorup}{A character with the name of variable used to color the upper triangle}
+\item{varname.colorup}{A character with the name of the variable used to color the upper triangle.}
 
-\item{varname.colordown}{A character with the name of variable used to color the lower triangle}
+\item{varname.colordown}{A character with the name of the variable used to color the lower triangle.}
 
-\item{varname.pchup}{A character with the name of variable used to mark points from the upper triangle}
+\item{varname.pchup}{A character with the name of the variable used to mark points for the upper triangle.}
 
-\item{varname.pchdown}{A character with the name of variable used to mark points from the lower triangle}
+\item{varname.pchdown}{A character with the name of the variable used to mark points for the lower triangle.}
 
-\item{vec.colorup}{A color vector with a length equivalent to the number of levels from varname.colorup}
+\item{vec.colorup}{A color vector with a length equivalent to the number of levels of varname.colorup.}
 
-\item{vec.colordown}{A color vector with a length equivalent to the number of levels from varname.colordown}
+\item{vec.colordown}{A color vector with a length equivalent to the number of levels of varname.colordown.}
 
-\item{vec.pchup}{A pch vector with a length equivalent to the number of levels from varname.pchup}
+\item{vec.pchup}{A pch vector with a length equivalent to the number of levels of varname.pchup.}
 
-\item{vec.pchdown}{A pch vector with a length equivalent to the number of levels from varname.pchdown}
+\item{vec.pchdown}{A pch vector with a length equivalent to the number of levels of varname.pchdown.}
 }
 \value{
-A matrix of graphs
+A matrix of scatter plots.
 }
 \description{
 Plots a matrix of scatter plots.
 }
 \examples{
 
-plotScatterM(UCH$outcomes,c(1:4), UCH$design, varname.colorup = "Hippurate",
-varname.colordown = "Citrate", varname.pchup = "Time", varname.pchdown = "Day",
-vec.colorup = c("red","blue","black"), vec.colordown = c("orange","purple","green"),
-vec.pchup = c(1,2), vec.pchdown = c(15,16))
+data("UCH")
 
+plotScatterM(Y = UCH$outcomes, cols = c(1:4), design = UCH$design,
+             varname.colorup = "Hippurate", varname.colordown = "Citrate",
+             varname.pchup = "Time", varname.pchdown = "Day",
+             vec.colorup = c("red","blue","black"),
+             vec.colordown = c("orange","purple","green"),
+             vec.pchup = c(1,2), vec.pchdown = c(15,16))
 
 }

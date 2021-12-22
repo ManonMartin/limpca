@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmwScoreScatterPlotM.R
 \name{lmwScoreScatterPlotM}
 \alias{lmwScoreScatterPlotM}
-\title{Plotting a Scores Matrix}
+\title{Scores scatter plot matrix}
 \usage{
 lmwScoreScatterPlotM(
   resLmwPcaEffects,
@@ -13,13 +13,13 @@ lmwScoreScatterPlotM(
 )
 }
 \arguments{
-\item{resLmwPcaEffects}{A list of p+3 elements depending of the model terms from \code{\link{PCALMEffects}}}
+\item{resLmwPcaEffects}{A list corresponding to the output value of \code{\link{lmwPcaEffects}}.}
 
-\item{effectNames}{A character vector with the name of the effects to plot}
+\item{effectNames}{A character vector with the name of the effects to plot.}
 
-\item{PCdim}{A numeric vector with the same length than effectNames and indicating the number of component to plot}
+\item{PCdim}{A numeric vector with the same length than effectNames and indicating the number of component to plot.}
 
-\item{modelAbbrev}{A logical whether to abbreviate the interaction terms}
+\item{modelAbbrev}{A logical whether to abbreviate the interaction terms or not.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatterM}}.}
 }
@@ -27,7 +27,7 @@ lmwScoreScatterPlotM(
 A matrix of graphs
 }
 \description{
-Plots a matrix of scores graphs
+Plots a matrix of scores plots.
 }
 \details{
 \code{lmwScoreScatterPlotM} is a wrapper of \code{\link{plotScatterM}}.

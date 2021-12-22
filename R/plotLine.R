@@ -2,7 +2,7 @@
 #' @title Line plot
 #'
 #' @description
-#' Draws Line plot(s).
+#' Draws line plot(s).
 #'
 #' @param Y A numerical matrix containing the rows to be drawn.
 #' @param rows A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s).
@@ -21,7 +21,7 @@
 #' @param shape The points shape if `type` == "p" (argument of length 1).
 #' @param theme ggplot theme, see `?ggtheme` for more info.
 #'
-#' @return A line plot.
+#' @return A line plot (ggplot).
 #'
 #' @examples
 #'
@@ -96,7 +96,7 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
 
   Y <- t(Y[rows,, drop=FALSE])
 
-  mn_xy <- make.names(rows) # correct the naming of variables
+  mn_xy <- make.names(rows) # corrects the naming of variables
 
   Y <- Y %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "x_axis")

@@ -8,17 +8,17 @@
 #'
 #' @return A list with the 5 following named elements :
 #' \describe{
-#'    \item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
-#'    \item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-#'    \item{\code{ModelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
-#'    \item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients.}
-#'    \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
+#'    \item{\code{lmwDataList}}{The initial object: a list with outcomes, design and formula.}
+#'    \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
+#'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each model effect.}
+#'    \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
+#'    \item{\code{effectsNamesAll}}{A character vector with the \emph{K} names of the model effects ordered and repeated as the column names of the model matrix.}
 #' }
 #'
 #' @details
 #' In typical ASCA-GLM analysis, the GLM model needs the design to be re-encoded with the commonly used in industrial experimental design \emph{sum coding}. The result is the model matrix.
-#' Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors. After the transformation the model matrix
-#' will be \emph{nxK}. For a parameter with a levels the re-encoding is \emph{a-1} colums with 0 and 1 for \emph{a-1} first levels and -1 for the last.
+#' Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors. After the transformation, the model matrix
+#' will be \emph{nxK}. For a parameter with \emph{a} levels, the re-encoding is \emph{a-1} columns with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
 #' \emph{K} is the sum of all the columns for every parameters.
 #'
 #' @seealso \code{\link{model.matrix}}
@@ -31,7 +31,7 @@
 #' data('UCH')
 #' resLmwModelMatrix <- lmwModelMatrix(UCH)
 #'
-#' head(resLmwModelMatrix$ModelMatrix)
+#' head(resLmwModelMatrix$modelMatrix)
 #'
 #' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
@@ -105,32 +105,32 @@ lmwModelMatrix <- function(lmwDataList) {
     # Finding all unique variables
   dummyVarNames <- colnames(modelMatrix)
   presencePolynomialEffects <- stringr::str_detect(dummyVarNames, '\\^[0-9]') # Detect exponent
-  covariateEffectsNames <- character(length = length(dummyVarNames))
-  covariateEffectsNames[presencePolynomialEffects] <- dummyVarNames[presencePolynomialEffects]
-  covariateEffectsNames[!presencePolynomialEffects] <- gsub('[0-9]', '', dummyVarNames[!presencePolynomialEffects])
-  covariateEffectsNames[covariateEffectsNames == '(Intercept)'] <- 'Intercept'
-  covariateEffectsNamesUnique <- unique(covariateEffectsNames)
-  nEffect <- length(covariateEffectsNamesUnique)
+  effectsNamesAll <- character(length = length(dummyVarNames))
+  effectsNamesAll[presencePolynomialEffects] <- dummyVarNames[presencePolynomialEffects]
+  effectsNamesAll[!presencePolynomialEffects] <- gsub('[0-9]', '', dummyVarNames[!presencePolynomialEffects])
+  effectsNamesAll[effectsNamesAll == '(Intercept)'] <- 'Intercept'
+  effectsNamesUnique <- unique(effectsNamesAll)
+  nEffect <- length(effectsNamesUnique)
 
     #Creating empty model matrices by effect
   modelMatrixByEffect <- list()
   length(modelMatrixByEffect) <- nEffect
-  names(modelMatrixByEffect) <- covariateEffectsNamesUnique
+  names(modelMatrixByEffect) <- effectsNamesUnique
 
     #Filling model matrices by effect
   for(iEffect in 1:nEffect){
-    selection <- which(covariateEffectsNames == covariateEffectsNamesUnique[iEffect])
-    selectionComplement <- which(covariateEffectsNames != covariateEffectsNamesUnique[iEffect])
+    selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
+    selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
     #Model matrices by effect
     modelMatrixByEffect[[iEffect]] <- as.matrix(modelMatrix[, selection])
 
   }
 
   resLmwModelMatrix = list(lmwDataList = lmwDataList,
-                          ModelMatrix = modelMatrix,
-                          ModelMatrixByEffect = modelMatrixByEffect,
-                          covariateEffectsNames = covariateEffectsNames,
-                          covariateEffectsNamesUnique = covariateEffectsNamesUnique)
+                          modelMatrix = modelMatrix,
+                          modelMatrixByEffect = modelMatrixByEffect,
+                          effectsNamesUnique = effectsNamesUnique,
+                          effectsNamesAll = effectsNamesAll)
 
   return(resLmwModelMatrix)
 }

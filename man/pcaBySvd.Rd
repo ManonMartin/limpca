@@ -17,16 +17,15 @@ A list with the following elements:
 \item{\code{scores}}{Scores}
 \item{\code{loadings}}{Loadings}
 \item{\code{eigval}}{Eigenvalues}
-\item{\code{pcd}}{Singular values}
-\item{\code{pcu}}{Normalized scores}
-\item{\code{var}}{Explained variance}
-\item{\code{cumvar}}{Cumulated explained variance}
+\item{\code{singvar}}{Singular values}
+\item{\code{var}}{Explained variances}
+\item{\code{cumvar}}{Cumulated explained variances}
 \item{\code{original.dataset}}{Original dataset}
 
 }
 }
 \description{
-PCA by singular value decomposition, the preprocessing involves the mean-centering of X.
+PCA by singular value decomposition, the pre-processing involves the mean-centering of X.
 }
 \examples{
 

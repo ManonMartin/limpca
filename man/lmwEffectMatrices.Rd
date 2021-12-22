@@ -4,40 +4,34 @@
 \alias{lmwEffectMatrices}
 \title{Computes the effect matrices}
 \usage{
-lmwEffectMatrices(
-  resLmwModelMatrix,
-  SS = TRUE,
-  newSSmethod = TRUE,
-  contrastList = NA
-)
+lmwEffectMatrices(resLmwModelMatrix, SS = TRUE, contrastList = NA)
 }
 \arguments{
 \item{resLmwModelMatrix}{A list of 5 elements from \code{\link{lmwModelMatrix}}.}
 
-\item{SS}{Logical. If \code{FALSE}, won't compute the effect percentage variations.}
-
-\item{newSSmethod}{Logical.If \code{FALSE}, the new optimized method to compute SS is not used.}
+\item{SS}{Logical. If \code{FALSE}, won't compute the percentage of variance for each effect.}
 
 \item{contrastList}{A list of contrast for each parameter. If \code{NA}, the function creates automatically the list by default.}
 }
 \value{
 A list with the following elements:
 \describe{
-\item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
-\item{\code{ModelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-\item{\code{ModelMatrixByEffect}}{A list of \emph{p} model matrices by models terms.}
-\item{\code{covariateEffectsNames}}{A character vector with \emph{K} names of the coefficients.}
-\item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
-\item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model terms.}
-\item{\code{predictedvalues}}{A \emph{nxm} matrix with the predicted values.}
-\item{\code{residuals}}{A \emph{nxm} matrix with the residuals.}
-\item{\code{parameters}}{A \emph{pxm} matrix with the coefficients of every parameters by response variables.}
-\item{\code{SS}}{A vector with the type III residuals for each model terms.}
-\item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms.}
+\item{\code{lmwDataList}}{The initial object: a list with outcomes, design and formula.}
+\item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
+\item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each effect.}
+\item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
+\item{\code{effectsNamesAll}}{A character vector with the \emph{K} names of the model effects ordered and repeated as the column names of the model matrix.}
+\item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model effect.}
+\item{\code{predictedvalues}}{The \emph{nxm} matrix of predicted outcome values.}
+\item{\code{residuals}}{The \emph{nxm} matrix of model residuals.}
+\item{\code{parameters}}{The \emph{pxm} matrix of the estimated parameters.}
+\item{\code{type3SS}}{A vector with the type III sum of squares for each model effect \emph{(If SS = TRUE)}.}
+\item{\code{variationPercentages}}{A vector with the percentage of variance for each model effect \emph{(If SS = TRUE)}.}
+\item{\code{varPercentagesPlot}}{A ggplot bar plot of the contributions of each model effect to the total variance \emph{(If SS = TRUE)}.}
 }
 }
 \description{
-Runs a GLM model and decomposes the outcomes into effect matrices for each model terms.
+Runs a GLM and decomposes the outcomes into effect matrices for each model effect.
 }
 \examples{
  data('UCH')

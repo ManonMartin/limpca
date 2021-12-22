@@ -2,11 +2,11 @@ contrastSS = function(resLmwModelMatrix){
 
   # Attributing name
   design = resLmwModelMatrix$lmwDataList$design
-  ModelMatrixByEffect = resLmwModelMatrix$ModelMatrixByEffect
-  covariateEffectsNamesUnique = resLmwModelMatrix$covariateEffectsNamesUnique
-  covariateEffectsNames = resLmwModelMatrix$covariateEffectsNames
-  neffect = length(covariateEffectsNamesUnique)
-  nparam = length(covariateEffectsNames)
+  modelMatrixByEffect = resLmwModelMatrix$modelMatrixByEffect
+  effectsNamesUnique = resLmwModelMatrix$effectsNamesUnique
+  effectsNamesAll = resLmwModelMatrix$effectsNamesAll
+  neffect = length(effectsNamesUnique)
+  nparam = length(effectsNamesAll)
 
   # Creating empy list
   L= list()
@@ -16,8 +16,8 @@ contrastSS = function(resLmwModelMatrix){
   Mat = diag(nparam)
 
   for(iEffect in 1:neffect){
-    selection = which(names(ModelMatrixByEffect) == covariateEffectsNamesUnique[iEffect])
-    MatEffect = ModelMatrixByEffect[[selection]]
+    selection = which(names(modelMatrixByEffect) == effectsNamesUnique[iEffect])
+    MatEffect = modelMatrixByEffect[[selection]]
     npi = ncol(MatEffect)
 
     L_iEffect = Mat[starting_col:(starting_col+npi-1),]

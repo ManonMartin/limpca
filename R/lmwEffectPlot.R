@@ -2,7 +2,7 @@
 #' @title Effect plot
 #'
 #' @description
-#' Draws effects plot for the lmwPcaEffects function.
+#' Draws effects plot for the \code{\link{lmwPcaEffects}} function.
 #'
 #' @param resASCA A list corresponding to the ASCA output value of \code{\link{lmwPcaEffects}}.
 #' @param effectName Name of the effect matrix used for the scores.
@@ -12,7 +12,7 @@
 #' @param w A character string giving the `design` factor whose levels will be used for the facet.
 #' @param ...
 #'
-#' @return An effect plot.
+#' @return An effect plot (ggplot).
 #'
 #' @details
 #' `lmwEffectPlot` is a wrapper of \code{\link{plotMeans}}.
@@ -21,14 +21,8 @@
 #'
 #' @import ggplot2
 
-lmwEffectPlot <- function(resASCA,
-                          effectName,
-                          axes = 1,
-                          x,
-                          z = NULL,
-                          w = NULL,
-                          hline = 0,
-                          ...){
+lmwEffectPlot <- function(resASCA, effectName, axes = 1,
+                          x, z = NULL, w = NULL, hline = 0, ...){
 
   # checks =========================
 
@@ -39,6 +33,10 @@ lmwEffectPlot <- function(resASCA,
   checkArg(z,c("str", "length1"), can.be.null = TRUE)
   checkArg(w,c("str", "length1"), can.be.null = TRUE)
   checkArg(hline,"num", can.be.null = TRUE)
+
+  if (!identical(names(resASCA[(length(resASCA)-5):length(resASCA)]),
+                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
 
   if(resASCA$method != "ASCA"){
     stop("resASCA does not correspond to an ASCA result of LmwEffectMatrices")

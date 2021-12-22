@@ -4,29 +4,28 @@
 #' @description
 #' Runs a Principal Component Analysis on the effect matrices and adapts the result according to the method.
 #'
-#' @param resLmwEffectMatrices A resLmwEffectMatrices list from \code{\link{lmwEffectMatrices}}
-#' @param method The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}
+#' @param resLmwEffectMatrices A resLmwEffectMatrices list from \code{\link{lmwEffectMatrices}}.
+#' @param method The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.
 #' @param combineEffects If not \code{NULL}, a list of vectors containing the names of the effects to be combined.
 #'
 #' @return A list of PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
 #'  \describe{
-#'   \item{\code{scores}}{Scores from the PCA for each of the n components.}
-#'   \item{\code{loadings}}{Loadings from the PCA for each of the n components.}
-#'   \item{\code{eigval}}{Eigenvalues of each of the n components.}
-#'   \item{\code{pcu}}{\emph{nxn} matrix of normalized scores.}
-#'   \item{\code{pcd}}{Singular values of each of the n components.}
-#'   \item{\code{var}}{Explained variance of each of the n components.}
-#'   \item{\code{cumvar}}{Cumulated explained variance of each of the n components.}
-#'   \item{\code{original.dataset}}{Original dataset}
+#'   \item{\code{scores}}{Scores from the PCA for each principal component.}
+#'   \item{\code{loadings}}{Loadings from the PCA for each principal component.}
+#'   \item{\code{eigval}}{Eigenvalues of each principal component.}
+#'   \item{\code{singvar}}{Singular values of each principal component.}
+#'   \item{\code{var}}{Explained variances of each principal component.}
+#'   \item{\code{cumvar}}{Cumulated explained variances of each principal component.}
+#'   \item{\code{original.dataset}}{Original dataset.}
 #'  }
 #'
 #'  There are also others outputs :
 #'  \describe{
-#'  \item{\code{lmwDataList}}{A list containing the outcomes, the experimental design and the formula.}
-#'  \item{\code{covariateEffectsNamesUnique}}{A character vector with the \emph{p} unique names of the model terms.}
-#'  \item{\code{method}}{The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.}
-#'  \item{\code{SS}}{A list of matrices with the type III residuals for each model terms.}
-#'  \item{\code{variationPercentages}}{A \emph{p} named vector with the variation percentages of each model terms.}
+#'  \item{\code{lmwDataList}}{The initial object: a list of outcomes, design and formula.}
+#'  \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model terms, each repeated once.}
+#'  \item{\code{method}}{The dimension reduction method used: \code{c("ASCA","APCA","ASCA-E")}.}
+#'  \item{\code{type3SS}}{A vector with the type III SS for each model term.}
+#'  \item{\code{variationPercentages}}{A vector with the percentage of variance explained by each model term.}
 #'  }
 #'
 #' @details
@@ -51,22 +50,24 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
 
   # Checking the resLmwEffectMatrices list
 
-  checkname = c("lmwDataList","ModelMatrix","ModelMatrixByEffect","covariateEffectsNames",
-                "covariateEffectsNamesUnique","effectMatrices",
+  checkname = c("lmwDataList","modelMatrix","modelMatrixByEffect","effectsNamesUnique",
+                "effectsNamesAll","effectMatrices",
                 "predictedvalues","residuals","parameters",
-                "SS","variationPercentages", "varPercentagesPlot")
+                "type3SS","variationPercentages", "varPercentagesPlot")
 
 
   if(!is.list(resLmwEffectMatrices)){stop("Argument resLmwEffectMatrices is not a list")}
   if(length(resLmwEffectMatrices)!=12){stop("List does not contain 12 arguments")}
   if(!all(names(resLmwEffectMatrices)==checkname)){stop("Argument is not a resLmwEffectMatrices object")}
-  if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$covariateEffectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
-  if(method %in% c("ASCA","APCA","ASCA-E")){}else{stop("Method must be one of the 3 : ASCA, ASCA-E, APCA")}
+  if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$effectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
+  if(!method %in% c("ASCA","APCA","ASCA-E")){stop("Method must be one of: ASCA, ASCA-E, APCA")}
+  method <- match.arg(method)
+  checkArg(combineEffects,c("list"),can.be.null=TRUE)
 
   # Attributing name
 
   lmwDataList = resLmwEffectMatrices$lmwDataList
-  covariateEffectsNamesUnique = resLmwEffectMatrices$covariateEffectsNamesUnique
+  effectsNamesUnique = resLmwEffectMatrices$effectsNamesUnique
 
   # Combining effects
 
@@ -95,9 +96,9 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   EffectMatGLM <- c(EffectMatGLM, Residuals = res)  # plus residuals
 
   if(!is.null(combineEffects)){
-    p = length(covariateEffectsNamesUnique) + length(combineEffects)
+    p = length(effectsNamesUnique) + length(combineEffects)
   } else{
-    p = length(covariateEffectsNamesUnique) # Number of parameters
+    p = length(effectsNamesUnique) # Number of parameters
   }
 
 
@@ -148,10 +149,10 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   names(resLmwPcaEffects) = names(EffectMatGLM)
 
   resLmwPcaEffects2 = list(lmwDataList = lmwDataList,
-                           covariateEffectsNamesUnique = covariateEffectsNamesUnique)
+                           effectsNamesUnique = effectsNamesUnique)
 
   resLmwPcaEffects = c(resLmwPcaEffects, resLmwPcaEffects2, method = method,
-                       SS = list(resLmwEffectMatrices$SS),
+                       type3SS = list(resLmwEffectMatrices$type3SS),
                        variationPercentages = list(resLmwEffectMatrices$variationPercentages))
 
   return(resLmwPcaEffects)
