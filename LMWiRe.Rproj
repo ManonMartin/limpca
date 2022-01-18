@@ -19,3 +19,4 @@ BuildType: Package
 PackageUseDevtools: Yes
 PackageBuildBinaryArgs: --compact-vignettes=both
 PackageCheckArgs: --no-build-vignettes --as-cran
+PackageRoxygenize: rd,collate,namespace
