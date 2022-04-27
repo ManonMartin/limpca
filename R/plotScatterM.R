@@ -301,11 +301,10 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL, title = "Scatterpl
     totallegend = length(c(vec.pchup,vec.pchdown,vec.colordown,vec.colorup))
     spacebyline = 0.85/totallegend
 
-    spacepchup = c(0.05,0.05+length(vec.pchup)*spacebyline)
-    spacepchdown = c(0.05+length(vec.pchup)*spacebyline,0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline)
-    spacecoldown = c(0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline,0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline +length(vec.colordown)*spacebyline)
     spacecolup = c(0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline +length(vec.colordown)*spacebyline,0.9)
-
+    spacepchup = c(0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline,0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline +length(vec.colordown)*spacebyline)
+    spacepchdown = c(0.05,0.05+length(vec.pchup)*spacebyline)
+    spacecoldown = c(0.05+length(vec.pchup)*spacebyline,0.05+length(vec.pchup)*spacebyline + length(vec.pchdown)*spacebyline)
 
     #Plotting legend
 
