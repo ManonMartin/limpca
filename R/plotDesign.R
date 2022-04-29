@@ -95,7 +95,7 @@ plotDesign <- function(design, x, y, rows = NULL, cols = NULL,
   form <- paste0(rows,"~",cols)
 
   p <- p +  ggplot2::geom_text(aes_string(label = "n"),
-                      vjust=-0.40)
+                              nudge_y = 0.45)
 
 
   if (!is.null(rows) | !is.null(cols)){
@@ -104,6 +104,8 @@ plotDesign <- function(design, x, y, rows = NULL, cols = NULL,
 
   }
   p <- p + ggplot2::ggtitle(title) + theme
+
+
   return(p)
 
 }
