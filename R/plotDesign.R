@@ -5,12 +5,13 @@
 #' Plots the experimental design of the data.
 #'
 #' @param design A nxk "free encoded" experimental design data frame.
-#' @param x A character string giving the column name of `design` to be used for the x axis.
-#' @param y A character string giving the column name of `design` to be used for the y axis.
-#' @param rows If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the rows.
-#' @param cols If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the columns.
+#' @param x By default: the first column of `design`. If not `NULL`, a character string giving the column name of `design` to be used for the x axis.
+#' @param y By default: the second column of `design`. If not `NULL`, a character string giving the column name of `design` to be used for the y axis.
+#' @param cols By default: the third column of `design` if present. If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the columns.
+#' @param rows By default: the third column of `design` if present. If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the rows.
 #' @param title Plot title.
 #' @param theme ggplot theme, see `?ggtheme` for more info.
+#' @param nudge_y Nudge points a fixed distance for text labels (used in `geom_text()`), see ggplot2::position_nudge.
 #'
 #' @return A plot of the design (ggplot).
 #'
@@ -24,20 +25,20 @@
 #'   mutate(across(everything(), as.factor))
 #'
 #' # 2 factors
-#' plotDesign(design = df, x = "cyl", y = "vs", rows = NULL,
-#'           cols = NULL)
+#' plotDesign(design = df, x = "cyl", y = "vs",
+#'           cols = NULL, rows = NULL)
 #' # 3 factors
-#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
-#'           cols = NULL)
+#' plotDesign(design = df, x = "cyl", y = "vs",
+#'           cols = NULL, rows = c("am"))
 #' # 4 factors
-#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
-#'           cols = c("gear"))
+#' plotDesign(design = df, x = "cyl", y = "vs",
+#'           cols = c("gear"), rows = c("am"))
 #' # 5 factors
-#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
-#'           cols = c("gear"))
+#' plotDesign(design = df, x = "cyl", y = "vs",
+#'           cols = c("gear"), rows = c("am","carb"))
 #'
-#' plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
-#'           cols = c("vs"))
+#' plotDesign(design = df, x = "cyl", y = "vs",
+#'           cols = c("vs"), rows = c("am","carb"))
 #'
 #' ### UCH
 #' data("UCH")
@@ -46,34 +47,54 @@
 #' @import ggplot2
 #' @import dplyr
 
-plotDesign <- function(design, x, y, rows = NULL, cols = NULL,
-                       title = "Plot of the design", theme = theme_bw()){
+plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
+                       title = "Plot of the design", theme = theme_bw(),
+                       nudge_y = 0.45){
 
   # checks ===================
 
   checkArg(design,"data.frame",can.be.null = FALSE)
-  checkArg(x,c("str","length1"),can.be.null = FALSE)
-  checkArg(y,c("str","length1"),can.be.null = FALSE)
+  checkArg(x,c("str","length1"),can.be.null = TRUE)
+  checkArg(y,c("str","length1"),can.be.null = TRUE)
   checkArg(rows,c("str"),can.be.null = TRUE)
   checkArg(cols,c("str"),can.be.null = TRUE)
   checkArg(title,c("str","length1"),can.be.null = TRUE)
 
-  x <- match.arg(x, choices = colnames(design))
-  y <- match.arg(y, choices = colnames(design))
-
-  if (!is.null(rows)){
-    if (!all(rows %in% colnames(design))){
-      stop(paste0("rows (",paste0(rows, collapse = ", "),
-                  ") is not matching column names of design: ",paste0(colnames(design), collapse = ", ")))
-    }
+  #
+  # y <- match.arg(y, choices = colnames(design))
+  if (!is.null(x)){
+    x <- match.arg(x, choices = colnames(design))
+  } else{
+    x <- colnames(design)[1]
   }
+
+  if (!is.null(y)){
+    y <- match.arg(y, choices = colnames(design))
+  } else{
+    y <- colnames(design)[2]
+  }
+
 
   if (!is.null(cols)){
     if (!all(cols %in% colnames(design))){
       stop(paste0("cols (",paste0(cols, collapse = ", "),
-                  ") is not matching column names of design: ",paste0(colnames(design), collapse = ", ")))
+                  ") is not matching column names of design: ",
+                  paste0(colnames(design), collapse = ", ")))
     }
+  } else{
+    if(ncol(design)>2){cols = colnames(design)[3]}
   }
+
+  if (!is.null(rows)){
+    if (!all(rows %in% colnames(design))){
+      stop(paste0("rows (",paste0(rows, collapse = ", "),
+                  ") is not matching column names of design: ",
+                  paste0(colnames(design), collapse = ", ")))
+    }
+  } else{
+    if(ncol(design)>3){rows = colnames(design)[4]}
+  }
+
 
 
   # plot design ===================
@@ -95,7 +116,7 @@ plotDesign <- function(design, x, y, rows = NULL, cols = NULL,
   form <- paste0(rows,"~",cols)
 
   p <- p +  ggplot2::geom_text(aes_string(label = "n"),
-                              nudge_y = 0.45)
+                              nudge_y = nudge_y)
 
 
   if (!is.null(rows) | !is.null(cols)){
