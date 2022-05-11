@@ -334,9 +334,11 @@ lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
 
   result <- replace(result, result == 0, paste0("< ", format(1/nboot, digits = 1, scientific = FALSE)))
 
-  resultsTable = rbind(result,
+  resultsTable_temp = rbind(result,
                        round(resLmwEffectMatrices$variationPercentages[1:length(Fobs)], 2))
+  resultsTable = cbind(resultsTable_temp, c("-", round(resLmwEffectMatrices$variationPercentages[["Residuals"]],2)))
   rownames(resultsTable) = c("Bootstrap p-values", "% of variance (T III)")
+  colnames(resultsTable) = c(resLmwEffectMatrices$effectsNamesUnique[-1],"Residuals")
 
   resLmwBootstrapTests = list(f.obs=Fobs,f.boot=Fboot,p.values=result,resultsTable=resultsTable)
 
