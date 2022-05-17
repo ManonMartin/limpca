@@ -40,7 +40,7 @@ pcaScreePlot = function(resPcaBySvd, nPC = 5,
                                y=res[,1])) +
     ggplot2::geom_bar(stat="identity") +
     ggplot2::xlab("Principal Components") +
-    ggplot2::ylab("Variance Percentage") +
+    ggplot2::ylab("Percentage of Variance") +
     ggplot2::ggtitle(title) +
     theme
 }

@@ -108,7 +108,7 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
                                                        y=contrib[,1]))+
       ggplot2::geom_bar(stat="identity")+
       ggplot2::xlab("Effects")+
-      ggplot2::ylab("Variation Percentage")+
+      ggplot2::ylab("Percentage of Variance")+
       ggplot2::theme_bw()
 
     resLmwEffectMatrices = c(resLmwEffectMatrices,resLmwSS,

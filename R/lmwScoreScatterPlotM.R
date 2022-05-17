@@ -1,8 +1,8 @@
 #' @export lmwScoreScatterPlotM
-#' @title Scores scatter plot matrix
+#' @title Score scatter plot matrix
 #'
 #' @description
-#' Plots a matrix of scores plots.
+#' Plots a matrix of score plots.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames A character vector with the name of the effects to plot.
