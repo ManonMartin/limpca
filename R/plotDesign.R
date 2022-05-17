@@ -49,7 +49,7 @@
 
 plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
                        title = "Plot of the design", theme = theme_bw(),
-                       nudge_y = 0.45){
+                       nudge_y = 0.2){
 
   # checks ===================
 
