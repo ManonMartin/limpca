@@ -2,7 +2,7 @@
 #' @title Scatter plot matrix
 #'
 #' @description
-#' Plots a matrix of scatter plots.
+#' Produces a scatter plot matrix between the selected columns of the outcomes matrix `Y` choosing specific colors and markers for the design factors on the upper and lower diagonal.
 #'
 #' @param Y nxm matrix with n observations and m variables.
 #' @param cols A vector with either the column names of the Y matrix to plot (character) or the column index positions.

@@ -2,7 +2,7 @@
 #' @title Line plot
 #'
 #' @description
-#' Draws line plot(s).
+#' Generates the response profile of one or more observation i.e. plots of one or more rows of the outcomes matrix on the y-axis against the m response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots are offered.
 #'
 #' @param Y A numerical matrix containing the rows to be drawn.
 #' @param rows A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s).

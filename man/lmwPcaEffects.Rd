@@ -39,7 +39,7 @@ There are also others outputs :
 }
 }
 \description{
-Runs a Principal Component Analysis on the effect matrices and adapts the result according to the method.
+Performs a PCA on each of the effect matrices from the outputs of \code{\link{lmwEffectMatrices}}. It has an option to determine the method applied: ASCA, APCA or ASCA-E. Combined effects (i.e. linear combinations of original effect matrices) can also be created and decomposed.
 }
 \details{
 The function allows 3 different methods :

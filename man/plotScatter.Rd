@@ -60,7 +60,7 @@ plotScatter(
 A scatter plot (ggplot).
 }
 \description{
-Draws a scatter plot.
+Produces a plot describing the relationship between two columns of the outcomes matrix \code{Y}. It allows to chose colors and markers for the levels of the design factors. Ellipses, polygones or segments can be added to group sets of points on the graph.
 }
 \examples{
 

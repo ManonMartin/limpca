@@ -2,7 +2,7 @@
 #' @title Summary of the contributions of each effect
 #'
 #' @description
-#' Creates a summary of the contribution of the different effects to the total variance as well as the contribution of the Principal Components calculated on each model matrix. Additionally provides plots of the ordered contributions.
+#' Reports the contribution of each effect to the total variance, but also the contribution of each principal component to the total variance per effect. Moreover, these contributions are summarized in a barplot.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param nPC The number of Principal Components to display.
@@ -35,7 +35,7 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   # Effect table with the total contribution ===============
   total_contrib_table = matrix(data=NA,nrow=neffect,ncol=1)
   rownames(total_contrib_table) = c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals")
-  colnames(total_contrib_table) = "Variation Percentages"
+  colnames(total_contrib_table) = "Percentage of Variance"
 
   total_contrib_table[,1] = round(resLmwPcaEffects$variationPercentages, 2)
 
@@ -111,7 +111,7 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   plotTotal <- ggplot2::ggplot(data=dataTotal, ggplot2::aes(x=reorder(effects, -varPercentage),y=varPercentage))+
     ggplot2::geom_bar(stat="identity")+
     ggplot2::xlab("Effects")+
-    ggplot2::ylab("Variance Percentage")+
+    ggplot2::ylab("Percentage of Variance")+
     ggplot2::theme_bw()
 
   # Plot of the contribution of each component to the variance of the effect
@@ -133,7 +133,7 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
                                 ggplot2::aes(x=reorder(rownames(dataContrib), -dataContrib[,1]),y=dataContrib[,1]))+
     ggplot2::geom_bar(stat="identity")+
     ggplot2::xlab("Contributions")+
-    ggplot2::ylab("Variance Percentage")+
+    ggplot2::ylab("Percentage of Variance")+
     ggplot2::scale_x_discrete(limits=rownames(data))+
     ggplot2::theme_bw()
   }

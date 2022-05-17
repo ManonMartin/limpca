@@ -2,7 +2,7 @@
 #' @title Scree Plot
 #'
 #' @description
-#' Draws scree plots for the pcaBySvd function.
+#' Returns a bar plot of the percentage of variance explained by each Principal Component calculated by \code{\link{pcaBySvd}}.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param nPC An integer with the number of Principal Components to plot.
@@ -40,7 +40,7 @@ pcaScreePlot = function(resPcaBySvd, nPC = 5,
                                y=res[,1])) +
     ggplot2::geom_bar(stat="identity") +
     ggplot2::xlab("Principal Components") +
-    ggplot2::ylab("Variance Percentage") +
+    ggplot2::ylab("Percentage of Variance") +
     ggplot2::ggtitle(title) +
     theme
 }

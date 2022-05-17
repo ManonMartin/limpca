@@ -1,15 +1,15 @@
 #' @export pcaLoadingPlot
-#' @title Loadings plots
+#' @title Loading plots
 #'
 #' @description
-#' Draws loadings plots for the pcaBySvd function.
+#' Plots the loadings from \code{\link{pcaBySvd}} with different possible line types.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param title Plot title.
 #' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
 #'
-#' @return A PCA loadings plot (ggplot).
+#' @return A PCA loading plot (ggplot).
 #'
 #' @details
 #' `pcaLoadingPlot` is a wrapper of \code{\link{plotLine}}.
@@ -21,10 +21,10 @@
 #' ResPCA = pcaBySvd(UCH$outcomes)
 #'
 #' pcaLoadingPlot(resPcaBySvd = ResPCA, axes = c(1,2),
-#' title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Values")
+#' title = "PCA loading plot UCH", xlab = "ppm", ylab = "Values")
 
 pcaLoadingPlot <- function(resPcaBySvd, axes = c(1,2),
-                         title = "PCA loadings plot", ...) {
+                         title = "PCA loading plot", ...) {
 
   # checks   ===================
   checkArg(resPcaBySvd,c("list"),can.be.null = FALSE)

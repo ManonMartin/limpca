@@ -2,7 +2,7 @@
 #' @title Performs a test on the effects from the model
 #'
 #' @description
-#' Computes a partial model without the tested effects then estimates the residuals. Next, computes new outcomes from the predicted values of the partial model and sampled residuals. Finally, computes the Sum of Squares and the test statistics.
+#' Tests the significance of the effects from the model using bootstrap. This function is based on the outputs of \code{\link{lmwEffectMatrices}}. Tests on combined effects are also provided.
 #'
 #' @param resLmwEffectMatrices A list of 12 from \code{\link{lmwEffectMatrices}}.
 #' @param nboot An integer with the number of iterations to perform.
@@ -334,9 +334,11 @@ lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
 
   result <- replace(result, result == 0, paste0("< ", format(1/nboot, digits = 1, scientific = FALSE)))
 
-  resultsTable = rbind(result,
+  resultsTable_temp = rbind(result,
                        round(resLmwEffectMatrices$variationPercentages[1:length(Fobs)], 2))
+  resultsTable = cbind(resultsTable_temp, c("-", round(resLmwEffectMatrices$variationPercentages[["Residuals"]],2)))
   rownames(resultsTable) = c("Bootstrap p-values", "% of variance (T III)")
+  colnames(resultsTable) = c(resLmwEffectMatrices$effectsNamesUnique[-1],"Residuals")
 
   resLmwBootstrapTests = list(f.obs=Fobs,f.boot=Fboot,p.values=result,resultsTable=resultsTable)
 

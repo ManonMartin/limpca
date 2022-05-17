@@ -57,7 +57,7 @@ plotMeans(
 A means plot (ggplot).
 }
 \description{
-Draws means plot(s).
+Draws, for a given response variable, a plot of the response means by levels of up to three categorical factors of the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
 }
 \examples{
 

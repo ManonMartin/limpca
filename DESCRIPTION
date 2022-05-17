@@ -1,6 +1,6 @@
 Package: LMWiRe
 Type: Package
-Title: R Routines for Linear Modelling with Wide Responses
+Title: Linear Models for Wide Responses
 Version: 0.1.0
 Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
                      email = "bernadette.ovaerts@uclouvain.be"),

@@ -1,15 +1,15 @@
 #' @export lmwScorePlot
-#' @title Scores plots
+#' @title Score plots
 #'
 #' @description
-#' Draws scores plots for the \code{\link{lmwPcaEffects}} function.
+#' Draws the score plots of each effect matrix provided in \code{\link{lmwPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect score matrices for two components at a time with all options available in \code{\link{plotScatter}}.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
-#' @return A list of scores plots (ggplot).
+#' @return A list of score plots (ggplot).
 #'
 #' @details
 #' `lmwScorePlot` is a wrapper of \code{\link{plotScatter}}.
@@ -86,7 +86,7 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   buildFig <- function(effect){
 
-    title = paste(resLmwPcaEffects$method, "scores plot :", effect, "effect")
+    title = paste(effect, ":", resLmwPcaEffects$method, "score plot")
 
     xlab <- pc_axes[[effect]][1]
     ylab <- pc_axes[[effect]][2]

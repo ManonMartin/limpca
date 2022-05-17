@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmwScorePlot.R
 \name{lmwScorePlot}
 \alias{lmwScorePlot}
-\title{Scores plots}
+\title{Score plots}
 \usage{
 lmwScorePlot(resLmwPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 }
@@ -16,10 +16,10 @@ lmwScorePlot(resLmwPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
 \value{
-A list of scores plots (ggplot).
+A list of score plots (ggplot).
 }
 \description{
-Draws scores plots for the \code{\link{lmwPcaEffects}} function.
+Draws the score plots of each effect matrix provided in \code{\link{lmwPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect score matrices for two components at a time with all options available in \code{\link{plotScatter}}.
 }
 \details{
 \code{lmwScorePlot} is a wrapper of \code{\link{plotScatter}}.

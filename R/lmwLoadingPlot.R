@@ -1,15 +1,15 @@
 #' @export lmwLoadingPlot
-#' @title Loadings plot(s)
+#' @title Loading plot(s)
 #'
 #' @description
-#' Draws loadings plots for the \code{\link{lmwPcaEffects}} function.
+#' Plots the loadings for each effect matrix from \code{\link{lmwPcaEffects}} outputs with line plots.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
 #'
-#' @return A list of loadings plots (ggplot).
+#' @return A list of loading plots (ggplot).
 #'
 #' @details
 #' `lmwLoadingPlot` is a wrapper of \code{\link{plotLine}}.
@@ -74,7 +74,7 @@ lmwLoadingPlot <- function(resLmwPcaEffects, effectNames = NULL,
   # Loadings plot  ===================
 
   buildFig <- function(effect){
-    title = paste(effect, ": loadings plot")
+    title = paste(effect, ": loading plot")
 
     plotLine(Y = loadings[[effect]], title = title, rows = axes, facet_label = lab[[effect]], ...)
   }

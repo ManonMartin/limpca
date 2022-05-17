@@ -6,34 +6,37 @@
 \usage{
 plotDesign(
   design,
-  x,
-  y,
+  x = NULL,
+  y = NULL,
   rows = NULL,
   cols = NULL,
   title = "Plot of the design",
-  theme = theme_bw()
+  theme = theme_bw(),
+  nudge_y = 0.45
 )
 }
 \arguments{
 \item{design}{A nxk "free encoded" experimental design data frame.}
 
-\item{x}{A character string giving the column name of \code{design} to be used for the x axis.}
+\item{x}{By default: the first column of \code{design}. If not \code{NULL}, a character string giving the column name of \code{design} to be used for the x axis.}
 
-\item{y}{A character string giving the column name of \code{design} to be used for the y axis.}
+\item{y}{By default: the second column of \code{design}. If not \code{NULL}, a character string giving the column name of \code{design} to be used for the y axis.}
 
-\item{rows}{If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
+\item{rows}{By default: the third column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
 
-\item{cols}{If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
+\item{cols}{By default: the third column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
 
 \item{title}{Plot title.}
 
 \item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
+
+\item{nudge_y}{Nudge points a fixed distance for text labels (used in \code{geom_text()}), see ggplot2::position_nudge.}
 }
 \value{
 A plot of the design (ggplot).
 }
 \description{
-Plots the experimental design of the data.
+Provides a graphical representation of the experimental design for up to 4 factors. It allows to visualize factors levels and check the balancing of the design.
 }
 \examples{
 
@@ -45,20 +48,20 @@ df <-  mtcars \%>\%
   mutate(across(everything(), as.factor))
 
 # 2 factors
-plotDesign(design = df, x = "cyl", y = "vs", rows = NULL,
-          cols = NULL)
+plotDesign(design = df, x = "cyl", y = "vs",
+          cols = NULL, rows = NULL)
 # 3 factors
-plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
-          cols = NULL)
+plotDesign(design = df, x = "cyl", y = "vs",
+          cols = NULL, rows = c("am"))
 # 4 factors
-plotDesign(design = df, x = "cyl", y = "vs", rows = c("am"),
-          cols = c("gear"))
+plotDesign(design = df, x = "cyl", y = "vs",
+          cols = c("gear"), rows = c("am"))
 # 5 factors
-plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
-          cols = c("gear"))
+plotDesign(design = df, x = "cyl", y = "vs",
+          cols = c("gear"), rows = c("am","carb"))
 
-plotDesign(design = df, x = "cyl", y = "vs", rows = c("am","carb"),
-          cols = c("vs"))
+plotDesign(design = df, x = "cyl", y = "vs",
+          cols = c("vs"), rows = c("am","carb"))
 
 ### UCH
 data("UCH")

@@ -2,7 +2,7 @@
 #' @title Creates the model matrix
 #'
 #' @description
-#' Creates the specific model matrix from the design for the ASCA-GLM method.
+#' Creates the model matrix `X` from the design matrix and the formula of the model.
 #'
 #' @param lmwDataList A list containing the outcomes, the experimental design and the formula.
 #'

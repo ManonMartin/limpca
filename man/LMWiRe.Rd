@@ -1,28 +1,27 @@
 \name{LMWiRe}
 \alias{LMWiRe}
-\title{R Routines for Linear Modelling With Wide Responses}
+\title{Linear Models for Wide Responses}
 
 \description{
 This package has for objectives to provide a method to make Linear Models for Wide Responses data. This method handles unbalanced design. At this development stage, the package can only perform one or two-way ANOVA of class I. More possibilities should be included in the future. The principal functions of the package are:
 
 \describe{
-  \item{\code{\link{LMModelMatrix}}}{Create a model matrix from the design matrix}
-  \item{\code{\link{LMEffectMatrices}}}{Compute an ANOVA-GLM model}
-  \item{\code{\link{PCALMEffects}}}{Perform a PCA on the effect matrices}
-  \item{\code{\link{LMModelMatrix}}}{Create a model matrix from the design matrix}
-  %\item{\code{\link{LMPermutTest}}}{Perform a permutation test for each effect matrix}
+  \item{\code{\link{lmwModelMatrix}}}{Creates a model matrix from the design and the model formula using sum coding}
+  \item{\code{\link{lmwEffectMatrices}}}{Estimates the GLM and derives the effect matrix for each model effect}
+  \item{\code{\link{lmwBootstrapTests}}}{Tests the significance of the effects using a parametric bootstrap}
+  \item{\code{\link{lmwPcaEffects}}}{Performs a PCA on the effect matrices and adapts the results according to the method chosen between ASCA, APCA or ASCA-E}
 }
 
 
 
-Other functions to observe the results are:
+The functions allowing the visualisation of the results are:
 \describe{
-  \item{\code{\link{PlotScoresMatrix}}}{Plot multiple scores of different effects in one graph}
-  \item{\code{\link{PlotScoresXY}}}{Plot scores of an effect on two components by graph }
-  \item{\code{\link{PlotLoadings}}}{Plot the loadings}
-  \item{\code{\link{PrintContributions}}}{Print a table with the contribution of each effect's component to the total variance}
-  \item{\code{\link{PlotScree}}}{Plot a barplot of the variance percentage of each component}
-  %\item{\code{\link{PlotLMSS}}}{Plot the variance of each effect}
+  \item{\code{\link{lmwLoadingPlot}}}{Plots the loadings}
+  \item{\code{\link{lmwScorePlot}}}{Plots scores of an effect for two components at a time}
+  \item{\code{\link{lmwScoreScatterPlotM}}}{Plots the scores of several effects simultaneously through a scores plot matrix}
+  \item{\code{\link{lmwEffectPlot}}}{Plots the ASCA scores of an effect for one Principal Component at a time and allows the scores to be decomposed by the levels of the factors found in the effect being studied.}
+  \item{\code{\link{lmwContributions}}}{Produces plots and tables listing the contribution of the different effects to the total variance as well as the contribution of the Principal Components calculated on each model matrix}
+  \item{\code{\link{lmwScreePlot}}}{Produces bar plots of the variance percentage explained by each Principal Component fo a given effect}
 }
 }
 

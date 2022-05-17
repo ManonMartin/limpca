@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmwLoadingPlot.R
 \name{lmwLoadingPlot}
 \alias{lmwLoadingPlot}
-\title{Loadings plot(s)}
+\title{Loading plot(s)}
 \usage{
 lmwLoadingPlot(resLmwPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 }
@@ -16,10 +16,10 @@ lmwLoadingPlot(resLmwPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 \item{...}{Additional arguments to be passed to \code{\link{plotLine}}.}
 }
 \value{
-A list of loadings plots (ggplot).
+A list of loading plots (ggplot).
 }
 \description{
-Draws loadings plots for the \code{\link{lmwPcaEffects}} function.
+Plots the loadings for each effect matrix from \code{\link{lmwPcaEffects}} outputs with line plots.
 }
 \details{
 \code{lmwLoadingPlot} is a wrapper of \code{\link{plotLine}}.

@@ -22,7 +22,7 @@ lmwScreePlot(
 A scree plot (ggplot).
 }
 \description{
-Draws scree plots for the \code{\link{lmwContributions}} function.
+Plots barplots of the percentage of variance associated with each principal component and for each matrix effect on the basis of \code{\link{lmwContributions}} outputs.
 }
 \examples{
 

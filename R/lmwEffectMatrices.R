@@ -2,7 +2,7 @@
 #' @title Computes the effect matrices
 #'
 #' @description
-#' Runs a GLM and decomposes the outcomes into effect matrices for each model effect.
+#' Estimates by OLS the effect matrices **M^(_0)**, **M^(_1)**, ...**M^(_f)**, ...**M^(_E)** for the outcomes and design matrix provided in object `resLmwModelMatrix` and calculates the linked percentage of variances.
 #'
 #' @param resLmwModelMatrix A list of 5 elements from \code{\link{lmwModelMatrix}}.
 #' @param SS Logical. If `FALSE`, won't compute the percentage of variance for each effect.
@@ -108,7 +108,7 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
                                                        y=contrib[,1]))+
       ggplot2::geom_bar(stat="identity")+
       ggplot2::xlab("Effects")+
-      ggplot2::ylab("Variation Percentage")+
+      ggplot2::ylab("Percentage of Variance")+
       ggplot2::theme_bw()
 
     resLmwEffectMatrices = c(resLmwEffectMatrices,resLmwSS,

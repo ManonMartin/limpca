@@ -20,7 +20,7 @@ A list with the 5 following named elements :
 }
 }
 \description{
-Creates the specific model matrix from the design for the ASCA-GLM method.
+Creates the model matrix \code{X} from the design matrix and the formula of the model.
 }
 \details{
 In typical ASCA-GLM analysis, the GLM model needs the design to be re-encoded with the commonly used in industrial experimental design \emph{sum coding}. The result is the model matrix.

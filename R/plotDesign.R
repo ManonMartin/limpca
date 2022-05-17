@@ -2,7 +2,7 @@
 #' @title Plot of the design matrix
 #'
 #' @description
-#' Plots the experimental design of the data.
+#' Provides a graphical representation of the experimental design for up to 4 factors. It allows to visualize factors levels and check the balancing of the design.
 #'
 #' @param design A nxk "free encoded" experimental design data frame.
 #' @param x By default: the first column of `design`. If not `NULL`, a character string giving the column name of `design` to be used for the x axis.

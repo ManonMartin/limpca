@@ -2,9 +2,9 @@
 % Please edit documentation in R/pcaLoadingPlot.R
 \name{pcaLoadingPlot}
 \alias{pcaLoadingPlot}
-\title{Loadings plots}
+\title{Loading plots}
 \usage{
-pcaLoadingPlot(resPcaBySvd, axes = c(1, 2), title = "PCA loadings plot", ...)
+pcaLoadingPlot(resPcaBySvd, axes = c(1, 2), title = "PCA loading plot", ...)
 }
 \arguments{
 \item{resPcaBySvd}{A list corresponding to the output value of \code{\link{pcaBySvd}}.}
@@ -16,10 +16,10 @@ pcaLoadingPlot(resPcaBySvd, axes = c(1, 2), title = "PCA loadings plot", ...)
 \item{...}{Additional arguments to be passed to \code{\link{plotLine}}.}
 }
 \value{
-A PCA loadings plot (ggplot).
+A PCA loading plot (ggplot).
 }
 \description{
-Draws loadings plots for the pcaBySvd function.
+Plots the loadings from \code{\link{pcaBySvd}} with different possible line types.
 }
 \details{
 \code{pcaLoadingPlot} is a wrapper of \code{\link{plotLine}}.
@@ -30,5 +30,5 @@ data('UCH')
 ResPCA = pcaBySvd(UCH$outcomes)
 
 pcaLoadingPlot(resPcaBySvd = ResPCA, axes = c(1,2),
-title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Values")
+title = "PCA loading plot UCH", xlab = "ppm", ylab = "Values")
 }

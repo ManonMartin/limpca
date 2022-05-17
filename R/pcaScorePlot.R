@@ -1,8 +1,8 @@
 #' @export pcaScorePlot
-#' @title Scores plots
+#' @title Score plots
 #'
 #' @description
-#' Draws scores plots for the pcaBySvd function.
+#' Produces rich score plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
@@ -10,7 +10,7 @@
 #' @param points_labs_rn Boolean indicating if the rownames of the scores matrix should be plotted.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
-#' @return A PCA scores plot (ggplot).
+#' @return A PCA score plot (ggplot).
 #'
 #' @details
 #' `pcaScorePlot` is a wrapper of \code{\link{plotScatter}}.
@@ -22,13 +22,13 @@
 #' ResPCA = pcaBySvd(UCH$outcomes)
 #'
 #' pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
-#' title = "PCA scores plot UCH", design = UCH$design,
+#' title = "PCA score plot UCH", design = UCH$design,
 #' color = "Hippurate", shape = "Citrate")
 #'
 #' @import ggplot2
 
 pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
-                         title = "PCA scores plot",
+                         title = "PCA score plot",
                          points_labs_rn = FALSE, ...) {
 
   # checks ===================

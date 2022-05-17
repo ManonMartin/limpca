@@ -25,7 +25,7 @@ A list with the following elements:
 }
 }
 \description{
-PCA by singular value decomposition, the pre-processing involves the mean-centering of X.
+Operates a Principal Component Analysis on the \code{Y} outcome/response matrix by a singular value decomposition (the pre-processing involves the mean-centering of \code{Y}). Outputs are represented with functions \code{\link{pcaScorePlot}}, \code{\link{pcaLoadingPlot}} and \code{\link{pcaScreePlot}}.
 }
 \examples{
 
