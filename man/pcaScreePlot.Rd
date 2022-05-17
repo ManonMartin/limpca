@@ -24,7 +24,7 @@ pcaScreePlot(
 A PCA scree plot
 }
 \description{
-Draws scree plots for the pcaBySvd function.
+Returns a bar plot of the percentage of variance explained by each Principal Component calculated by \code{\link{pcaBySvd}}.
 }
 \examples{
 

@@ -2,7 +2,7 @@
 #' @title Score plots
 #'
 #' @description
-#' Draws score plots for the \code{\link{lmwPcaEffects}} function.
+#' Draws the score plots of each effect matrix provided in \code{\link{lmwPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect score matrices for two components at a time with all options available in \code{\link{plotScatter}}.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.

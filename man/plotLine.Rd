@@ -60,7 +60,7 @@ plotLine(
 A line plot (ggplot).
 }
 \description{
-Draws line plot(s).
+Generates the response profile of one or more observation i.e. plots of one or more rows of the outcomes matrix on the y-axis against the m response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots are offered.
 }
 \examples{
 

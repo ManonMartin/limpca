@@ -2,7 +2,7 @@
 #' @title Loading plot(s)
 #'
 #' @description
-#' Draws loading plots for the \code{\link{lmwPcaEffects}} function.
+#' Plots the loadings for each effect matrix from \code{\link{lmwPcaEffects}} outputs with line plots.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.

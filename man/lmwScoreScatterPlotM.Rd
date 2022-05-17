@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmwScoreScatterPlotM.R
 \name{lmwScoreScatterPlotM}
 \alias{lmwScoreScatterPlotM}
-\title{Scores scatter plot matrix}
+\title{Score scatter plot matrix}
 \usage{
 lmwScoreScatterPlotM(
   resLmwPcaEffects,
@@ -27,7 +27,7 @@ lmwScoreScatterPlotM(
 A matrix of graphs
 }
 \description{
-Plots a matrix of scores plots.
+Plots the scores of all model effects simultaneously in a scatterplot matrix. By default, the first principal component only is kept for each model effect and, as a wrapper of \code{\link{plotScatterM}}, the choice markers and colors for factor levels allow to enrich the visualization of the factor effects on the responses.
 }
 \details{
 \code{lmwScoreScatterPlotM} is a wrapper of \code{\link{plotScatterM}}.

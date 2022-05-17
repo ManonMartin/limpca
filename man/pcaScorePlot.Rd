@@ -2,12 +2,12 @@
 % Please edit documentation in R/pcaScorePlot.R
 \name{pcaScorePlot}
 \alias{pcaScorePlot}
-\title{Scores plots}
+\title{Score plots}
 \usage{
 pcaScorePlot(
   resPcaBySvd,
   axes = c(1, 2),
-  title = "PCA scores plot",
+  title = "PCA score plot",
   points_labs_rn = FALSE,
   ...
 )
@@ -24,10 +24,10 @@ pcaScorePlot(
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
 \value{
-A PCA scores plot (ggplot).
+A PCA score plot (ggplot).
 }
 \description{
-Draws scores plots for the pcaBySvd function.
+Produces rich score plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
 }
 \details{
 \code{pcaScorePlot} is a wrapper of \code{\link{plotScatter}}.
@@ -38,7 +38,7 @@ data('UCH')
 ResPCA = pcaBySvd(UCH$outcomes)
 
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
-title = "PCA scores plot UCH", design = UCH$design,
+title = "PCA score plot UCH", design = UCH$design,
 color = "Hippurate", shape = "Citrate")
 
 }

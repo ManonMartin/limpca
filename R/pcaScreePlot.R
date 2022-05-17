@@ -2,7 +2,7 @@
 #' @title Scree Plot
 #'
 #' @description
-#' Draws scree plots for the pcaBySvd function.
+#' Returns a bar plot of the percentage of variance explained by each Principal Component calculated by \code{\link{pcaBySvd}}.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param nPC An integer with the number of Principal Components to plot.

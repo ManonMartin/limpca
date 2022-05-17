@@ -2,7 +2,7 @@
 #' @title Score scatter plot matrix
 #'
 #' @description
-#' Plots a matrix of score plots.
+#' Plots the scores of all model effects simultaneously in a scatterplot matrix. By default, the first principal component only is kept for each model effect and, as a wrapper of \code{\link{plotScatterM}}, the choice markers and colors for factor levels allow to enrich the visualization of the factor effects on the responses.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames A character vector with the name of the effects to plot.

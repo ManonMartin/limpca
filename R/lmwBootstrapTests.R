@@ -2,7 +2,7 @@
 #' @title Performs a test on the effects from the model
 #'
 #' @description
-#' Computes a partial model without the tested effects then estimates the residuals. Next, computes new outcomes from the predicted values of the partial model and sampled residuals. Finally, computes the Sum of Squares and the test statistics.
+#' Tests the significance of the effects from the model using bootstrap. This function is based on the outputs of \code{\link{lmwEffectMatrices}}. Tests on combined effects are also provided.
 #'
 #' @param resLmwEffectMatrices A list of 12 from \code{\link{lmwEffectMatrices}}.
 #' @param nboot An integer with the number of iterations to perform.

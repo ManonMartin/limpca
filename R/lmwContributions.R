@@ -2,7 +2,7 @@
 #' @title Summary of the contributions of each effect
 #'
 #' @description
-#' Creates a summary of the contribution of the different effects to the total variance as well as the contribution of the Principal Components calculated on each model matrix. Additionally provides plots of the ordered contributions.
+#' Reports the contribution of each effect to the total variance, but also the contribution of each principal component to the total variance per effect. Moreover, these contributions are summarized in a barplot.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param nPC The number of Principal Components to display.

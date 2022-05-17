@@ -2,7 +2,7 @@
 #' @title Scree Plot
 #'
 #' @description
-#' Draws scree plots for the \code{\link{lmwContributions}} function.
+#' Plots barplots of the percentage of variance associated with each principal component and for each matrix effect on the basis of \code{\link{lmwContributions}} outputs.
 #'
 #' @param resLmwContributions A resLmwContributions list from the function \code{\link{lmwContributions}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.

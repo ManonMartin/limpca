@@ -2,7 +2,7 @@
 #' @title Scatter plot
 #'
 #' @description
-#' Draws a scatter plot.
+#' Produces a plot describing the relationship between two columns of the outcomes matrix `Y`. It allows to chose colors and markers for the levels of the design factors. Ellipses, polygones or segments can be added to group sets of points on the graph.
 #'
 #' @param Y A nxm matrix with n observations and m variables.
 #' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the Y matrix to plot (character) or the index position(s).

@@ -2,7 +2,7 @@
 #' @title Score plots
 #'
 #' @description
-#' Draws score plots for the pcaBySvd function.
+#' Produces rich score plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.

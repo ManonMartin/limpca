@@ -1,7 +1,7 @@
 ---
 title: "Application of the LMWiRe package on the UCH dataset"
 author: "Benaiche Nadia"
-date: 2022-01-09
+date: "`r Sys.Date()`"
 package: LMWiRe
 output:
   BiocStyle::html_document:
@@ -59,12 +59,12 @@ The purpose of this vignette is to show the possibilities offered by the LMWiRe 
 
 # Installation
 
-The package is actually in its development stage and is available on GitHub at the url: <https://github.com/bgovaerts/LMWiRe/tree/develop>. It can be installed via the `devtools::install_github()` function. The package needs to be loaded afterwards.
+The package is actually in its development stage and is available on GitHub at the url:<https://github.com/bgovaerts/LMWiRe>. It can be installed via the `devtools::install_github()` function. The package needs to be loaded afterwards.
 
 
 ```{r Install, results=FALSE, message=FALSE}
 
-# devtools::install_github("bgovaerts/LMWiRe@develop", force = TRUE)
+# devtools::install_github("bgovaerts/LMWiRe", force = TRUE)
 
 library("LMWiRe")
 
@@ -163,19 +163,19 @@ pcaScreePlot(ResPCA, nPC = 6) + ggplot2::geom_bar(stat = "identity", fill = "cad
 ```{r Scores}
 
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-             title = "PCA scores plot: PC1 and PC2", 
+             title = "PCA score plot: PC1 and PC2", 
              design = UCH$design,
              color = "Hippurate", shape = "Citrate",
              points_labs_rn = FALSE)
 
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-             title = "PCA scores plot: PC1 and PC2", 
+             title = "PCA score plot: PC1 and PC2", 
              design = UCH$design,
              color = "Time", shape = "Hippurate",
              points_labs_rn = FALSE)
 
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(3,4), 
-             title = "PCA scores plot: PC3 and PC4", 
+             title = "PCA score plot: PC3 and PC4", 
              design = UCH$design,
              color = "Time", shape = "Citrate",
              points_labs_rn = FALSE)
@@ -185,7 +185,7 @@ pcaScorePlot(resPcaBySvd = ResPCA, axes = c(3,4),
 ```{r Loadings}
 
 p2 <- pcaLoadingPlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-               title = "PCA loadings plot UCH", xlab = "ppm", ylab = "Intensity")
+               title = "PCA loading plot UCH", xlab = "ppm", ylab = "Intensity")
 
 p2 + annotate("rect", xmin=7.458, xmax=7.935, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") +
  annotate("rect", xmin=3.881, xmax=4.041, ymin=-Inf, ymax=Inf, alpha=0.2, fill="yellowgreen") +
@@ -231,7 +231,7 @@ We can use a parametric bootstrap test to determine whether an effect is signifi
 
 ```{r Bootstrap}
 
-resLmwBootstrapTests = lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=100)
+resLmwBootstrapTests = lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=1000)
 
 # Print Pvalue
 pander::pander(t(resLmwBootstrapTests$resultsTable))
@@ -291,7 +291,7 @@ lmwScoreScatterPlotM(resASCA,
                      varname.pchup="Hippurate",
                      vec.pchup = c(4,16,2),
                      varname.pchdown="Time",
-                     vec.pchdown = c(1,3), title = "ASCA scores scatterplot matrix")
+                     vec.pchdown = c(1,3), title = "ASCA score scatterplot matrix")
 ```
 
 ### Effects plot
@@ -365,7 +365,7 @@ lmwScoreScatterPlotM(resASCAE,
                      varname.pchup="Hippurate",
                      vec.pchup = c(4,16,2),
                      varname.pchdown="Time",
-                     vec.pchdown = c(1,3), title = "ASCA-E scores scatterplot matrix")
+                     vec.pchdown = c(1,3), title = "ASCA-E score scatterplot matrix")
 ```
 
 ## APCA
@@ -405,7 +405,7 @@ lmwScoreScatterPlotM(resAPCA,
                      varname.pchup="Hippurate",
                      vec.pchup = c(4,16,2),
                      varname.pchdown="Time",
-                     vec.pchdown = c(1,3), title = "APCA scores scatterplot matrix")
+                     vec.pchdown = c(1,3), title = "APCA score scatterplot matrix")
 ```
 
 ### Loadings plot

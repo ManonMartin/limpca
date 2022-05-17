@@ -2,7 +2,7 @@
 #' @title Effect plot
 #'
 #' @description
-#' Draws effects plot for the \code{\link{lmwPcaEffects}} function.
+#' Plots the ASCA scores by effect levels for a given model effect (for one by principal component at a time). This graph is particularly appealing to interpret interactions or combined effects.
 #'
 #' @param resASCA A list corresponding to the ASCA output value of \code{\link{lmwPcaEffects}}.
 #' @param effectName Name of the effect matrix used for the scores.

@@ -2,7 +2,7 @@
 #' @title Loading plots
 #'
 #' @description
-#' Draws loading plots for the pcaBySvd function.
+#' Plots the loadings from \code{\link{pcaBySvd}} with different possible line types.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.

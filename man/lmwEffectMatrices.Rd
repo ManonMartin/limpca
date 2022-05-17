@@ -31,7 +31,7 @@ A list with the following elements:
 }
 }
 \description{
-Runs a GLM and decomposes the outcomes into effect matrices for each model effect.
+Estimates by OLS the effect matrices \strong{M^(_0)}, \strong{M^(_1)}, ...\strong{M^(_f)}, ...\strong{M^(_E)} for the outcomes and design matrix provided in object \code{resLmwModelMatrix} and calculates the linked percentage of variances.
 }
 \examples{
  data('UCH')

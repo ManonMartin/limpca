@@ -49,7 +49,7 @@ plotScatterM(
 A matrix of scatter plots.
 }
 \description{
-Plots a matrix of scatter plots.
+Produces a scatter plot matrix between the selected columns of the outcomes matrix \code{Y} choosing specific colors and markers for the design factors on the upper and lower diagonal.
 }
 \examples{
 

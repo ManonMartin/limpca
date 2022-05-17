@@ -2,7 +2,7 @@
 #' @title PCA on the effect matrices
 #'
 #' @description
-#' Runs a Principal Component Analysis on the effect matrices and adapts the result according to the method.
+#' Performs a PCA on each of the effect matrices from the outputs of \code{\link{lmwEffectMatrices}}. It has an option to determine the method applied: ASCA, APCA or ASCA-E. Combined effects (i.e. linear combinations of original effect matrices) can also be created and decomposed.
 #'
 #' @param resLmwEffectMatrices A resLmwEffectMatrices list from \code{\link{lmwEffectMatrices}}.
 #' @param method The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.
