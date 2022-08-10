@@ -5,9 +5,9 @@ date: '`r format(Sys.time(), "%B %d, %Y,%H:%M")`'
 package: LMWiRe
 output:
   BiocStyle::html_document:
-    toc: yes
+    toc: true
     toc_depth: 3
-    toc_float: yes
+    toc_float: true
 vignette: >
    %\VignetteIndexEntry{Analysis of the UCH dataset with LMWiRe}
    %\VignetteEncoding{UTF-8}
@@ -290,9 +290,9 @@ pander::pander(t(resLmwBootstrapTests$resultsTable))
 
 ```
 
-# ASCA/ASCA-E/APCA decomposition
+# ASCA/APCA/ASCA-E decomposition
 
-ASCA/ASCA-E/APCA decomposition allow to represent the information from the effect matrices in a space of reduced dimensions. The function `lmwPcaEffects()` has a method argument to define which method to use.
+ASCA/APCA/ASCA-E decomposition allow to represent the information from the effect matrices in a space of reduced dimensions. The function `lmwPcaEffects()` has a method argument to define which method to use.
 
 ## ASCA
 
@@ -405,6 +405,70 @@ lmwScorePlot(resASCA, effectNames = "Residuals", color = "Day",
 
 ```
 
+
+## APCA
+
+The APCA method performs PCAs on the effect matrices augmented by the residuals. The same functions are used.
+
+```{r APCA PCA}
+resAPCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
+                        method="APCA")
+```
+
+### Contributions
+
+```{r APCA Contrib}
+resLmwContributions = lmwContributions(resAPCA)
+
+pander::pander(resLmwContributions$effectTable)
+```
+
+### Scores Plot
+
+```{r APCA ScoresXY}
+lmwScorePlot(resAPCA, effectNames = "Hippurate", 
+             color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
+lmwScorePlot(resAPCA, effectNames = "Citrate", 
+             color = "Citrate", shape = "Citrate", drawShapes = "ellipse")
+
+lmwScorePlot(resAPCA, effectNames = "Time", 
+             color = "Time", shape = "Time", drawShapes = "ellipse")
+lmwScorePlot(resAPCA, effectNames = "Time", 
+             color = "Time", shape = "Time", drawShapes = "polygon")
+lmwScorePlot(resAPCA, effectNames = "Time", 
+             color = "Time", shape = "Time", drawShapes = "segment")
+
+lmwScorePlot(resAPCA, effectNames = "Hippurate:Time", 
+             color = "Hippurate", shape = "Time", drawShapes = "segment")
+lmwScorePlot(resAPCA, effectNames = "Hippurate:Time", 
+             color = "Hippurate", shape = "Time", drawShapes = "polygon")
+```
+
+```{r APCA ScoresMatrix}
+lmwScoreScatterPlotM(resAPCA,
+                     effectNames = c("Hippurate", "Citrate", "Time",
+                                     "Hippurate:Time"),
+                     modelAbbrev = TRUE,
+                     varname.colorup = "Citrate",
+                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
+                     varname.colordown  = "Time",
+                     vec.colordown = c("cadetblue4","deeppink4"),
+                     varname.pchup="Hippurate",
+                     vec.pchup = c(4,16,2),
+                     varname.pchdown="Time",
+                     vec.pchdown = c(1,3), 
+                     title = "APCA scores scatterplot matrix")
+```
+
+### Loadings plot
+
+```{r APCA loadings}
+
+lmwLoadingPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
+                                        "Time", "Hippurate:Time"), axes = 1)
+
+```
+
 ## ASCA-E
 
 The ASCA-E method performs PCAs on the effect matrices then add the residuals. The same functions are used.
@@ -445,60 +509,6 @@ lmwScoreScatterPlotM(resASCAE,
                      title = "ASCA-E scores scatterplot matrix")
 ```
 
-## APCA
-
-The APCA method performs PCAs on the effect matrices augmented by the residuals. The same functions are used.
-
-```{r APCA PCA}
-resAPCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
-                        method="APCA")
-```
-
-### Contributions
-
-```{r APCA Contrib}
-resLmwContributions = lmwContributions(resAPCA)
-
-pander::pander(resLmwContributions$effectTable)
-```
-
-### Scores Plot
-
-```{r APCA ScoresXY}
-lmwScorePlot(resAPCA, effectNames = "Hippurate", 
-             color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
-lmwScorePlot(resAPCA, effectNames = "Citrate", 
-             color = "Citrate", shape = "Citrate")
-lmwScorePlot(resAPCA, effectNames = "Time", 
-             color = "Time", shape = "Time")
-lmwScorePlot(resAPCA, effectNames = "Hippurate:Time", 
-             color = "Hippurate", shape = "Time")
-```
-
-```{r APCA ScoresMatrix}
-lmwScoreScatterPlotM(resAPCA,
-                     effectNames = c("Hippurate", "Citrate", "Time",
-                                     "Hippurate:Time"),
-                     modelAbbrev = TRUE,
-                     varname.colorup = "Citrate",
-                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
-                     varname.colordown  = "Time",
-                     vec.colordown = c("cadetblue4","deeppink4"),
-                     varname.pchup="Hippurate",
-                     vec.pchup = c(4,16,2),
-                     varname.pchdown="Time",
-                     vec.pchdown = c(1,3), 
-                     title = "APCA scores scatterplot matrix")
-```
-
-### Loadings plot
-
-```{r APCA loadings}
-
-lmwLoadingPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
-                                        "Time", "Hippurate:Time"), axes = 1)
-
-```
 
 # Session info
 ```{r}

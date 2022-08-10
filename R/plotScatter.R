@@ -187,7 +187,7 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
     } else if (drawShapes == "polygon"){
         #getting the convex hull of each unique point set
         find_hull <- function(df) df[chull(df[,mn_xy[1]], df[,mn_xy[2]]), ]
-        hulls <- plyr::ddply(df_tot, color, find_hull)
+        hulls <- plyr::ddply(df_tot, unique(c(color, shape)), find_hull)
 
         fig <- fig + ggplot2::geom_polygon(data = hulls,
                                     aes_string(fill=color, color = color),
@@ -195,10 +195,10 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
     } else if (drawShapes == "segment"){
 
       centroids <- df_tot %>%
-        dplyr::group_by(dplyr::across(dplyr::all_of(color))) %>%
+        dplyr::group_by(dplyr::across(dplyr::all_of(unique(c(color, shape))))) %>%
         dplyr::summarise(across(dplyr::all_of(mn_xy),mean))
 
-        df_tot_centr <- df_tot %>% dplyr::left_join(centroids, by = color,
+        df_tot_centr <- df_tot %>% dplyr::left_join(centroids, by = unique(c(color, shape)),
                                              suffix = c("", ".centroid"))
 
         centr_name <- paste0(mn_xy, ".centroid")
