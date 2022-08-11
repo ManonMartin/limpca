@@ -60,7 +60,7 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   if(length(resLmwEffectMatrices)!=12){stop("List does not contain 12 arguments")}
   if(!all(names(resLmwEffectMatrices)==checkname)){stop("Argument is not a resLmwEffectMatrices object")}
   if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$effectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
-  if(!method %in% c("ASCA","APCA","ASCA-E")){stop("Method must be one of: ASCA, ASCA-E, APCA")}
+  # if(!method %in% c("ASCA","APCA","ASCA-E")){stop("Method must be one of: ASCA, ASCA-E, APCA")}
   method <- match.arg(method)
   checkArg(combineEffects,c("list"),can.be.null=TRUE)
 

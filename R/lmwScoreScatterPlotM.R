@@ -18,7 +18,7 @@
 #' @examples
 #'
 #'  data('UCH')
-#'  ResLMModelMatrix = LMModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
+#'  ResLMModelMatrix = lmwModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
 #'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
 #'  resLmwPcaEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
 #'  PlotScoresMatrix(resLmwPcaEffects,
