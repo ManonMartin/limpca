@@ -12,7 +12,7 @@ plotDesign(
   cols = NULL,
   title = "Plot of the design",
   theme = theme_bw(),
-  nudge_y = 0.45
+  nudge_y = 0.2
 )
 }
 \arguments{
@@ -22,7 +22,7 @@ plotDesign(
 
 \item{y}{By default: the second column of \code{design}. If not \code{NULL}, a character string giving the column name of \code{design} to be used for the y axis.}
 
-\item{rows}{By default: the third column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
+\item{rows}{By default: the fourth column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
 
 \item{cols}{By default: the third column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
 
@@ -42,10 +42,11 @@ Provides a graphical representation of the experimental design for up to 4 facto
 
 ### mtcars
 data(mtcars)
+library(tidyverse)
 df <-  mtcars \%>\%
-  select(cyl, vs, am, gear, carb) \%>\%
+  dplyr::select(cyl, vs, am, gear, carb) \%>\%
   as.data.frame() \%>\%
-  mutate(across(everything(), as.factor))
+  dplyr::mutate(across(everything(), as.factor))
 
 # 2 factors
 plotDesign(design = df, x = "cyl", y = "vs",

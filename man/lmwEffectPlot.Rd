@@ -41,4 +41,10 @@ Plots the ASCA scores by effect levels for a given model effect (for one by prin
 }
 \examples{
 
+  resLmwModelMatrix = lmwModelMatrix(UCH)
+  resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
+  resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
+method="ASCA", combineEffects = list(c("Hippurate", "Time",  "Hippurate:Time")))
+  lmwEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
+
 }

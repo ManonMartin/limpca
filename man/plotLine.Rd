@@ -74,6 +74,7 @@ plotLine(Y = UCH$outcomes, type = "p",
          rows = c(1:8), ncol=2)
 
 # stacked plots
+library(ggplot2)
 plotLine(Y = UCH$outcomes, rows = c(1:4),
          stacked = TRUE, color = "rows") +
          scale_color_brewer(palette="Set1")

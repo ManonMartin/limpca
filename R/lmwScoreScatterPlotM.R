@@ -18,12 +18,19 @@
 #' @examples
 #'
 #'  data('UCH')
-#'  ResLMModelMatrix = lmwModelMatrix(formula=as.formula(UCH$formula),design=UCH$design)
-#'  ResLMEffectMatrices = LMEffectMatrices(ResLMModelMatrix,outcomes=UCH$outcomes)
-#'  resLmwPcaEffects = PCALMEffects(ResLMEffectMatrices,method="ASCA-E")
-#'  PlotScoresMatrix(resLmwPcaEffects,
+#'  resLmwModelMatrix = lmwModelMatrix(UCH)
+#'  ResLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
+#'  resLmwPcaEffects = lmwPcaEffects(ResLmwEffectMatrices,method="ASCA-E")
+#'
+#'  lmwScoreScatterPlotM(resLmwPcaEffects,
+#'                  varname.colorup = "Citrate",
+#'                  varname.pchup="Hippurate",
+#'                  varname.pchdown = "Day",
+#'                  varname.colordown="Time")
+#'
+#'  # advanced setting
+#'  lmwScoreScatterPlotM(resLmwPcaEffects,
 #'                  modelAbbrev=FALSE,
-#'                  design=UCH$design,
 #'                  effectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
 #'                  PCdim=c(2,2,2),
 #'                  varname.colorup = "Citrate",

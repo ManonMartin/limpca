@@ -8,7 +8,7 @@
 #' @param x By default: the first column of `design`. If not `NULL`, a character string giving the column name of `design` to be used for the x axis.
 #' @param y By default: the second column of `design`. If not `NULL`, a character string giving the column name of `design` to be used for the y axis.
 #' @param cols By default: the third column of `design` if present. If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the columns.
-#' @param rows By default: the third column of `design` if present. If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the rows.
+#' @param rows By default: the fourth column of `design` if present. If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the rows.
 #' @param title Plot title.
 #' @param theme ggplot theme, see `?ggtheme` for more info.
 #' @param nudge_y Nudge points a fixed distance for text labels (used in `geom_text()`), see ggplot2::position_nudge.
@@ -19,10 +19,11 @@
 #'
 #' ### mtcars
 #' data(mtcars)
+#' library(tidyverse)
 #' df <-  mtcars %>%
-#'   select(cyl, vs, am, gear, carb) %>%
+#'   dplyr::select(cyl, vs, am, gear, carb) %>%
 #'   as.data.frame() %>%
-#'   mutate(across(everything(), as.factor))
+#'   dplyr::mutate(across(everything(), as.factor))
 #'
 #' # 2 factors
 #' plotDesign(design = df, x = "cyl", y = "vs",
@@ -46,6 +47,7 @@
 #'
 #' @import ggplot2
 #' @import dplyr
+#' @import tidyverse
 
 plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
                        title = "Plot of the design", theme = theme_bw(),
@@ -82,7 +84,8 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
                   paste0(colnames(design), collapse = ", ")))
     }
   } else{
-    if(ncol(design)>2){cols = colnames(design)[3]}
+    cn <- colnames(design)[3]
+    if(ncol(design)>2 & ! cn %in% c(rows,x,y)){cols = colnames(design)[3]}
   }
 
   if (!is.null(rows)){
@@ -92,7 +95,8 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
                   paste0(colnames(design), collapse = ", ")))
     }
   } else{
-    if(ncol(design)>3){rows = colnames(design)[4]}
+    cn <- colnames(design)[4]
+    if(ncol(design)>3& ! cn %in% c(cols,x,y)){rows = colnames(design)[4]}
   }
 
 

@@ -88,6 +88,7 @@ plotScatter(Y = UCH$outcomes, design = UCH$design,
             drawShapes = "segment")
 
 # Customize shapes
+library(ggplot2)
 plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), shape = "Hippurate", size = 3) +
   scale_discrete_identity(aesthetics = 'shape',

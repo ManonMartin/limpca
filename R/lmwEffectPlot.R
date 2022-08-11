@@ -19,6 +19,12 @@
 #'
 #' @examples
 #'
+#'   resLmwModelMatrix = lmwModelMatrix(UCH)
+#'   resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
+#'   resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
+#'method="ASCA", combineEffects = list(c("Hippurate", "Time",  "Hippurate:Time")))
+#'   lmwEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
+#'
 #' @import ggplot2
 
 lmwEffectPlot <- function(resASCA, effectName, axes = 1,

@@ -30,11 +30,11 @@
 #'
 #' # 2 factors
 #' plotMeans(Y = UCH$outcomes, design = UCH$design, cols = c(364,365),
-#'           x = "Hippurate", z = "Time", shape = 15)
+#'           x = "Hippurate", z = "Time", shape = c(15,1))
 #'
 #' # 3 factors
 #' plotMeans(Y = UCH$outcomes, design = UCH$design, cols = c(364,365),
-#'           x = "Hippurate", z = "Time", w = "Citrate", linetype = 3)
+#'           x = "Hippurate", z = "Time", w = "Citrate", linetype = c(3,3))
 #'
 #' @import ggplot2
 #' @importFrom stats aggregate
