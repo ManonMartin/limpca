@@ -63,12 +63,12 @@ The model used in this example is a three-way ANOVA with fixed effects. This doc
 
 # Installation
 
-The package is actually in its development stage and is available on GitHub at the url: <https://github.com/bgovaerts/LMWiRe/tree/develop>. It can be installed via the `devtools::install_github()` function. The package needs to be loaded afterwards.
+The package is actually in its development stage and is available on GitHub at the url: <https://github.com/bgovaerts/LMWiRe/tree/develop>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
 
 
 ```{r Install, results=FALSE, message=FALSE}
-
-# devtools::install_github("bgovaerts/LMWiRe@develop", force = TRUE)
+# if (!requireNamespace("remotes")) install.packages(pkgs="remotes", dependencies="Depends")
+# remotes::install_github("bgovaerts/LMWiRe@develop", dependencies = TRUE)
 library("LMWiRe")
 ```
 
@@ -341,17 +341,13 @@ lmwScorePlot(resASCA, effectNames = "Hippurate+Time+Hippurate:Time",
 
 Finally we can represent the scores with a matrix of plots. This graph allows to observe multiple variables simultaneously.
 
-```{r ASCA ScoresMatrix}
+```{r ASCA ScoresMatrix, fig.height=8}
 lmwScoreScatterPlotM(resASCA,
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
-                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
                      varname.colordown  = "Time",
-                     vec.colordown = c("cadetblue4","deeppink4"),
                      varname.pchup="Hippurate",
-                     vec.pchup = c(4,16,2),
                      varname.pchdown="Time",
-                     vec.pchdown = c(1,3), 
                      title = "ASCA scores scatterplot matrix")
 ```
 
@@ -450,13 +446,9 @@ lmwScoreScatterPlotM(resAPCA,
                                      "Hippurate:Time"),
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
-                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
                      varname.colordown  = "Time",
-                     vec.colordown = c("cadetblue4","deeppink4"),
                      varname.pchup="Hippurate",
-                     vec.pchup = c(4,16,2),
                      varname.pchdown="Time",
-                     vec.pchdown = c(1,3), 
                      title = "APCA scores scatterplot matrix")
 ```
 

@@ -157,7 +157,7 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL, title = "Scatterpl
     }else{
       varname.colorup=varname.colordown
       if(is.null(vec.colordown)){
-        vec.colorup=ggsci::pal_ucscgb("default")(length(levels(design[,which(names(design)==varname.colorup)])))
+        vec.colorup=ggsci::pal_d3("category20")(length(levels(design[,which(names(design)==varname.colorup)])))
       }else{
         vec.colorup=vec.colordown
       }
@@ -167,7 +167,7 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL, title = "Scatterpl
       varname.colordown=varname.colorup}
     if(is.null(vec.colorup)){ # Default
       if(is.null(vec.colordown)){
-        vec.colorup=ggsci::pal_ucscgb("default")(length(levels(design[,which(names(design)==varname.colorup)])))
+        vec.colorup=ggsci::pal_d3("category20")(length(levels(design[,which(names(design)==varname.colorup)])))
       }else if(varname.colordown == varname.colorup){
         vec.colorup=vec.colordown
       }
@@ -207,7 +207,9 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL, title = "Scatterpl
     }else{
       varname.pchdown = varname.pchup
       if(is.null(vec.pchup)){
-        vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
+        # vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
+        pchs <- c(4,16,2,1,3,0, 8, 6, 7, 5, 9:15,17:25)
+        vec.pchdown = pchs[c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))]
       }else{
         vec.pchdown = vec.pchup
       }
@@ -215,7 +217,9 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL, title = "Scatterpl
   }else{
     if(is.null(vec.pchdown)){
       if(is.null(vec.pchup)){
-        vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
+        # vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
+        pchs <- c(4,16,2,1,3,0, 8, 6, 7, 5, 9:15,17:25)
+        vec.pchdown = pchs[c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))]
       }else if(varname.pchdown == varname.pchup){
         vec.pchdown = vec.pchup
       }else{

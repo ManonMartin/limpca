@@ -26,7 +26,7 @@ LazyData: true
 LazyDataCompression: gzip
 VignetteBuilder: knitr
 Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, ggrepel, reshape2,
-    grDevices, Rcpp, graphics, doParallel, parallel, dplyr, tibble, tidyr
+    grDevices, Rcpp, graphics, doParallel, parallel, dplyr, tibble, tidyr, ggsci
 Suggests: 
     BiocStyle,
     rmarkdown
