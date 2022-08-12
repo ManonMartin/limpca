@@ -106,7 +106,7 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   # Plot of the total contribution
   effect_name = ModelAbbrev(c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals"))
   dataTotal <- data.frame(effects = effect_name,
-                          varPercentage = unname(resLmwEffectMatrices$variationPercentages))
+                          varPercentage = unname(resLmwPcaEffects$variationPercentages))
 
   plotTotal <- ggplot2::ggplot(data=dataTotal, ggplot2::aes(x=reorder(effects, -varPercentage),y=varPercentage))+
     ggplot2::geom_bar(stat="identity")+
@@ -145,7 +145,7 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
     plotContrib = NULL
   }
 
-  if(all(is.na(resLmwEffectMatrices$type3SS)) & all(is.na(resLmwEffectMatrices$variationPercentages))){
+  if(all(is.na(resLmwPcaEffects$type3SS)) & all(is.na(resLmwPcaEffects$variationPercentages))){
     if(is.null(combinedEffect_table)){
       resLmwContributions=list(effectTable=effect_table)
     }else{

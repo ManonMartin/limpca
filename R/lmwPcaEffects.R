@@ -7,6 +7,7 @@
 #' @param resLmwEffectMatrices A resLmwEffectMatrices list from \code{\link{lmwEffectMatrices}}.
 #' @param method The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.
 #' @param combineEffects If not \code{NULL}, a list of vectors containing the names of the effects to be combined.
+#' @param verbose If \code{TRUE}, will display a message with the duration of execution.
 #'
 #' @return A list of PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
 #'  \describe{
@@ -46,7 +47,7 @@
 
 
 lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
-                         combineEffects=NULL){
+                         combineEffects=NULL,verbose = FALSE){
 
   # Checking the resLmwEffectMatrices list
 
@@ -105,12 +106,15 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   # Defining the matrix for the PCA depending on the method
 
   if(method=="ASCA"){
-
-    print("ASCA method used : PCA on the pure effect matrices")
+    if (verbose){
+      print("ASCA method used : PCA on the pure effect matrices")
+    }
 
   }else if(method=="APCA"){
 
-    print("APCA method used : PCA on the augmented effect matrices")
+    if (verbose){
+      print("APCA method used : PCA on the augmented effect matrices")
+    }
 
     # Compute the augmented effect matrices
 
@@ -120,7 +124,9 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
 
   }else if(method=="ASCA-E"){
 
-    print("ASCA-E method used : PCA on the pure effect matrices but scores are updated")
+    if (verbose){
+      print("ASCA-E method used : PCA on the pure effect matrices but scores are updated")
+    }
 
   }else{
 

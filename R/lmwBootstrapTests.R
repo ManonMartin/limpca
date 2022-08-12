@@ -7,6 +7,7 @@
 #' @param resLmwEffectMatrices A list of 12 from \code{\link{lmwEffectMatrices}}.
 #' @param nboot An integer with the number of iterations to perform.
 #' @param nCores The number of cores to use for parallel execution.
+#' @param verbose If \code{TRUE}, will display a message with the duration of execution.
 #'
 #' @return A list with the following elements:
 #'  \describe{
@@ -21,7 +22,7 @@
 #'  resLmwModelMatrix <- lmwModelMatrix(UCH)
 #'  resLmwEffectMatrices <- lmwEffectMatrices(resLmwModelMatrix = resLmwModelMatrix)
 #'
-#'  res <- lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=10, nCores=2)
+#'  res <- lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, nboot=10, nCores=2, verbose = TRUE)
 #'
 #' @references
 #' Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
@@ -31,7 +32,7 @@
 #' @import parallel
 #' @importFrom plyr laply llply
 
-lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
+lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2, verbose = FALSE){
 
   # Checking the resLmwEffectMatrices list
 
@@ -343,7 +344,9 @@ lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2){
   resLmwBootstrapTests = list(f.obs=Fobs,f.boot=Fboot,p.values=result,resultsTable=resultsTable)
 
   doParallel::stopImplicitCluster
-  print(Sys.time() - start_time)
+  if (verbose){
+    print(Sys.time() - start_time)
+  }
 
   return(resLmwBootstrapTests)
   }

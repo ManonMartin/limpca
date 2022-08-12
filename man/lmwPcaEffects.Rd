@@ -7,7 +7,8 @@
 lmwPcaEffects(
   resLmwEffectMatrices,
   method = c("ASCA", "APCA", "ASCA-E"),
-  combineEffects = NULL
+  combineEffects = NULL,
+  verbose = FALSE
 )
 }
 \arguments{
@@ -16,6 +17,8 @@ lmwPcaEffects(
 \item{method}{The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.}
 
 \item{combineEffects}{If not \code{NULL}, a list of vectors containing the names of the effects to be combined.}
+
+\item{verbose}{If \code{TRUE}, will display a message with the duration of execution.}
 }
 \value{
 A list of PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
