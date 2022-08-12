@@ -77,7 +77,10 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
   if(is.null(PCdim)){
     classicalPC = TRUE
     if(allEffect==TRUE){
-      PCdim = rep(1,(length(resLmwPcaEffects)-5))
+      effectsNamesUnique <- resLmwPcaEffects$effectsNamesUnique
+      effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
+      PCdim = rep(1,(length(effectsNamesUnique)+1)) # +1 for the residuals
+      effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
     }else{
       PCdim = rep(1,length(effectNames))
     }
@@ -102,24 +105,27 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
 
   if(allEffect==TRUE){
     if(classicalPC){ # Only PC1 to all effects
-      for(i in 1:(length(resLmwPcaEffects)-5)){
-        coomatrix[,i] = resLmwPcaEffects[[i]]$scores[,PCdim[i]]
-        colnames(coomatrix)[i] = paste(names(resLmwPcaEffects)[i],"PC1")
-        var[i] = (resLmwPcaEffects$variationPercentages[i] * resLmwPcaEffects[[i]]$var[1])/100}
+      for(i in 1:length(effectsNamesUniqueRes)){
+        coomatrix[,i] = resLmwPcaEffects[[effectsNamesUniqueRes[i]]]$scores[,PCdim[i]]
+        colnames(coomatrix)[i] = paste(effectsNamesUniqueRes[i],"PC1")
+        var[i] = (resLmwPcaEffects$variationPercentages[effectsNamesUniqueRes[i]] *
+                    resLmwPcaEffects[[effectsNamesUniqueRes[i]]]$var[1])/100}
     }else{ # All effects but more than 1 PC
       l = 1
       for(j in 1:length(PCdim)){ # Some effects must be printed on PC2 or more
 
         if(PCdim[j] == 1){
-          coomatrix[,l] = resLmwPcaEffects[[j]]$scores[,PCdim[j]]
-          colnames(coomatrix)[l] = paste(names(resLmwPcaEffects)[j],"PC1")
-          var[l] = (resLmwPcaEffects$variationPercentages[j] * resLmwPcaEffects[[j]]$var[1])/100
+          coomatrix[,l] = resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$scores[,PCdim[j]]
+          colnames(coomatrix)[l] = paste(effectsNamesUniqueRes[j],"PC1")
+          var[l] = (resLmwPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
+                      resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$var[1])/100
           l=l+1
         }else{
           for(m in 1:PCdim[j]){ # Get the others PC
-            coomatrix[,l] = resLmwPcaEffects[[j]]$scores[,m]
-            colnames(coomatrix)[l] = paste(names(resLmwPcaEffects)[j],colnames(resLmwPcaEffects[[j]]$scores)[m])
-            var[l] = (resLmwPcaEffects$variationPercentages[j] * resLmwPcaEffects[[j]]$var[m])/100
+            coomatrix[,l] = resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$scores[,m]
+            colnames(coomatrix)[l] = paste(effectsNamesUniqueRes[j],colnames(resLmwPcaEffects[[j]]$scores)[m])
+            var[l] = (resLmwPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
+                        resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$var[m])/100
             l=l+1
           }
         }

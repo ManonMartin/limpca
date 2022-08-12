@@ -342,7 +342,7 @@ lmwScorePlot(resASCA, effectNames = "Hippurate+Time+Hippurate:Time",
 Finally we can represent the scores with a matrix of plots. This graph allows to observe multiple variables simultaneously.
 
 ```{r ASCA ScoresMatrix, fig.height=8}
-lmwScoreScatterPlotM(resASCA,
+lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
                      varname.colordown  = "Time",
