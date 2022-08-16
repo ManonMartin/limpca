@@ -68,7 +68,7 @@ The package is actually in its development stage and is available on GitHub at t
 
 ```{r Install, results=FALSE, message=FALSE}
 # if (!requireNamespace("remotes")) install.packages(pkgs="remotes", dependencies="Depends")
-# remotes::install_github("bgovaerts/LMWiRe@develop", dependencies = TRUE)
+# remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE)
 library("LMWiRe")
 ```
 

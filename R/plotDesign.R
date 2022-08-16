@@ -11,7 +11,6 @@
 #' @param rows By default: the fourth column of `design` if present. If not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the rows.
 #' @param title Plot title.
 #' @param theme ggplot theme, see `?ggtheme` for more info.
-#' @param nudge_y Nudge points a fixed distance for text labels (used in `geom_text()`), see ggplot2::position_nudge.
 #'
 #' @return A plot of the design (ggplot).
 #'
@@ -50,33 +49,35 @@
 #' @import tidyverse
 
 plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
-                       title = "Plot of the design", theme = theme_bw(),
-                       nudge_y = 0.2){
-
-  # checks ===================
-
+                       title = "Plot of the design", theme = theme_bw()){
+  
+  # checks arguments ===================
+  
   checkArg(design,"data.frame",can.be.null = FALSE)
   checkArg(x,c("str","length1"),can.be.null = TRUE)
   checkArg(y,c("str","length1"),can.be.null = TRUE)
   checkArg(rows,c("str"),can.be.null = TRUE)
   checkArg(cols,c("str"),can.be.null = TRUE)
   checkArg(title,c("str","length1"),can.be.null = TRUE)
+  
+  # initialize x, y, rows, cols
 
-  #
-  # y <- match.arg(y, choices = colnames(design))
+  if (is.null(x)&is.null(y)) xynull=TRUE else xynull=FALSE
+  
+  if(length(colnames(design))==1)  design=cbind(design,count="n")
+
   if (!is.null(x)){
     x <- match.arg(x, choices = colnames(design))
   } else{
     x <- colnames(design)[1]
   }
-
+  
   if (!is.null(y)){
     y <- match.arg(y, choices = colnames(design))
   } else{
     y <- colnames(design)[2]
   }
-
-
+  
   if (!is.null(cols)){
     if (!all(cols %in% colnames(design))){
       stop(paste0("cols (",paste0(cols, collapse = ", "),
@@ -85,9 +86,9 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
     }
   } else{
     cn <- colnames(design)[3]
-    if(ncol(design)>2 & ! cn %in% c(rows,x,y)){cols = colnames(design)[3]}
+    if(xynull &ncol(design)>2 & ! cn %in% c(rows,x,y)){cols = colnames(design)[3]}
   }
-
+  
   if (!is.null(rows)){
     if (!all(rows %in% colnames(design))){
       stop(paste0("rows (",paste0(rows, collapse = ", "),
@@ -96,41 +97,43 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
     }
   } else{
     cn <- colnames(design)[4]
-    if(ncol(design)>3& ! cn %in% c(cols,x,y)){rows = colnames(design)[4]}
+    if(xynull & ncol(design)>3& ! cn %in% c(cols,x,y)){rows = colnames(design)[4]}
   }
-
-
-
-  # plot design ===================
-
+  
+  # Calculate replicates by design point ===================
+  
   df_count <- design %>%
     dplyr::count(dplyr::across(dplyr::all_of(c(x,y,rows,cols))))
-
-  p <- ggplot2::ggplot(df_count, ggplot2::aes_string(x = x, y = y)) +
-    ggplot2::geom_point()
-
+ 
+  # prepare plot ===================
+  
+  p <- ggplot2::ggplot(df_count, ggplot2::aes_string(x = x, y = y)) 
+  
   if (is.null(rows)){
     rows="."
   } else{rows = paste0(rows, collapse = "+")}
-
+  
   if (is.null(cols)){
     cols="."
   } else{cols = paste0(cols, collapse = "+")}
-
+  
   form <- paste0(rows,"~",cols)
-
-  p <- p +  ggplot2::geom_text(aes_string(label = "n"),
-                              nudge_y = nudge_y)
-
-
+  
+  p <- p +  ggplot2::geom_text(aes_string(label = "n"))
+  
+  if(is.numeric(df_count[,y]))
+  {cat("\n y numeric")
+    maxy=max(df_count[,y])
+    miny=min(df_count[,y])
+    delta=(maxy-miny)/10
+    p <- p + ylim(miny-delta,maxy+delta)} 
+  
   if (!is.null(rows) | !is.null(cols)){
     p <- p + ggplot2::facet_grid(as.formula(form),
-                        labeller = label_both)
-
-  }
-  p <- p + ggplot2::ggtitle(title) + theme
-
-
+                                 labeller = label_both)}
+  
+    p <- p + ggplot2::ggtitle(title) + theme
+  
   return(p)
-
+  
 }
