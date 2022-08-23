@@ -1,5 +1,5 @@
-#' @export lmwScorePlot
-#' @title Score plots
+#' @export lmwPcaScatterPlot
+#' @title Scores and loadings scatterplots
 #'
 #' @description
 #' Draws the score plots of each effect matrix provided in \code{\link{lmwPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect score matrices for two components at a time with all options available in \code{\link{plotScatter}}.
@@ -7,6 +7,7 @@
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
+#' @param design design
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
 #' @return A list of score plots (ggplot).
@@ -29,8 +30,10 @@
 #' color = "Hippurate", shape = "Time")
 #'
 
-lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
-                         axes = c(1,2), ...) {
+lmwPcaScatterPlot <- function(resLmwPcaEffects, what = c("scores", "loadings"),
+                              effectNames = NULL, axes = c(1,2),
+                              design = resLmwPcaEffects$lmwDataList$design,
+                              ...) {
 
   # checks ===================
   checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
@@ -47,17 +50,26 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
     effectNames <- c(resLmwPcaEffects$effectsNamesUnique)[-1]
   }
 
-  # scores
-  scores <- lapply(effectNames, function(x) resLmwPcaEffects[[x]][["scores"]])
-  names(scores) <- effectNames
+  if (what=="scores"){
+    # scores
+    df <- lapply(effectNames, function(x) resLmwPcaEffects[[x]][["scores"]])
+    names(df) <- effectNames
+  }else{
+    # loadings
+    df <- lapply(effectNames, function(x) resLmwPcaEffects[[x]][["loadings"]])
+    names(df) <- effectNames
+  }
+
+
+
 
   if (length(axes) !=2){
     stop("axes is not of length 2")
   }
 
-  if (max(axes) > ncol(scores[[effectNames[1]]])){
+  if (max(axes) > ncol(df[[effectNames[1]]])){
     stop(paste0("axes (",paste0(axes, collapse = ",")
-                ,") is beyond the ncol of scores (",ncol(scores),")"))
+                ,") is beyond the ncol of df (",ncol(df),")"))
   }
 
   # percentage of explained variance   ===================
@@ -86,38 +98,40 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   buildFig <- function(effect){
 
-    title = paste(effect, ":", resLmwPcaEffects$method, "score plot")
+    tit <- ifelse(what=="scores","score plot","loading plot" )
+    title = paste(effect, ":", resLmwPcaEffects$method, tit)
 
     xlab <- pc_axes[[effect]][1]
     ylab <- pc_axes[[effect]][2]
 
-    xlim_val = c(1.4*min(resLmwPcaEffects[[effect]][["scores"]][,axes[1]]),
-                 1.4*max(resLmwPcaEffects[[effect]][["scores"]][,axes[1]]))
+    xlim_val = c(1.4*min(resLmwPcaEffects[[effect]][[what]][,axes[1]]),
+                 1.4*max(resLmwPcaEffects[[effect]][[what]][,axes[1]]))
 
     # Checking the second component
     if(resLmwPcaEffects$method != "APCA"){
       if(resLmwPcaEffects[[effect]][["var"]][axes[2]]<1){
         warning("The variance of PC2 is inferior to 1%. Graph scaled")
-        ylim_val = c(100*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
-                     100*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))
+        ylim_val = c(100*min(resLmwPcaEffects[[effect]][[what]][,axes[2]]),
+                     100*max(resLmwPcaEffects[[effect]][[what]][,axes[2]]))
       }else{
-        ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
-                     1.4*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))
+        ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][[what]][,axes[2]]),
+                     1.4*max(resLmwPcaEffects[[effect]][[what]][,axes[2]]))
       }
     }else{
-      ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]),
-                   1.4*max(resLmwPcaEffects[[effect]][["scores"]][,axes[2]]))
+      ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][[what]][,axes[2]]),
+                   1.4*max(resLmwPcaEffects[[effect]][[what]][,axes[2]]))
     }
 
     # Building plots
-    fig <- plotScatter(Y = scores[[effect]], xy = axes,
-                       xlab = xlab, ylab = ylab,
-                       design = resLmwPcaEffects$lmwDataList$design, ...)
+      fig <- plotScatter(Y = df[[effect]], xy = axes,
+                         xlab = xlab, ylab = ylab,
+                         design = design, ...)
 
-    fig <- fig + ylim(ylim_val) + xlim(xlim_val) + ggtitle(title)
+      fig <- fig + ylim(ylim_val) + xlim(xlim_val) + ggtitle(title)
+
   }
 
-  # Scores plot  ===================
+  # scatterplot plot  ===================
 
   fig <- lapply(effectNames, buildFig)
   names(fig) <- effectNames

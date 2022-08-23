@@ -46,8 +46,9 @@ references:
 ```{r Setup,include=FALSE}
 require(knitr)
 require(pander)
-require(patchwork)
+# require(patchwork)
 require(ggplot2)
+library(gridExtra)
 knitr::opts_chunk$set(message=FALSE,warning=FALSE,comment=NA)
 ```
 
@@ -115,7 +116,7 @@ The 600 response (`outcomes`) variables represent, for each observation, the int
 
 ### `plotLine` function
 
-Here, annotation are added to the `ggplot` in ordre to highligth the Hippurate (green) and Citrate (red) peaks. 
+Here, annotation are added to the `ggplot` in order to highlight the Hippurate (green) and Citrate (red) peaks. 
 
 ```{r Spectrum visualization}
 cit_peaks <- annotate("rect", xmin=c(2.509), xmax=c(2.709), 
@@ -124,7 +125,7 @@ cit_peaks <- annotate("rect", xmin=c(2.509), xmax=c(2.709),
 
 hip_peaks <- annotate("rect", xmin=c(7.458,3.881), xmax=c(7.935,4.041), 
               ymin=-Inf, ymax=Inf, alpha=0.2, 
-              fill=c("yellowgreen")) 
+              fill=c("yellowgreen"))
 
 p1 <- plotLine(Y = UCH$outcomes,
          title = "H-NMR spectrum",
@@ -292,11 +293,11 @@ pander::pander(t(resLmwBootstrapTests$resultsTable))
 
 # ASCA/APCA/ASCA-E decomposition
 
-ASCA/APCA/ASCA-E decomposition allow to represent the information from the effect matrices in a space of reduced dimensions. The function `lmwPcaEffects()` has a method argument to define which method to use.
+ASCA/APCA/ASCA-E decomposition allow to represent the information from the effect matrices in a space of reduced dimensions through PCA. The function `lmwPcaEffects()` has a method argument to define which method to use, namely `ASCA`, `APCA` or `ASCA-E`.
 
 ## ASCA
 
-The ASCA method performs PCAs on the pure effect matrices.
+The ASCA method performs PCA on the pure effect matrices.
 
 ```{r ASCA PCA}
 resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
@@ -307,39 +308,123 @@ resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
 
 ### Contributions
 
-The contributions from each effect and their components are estimated and reported in tables with the function `lmwContributions()`. Moreover the function also output barplots with the ordered contributions.
+The contributions from each effect and their principal components are estimated and reported in tables with the function `lmwContributions()`. 
 
 ```{r ASCA Contrib}
 resLmwContributions = lmwContributions(resASCA)
-
-pander::pander(resLmwContributions$totalContribTable)
-pander::pander(resLmwContributions$effectTable)
-pander::pander(resLmwContributions$contribTable)
-pander::pander(resLmwContributions$combinedEffectTable)
-
-resLmwContributions$plotContrib + ggplot2::geom_bar(stat = "identity", 
-                                                    fill = "cadetblue4")
 ```
 
-### Scores Plot
+- Table of the percentage of contribution of each effect to the total variance.
+```{r}
+pander::pander(resLmwContributions$totalContribTable)
+```
 
-The score matrices are then represented on two components with the function `lmwScorePlot()`.
+- Table of the variance percentage explained by each Principal Component in each model effect decomposition.
+```{r}
+pander::pander(resLmwContributions$effectTable)
+```
+
+- Table of the variance percentage explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance.
+```{r}
+pander::pander(resLmwContributions$contribTable)
+```
+
+- Equivalent of the `effectTable` for the combination of effects mentioned in `lmwPcaEffects().`
+```{r}
+pander::pander(resLmwContributions$combinedEffectTable)
+```
+
+
+- Moreover the function also outputs a barplot either with the ordered contributions per effect or across all the PCs of the different effects.
+
+
+```{r}
+resLmwContributions$plotTotal
+resLmwContributions$plotContrib
+```
+
+
+### Scores and loadings Plots
+
+The loadings are here represented on a line plot with the function `lmwLoadingPlot()` to conveniently compare them with the original spectral profiles. 
+
+```{r}
+all_loadings_pl <- lmwLoadingPlot(resASCA, 
+                              effectNames = c("Hippurate", "Citrate","Time",
+                                              "Hippurate:Time",
+                                              "Hippurate+Time+Hippurate:Time"), 
+                              axes = 1, xlab = "ppm")
+```
+
+
+The score matrices are represented two components at a time on a scatterplot with the function `lmwScorePlot()`.   
+
+
+Scores and loadings of a combination of effects, here `"Hippurate+Time+Hippurate:Time"` can also be represented.
 
 ```{r ASCA ScoresXY}
-lmwScorePlot(resASCA, effectNames = "Hippurate", 
+ 
+lmwPcaScatterPlot(resASCA, what = "loadings", 
+                  effectNames = "Hippurate",color="test",
+                  design=data.frame(test = rep(c("1","2"), 
+                                               length.out = nrow(resASCA$Hippurate$loadings))))
+lmwPcaScatterPlot(resASCA, what = "loadings", 
+                  effectNames = "Hippurate",
+                  design=NULL)
+
+lmwPcaScatterPlot(resASCA, what = "scores", 
+                  effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
-lmwScorePlot(resASCA, effectNames = "Citrate", 
+
+# Hippurate
+hip_scores_pl <- lmwScorePlot(resASCA, effectNames = "Hippurate", 
+             color = "Hippurate", shape = "Hippurate")
+
+hip_loadings_pl <- all_loadings_pl$Hippurate +  hip_peaks
+
+grid.arrange(hip_scores_pl,hip_loadings_pl, ncol=2)
+  
+# Citrate
+cit_scores_pl <- lmwScorePlot(resASCA, effectNames = "Citrate", 
              color = "Citrate", shape = "Citrate")
-lmwScorePlot(resASCA, effectNames = "Time", color = "Time", shape = "Time")
-lmwScorePlot(resASCA, effectNames = "Hippurate:Time", 
-             color = "Hippurate", shape = "Time")
-lmwScorePlot(resASCA, effectNames = "Hippurate+Time+Hippurate:Time", 
-             color = "Hippurate", shape = "Time")
-lmwScorePlot(resASCA, effectNames = "Hippurate+Time+Hippurate:Time", 
-             color = "Hippurate", shape = "Time", axes = c(3,4))
+cit_loadings_pl <- all_loadings_pl$Citrate +  cit_peaks
+
+grid.arrange(cit_scores_pl,cit_loadings_pl, ncol=2)
+
+# Time
+
+plotLine(t(resASCA$Time$scores),  
+         rows = 1, type = c("p"),xaxis_type = "character")
+
+tim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Time", color = "Time", shape = "Time")
+
+time_peaks <- annotate("rect", xmin=c(5.955364), xmax=c(6.155364), 
+              ymin=-Inf, ymax=Inf, alpha=0.2, 
+              fill=c("royalblue")) 
+
+tim_loadings_pl <- all_loadings_pl$Time +  time_peaks
+
+grid.arrange(tim_scores_pl,tim_loadings_pl, ncol=2)
+
+# Hippurate:Time
+hiptim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Hippurate:Time", 
+                                 color = "Hippurate", shape = "Time")
+hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` + time_peaks + hip_peaks
+
+grid.arrange(tim_scores_pl,hiptim_loadings_pl, ncol=2)
+
+# Hippurate+Time+Hippurate:Time
+hiptimInter_scores_pl <- lmwScorePlot(resASCA, 
+                                      effectNames = "Hippurate+Time+Hippurate:Time", 
+                                      color = "Hippurate", shape = "Time")
+
+hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` + time_peaks + hip_peaks
+
+grid.arrange(hiptimInter_scores_pl,hiptimInter_loadings_pl, ncol=2)
+
 ```
 
-Finally we can represent the scores with a matrix of plots. This graph allows to observe multiple variables simultaneously.
+Finally we can represent the scores with a matrix of plots with `lmwScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
 
 ```{r ASCA ScoresMatrix, fig.height=8}
 lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
@@ -353,14 +438,32 @@ lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
 
 ### Effects plot
 
-```{r ASCA effects}
+Only possible with the ASCA method
+
+#### Main effects
+
+```{r}
 lmwEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
 lmwEffectPlot(resASCA, effectName = "Citrate", x = "Citrate")
 lmwEffectPlot(resASCA, effectName = "Time", x = "Time")
+```
+
+
+#### Interaction `Hippurate:Time`
+
+```{r}
 lmwEffectPlot(resASCA, effectName = "Hippurate:Time", 
               x = "Hippurate", z = "Time")
 lmwEffectPlot(resASCA, effectName = "Hippurate:Time", 
               x = "Time", z = "Hippurate")
+```
+
+
+#### Combination of effects `Hippurate+Time+Hippurate:Time`
+
+
+
+```{r ASCA effects}
 lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
               x = "Hippurate", z = "Time")
 lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
@@ -368,12 +471,11 @@ lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time",
 ```
 
 
-### Loadings plot
+### Loadings plot (to remove)
+FIXME
 
 ```{r ASCA loadings}
-time_peaks <- annotate("rect", xmin=c(5.955364), xmax=c(6.155364), 
-              ymin=-Inf, ymax=Inf, alpha=0.2, 
-              fill=c("royalblue")) 
+
 
 resLoadASCA <- lmwLoadingPlot(resASCA, 
                               effectNames = c("Hippurate", "Citrate","Time",
@@ -395,7 +497,7 @@ resLoadASCA[[5]] + time_peaks + hip_peaks
 ### Residuals plot
 
 ```{r Plot Residuals}
-
+# FIXME: loadings ??
 lmwScorePlot(resASCA, effectNames = "Residuals", color = "Day", 
              shape = "Day", drawShapes = "ellipse")
 
@@ -421,9 +523,12 @@ pander::pander(resLmwContributions$effectTable)
 
 ### Scores Plot
 
+different shapes with `drawShapes` argument
+
 ```{r APCA ScoresXY}
 lmwScorePlot(resAPCA, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
+
 lmwScorePlot(resAPCA, effectNames = "Citrate", 
              color = "Citrate", shape = "Citrate", drawShapes = "ellipse")
 
@@ -463,14 +568,14 @@ lmwLoadingPlot(resAPCA, effectNames = c("Hippurate", "Citrate",
 
 ## ASCA-E
 
-The ASCA-E method performs PCAs on the effect matrices then add the residuals. The same functions are used.
+The ASCA-E method performs PCA on the effect matrices then adds the residuals to compute the augmented scores. The same functions are used.
 
 ```{r ASCAE PCA}
 resASCAE = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
                          method="ASCA-E")
 ```
 
-Contributions and loadings are identical to the ASCA results.
+Contributions and loadings are similar to the ASCA results.
 
 ### Scores Plot
 

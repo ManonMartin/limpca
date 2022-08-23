@@ -111,7 +111,7 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
     match.arg(shape, choices = c(colnames(design), NULL))
   }
 
-  if (!is.null(color) | !is.null(shape)){
+  if (length(color)==1 | length(shape)==1){
     if (is.null(design)){
       stop("color or shape is specified but design is NULL")
     }

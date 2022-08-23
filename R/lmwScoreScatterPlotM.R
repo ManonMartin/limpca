@@ -86,6 +86,12 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
     }
   }else{
     classicalPC=FALSE
+    if(allEffect==TRUE){
+      effectsNamesUnique <- resLmwPcaEffects$effectsNamesUnique
+      effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
+      effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
+    }
+
   }
 
   # Checking equivalent length
