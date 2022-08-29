@@ -1,5 +1,5 @@
-#' @export lmwLoadingPlot
-#' @title Loading plot(s)
+#' @export lmwLoading1dPlot
+#' @title Loadings represented on a line plot.
 #'
 #' @description
 #' Plots the loadings for each effect matrix from \code{\link{lmwPcaEffects}} outputs with line plots.
@@ -12,7 +12,7 @@
 #' @return A list of loading plots (ggplot).
 #'
 #' @details
-#' `lmwLoadingPlot` is a wrapper of \code{\link{plotLine}}.
+#' `lmwLoading1dPlot` is a wrapper of \code{\link{plotLine}}.
 #'
 #'
 #' @examples
@@ -22,10 +22,10 @@
 #' resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 #' resASCA = lmwPcaEffects(resLmwEffectMatrices)
 #'
-#' lmwLoadingPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
+#' lmwLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
 
 
-lmwLoadingPlot <- function(resLmwPcaEffects, effectNames = NULL,
+lmwLoading1dPlot <- function(resLmwPcaEffects, effectNames = NULL,
                            axes = c(1,2), ...) {
 
   # checks   ===================
@@ -41,8 +41,12 @@ lmwLoadingPlot <- function(resLmwPcaEffects, effectNames = NULL,
     stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
 
   if(is.null(effectNames)){
-    effectNames <- c(resLmwPcaEffects$effectsNamesUnique)[-1]
+    effectNames <- resLmwPcaEffects$effectsNamesUnique
+    effectNames <- effectNames[effectNames != "Intercept"]
+    effectNames <- c(effectNames, "Residuals")
   }
+
+
 
   # loadings
 

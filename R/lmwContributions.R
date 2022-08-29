@@ -3,6 +3,7 @@
 #'
 #' @description
 #' Reports the contribution of each effect to the total variance, but also the contribution of each principal component to the total variance per effect. Moreover, these contributions are summarized in a barplot.
+#' Only meaningful for ASCA and ASCA-E methods since the principal components are derived from the pure effect matrices.
 #'
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param nPC The number of Principal Components to display.
@@ -30,6 +31,13 @@
 
 lmwContributions=function(resLmwPcaEffects, nPC=5){
 
+  if (resLmwPcaEffects$method == "APCA"){
+    stop("Tying to comupte the contributions based on the APCA method.
+        The contribution of each principal component to the total variance
+        per effect is only meaningful for ASCA and ASCA-E methods since
+        the principal components are then derived from the
+        pure effect matrices.")
+  }
   neffect = length(resLmwPcaEffects$effectsNamesUnique)
 
   # Effect table with the total contribution ===============
@@ -63,8 +71,6 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   # Effect table with the contribution of each component
   # to the variance of the effect ===============
 
-  if(resLmwPcaEffects$method != "APCA"){
-
   contrib_table = matrix(data=NA,nrow=neffect,(nPC+1))
   rownames(contrib_table) = c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals")
   temp_colnames = c(temp_colnames[1:nPC],"Contrib")
@@ -77,7 +83,7 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
 
   contrib_table[,(nPC+1)] = resLmwPcaEffects$variationPercentages
   contrib_table = round(contrib_table,2)
-  }
+
 
   # Effect table for combined effects ===============
   if(length(resLmwPcaEffects)-5 != length(resLmwPcaEffects$effectsNamesUnique)){
@@ -115,7 +121,6 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
     ggplot2::theme_bw()
 
   # Plot of the contribution of each component to the variance of the effect
-  if(resLmwPcaEffects$method != "APCA"){
   tabname = matrix(data=NA,nrow=neffect,ncol=nPC)
 
   for(j in 1:nPC){
@@ -136,14 +141,9 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
     ggplot2::ylab("Percentage of Variance")+
     ggplot2::scale_x_discrete(limits=rownames(data))+
     ggplot2::theme_bw()
-  }
+
 
   # Output
-
-  if(resLmwPcaEffects$method == "APCA"){
-    contrib_table = NULL
-    plotContrib = NULL
-  }
 
   if(all(is.na(resLmwPcaEffects$type3SS)) & all(is.na(resLmwPcaEffects$variationPercentages))){
     if(is.null(combinedEffect_table)){

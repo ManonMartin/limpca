@@ -44,15 +44,17 @@ references:
 ---
 
 ```{r Setup,include=FALSE}
-require(knitr)
-require(pander)
-# require(patchwork)
-require(ggplot2)
-library(gridExtra)
+# require(knitr)
 knitr::opts_chunk$set(message=FALSE,warning=FALSE,comment=NA)
+rm(list=ls())
 ```
 
-<span style="color: red;"> <font size="4"> THIS VIGNETTE IS STILL UNDER DEVELOPMENT (after section 6). IT WILL BE UPDATED SOON</font></span>
+```{r}
+library(pander)
+library(ggplot2)
+library(gridExtra)
+```
+
 
 # Introduction
 
@@ -80,7 +82,7 @@ Before any analysis, the `UCH` data set needs to be loaded. The LMWiRe package c
 ```{r Data Importation}
 
 data("UCH")
-
+UCH$formula <- "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate + Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time"
 ```
 
 # Data exploration
@@ -269,7 +271,9 @@ pander::pander(head(resLmwModelMatrix$modelMatrix))
 resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 ```
 
-### Print and plot effect contributions
+## Effects importance
+
+The contributions from each effect is outputted from `lmwEffectMatrices`.
 
 ```{r}
 pander(resLmwEffectMatrices$variationPercentages)
@@ -291,6 +295,8 @@ pander::pander(t(resLmwBootstrapTests$resultsTable))
 
 ```
 
+
+
 # ASCA/APCA/ASCA-E decomposition
 
 ASCA/APCA/ASCA-E decomposition allow to represent the information from the effect matrices in a space of reduced dimensions through PCA. The function `lmwPcaEffects()` has a method argument to define which method to use, namely `ASCA`, `APCA` or `ASCA-E`.
@@ -308,13 +314,13 @@ resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
 
 ### Contributions
 
-The contributions from each effect and their principal components are estimated and reported in tables with the function `lmwContributions()`. 
+The contribution of each principal component of the effects is estimated and reported in tables with the function `lmwContributions()`. 
 
 ```{r ASCA Contrib}
 resLmwContributions = lmwContributions(resASCA)
 ```
 
-- Table of the percentage of contribution of each effect to the total variance.
+- The table of the percentage of contribution of each effect to the total variance outputted from `lmwEffectMatrices` is retained here.
 ```{r}
 pander::pander(resLmwContributions$totalContribTable)
 ```
@@ -346,10 +352,10 @@ resLmwContributions$plotContrib
 
 ### Scores and loadings Plots
 
-The loadings are here represented on a line plot with the function `lmwLoadingPlot()` to conveniently compare them with the original spectral profiles. 
+The loadings are here represented on a line plot with the function `lmwLoading1dPlot()` to conveniently compare them with the original spectral profiles. 
 
 ```{r}
-all_loadings_pl <- lmwLoadingPlot(resASCA, 
+all_loadings_pl <- lmwLoading1dPlot(resASCA, 
                               effectNames = c("Hippurate", "Citrate","Time",
                                               "Hippurate:Time",
                                               "Hippurate+Time+Hippurate:Time"), 
@@ -363,19 +369,6 @@ The score matrices are represented two components at a time on a scatterplot wit
 Scores and loadings of a combination of effects, here `"Hippurate+Time+Hippurate:Time"` can also be represented.
 
 ```{r ASCA ScoresXY}
- 
-lmwPcaScatterPlot(resASCA, what = "loadings", 
-                  effectNames = "Hippurate",color="test",
-                  design=data.frame(test = rep(c("1","2"), 
-                                               length.out = nrow(resASCA$Hippurate$loadings))))
-lmwPcaScatterPlot(resASCA, what = "loadings", 
-                  effectNames = "Hippurate",
-                  design=NULL)
-
-lmwPcaScatterPlot(resASCA, what = "scores", 
-                  effectNames = "Hippurate", 
-             color = "Hippurate", shape = "Hippurate")
-
 # Hippurate
 hip_scores_pl <- lmwScorePlot(resASCA, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
@@ -477,7 +470,7 @@ FIXME
 ```{r ASCA loadings}
 
 
-resLoadASCA <- lmwLoadingPlot(resASCA, 
+resLoadASCA <- lmwLoading1dPlot(resASCA, 
                               effectNames = c("Hippurate", "Citrate","Time",
                                               "Hippurate:Time",
                                               "Hippurate+Time+Hippurate:Time"), 
@@ -511,14 +504,6 @@ The APCA method performs PCAs on the effect matrices augmented by the residuals.
 ```{r APCA PCA}
 resAPCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
                         method="APCA")
-```
-
-### Contributions
-
-```{r APCA Contrib}
-resLmwContributions = lmwContributions(resAPCA)
-
-pander::pander(resLmwContributions$effectTable)
 ```
 
 ### Scores Plot
@@ -561,7 +546,7 @@ lmwScoreScatterPlotM(resAPCA,
 
 ```{r APCA loadings}
 
-lmwLoadingPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
+lmwLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
                                         "Time", "Hippurate:Time"), axes = 1)
 
 ```

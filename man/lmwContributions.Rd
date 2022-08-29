@@ -24,6 +24,7 @@ A list of:
 }
 \description{
 Reports the contribution of each effect to the total variance, but also the contribution of each principal component to the total variance per effect. Moreover, these contributions are summarized in a barplot.
+Only meaningful for ASCA and ASCA-E methods since the principal components are derived from the pure effect matrices.
 }
 \examples{
 data('UCH')
