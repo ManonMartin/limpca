@@ -28,7 +28,9 @@ lmwEffectPlot(
 
 \item{w}{A character string giving the \code{design} factor whose levels will be used for the facet.}
 
-\item{...}{}
+\item{hline}{If not \code{NULL}, draws (a) horizontal line(s).}
+
+\item{...}{Additional arguments to be passed to \code{\link{plotMeans}}.}
 }
 \value{
 An effect plot (ggplot).

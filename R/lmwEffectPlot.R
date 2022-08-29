@@ -10,7 +10,8 @@
 #' @param x A character string giving the `design` factor whose levels will form the x axis.
 #' @param z A character string giving the `design` factor whose levels will form the traces.
 #' @param w A character string giving the `design` factor whose levels will be used for the facet.
-#' @param ...
+#' @param hline If not \code{NULL}, draws (a) horizontal line(s).
+#' @param ... Additional arguments to be passed to \code{\link{plotMeans}}.
 #'
 #' @return An effect plot (ggplot).
 #'

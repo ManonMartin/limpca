@@ -16,7 +16,7 @@ This package has for objectives to provide a method to make Linear Models for Wi
 
 The functions allowing the visualisation of the results are:
 \describe{
-  \item{\code{\link{lmwLoadingPlot}}}{Plots the loadings}
+  \item{\code{\link{lmwLoading1dPlot}} or \code{\link{lmwLoading2dPlot}}}{Plots the loadings as a line plot (1D) or in 2D as a scatterplot}
   \item{\code{\link{lmwScorePlot}}}{Plots scores of an effect for two components at a time}
   \item{\code{\link{lmwScoreScatterPlotM}}}{Plots the scores of several effects simultaneously through a scores plot matrix}
   \item{\code{\link{lmwEffectPlot}}}{Plots the ASCA scores of an effect for one Principal Component at a time and allows the scores to be decomposed by the levels of the factors found in the effect being studied.}

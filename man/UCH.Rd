@@ -15,8 +15,7 @@ A list of 3 : the experimental design, the outcomes for every observations and t
 }
 \details{
 \code{outcomes = Hippurate + Citrate + Time +
-            H*C + T*H + T*C +
-            H*C*T}
+            Hippurate:Citrate + Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time}
 }
 \source{
 Rousseau, R. (2011). \emph{Statistical contribution to the analysis of metabonomics data in 1H NMR spectroscopy}

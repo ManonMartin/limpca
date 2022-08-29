@@ -2,7 +2,10 @@
 #' @title Singular value decomposition for PCA analysis
 #'
 #' @description
-#' Operates a Principal Component Analysis on the `Y` outcome/response matrix by a singular value decomposition (the pre-processing involves the mean-centering of `Y`). Outputs are represented with functions \code{\link{pcaScorePlot}}, \code{\link{pcaLoadingPlot}} and \code{\link{pcaScreePlot}}.
+#' Operates a Principal Component Analysis on the `Y` outcome/response matrix by a singular
+#' value decomposition (the pre-processing involves the mean-centering of `Y`).
+#' Outputs are represented with functions \code{\link{pcaScorePlot}},
+#' \code{\link{pcaLoading1dPlot}}, \code{\link{pcaLoading2dPlot}} and \code{\link{pcaScreePlot}}.
 #'
 #' @param Y The nxm matrix with n observations and m response variables.
 #' @param nPC Number of Principal Components.

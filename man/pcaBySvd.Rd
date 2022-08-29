@@ -25,7 +25,10 @@ A list with the following elements:
 }
 }
 \description{
-Operates a Principal Component Analysis on the \code{Y} outcome/response matrix by a singular value decomposition (the pre-processing involves the mean-centering of \code{Y}). Outputs are represented with functions \code{\link{pcaScorePlot}}, \code{\link{pcaLoadingPlot}} and \code{\link{pcaScreePlot}}.
+Operates a Principal Component Analysis on the \code{Y} outcome/response matrix by a singular
+value decomposition (the pre-processing involves the mean-centering of \code{Y}).
+Outputs are represented with functions \code{\link{pcaScorePlot}},
+\code{\link{pcaLoading1dPlot}}, \code{\link{pcaLoading2dPlot}} and \code{\link{pcaScreePlot}}.
 }
 \examples{
 

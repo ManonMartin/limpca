@@ -8,6 +8,7 @@
 #' @param cols A vector with either the column names of the Y matrix to plot (character) or the column index positions.
 #' @param design A nxk "free encoded" experimental design data frame.
 #' @param labelVector Labels to display on the diagonal. If `NULL`, the `cols` names are used.
+#' @param title Title of the graph.
 #' @param varname.colorup A character with the name of the variable used to color the upper triangle.
 #' @param varname.colordown A character with the name of the variable used to color the lower triangle.
 #' @param varname.pchup A character with the name of the variable used to mark points for the upper triangle.

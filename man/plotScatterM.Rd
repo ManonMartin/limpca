@@ -29,6 +29,8 @@ plotScatterM(
 
 \item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the \code{cols} names are used.}
 
+\item{title}{Title of the graph.}
+
 \item{varname.colorup}{A character with the name of the variable used to color the upper triangle.}
 
 \item{varname.colordown}{A character with the name of the variable used to color the lower triangle.}

@@ -17,6 +17,8 @@ lmwScreePlot(
 \item{effectNames}{Names of the effects to be plotted. if \code{NULL}, all the effects are plotted.}
 
 \item{nPC}{An integer with the number of components to plot.}
+
+\item{theme}{\code{ggplot} theme}
 }
 \value{
 A scree plot (ggplot).

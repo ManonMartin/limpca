@@ -7,6 +7,7 @@
 #' @param resLmwContributions A resLmwContributions list from the function \code{\link{lmwContributions}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.
 #' @param nPC An integer with the number of components to plot.
+#' @param theme `ggplot` theme
 #'
 #' @return A scree plot (ggplot).
 #'
