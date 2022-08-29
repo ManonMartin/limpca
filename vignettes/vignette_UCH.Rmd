@@ -195,7 +195,7 @@ plotMeans(Y = UCH$outcomes,
 The function `pcaBySvd` is useful to compute a PCA decomposition of the `outcomes` matrix. The linked usefull functions are :
 
 * `pcaScreePlot` to obtaine a scree plot
-* `pcaLoadingPlot` for the loading plots
+* `pcaLoading1dPlot` for the loading plots
 * `pcaScorePlot` for the score plots
 
 ```{r PCA}
@@ -233,7 +233,7 @@ In the first two loading plots a mix of Citrate and Hippurate peaks already appe
 
 ```{r Loadings}
 
-p2 <- pcaLoadingPlot(resPcaBySvd = ResPCA, axes = c(1,2), 
+p2 <- pcaLoading1dPlot(resPcaBySvd = ResPCA, axes = c(1,2), 
                title = "PCA loadings plot UCH", xlab = "ppm", 
                ylab = "Intensity")
 

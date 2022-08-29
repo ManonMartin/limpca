@@ -16,7 +16,7 @@ lmwLoading1dPlot(resLmwPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 \item{...}{Additional arguments to be passed to \code{\link{plotLine}}.}
 }
 \value{
-A list of loading plots (ggplot).
+A list of \code{ggplot} objects representing the loading plots.
 }
 \description{
 Plots the loadings for each effect matrix from \code{\link{lmwPcaEffects}} outputs with line plots.

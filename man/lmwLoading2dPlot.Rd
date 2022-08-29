@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmwLoading2dPlot.R
 \name{lmwLoading2dPlot}
 \alias{lmwLoading2dPlot}
-\title{Loading plots}
+\title{Loading plots on a 2D scatter plot}
 \usage{
 lmwLoading2dPlot(
   resLmwPcaEffects,
@@ -39,12 +39,16 @@ resLmwModelMatrix = lmwModelMatrix(UCH)
 resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 resASCA = lmwPcaEffects(resLmwEffectMatrices)
 
+# adding labels to points
 labels = substr(colnames(UCH$outcomes),1,4)
 ids <- order(resASCA$Hippurate$loadings[,1], decreasing = TRUE)[1:10]
 labels[-c(ids)] <- ""
+
+# adding (arbitrary) color and shape to points
 groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
 metadata <- data.frame(groups)
+
 lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-metadata=metadata, color = "groups", shape = "groups",
+metadata = metadata, color = "groups", shape = "groups",
 points_labs = labels)
 }

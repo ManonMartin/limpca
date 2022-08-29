@@ -9,7 +9,7 @@
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
 #'
-#' @return A list of loading plots (ggplot).
+#' @return A list of `ggplot` objects representing the loading plots.
 #'
 #' @details
 #' `lmwLoading1dPlot` is a wrapper of \code{\link{plotLine}}.

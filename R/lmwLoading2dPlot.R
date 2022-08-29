@@ -1,5 +1,5 @@
 #' @export lmwLoading2dPlot
-#' @title Loading plots
+#' @title Loading plots on a 2D scatter plot
 #'
 #' @description
 #' Draws the Loading plots of each effect matrix provided in \code{\link{lmwPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
@@ -33,7 +33,7 @@
 #' metadata <- data.frame(groups)
 #'
 #' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-#' metadata=metadata, color = "groups", shape = "groups",
+#' metadata = metadata, color = "groups", shape = "groups",
 #' points_labs = labels)
 
 
