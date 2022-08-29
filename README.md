@@ -42,7 +42,7 @@ plotDesign(design = UCH$design, x = "Hippurate",
            title = "Design of the UCH dataset")
 ```
 
-<img src="inst/doc/README-dataVisu-1.png" width="100%" />
+<img src="inst/doc/README-dataVisu-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
@@ -54,7 +54,7 @@ plotLine(Y = UCH$outcomes,
          ylab = "Intensity")
 ```
 
-<img src="inst/doc/README-dataVisu-2.png" width="100%" />
+<img src="inst/doc/README-dataVisu-2.png" width="70%" style="display: block; margin: auto;" />
 
 ## PCA
 
@@ -63,7 +63,7 @@ ResPCA = pcaBySvd(UCH$outcomes)
 pcaScreePlot(ResPCA, nPC = 6)
 ```
 
-<img src="inst/doc/README-PCA-1.png" width="100%" />
+<img src="inst/doc/README-PCA-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
@@ -73,7 +73,7 @@ pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
              points_labs_rn = FALSE)
 ```
 
-<img src="inst/doc/README-PCA-2.png" width="100%" />
+<img src="inst/doc/README-PCA-2.png" width="70%" style="display: block; margin: auto;" />
 
 ## Model estimation and effect matrix decomposition
 
@@ -92,7 +92,7 @@ resEM = lmwEffectMatrices(resMM)
 resEM$varPercentagesPlot
 ```
 
-<img src="inst/doc/README-effectImpSign-1.png" width="100%" />
+<img src="inst/doc/README-effectImpSign-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
@@ -100,10 +100,10 @@ resEM$varPercentagesPlot
 resBT = lmwBootstrapTests(resLmwEffectMatrices = resEM, nboot=100)
 resBT$resultsTable
 #>                       Hippurate Citrate  Time     Hippurate:Citrate
-#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.09"           
+#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.17"           
 #> % of variance (T III) "39.31"   "29.91"  "16.24"  "1.54"           
 #>                       Hippurate:Time Citrate:Time Hippurate:Citrate:Time
-#> Bootstrap p-values    "< 0.01"       "0.44"       "0.12"                
+#> Bootstrap p-values    "< 0.01"       "0.37"       "0.1"                 
 #> % of variance (T III) "6.23"         "0.54"       "1.68"                
 #>                       Residuals
 #> Bootstrap p-values    "-"      
@@ -121,7 +121,7 @@ lmwScorePlot(resASCAE, effectNames = "Hippurate",
              color = "Hippurate", shape = "Hippurate")
 ```
 
-<img src="inst/doc/README-ASCAE-1.png" width="100%" />
+<img src="inst/doc/README-ASCAE-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
@@ -131,7 +131,7 @@ lmwLoading1dPlot(resASCAE, effectNames = c("Hippurate"),
 #> $Hippurate
 ```
 
-<img src="inst/doc/README-ASCAE-2.png" width="100%" />
+<img src="inst/doc/README-ASCAE-2.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
@@ -145,4 +145,4 @@ lmwScoreScatterPlotM(resASCAE,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-<img src="inst/doc/README-ASCAE-3.png" width="100%" />
+<img src="inst/doc/README-ASCAE-3.png" width="70%" style="display: block; margin: auto;" />
