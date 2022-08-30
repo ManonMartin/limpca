@@ -352,21 +352,21 @@ resLmwContributions$plotContrib
 
 ### Scores and loadings Plots
 
-The loadings are here represented on a line plot with the function `lmwLoading1dPlot()` to conveniently compare them with the original spectral profiles. 
+The loadings can be represented on a line plot with the function `lmwLoading1dPlot()` to conveniently compare them with the original spectral profiles. 
 
 ```{r}
 all_loadings_pl <- lmwLoading1dPlot(resASCA, 
                               effectNames = c("Hippurate", "Citrate","Time",
                                               "Hippurate:Time",
-                                              "Hippurate+Time+Hippurate:Time"), 
+                                              "Hippurate+Time+Hippurate:Time", 
+                                              "Residuals"), 
                               axes = 1, xlab = "ppm")
 ```
 
 
 The score matrices are represented two components at a time on a scatterplot with the function `lmwScorePlot()`.   
 
-
-Scores and loadings of a combination of effects, here `"Hippurate+Time+Hippurate:Time"` can also be represented.
+#### Main effects
 
 ```{r ASCA ScoresXY}
 # Hippurate
@@ -385,11 +385,8 @@ cit_loadings_pl <- all_loadings_pl$Citrate +  cit_peaks
 grid.arrange(cit_scores_pl,cit_loadings_pl, ncol=2)
 
 # Time
-
-plotLine(t(resASCA$Time$scores),  
-         rows = 1, type = c("p"),xaxis_type = "character")
-
-tim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Time", color = "Time", shape = "Time")
+tim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Time", color = "Time", 
+                              shape = "Time")
 
 time_peaks <- annotate("rect", xmin=c(5.955364), xmax=c(6.155364), 
               ymin=-Inf, ymax=Inf, alpha=0.2, 
@@ -399,23 +396,52 @@ tim_loadings_pl <- all_loadings_pl$Time +  time_peaks
 
 grid.arrange(tim_scores_pl,tim_loadings_pl, ncol=2)
 
+```
+
+#### Interaction `Hippurate:Time`
+
+```{r}
 # Hippurate:Time
 hiptim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Hippurate:Time", 
                                  color = "Hippurate", shape = "Time")
 hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` + time_peaks + hip_peaks
 
-grid.arrange(tim_scores_pl,hiptim_loadings_pl, ncol=2)
+grid.arrange(hiptim_scores_pl,hiptim_loadings_pl, ncol=2)
+```
 
+#### Combination of effects `Hippurate+Time+Hippurate:Time`
+
+Scores and loadings of a combination of effects, here `"Hippurate+Time+Hippurate:Time"` can also be represented.
+
+```{r}
 # Hippurate+Time+Hippurate:Time
 hiptimInter_scores_pl <- lmwScorePlot(resASCA, 
-                                      effectNames = "Hippurate+Time+Hippurate:Time", 
-                                      color = "Hippurate", shape = "Time")
+                                 effectNames = "Hippurate+Time+Hippurate:Time", 
+                                 color = "Hippurate", shape = "Time")
 
-hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` + time_peaks + hip_peaks
+hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` + 
+                            time_peaks + hip_peaks
 
 grid.arrange(hiptimInter_scores_pl,hiptimInter_loadings_pl, ncol=2)
-
 ```
+
+For interaction terms of combined effects however, a better graphical representation is possible with the function `lmwEffectPlot()` (see below).
+
+
+#### Model residuals
+
+```{r Plot Residuals}
+
+resid_scores_pl <- lmwScorePlot(resASCA, effectNames = "Residuals",
+                                color = "Day", shape = "Day", 
+                                drawShapes = "segment")
+
+
+resid_loadings_pl <- all_loadings_pl$Residuals 
+
+grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
+```
+
 
 We can also represent the scores with a matrix of plots with `lmwScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
 
@@ -429,7 +455,7 @@ lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-Finally the loadings can also be represented as a scatter plot.
+Finally the loadings could also be represented as a scatter plot.
 
 ```{r ASCA loadings}
 
@@ -441,9 +467,10 @@ lmwLoading2dPlot(resASCA, effectNames = c("Hippurate"),
                  axes = c(1,2), points_labs = labels)
 ```
 
+
 ### Effects plot
 
-Only possible with the ASCA method
+This function can only be applied to the `ASCA` method.
 
 #### Main effects
 
@@ -476,17 +503,6 @@ lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time",
 ```
 
 
-
-
-
-### Residuals plot
-
-```{r Plot Residuals}
-# FIXME: loadings ??
-lmwScorePlot(resASCA, effectNames = "Residuals", color = "Day", 
-             shape = "Day", drawShapes = "ellipse")
-
-```
 
 
 ## APCA
@@ -545,7 +561,7 @@ lmwLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate",
 
 ## ASCA-E
 
-The ASCA-E method performs PCA on the effect matrices then adds the residuals to compute the augmented scores. The same functions are used.
+The ASCA-E method performs PCA on the effect matrices then adds the residuals to compute the augmented scores. 
 
 ```{r ASCAE PCA}
 resASCAE = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 

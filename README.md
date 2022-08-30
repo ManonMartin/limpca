@@ -30,7 +30,7 @@ str(UCH)
 #>   ..- attr(*, "dimnames")=List of 2
 #>   .. ..$   : chr [1:34] "M2C00D2R1" "M2C00D2R2" "M2C02D2R1" "M2C02D2R2" ...
 #>   .. ..$ X1: chr [1:600] "9.9917004" "9.9753204" "9.9590624" "9.9427436" ...
-#>  $ formula : chr "outcomes ~ Hippurate + Citrate + Time + Hippurate*Citrate+Time*Hippurate+Time*Citrate+Hippurate*Citrate*Time"
+#>  $ formula : chr "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate + Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time"
 ```
 
 ## Data visualisation
@@ -100,10 +100,10 @@ resEM$varPercentagesPlot
 resBT = lmwBootstrapTests(resLmwEffectMatrices = resEM, nboot=100)
 resBT$resultsTable
 #>                       Hippurate Citrate  Time     Hippurate:Citrate
-#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.17"           
+#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.11"           
 #> % of variance (T III) "39.31"   "29.91"  "16.24"  "1.54"           
 #>                       Hippurate:Time Citrate:Time Hippurate:Citrate:Time
-#> Bootstrap p-values    "< 0.01"       "0.37"       "0.1"                 
+#> Bootstrap p-values    "< 0.01"       "0.43"       "0.08"                
 #> % of variance (T III) "6.23"         "0.54"       "1.68"                
 #>                       Residuals
 #> Bootstrap p-values    "-"      
