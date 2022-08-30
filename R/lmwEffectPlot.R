@@ -29,7 +29,8 @@
 #' @import ggplot2
 
 lmwEffectPlot <- function(resASCA, effectName, axes = 1,
-                          x, z = NULL, w = NULL, hline = 0, ...){
+                          x, z = NULL, w = NULL, hline = 0,title = NULL,
+                          ylab = NULL, ...){
 
   # checks =========================
 
@@ -40,6 +41,8 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   checkArg(z,c("str", "length1"), can.be.null = TRUE)
   checkArg(w,c("str", "length1"), can.be.null = TRUE)
   checkArg(hline,"num", can.be.null = TRUE)
+  checkArg(title,c("str", "length1"), can.be.null = TRUE)
+  checkArg(ylab,c("str", "length1"), can.be.null = TRUE)
 
   if (!identical(names(resASCA[(length(resASCA)-5):length(resASCA)]),
                  c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
@@ -76,11 +79,14 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   }
 
   # prepare the arguments  ==============================
+  if (!exists("title")){
 
-  matEffect <- resASCA[[effectName]][["scores"]]
+    title = paste0(effectName, " scores as a function of ",x, ": PC",axes)
+  }
 
-  title = paste0(effectName, " scores as a function of ",x, ": PC",axes)
+  if (!exists("ylab") | (!is.character(ylab) & !is.null(ylab))){
   ylab = paste0("Scores (",round(resASCA[[effectName]][["var"]][axes], 2),"% of variation explained)")
+  }
 
   fig <- plotMeans(Y = matEffect,
             design = resASCA$lmwDataList$design,
