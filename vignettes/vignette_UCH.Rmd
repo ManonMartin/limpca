@@ -417,7 +417,7 @@ grid.arrange(hiptimInter_scores_pl,hiptimInter_loadings_pl, ncol=2)
 
 ```
 
-Finally we can represent the scores with a matrix of plots with `lmwScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
+We can also represent the scores with a matrix of plots with `lmwScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
 
 ```{r ASCA ScoresMatrix, fig.height=8}
 lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
@@ -429,24 +429,16 @@ lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-#### Loadings scatter plot 
-
+Finally the loadings can also be represented as a scatter plot.
 
 ```{r ASCA loadings}
 
-resLoadASCA <- lmwLoading2dPlot(resASCA, 
-                              effectNames = c("Hippurate"), 
-                              axes = c(1,2), ylab = "ppm")
-resLoadASCA[[1]] +  hip_peaks
+# adding labels to points for the Hippurate peaks
+labels = substr(colnames(UCH$outcomes),1,4)
+labels[-c(369, 132, 150, 133, 149, 144, 145, 368, 151)] <- ""
 
-resLoadASCA[[2]] + cit_peaks
-
-resLoadASCA[[3]] + time_peaks
-
-resLoadASCA[[4]] + time_peaks + hip_peaks
-
-resLoadASCA[[5]] + time_peaks + hip_peaks
-
+lmwLoading2dPlot(resASCA, effectNames = c("Hippurate"), 
+                 axes = c(1,2), points_labs = labels)
 ```
 
 ### Effects plot
