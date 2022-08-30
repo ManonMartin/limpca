@@ -40,6 +40,8 @@
 lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
                          axes = c(1,2), metadata = NULL, ...) {
 
+  mcall = as.list(match.call())[-1L]
+
   # checks ===================
   checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
   checkArg(effectNames,c("str"),can.be.null = TRUE)
@@ -101,8 +103,8 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
     title = paste(effect, ":", resLmwPcaEffects$method, "loading plot")
 
-    xlab <- pc_axes[[effect]][1]
-    ylab <- pc_axes[[effect]][2]
+    xlab_pc <- pc_axes[[effect]][1]
+    ylab_pc <- pc_axes[[effect]][2]
 
     xlim_val = c(1.4*min(resLmwPcaEffects[[effect]][["loadings"]][,axes[1]]),
                  1.4*max(resLmwPcaEffects[[effect]][["loadings"]][,axes[1]]))
@@ -123,9 +125,29 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
     }
 
     # Building plots
-    fig <- plotScatter(Y = loadings[[effect]], xy = axes,
-                       xlab = xlab, ylab = ylab,
-                       design = metadata, ...)
+
+    if (!"xlab" %in% names(mcall)){
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                           xlab = xlab_pc, ylab = ylab_pc,
+                           design = metadata, ...)
+      }else {
+        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                           xlab = xlab_pc,
+                           design = metadata, ...)
+      }
+    }else{
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                           ylab = ylab_pc,
+                           design = metadata, ...)
+      }else {
+        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                           design = metadata, ...)
+      }
+    }
+
+
 
     fig <- fig + ylim(ylim_val) + xlim(xlim_val) + ggtitle(title)
   }

@@ -429,6 +429,26 @@ lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
+#### Loadings scatter plot 
+
+
+```{r ASCA loadings}
+
+resLoadASCA <- lmwLoading2dPlot(resASCA, 
+                              effectNames = c("Hippurate"), 
+                              axes = c(1,2), ylab = "ppm")
+resLoadASCA[[1]] +  hip_peaks
+
+resLoadASCA[[2]] + cit_peaks
+
+resLoadASCA[[3]] + time_peaks
+
+resLoadASCA[[4]] + time_peaks + hip_peaks
+
+resLoadASCA[[5]] + time_peaks + hip_peaks
+
+```
+
 ### Effects plot
 
 Only possible with the ASCA method
@@ -464,28 +484,8 @@ lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time",
 ```
 
 
-### Loadings plot (to remove)
-FIXME
-
-```{r ASCA loadings}
 
 
-resLoadASCA <- lmwLoading1dPlot(resASCA, 
-                              effectNames = c("Hippurate", "Citrate","Time",
-                                              "Hippurate:Time",
-                                              "Hippurate+Time+Hippurate:Time"), 
-                              axes = 1, xlab = "ppm")
-resLoadASCA[[1]] +  hip_peaks
-
-resLoadASCA[[2]] + cit_peaks
-
-resLoadASCA[[3]] + time_peaks
-
-resLoadASCA[[4]] + time_peaks + hip_peaks
-
-resLoadASCA[[5]] + time_peaks + hip_peaks
-
-```
 
 ### Residuals plot
 
@@ -577,17 +577,13 @@ lmwScorePlot(resASCAE, effectNames = "Hippurate:Time",
 
 ```{r ASCAE ScoresMatrix}
 lmwScoreScatterPlotM(resASCAE,
-                     modelAbbrev = TRUE,
                      effectNames = c("Hippurate", "Citrate", "Time",
                                      "Hippurate:Time"),
+                     modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
-                     vec.colorup = c("royalblue","yellowgreen","lightcoral"),
                      varname.colordown  = "Time",
-                     vec.colordown = c("cadetblue4","deeppink4"),
                      varname.pchup="Hippurate",
-                     vec.pchup = c(4,16,2),
                      varname.pchdown="Time",
-                     vec.pchdown = c(1,3), 
                      title = "ASCA-E scores scatterplot matrix")
 ```
 

@@ -32,6 +32,8 @@
 lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
                          axes = c(1,2), ...) {
 
+  mcall = as.list(match.call())[-1L]
+
   # checks ===================
   checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
   checkArg(effectNames,c("str"),can.be.null = TRUE)
@@ -113,9 +115,27 @@ lmwScorePlot <- function(resLmwPcaEffects, effectNames = NULL,
     }
 
     # Building plots
-    fig <- plotScatter(Y = scores[[effect]], xy = axes,
-                       xlab = xlab, ylab = ylab,
-                       design = resLmwPcaEffects$lmwDataList$design, ...)
+
+    if (!"xlab" %in% names(mcall)){
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = scores[[effect]], xy = axes,
+                           xlab = xlab, ylab = ylab,
+                           design = resLmwPcaEffects$lmwDataList$design, ...)
+      }else {
+        fig <- plotScatter(Y = scores[[effect]], xy = axes,
+                           xlab = xlab,
+                           design = resLmwPcaEffects$lmwDataList$design, ...)
+      }
+    }else{
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = scores[[effect]], xy = axes,
+                           ylab = ylab,
+                           design = resLmwPcaEffects$lmwDataList$design, ...)
+      }else {
+        fig <- plotScatter(Y = scores[[effect]], xy = axes,
+                           design = resLmwPcaEffects$lmwDataList$design, ...)
+      }
+    }
 
     fig <- fig + ylim(ylim_val) + xlim(xlim_val) + ggtitle(title)
   }

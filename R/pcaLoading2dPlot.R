@@ -36,6 +36,8 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA loading plot",
                          points_labs_rn = FALSE, metadata = NULL, ...) {
 
+  mcall = as.list(match.call())[-1L]
+
   # checks ===================
   checkArg(resPcaBySvd,c("list"),can.be.null = FALSE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
@@ -82,17 +84,61 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
   ylim1 <- max(abs(loadings[,axes[2]]))
   ylim_val <-  c(-ylim1,ylim1)
 
-  if (points_labs_rn){
-    fig <- plotScatter(Y = loadings, title = title,
-                       xy = axes, xlab = xlab, ylab = ylab,
-                       points_labs = rownames(loadings),
-                       design = metadata,
-                       ...)
-  } else {
-    fig <- plotScatter(Y = loadings, title = title,
-                       xy = axes, xlab = xlab, ylab = ylab, design = metadata,
-                       ...)
-  }
+    if (points_labs_rn){
+      if (!"xlab" %in% names(mcall)){
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes, xlab = xlab, ylab = ylab,
+                             points_labs = rownames(loadings),
+                             design = metadata,
+                             ...)
+        }else{
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes, xlab = xlab,
+                             points_labs = rownames(loadings),
+                             design = metadata,
+                             ...)
+        }
+      }else{
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes, ylab = ylab,
+                             points_labs = rownames(loadings),
+                             design = metadata,
+                             ...)
+        }else{
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes,
+                             points_labs = rownames(loadings),
+                             design = metadata,
+                             ...)
+        }
+      }
+
+    } else {
+      if (!"xlab" %in% names(mcall)){
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes, xlab = xlab, ylab = ylab,
+                             design = metadata,...)
+        }else{
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes, xlab = xlab,
+                             design = metadata,...)
+        }
+      }else{
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes, ylab = ylab,
+                             design = metadata,...)
+        }else{
+          fig <- plotScatter(Y = loadings, title = title,
+                             xy = axes,
+                             design = metadata,...)
+        }
+      }
+
+    }
 
   # loadings plot  ===================
   fig <- fig + ggplot2::xlim(xlim_val) + ggplot2::ylim(ylim_val)

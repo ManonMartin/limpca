@@ -29,8 +29,9 @@
 #' @import ggplot2
 
 lmwEffectPlot <- function(resASCA, effectName, axes = 1,
-                          x, z = NULL, w = NULL, hline = 0,title = NULL,
-                          ylab = NULL, ...){
+                          x, z = NULL, w = NULL, hline = 0, ...){
+
+  mcall = as.list(match.call())[-1L]
 
   # checks =========================
 
@@ -41,8 +42,6 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   checkArg(z,c("str", "length1"), can.be.null = TRUE)
   checkArg(w,c("str", "length1"), can.be.null = TRUE)
   checkArg(hline,"num", can.be.null = TRUE)
-  checkArg(title,c("str", "length1"), can.be.null = TRUE)
-  checkArg(ylab,c("str", "length1"), can.be.null = TRUE)
 
   if (!identical(names(resASCA[(length(resASCA)-5):length(resASCA)]),
                  c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
@@ -81,24 +80,55 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   # prepare the arguments  ==============================
   matEffect <- resASCA[[effectName]][["scores"]]
 
-  if (is.null("title")){
-    title = paste0(effectName, " scores as a function of ",x, ": PC",axes)
-  }
-
-  if (is.null("ylab")){
+  title = paste0(effectName, " scores as a function of ",x, ": PC",axes)
   ylab = paste0("Scores (",round(resASCA[[effectName]][["var"]][axes], 2),"% of variation explained)")
+
+  if (!"title" %in% names(mcall)){
+    if (!"ylab" %in% names(mcall)){
+      fig <- plotMeans(Y = matEffect,
+                       design = resASCA$lmwDataList$design,
+                       cols = axes,
+                       x = x,
+                       z = z,
+                       w = w,
+                       title = title,
+                       ylab = ylab,
+                       hline = hline,
+                       ...)
+    }else {
+      fig <- plotMeans(Y = matEffect,
+                       design = resASCA$lmwDataList$design,
+                       cols = axes,
+                       x = x,
+                       z = z,
+                       w = w,
+                       title = title,
+                       hline = hline,
+                       ...)
+    }
+  }else{
+    if (!"ylab" %in% names(mcall)){
+      fig <- plotMeans(Y = matEffect,
+                       design = resASCA$lmwDataList$design,
+                       cols = axes,
+                       x = x,
+                       z = z,
+                       w = w,
+                       ylab = ylab,
+                       hline = hline,
+                       ...)
+    }else {
+      fig <- plotMeans(Y = matEffect,
+                       design = resASCA$lmwDataList$design,
+                       cols = axes,
+                       x = x,
+                       z = z,
+                       w = w,
+                       hline = hline,
+                       ...)
+    }
   }
 
-  fig <- plotMeans(Y = matEffect,
-            design = resASCA$lmwDataList$design,
-            cols = axes,
-            x = x,
-            z = z,
-            w = w,
-            title = title,
-            ylab = ylab,
-            hline = hline,
-            ...)
 
   return(fig)
 

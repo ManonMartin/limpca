@@ -31,6 +31,8 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA score plot",
                          points_labs_rn = FALSE, ...) {
 
+  mcall = as.list(match.call())[-1L]
+
   # checks ===================
   checkArg(resPcaBySvd,c("list"),can.be.null = FALSE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
@@ -77,13 +79,55 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1,2),
   ylim_val <-  c(-ylim1,ylim1)
 
   if (points_labs_rn){
-    fig <- plotScatter(Y = scores, title = title,
-                       xy = axes, xlab = xlab, ylab = ylab,
-                       points_labs = rownames(scores),
-                       ...)
+    if (!"xlab" %in% names(mcall)){
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = scores, title = title,
+                           xy = axes, xlab = xlab, ylab = ylab,
+                           points_labs = rownames(scores),
+                           ...)
+      }else{
+        fig <- plotScatter(Y = scores, title = title,
+                           xy = axes, xlab = xlab,
+                           points_labs = rownames(scores),
+                           ...)
+      }
+      }else{
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = scores, title = title,
+                             xy = axes, ylab = ylab,
+                             points_labs = rownames(scores),
+                             ...)
+        }else{
+          fig <- plotScatter(Y = scores, title = title,
+                             xy = axes,
+                             points_labs = rownames(scores),
+                             ...)
+        }
+      }
+
   } else {
-    fig <- plotScatter(Y = scores, title = title,
-                       xy = axes, xlab = xlab, ylab = ylab, ...)
+    if (!"xlab" %in% names(mcall)){
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = scores, title = title,
+                           xy = axes, xlab = xlab, ylab = ylab,
+                           ...)
+      }else{
+        fig <- plotScatter(Y = scores, title = title,
+                           xy = axes, xlab = xlab,
+                           ...)
+      }
+    }else{
+      if (!"ylab" %in% names(mcall)){
+        fig <- plotScatter(Y = scores, title = title,
+                           xy = axes, ylab = ylab,
+                           ...)
+      }else{
+        fig <- plotScatter(Y = scores, title = title,
+                           xy = axes,
+                           ...)
+      }
+    }
+
   }
 
   # Scores plot  ===================
