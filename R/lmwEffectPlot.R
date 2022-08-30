@@ -79,12 +79,13 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   }
 
   # prepare the arguments  ==============================
-  if (!exists("title")){
+  matEffect <- resASCA[[effectName]][["scores"]]
 
+  if (is.null("title")){
     title = paste0(effectName, " scores as a function of ",x, ": PC",axes)
   }
 
-  if (!exists("ylab") | (!is.character(ylab) & !is.null(ylab))){
+  if (is.null("ylab")){
   ylab = paste0("Scores (",round(resASCA[[effectName]][["var"]][axes], 2),"% of variation explained)")
   }
 
