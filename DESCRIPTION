@@ -3,21 +3,19 @@ Type: Package
 Title: Linear Models for Wide Responses
 Version: 0.1.0
 Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
-                     email = "bernadette.ovaerts@uclouvain.be"),
+                     email = "bernadette.govaerts@uclouvain.be"),
               person("Sebastien","Franceschini", role = "ctb",
                     email="sfranceschini@uliege.be"),
-              person("Robin","van Oirbeek", role = "cre",
+              person("Robin","van Oirbeek", role = "ctb",
                     email="robin.vanoirbeek@gmail.com"),
               person("Michel","Thiel", role = "aut",
-                    email="michel.thiel@ucb.com"),
+                    email="michel.thiel@uclouvain.be"),
               person("Pascal","de Tullio", role = "dtc",
                     email="pdetullio@uliege.be"),
-              person("Manon","Martin", role = "aut",
+              person("Manon","Martin", role = c("aut", "cre"),
                     email="manon.martin@uclouvain.be"),
-              person("Nadia", "Benaiche", role = "aut",
+              person("Nadia", "Benaiche", role = "ctb",
                      email = "nadia.benaiche@student.uclouvain.be"))
-Maintainer: Manon Martin <Manon.martin@uclouvain.be>, 
-            Michel Thiel <Michel.thiel@ucb.com>
 Description: This package brings a method to analyze Wide Response data with a
     one or two-way ANOVA of class I. This method handles unbalanced design.
 License: GPL-2
