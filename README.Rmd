@@ -30,7 +30,7 @@ remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE)
 library("LMWiRe")
 ```
 
-
+For any enquiry, you can send an email to the package authors: [bernadette.govaerts@uclouvain.be](mailto:bernadette.govaerts@uclouvain.be) ; [michel.thiel@uclouvain.be](mailto:michel.thiel@uclouvain.be) or [manon.martin@uclouvain.be](mailto:manon.martin@uclouvain.be)
 
 # Short application on the `UCH` dataset
 
