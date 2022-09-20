@@ -66,7 +66,7 @@ The model used in this example is a three-way ANOVA with fixed effects. This doc
 
 # Installation
 
-The package is actually in its development stage and is available on GitHub at the url: <https://github.com/bgovaerts/LMWiRe/tree/develop>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
+The package is actually in its development stage and is available on GitHub at the url: <https://github.com/ManonMartin/LMWiRe>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
 
 
 ```{r Install, results=FALSE, message=FALSE}

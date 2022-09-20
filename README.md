@@ -104,10 +104,10 @@ resEM$varPercentagesPlot
 resBT = lmwBootstrapTests(resLmwEffectMatrices = resEM, nboot=100)
 resBT$resultsTable
 #>                       Hippurate Citrate  Time     Hippurate:Citrate
-#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.22"           
+#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.16"           
 #> % of variance (T III) "39.31"   "29.91"  "16.24"  "1.54"           
 #>                       Hippurate:Time Citrate:Time Hippurate:Citrate:Time
-#> Bootstrap p-values    "< 0.01"       "0.48"       "0.11"                
+#> Bootstrap p-values    "< 0.01"       "0.42"       "0.08"                
 #> % of variance (T III) "6.23"         "0.54"       "1.68"                
 #>                       Residuals
 #> Bootstrap p-values    "-"      

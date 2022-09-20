@@ -4,3 +4,4 @@
 ^Meta$
 ^\.github$
 ^README.$
+doc/.*[.]png$

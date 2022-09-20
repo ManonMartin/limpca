@@ -7,7 +7,7 @@
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
-#' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
+#' @param vardata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
 #' @return A list of loading plots (ggplot).
@@ -30,15 +30,15 @@
 #'
 #' # adding (arbitrary) color and shape to points
 #' groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
-#' metadata <- data.frame(groups)
+#' vardata <- data.frame(groups)
 #'
 #' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-#' metadata = metadata, color = "groups", shape = "groups",
+#' vardata = vardata, color = "groups", shape = "groups",
 #' points_labs = labels)
 
 
 lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
-                         axes = c(1,2), metadata = NULL, ...) {
+                         axes = c(1,2), vardata = NULL, ...) {
 
   mcall = as.list(match.call())[-1L]
 
@@ -46,7 +46,7 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
   checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
   checkArg(effectNames,c("str"),can.be.null = TRUE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
-  checkArg(metadata,"data.frame",can.be.null = TRUE)
+  checkArg(vardata,"data.frame",can.be.null = TRUE)
 
   if(!all(effectNames%in%names(resLmwPcaEffects))){stop("One of the effects from effectNames is not in resLmwPcaEffects.")}
 
@@ -130,20 +130,20 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
       if (!"ylab" %in% names(mcall)){
         fig <- plotScatter(Y = loadings[[effect]], xy = axes,
                            xlab = xlab_pc, ylab = ylab_pc,
-                           design = metadata, ...)
+                           design = vardata, ...)
       }else {
         fig <- plotScatter(Y = loadings[[effect]], xy = axes,
                            xlab = xlab_pc,
-                           design = metadata, ...)
+                           design = vardata, ...)
       }
     }else{
       if (!"ylab" %in% names(mcall)){
         fig <- plotScatter(Y = loadings[[effect]], xy = axes,
                            ylab = ylab_pc,
-                           design = metadata, ...)
+                           design = vardata, ...)
       }else {
         fig <- plotScatter(Y = loadings[[effect]], xy = axes,
-                           design = metadata, ...)
+                           design = vardata, ...)
       }
     }
 

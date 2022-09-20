@@ -8,7 +8,7 @@ lmwLoading2dPlot(
   resLmwPcaEffects,
   effectNames = NULL,
   axes = c(1, 2),
-  metadata = NULL,
+  vardata = NULL,
   ...
 )
 }
@@ -19,7 +19,7 @@ lmwLoading2dPlot(
 
 \item{axes}{A numerical vector with the 2 Principal Components axes to be drawn.}
 
-\item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
+\item{vardata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
@@ -46,9 +46,9 @@ labels[-c(ids)] <- ""
 
 # adding (arbitrary) color and shape to points
 groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
-metadata <- data.frame(groups)
+vardata <- data.frame(groups)
 
 lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-metadata = metadata, color = "groups", shape = "groups",
+vardata = vardata, color = "groups", shape = "groups",
 points_labs = labels)
 }
