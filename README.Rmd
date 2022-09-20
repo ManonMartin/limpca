@@ -9,7 +9,7 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "inst/doc/README-",
+  fig.path = "vignettes/README-",
   out.width = "70%",
   fig.align='center'
 )
