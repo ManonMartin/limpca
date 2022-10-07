@@ -26,7 +26,7 @@ library("LMWiRe")
 # Installation
 
 ```{r, eval=FALSE}
-remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE)
+remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE, build_vignettes = TRUE)
 library("LMWiRe")
 ```
 
