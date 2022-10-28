@@ -1,7 +1,7 @@
 ---
 title: "Application of the LMWiRe package on the UCH dataset"
 author: "Benaiche Nadia, Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts Bernadette"
-date: '`r format(Sys.time(), "%B %d, %Y,%H:%M")`'
+date: '`r format(Sys.time(), "%B %d, %Y")`'
 package: LMWiRe
 output:
   BiocStyle::html_document:
@@ -53,6 +53,7 @@ rm(list=ls())
 library(pander)
 library(ggplot2)
 library(gridExtra)
+library(patchwork)
 ```
 
 
@@ -66,12 +67,19 @@ The model used in this example is a three-way ANOVA with fixed effects. This doc
 
 # Installation
 
-The package is actually in its development stage and is available on GitHub at the url: <https://github.com/ManonMartin/LMWiRe>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
+The package is actually in its development stage and is available on GitHub: <https://github.com/ManonMartin/LMWiRe>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
+
+```{r Install, eval=FALSE}
+if (!requireNamespace("remotes"))
+install.packages(pkgs="remotes", dependencies="Depends")
+remotes::install_github("ManonMartin/LMWiRe", 
+                        dependencies = TRUE)
+```
+
+Note that if you would like to build the vignettes, you have to install `BiocStyle` and `rmarkdown` packages before installing `LMWiRe` with the following command: `remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE, build_vignettes = TRUE)`.
 
 
-```{r Install, results=FALSE, message=FALSE}
-# if (!requireNamespace("remotes")) install.packages(pkgs="remotes", dependencies="Depends")
-# remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE, build_vignettes = TRUE)
+```{r Load, results=FALSE, message=FALSE}
 library("LMWiRe")
 ```
 
@@ -470,7 +478,7 @@ lmwLoading2dPlot(resASCA, effectNames = c("Hippurate"),
 
 ### Effects plot
 
-This function can only be applied to the `ASCA` method.
+The `lmwEffectPlot` function can only be applied with the `ASCA` method.
 
 #### Main effects
 
