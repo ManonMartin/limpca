@@ -8,6 +8,7 @@
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param title Plot title.
 #' @param points_labs_rn Boolean indicating if the rownames of the loadings matrix should be plotted.
+#' @param pl_n The number of rownames that should be plotted, based on a distance measure (*see* details)
 #' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
@@ -16,6 +17,9 @@
 #' @details
 #' `pcaLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
+#' The distance measure $d$ that is used to rank the variables is based on the following formula:
+#' $d = \sqrt(P_{ab}^2*\lambda_{ab}^2)$ where $a$ and $b$ are two selected Principal
+#' Components, $P_{ab}$ represents their loadings and $\lambda_{ab}$ their singular values.
 #'
 #' @examples
 #'
@@ -30,11 +34,21 @@
 #' title = "PCA loading plot UCH", metadata = metadata,
 #' color = "groups", shape = "groups")
 #'
+#' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+#' title = "PCA loading plot UCH", metadata = metadata,
+#' color = "groups", shape = "groups", points_labs_rn = TRUE)
+#'
+#' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+#' title = "PCA loading plot UCH", metadata = metadata,
+#' color = "groups", shape = "groups", points_labs_rn = TRUE,
+#' pl_n = 10)
+#'
 #' @import ggplot2
 
 pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA loading plot",
-                         points_labs_rn = FALSE, metadata = NULL, ...) {
+                         points_labs_rn = FALSE, pl_n = nrow(resPcaBySvd$loadings),
+                           metadata = NULL, ...) {
 
   mcall = as.list(match.call())[-1L]
 
@@ -43,6 +57,7 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
   checkArg(title,c("str", "length1"),can.be.null = FALSE)
   checkArg(points_labs_rn,c("bool"),can.be.null = FALSE)
+  checkArg(pl_n,c("int", "pos","length1"),can.be.null = FALSE)
   checkArg(metadata,"data.frame",can.be.null = TRUE)
 
   if (!identical(names(resPcaBySvd),c("scores","loadings","eigval","singvar",
@@ -74,6 +89,18 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
 
   pc_var_char <- paste0("PC", axes, " (",pc_var_char[axes], "%)")
 
+  # distance measure   ===================
+
+  load <- ResPCA$loadings[,axes]
+  singvar <- ResPCA$singvar[axes]
+
+  dista <- load^2%*%singvar^2
+
+  points_labels <- rownames(loadings)
+  # pl_n <- 10
+  ids <- order(dista, decreasing = TRUE)[1:pl_n]
+  points_labels[-ids] <- ""
+
   # graphical parameters   ===================
   xlab <- pc_var_char[1]
   ylab <- pc_var_char[2]
@@ -89,13 +116,13 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
         if (!"ylab" %in% names(mcall)){
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, xlab = xlab, ylab = ylab,
-                             points_labs = rownames(loadings),
+                             points_labs = points_labels,
                              design = metadata,
                              ...)
         }else{
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, xlab = xlab,
-                             points_labs = rownames(loadings),
+                             points_labs = points_labels,
                              design = metadata,
                              ...)
         }
@@ -103,13 +130,13 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
         if (!"ylab" %in% names(mcall)){
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, ylab = ylab,
-                             points_labs = rownames(loadings),
+                             points_labs = points_labels,
                              design = metadata,
                              ...)
         }else{
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes,
-                             points_labs = rownames(loadings),
+                             points_labs = points_labels,
                              design = metadata,
                              ...)
         }
