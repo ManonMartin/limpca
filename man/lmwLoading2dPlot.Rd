@@ -8,7 +8,9 @@ lmwLoading2dPlot(
   resLmwPcaEffects,
   effectNames = NULL,
   axes = c(1, 2),
-  vardata = NULL,
+  points_labs_rn = FALSE,
+  pl_n = 10,
+  metadata = NULL,
   ...
 )
 }
@@ -19,7 +21,11 @@ lmwLoading2dPlot(
 
 \item{axes}{A numerical vector with the 2 Principal Components axes to be drawn.}
 
-\item{vardata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
+\item{points_labs_rn}{Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the \code{points_labs} argument from \code{\link{plotScatter}}.}
+
+\item{pl_n}{The number of labels that should be plotted, based on a distance measure (\emph{see} Details).}
+
+\item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
@@ -31,6 +37,10 @@ Draws the Loading plots of each effect matrix provided in \code{\link{lmwPcaEffe
 }
 \details{
 \code{lmwLoading2dPlot} is a wrapper of \code{\link{plotScatter}}.
+
+The distance measure $d$ that is used to rank the variables is based on the following formula:
+$d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
+Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
 }
 \examples{
 
@@ -39,16 +49,19 @@ resLmwModelMatrix = lmwModelMatrix(UCH)
 resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 resASCA = lmwPcaEffects(resLmwEffectMatrices)
 
-# adding labels to points
-labels = substr(colnames(UCH$outcomes),1,4)
-ids <- order(resASCA$Hippurate$loadings[,1], decreasing = TRUE)[1:10]
-labels[-c(ids)] <- ""
-
-# adding (arbitrary) color and shape to points
-groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
-vardata <- data.frame(groups)
+# adding color, shape and labels to points
+id_hip <- c(126:156,362:375)
+peaks <- rep("other", ncol(UCH$outcomes))
+peaks[id_hip] <- "hip"
+metadata <- data.frame(peaks)
 
 lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-vardata = vardata, color = "groups", shape = "groups",
-points_labs = labels)
+metadata = metadata, points_labs_rn = TRUE, color="peaks",
+shape = "peaks")
+
+# changing max.overlaps of ggrepel
+options(ggrepel.max.overlaps = 30)
+lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
+metadata = metadata, points_labs_rn = TRUE, color="peaks",
+shape = "peaks", pl_n = 20)
 }

@@ -9,6 +9,7 @@ pcaLoading2dPlot(
   axes = c(1, 2),
   title = "PCA loading plot",
   points_labs_rn = FALSE,
+  pl_n = 10,
   metadata = NULL,
   ...
 )
@@ -20,7 +21,9 @@ pcaLoading2dPlot(
 
 \item{title}{Plot title.}
 
-\item{points_labs_rn}{Boolean indicating if the rownames of the loadings matrix should be plotted.}
+\item{points_labs_rn}{Boolean indicating if the labels should be plotted. By default, uses the row names of the loadings matrix but it can be manually specified with the \code{points_labs} argument from \code{\link{plotScatter}}.}
+
+\item{pl_n}{The number of labels that should be plotted, based on a distance measure (\emph{see} Details).}
 
 \item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
 
@@ -34,18 +37,38 @@ Produces loading plots from \code{\link{pcaBySvd}} with the same graphical optio
 }
 \details{
 \code{pcaLoading2dPlot} is a wrapper of \code{\link{plotScatter}}.
+
+The distance measure $d$ that is used to rank the variables is based on the following formula:
+$d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
+Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
 }
 \examples{
 
 data('UCH')
 ResPCA = pcaBySvd(UCH$outcomes)
 
-# adding (arbitrary) color and shape to points
-groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
-metadata <- data.frame(groups)
+pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+title = "PCA loading plot UCH")
+
+# adding color,  shape and labels to points
+id_cit <- 446:459
+id_hip <- c(126:156,362:375)
+peaks <- rep("other", ncol(UCH$outcomes))
+peaks[id_hip] <- "hip"
+peaks[id_cit] <- "cit"
+metadata <- data.frame(peaks)
 
 pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 title = "PCA loading plot UCH", metadata = metadata,
-color = "groups", shape = "groups")
+color = "peaks", shape = "peaks", points_labs_rn = TRUE)
+
+# changing max.overlaps of ggrepel
+options(ggrepel.max.overlaps = 30)
+pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+title = "PCA loading plot UCH", metadata = metadata,
+color = "peaks", shape = "peaks", points_labs_rn = TRUE,
+pl_n = 35)
+
+
 
 }

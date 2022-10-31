@@ -13,13 +13,14 @@
 #' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
 #' @param ylab If not \code{NULL}, label for the y-axis.
-#' @param size The points size.
-#' @param size_lab The size of points labels.
+#' @param size The points size, by default 2.
+#' @param size_lab The size of points labels, by default 3.
 #' @param drawShapes Multiple shapes can be drawn based on the `color`: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).
-#' @param typeEl The type of ellipse, either `norm` (multivariate normal distribution), `t` (multivariate t-distribution) or `euclid` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
-#' @param levelEl The confidence level at which to draw an ellipse.
-#' @param alphaPoly The degree of transparency for polygons.
-#' @param theme ggplot theme, see `?ggtheme` for more info.
+#' @param typeEl The type of ellipse, either `norm` (multivariate normal distribution, the default), `t` (multivariate t-distribution) or `euclid` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
+#' @param levelEl The confidence level at which to draw an ellipse, by default 0.9.
+#' @param alphaPoly The degree of transparency for polygons, by default 0.4.
+#' @param theme ggplot theme (default: `theme_bw()`), see `?ggtheme` for more info.
+#' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0).
 #'
 #' @return A scatter plot (ggplot).
 #'
@@ -80,7 +81,7 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
                                        "polygon", "segment"),
                         typeEl = c("norm","t","euclid"),
                         levelEl = 0.9, alphaPoly = 0.4,
-                        theme = theme_bw()) {
+                        theme = theme_bw(), drawOrigin = FALSE) {
 
   # checks ==============================
   checkArg(Y,"matrix",can.be.null = FALSE)
@@ -168,7 +169,14 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
                          ggplot2::aes_string(x=mn_xy[1],y=mn_xy[2],
                                              label = "points_labs",
                                              color = color,
-                                             shape = shape)) +
+                                             shape = shape))
+  if (drawOrigin){
+    fig <- fig +
+      geom_hline(yintercept = 0, linetype = 2, color = "gray70") +
+      geom_vline(xintercept = 0, linetype = 2, color = "gray80")
+  }
+
+  fig <- fig +
     ggplot2::geom_point(size=size) +
     labs(x = xlab, y = ylab, title = title) +
     theme
@@ -210,6 +218,7 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
                                   color = color))
     }
   }
+
 
 
   return(fig)

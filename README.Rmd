@@ -29,7 +29,7 @@ remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE)
 library("LMWiRe")
 ```
 
-Note that if you would like to build the vignettes, you have to install `BiocStyle` and `rmarkdown` packages before installing `LMWiRe` with the following command: `remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE, build_vignettes = TRUE)`.
+Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `LMWiRe` with the following command: `remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE, build_vignettes = TRUE)`.
 
 For any enquiry, you can send an email to the package authors: [bernadette.govaerts@uclouvain.be](mailto:bernadette.govaerts@uclouvain.be) ; [michel.thiel@uclouvain.be](mailto:michel.thiel@uclouvain.be) or [manon.martin@uclouvain.be](mailto:manon.martin@uclouvain.be)
 

@@ -7,7 +7,10 @@
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
-#' @param vardata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
+#' @param points_labs_rn Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
+#' @param pl_n The number of labels that should be plotted, based on a distance measure (*see* Details).
+#' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
+#' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
 #' @return A list of loading plots (ggplot).
@@ -15,6 +18,9 @@
 #' @details
 #' `lmwLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
+#' The distance measure $d$ that is used to rank the variables is based on the following formula:
+#' $d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
+#' Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
 #'
 #' @examples
 #'
@@ -23,22 +29,30 @@
 #' resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 #' resASCA = lmwPcaEffects(resLmwEffectMatrices)
 #'
-#' # adding labels to points
-#' labels = substr(colnames(UCH$outcomes),1,4)
-#' ids <- order(resASCA$Hippurate$loadings[,1], decreasing = TRUE)[1:10]
-#' labels[-c(ids)] <- ""
+#' lmwLoading2dPlot(resASCA,effectNames = "Hippurate")
 #'
-#' # adding (arbitrary) color and shape to points
-#' groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
-#' vardata <- data.frame(groups)
+#' # adding color, shape and labels to points
+#' id_hip <- c(126:156,362:375)
+#' peaks <- rep("other", ncol(UCH$outcomes))
+#' peaks[id_hip] <- "hip"
+#' metadata <- data.frame(peaks)
 #'
 #' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-#' vardata = vardata, color = "groups", shape = "groups",
-#' points_labs = labels)
-
+#' metadata = metadata, points_labs_rn = TRUE, color="peaks",
+#' shape = "peaks")
+#'
+#' # changing max.overlaps of ggrepel
+#' options(ggrepel.max.overlaps = 30)
+#' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
+#' metadata = metadata, points_labs_rn = TRUE, color="peaks",
+#' shape = "peaks", pl_n = 20)
 
 lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
-                         axes = c(1,2), vardata = NULL, ...) {
+                         axes = c(1,2),
+                         points_labs_rn = FALSE,
+                         pl_n = 10,
+                         metadata = NULL, drawOrigin = TRUE,
+                         ...) {
 
   mcall = as.list(match.call())[-1L]
 
@@ -46,7 +60,7 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
   checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
   checkArg(effectNames,c("str"),can.be.null = TRUE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
-  checkArg(vardata,"data.frame",can.be.null = TRUE)
+  checkArg(metadata,"data.frame",can.be.null = TRUE)
 
   if(!all(effectNames%in%names(resLmwPcaEffects))){stop("One of the effects from effectNames is not in resLmwPcaEffects.")}
 
@@ -61,7 +75,7 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
   }
 
 
-  # loadings
+  # loadings   ===================
 
   loadings <- lapply(effectNames, function(x) resLmwPcaEffects[[x]][["loadings"]])
   names(loadings) <- effectNames
@@ -74,6 +88,8 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
     stop(paste0("axes (",paste0(axes, collapse = ",")
                 ,") is beyond the ncol of loadings (",ncol(loadings),")"))
   }
+
+
 
   # percentage of explained variance   ===================
 
@@ -95,6 +111,26 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   pc_axes <- lapply(effectNames, pc_var_fun)
   names(pc_axes) <- effectNames
+
+
+  # distance measure and labels  ===================
+
+
+  if(!hasArg("points_labs")){
+    labs <- colnames(resLmwPcaEffects$lmwDataList$outcomes)
+  }
+
+  dist_labels_fun <- function(effect, axes, labs){
+    load <- resLmwPcaEffects[[effect]][["loadings"]][,axes]
+    singvar <- resLmwPcaEffects[[effect]][["singvar"]][axes]
+    dista <- load^2%*%singvar^2
+    ids <- order(dista, decreasing = TRUE)[1:pl_n]
+    labs[-ids] <- ""
+    labs
+  }
+
+  points_labels <- sapply(effectNames, dist_labels_fun,
+                          axes = axes, labs = labs, simplify = FALSE)
 
 
   # graphical parameters   ===================
@@ -126,27 +162,65 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
     # Building plots
 
-    if (!"xlab" %in% names(mcall)){
-      if (!"ylab" %in% names(mcall)){
-        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
-                           xlab = xlab_pc, ylab = ylab_pc,
-                           design = vardata, ...)
-      }else {
-        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
-                           xlab = xlab_pc,
-                           design = vardata, ...)
+    if (points_labs_rn){
+      if (!"xlab" %in% names(mcall)){
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             xlab = xlab_pc, ylab = ylab_pc,
+                             design = metadata,
+                             points_labs = points_labels[[effect]],
+                             drawOrigin = drawOrigin,
+                             ...)
+        }else {
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             xlab = xlab_pc,
+                             design = metadata,
+                             points_labs = points_labels[[effect]],
+                             drawOrigin = drawOrigin,
+                             ...)
+        }
+      }else{
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             ylab = ylab_pc,
+                             design = metadata,
+                             points_labs = points_labels[[effect]],
+                             drawOrigin = drawOrigin,
+                             ...)
+        }else {
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             design = metadata,
+                             points_labs = points_labels[[effect]],
+                             drawOrigin = drawOrigin,
+                             ...)
+        }
       }
-    }else{
-      if (!"ylab" %in% names(mcall)){
-        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
-                           ylab = ylab_pc,
-                           design = vardata, ...)
-      }else {
-        fig <- plotScatter(Y = loadings[[effect]], xy = axes,
-                           design = vardata, ...)
+    } else {
+      if (!"xlab" %in% names(mcall)){
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             xlab = xlab_pc, ylab = ylab_pc,
+                             design = metadata,
+                             drawOrigin = drawOrigin, ...)
+        }else {
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             xlab = xlab_pc,
+                             design = metadata,
+                             drawOrigin = drawOrigin, ...)
+        }
+      }else{
+        if (!"ylab" %in% names(mcall)){
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             ylab = ylab_pc,
+                             design = metadata,
+                             drawOrigin = drawOrigin, ...)
+        }else {
+          fig <- plotScatter(Y = loadings[[effect]], xy = axes,
+                             design = metadata,
+                             drawOrigin = drawOrigin, ...)
+        }
       }
     }
-
 
 
     fig <- fig + ylim(ylim_val) + xlim(xlim_val) + ggtitle(title)

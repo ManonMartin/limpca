@@ -341,6 +341,10 @@ lmwBootstrapTests = function(resLmwEffectMatrices,nboot=100,nCores=2, verbose = 
   rownames(resultsTable) = c("Bootstrap p-values", "% of variance (T III)")
   colnames(resultsTable) = c(resLmwEffectMatrices$effectsNamesUnique[-1],"Residuals")
 
+  resultsTable <- t(resultsTable)
+  resultsTable <- as.data.frame(resultsTable[,c(2,1)])
+  resultsTable[,1] <- as.numeric(resultsTable[,1])
+
   resLmwBootstrapTests = list(f.obs=Fobs,f.boot=Fboot,p.values=result,resultsTable=resultsTable)
 
   doParallel::stopImplicitCluster

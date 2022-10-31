@@ -7,9 +7,10 @@
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param title Plot title.
-#' @param points_labs_rn Boolean indicating if the rownames of the loadings matrix should be plotted.
-#' @param pl_n The number of rownames that should be plotted, based on a distance measure (*see* details)
+#' @param points_labs_rn Boolean indicating if the labels should be plotted. By default, uses the row names of the loadings matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
+#' @param pl_n The number of labels that should be plotted, based on a distance measure (*see* Details).
 #' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
+#' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
 #' @return A `ggplot` object with the PCA loading plot.
@@ -18,37 +19,44 @@
 #' `pcaLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
 #' The distance measure $d$ that is used to rank the variables is based on the following formula:
-#' $d = \sqrt(P_{ab}^2*\lambda_{ab}^2)$ where $a$ and $b$ are two selected Principal
-#' Components, $P_{ab}$ represents their loadings and $\lambda_{ab}$ their singular values.
+#' $d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
+#' Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
 #'
 #' @examples
 #'
 #' data('UCH')
 #' ResPCA = pcaBySvd(UCH$outcomes)
 #'
-#' # adding (arbitrary) color and shape to points
-#' groups <- rep(c(1,2), length.out = ncol(UCH$outcomes))
-#' metadata <- data.frame(groups)
+#' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+#' title = "PCA loading plot UCH")
+#'
+#' # adding color,  shape and labels to points
+#' id_cit <- 446:459
+#' id_hip <- c(126:156,362:375)
+#' peaks <- rep("other", ncol(UCH$outcomes))
+#' peaks[id_hip] <- "hip"
+#' peaks[id_cit] <- "cit"
+#' metadata <- data.frame(peaks)
 #'
 #' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 #' title = "PCA loading plot UCH", metadata = metadata,
-#' color = "groups", shape = "groups")
+#' color = "peaks", shape = "peaks", points_labs_rn = TRUE)
 #'
+#' # changing max.overlaps of ggrepel
+#' options(ggrepel.max.overlaps = 30)
 #' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 #' title = "PCA loading plot UCH", metadata = metadata,
-#' color = "groups", shape = "groups", points_labs_rn = TRUE)
+#' color = "peaks", shape = "peaks", points_labs_rn = TRUE,
+#' pl_n = 35)
 #'
-#' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
-#' title = "PCA loading plot UCH", metadata = metadata,
-#' color = "groups", shape = "groups", points_labs_rn = TRUE,
-#' pl_n = 10)
+#'
 #'
 #' @import ggplot2
 
 pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA loading plot",
-                         points_labs_rn = FALSE, pl_n = nrow(resPcaBySvd$loadings),
-                           metadata = NULL, ...) {
+                         points_labs_rn = FALSE, pl_n = 10,
+                         metadata = NULL, drawOrigin = TRUE, ...) {
 
   mcall = as.list(match.call())[-1L]
 
@@ -64,7 +72,7 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                                       "var","cumvar","original.dataset"))){
     stop("resPcaBySvd is not an output value of pcaBySvd")}
 
-  # loadings
+  # loadings   ===================
   loadings <- resPcaBySvd$loadings
   checkArg(loadings,c("matrix"),can.be.null = FALSE)
 
@@ -89,15 +97,16 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
 
   pc_var_char <- paste0("PC", axes, " (",pc_var_char[axes], "%)")
 
-  # distance measure   ===================
+  # distance measure and labels  ===================
 
   load <- ResPCA$loadings[,axes]
   singvar <- ResPCA$singvar[axes]
 
   dista <- load^2%*%singvar^2
 
-  points_labels <- rownames(loadings)
-  # pl_n <- 10
+  if(!hasArg("points_labs")){
+    points_labels <- rownames(loadings)
+  }
   ids <- order(dista, decreasing = TRUE)[1:pl_n]
   points_labels[-ids] <- ""
 
@@ -118,12 +127,14 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                              xy = axes, xlab = xlab, ylab = ylab,
                              points_labs = points_labels,
                              design = metadata,
+                             drawOrigin = drawOrigin,
                              ...)
         }else{
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, xlab = xlab,
                              points_labs = points_labels,
                              design = metadata,
+                             drawOrigin = drawOrigin,
                              ...)
         }
       }else{
@@ -132,12 +143,14 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                              xy = axes, ylab = ylab,
                              points_labs = points_labels,
                              design = metadata,
+                             drawOrigin = drawOrigin,
                              ...)
         }else{
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes,
                              points_labs = points_labels,
                              design = metadata,
+                             drawOrigin = drawOrigin,
                              ...)
         }
       }
@@ -147,21 +160,25 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
         if (!"ylab" %in% names(mcall)){
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, xlab = xlab, ylab = ylab,
-                             design = metadata,...)
+                             design = metadata,
+                             drawOrigin = drawOrigin,...)
         }else{
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, xlab = xlab,
-                             design = metadata,...)
+                             design = metadata,
+                             drawOrigin = drawOrigin,...)
         }
       }else{
         if (!"ylab" %in% names(mcall)){
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes, ylab = ylab,
-                             design = metadata,...)
+                             design = metadata,
+                             drawOrigin = drawOrigin,...)
         }else{
           fig <- plotScatter(Y = loadings, title = title,
                              xy = axes,
-                             design = metadata,...)
+                             design = metadata,
+                             drawOrigin = drawOrigin,...)
         }
       }
 
