@@ -9,6 +9,7 @@ pcaLoading2dPlot(
   axes = c(1, 2),
   title = "PCA loading plot",
   points_labs_rn = FALSE,
+  pl_n = nrow(resPcaBySvd$loadings),
   metadata = NULL,
   ...
 )
@@ -22,6 +23,8 @@ pcaLoading2dPlot(
 
 \item{points_labs_rn}{Boolean indicating if the rownames of the loadings matrix should be plotted.}
 
+\item{pl_n}{The number of rownames that should be plotted, based on a distance measure (\emph{see} details)}
+
 \item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
@@ -34,6 +37,11 @@ Produces loading plots from \code{\link{pcaBySvd}} with the same graphical optio
 }
 \details{
 \code{pcaLoading2dPlot} is a wrapper of \code{\link{plotScatter}}.
+
+The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
+\deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
+and \eqn{b}{b} are two selected Principal Components, \eqn{P_{ab}}{P_ab} represents their
+loadings and \eqn{\lambda_{ab}}{lambda_ab} their singular values.
 }
 \examples{
 
@@ -47,5 +55,14 @@ metadata <- data.frame(groups)
 pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 title = "PCA loading plot UCH", metadata = metadata,
 color = "groups", shape = "groups")
+
+pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+title = "PCA loading plot UCH", metadata = metadata,
+color = "groups", shape = "groups", points_labs_rn = TRUE)
+
+pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
+title = "PCA loading plot UCH", metadata = metadata,
+color = "groups", shape = "groups", points_labs_rn = TRUE,
+pl_n = 10)
 
 }

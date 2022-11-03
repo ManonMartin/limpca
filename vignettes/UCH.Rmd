@@ -51,9 +51,9 @@ rm(list=ls())
 
 ```{r}
 library(pander)
+library(knitr)
 library(ggplot2)
 library(gridExtra)
-library(patchwork)
 ```
 
 

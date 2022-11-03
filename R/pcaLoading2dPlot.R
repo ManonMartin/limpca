@@ -17,9 +17,10 @@
 #' @details
 #' `pcaLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
-#' The distance measure $d$ that is used to rank the variables is based on the following formula:
-#' $d = \sqrt(P_{ab}^2*\lambda_{ab}^2)$ where $a$ and $b$ are two selected Principal
-#' Components, $P_{ab}$ represents their loadings and $\lambda_{ab}$ their singular values.
+#' The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
+#' \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
+#' and \eqn{b}{b} are two selected Principal Components, \eqn{P_{ab}}{P_ab} represents their
+#' loadings and \eqn{\lambda_{ab}}{lambda_ab} their singular values.
 #'
 #' @examples
 #'
@@ -97,7 +98,7 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
   dista <- load^2%*%singvar^2
 
   points_labels <- rownames(loadings)
-  # pl_n <- 10
+
   ids <- order(dista, decreasing = TRUE)[1:pl_n]
   points_labels[-ids] <- ""
 
