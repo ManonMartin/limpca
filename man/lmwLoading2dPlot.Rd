@@ -8,9 +8,10 @@ lmwLoading2dPlot(
   resLmwPcaEffects,
   effectNames = NULL,
   axes = c(1, 2),
-  points_labs_rn = FALSE,
+  addRownames = FALSE,
   pl_n = 10,
   metadata = NULL,
+  drawOrigin = TRUE,
   ...
 )
 }
@@ -21,11 +22,13 @@ lmwLoading2dPlot(
 
 \item{axes}{A numerical vector with the 2 Principal Components axes to be drawn.}
 
-\item{points_labs_rn}{Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the \code{points_labs} argument from \code{\link{plotScatter}}.}
+\item{addRownames}{Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the \code{points_labs} argument from \code{\link{plotScatter}}.}
 
 \item{pl_n}{The number of labels that should be plotted, based on a distance measure (\emph{see} Details).}
 
 \item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
+
+\item{drawOrigin}{if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
@@ -38,9 +41,10 @@ Draws the Loading plots of each effect matrix provided in \code{\link{lmwPcaEffe
 \details{
 \code{lmwLoading2dPlot} is a wrapper of \code{\link{plotScatter}}.
 
-The distance measure $d$ that is used to rank the variables is based on the following formula:
-$d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
-Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
+The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
+\deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
+and \eqn{b}{b} are two selected Principal Components, \eqn{P_{ab}}{P_ab} represents their
+loadings and \eqn{\lambda_{ab}}{lambda_ab} their singular values.
 }
 \examples{
 
@@ -49,6 +53,8 @@ resLmwModelMatrix = lmwModelMatrix(UCH)
 resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
 resASCA = lmwPcaEffects(resLmwEffectMatrices)
 
+lmwLoading2dPlot(resASCA,effectNames = "Hippurate")
+
 # adding color, shape and labels to points
 id_hip <- c(126:156,362:375)
 peaks <- rep("other", ncol(UCH$outcomes))
@@ -56,12 +62,12 @@ peaks[id_hip] <- "hip"
 metadata <- data.frame(peaks)
 
 lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-metadata = metadata, points_labs_rn = TRUE, color="peaks",
+metadata = metadata, addRownames = TRUE, color="peaks",
 shape = "peaks")
 
 # changing max.overlaps of ggrepel
 options(ggrepel.max.overlaps = 30)
 lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-metadata = metadata, points_labs_rn = TRUE, color="peaks",
+metadata = metadata, addRownames = TRUE, color="peaks",
 shape = "peaks", pl_n = 20)
 }

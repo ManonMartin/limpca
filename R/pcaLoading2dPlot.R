@@ -7,7 +7,7 @@
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param title Plot title.
-#' @param points_labs_rn Boolean indicating if the labels should be plotted. By default, uses the row names of the loadings matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
+#' @param addRownames Boolean indicating if the labels should be plotted. By default, uses the row names of the loadings matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
 #' @param pl_n The number of labels that should be plotted, based on a distance measure (*see* Details).
 #' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
 #' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.
@@ -18,9 +18,10 @@
 #' @details
 #' `pcaLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
-#' The distance measure $d$ that is used to rank the variables is based on the following formula:
-#' $d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
-#' Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
+#' The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
+#' \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
+#' and \eqn{b}{b} are two selected Principal Components, \eqn{P_{ab}}{P_ab} represents their
+#' loadings and \eqn{\lambda_{ab}}{lambda_ab} their singular values.
 #'
 #' @examples
 #'
@@ -40,13 +41,13 @@
 #'
 #' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 #' title = "PCA loading plot UCH", metadata = metadata,
-#' color = "peaks", shape = "peaks", points_labs_rn = TRUE)
+#' color = "peaks", shape = "peaks", addRownames = TRUE)
 #'
 #' # changing max.overlaps of ggrepel
 #' options(ggrepel.max.overlaps = 30)
 #' pcaLoading2dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
 #' title = "PCA loading plot UCH", metadata = metadata,
-#' color = "peaks", shape = "peaks", points_labs_rn = TRUE,
+#' color = "peaks", shape = "peaks", addRownames = TRUE,
 #' pl_n = 35)
 #'
 #'
@@ -55,7 +56,7 @@
 
 pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
                          title = "PCA loading plot",
-                         points_labs_rn = FALSE, pl_n = 10,
+                         addRownames = FALSE, pl_n = 10,
                          metadata = NULL, drawOrigin = TRUE, ...) {
 
   mcall = as.list(match.call())[-1L]
@@ -64,7 +65,7 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
   checkArg(resPcaBySvd,c("list"),can.be.null = FALSE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
   checkArg(title,c("str", "length1"),can.be.null = FALSE)
-  checkArg(points_labs_rn,c("bool"),can.be.null = FALSE)
+  checkArg(addRownames,c("bool"),can.be.null = FALSE)
   checkArg(pl_n,c("int", "pos","length1"),can.be.null = FALSE)
   checkArg(metadata,"data.frame",can.be.null = TRUE)
 
@@ -104,11 +105,13 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
 
   dista <- load^2%*%singvar^2
 
-  if(!hasArg("points_labs")){
+  if(hasArg("points_labs")){
+    addRownames = FALSE
+  }else{
     points_labels <- rownames(loadings)
+    ids <- order(dista, decreasing = TRUE)[1:pl_n]
+    points_labels[-ids] <- ""
   }
-  ids <- order(dista, decreasing = TRUE)[1:pl_n]
-  points_labels[-ids] <- ""
 
   # graphical parameters   ===================
   xlab <- pc_var_char[1]
@@ -120,7 +123,7 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
   ylim1 <- max(abs(loadings[,axes[2]]))
   ylim_val <-  c(-ylim1,ylim1)
 
-    if (points_labs_rn){
+    if (addRownames){
       if (!"xlab" %in% names(mcall)){
         if (!"ylab" %in% names(mcall)){
           fig <- plotScatter(Y = loadings, title = title,

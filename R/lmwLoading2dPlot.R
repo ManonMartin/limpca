@@ -7,7 +7,7 @@
 #' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
-#' @param points_labs_rn Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
+#' @param addRownames Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
 #' @param pl_n The number of labels that should be plotted, based on a distance measure (*see* Details).
 #' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
 #' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.
@@ -18,9 +18,10 @@
 #' @details
 #' `lmwLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
-#' The distance measure $d$ that is used to rank the variables is based on the following formula:
-#' $d = \sqrt(P_{ij}^2*\lambda_{ij}^2)$ where $i$ and $j$ are two selected Principal
-#' Components, $P_{ij}$ represents their loadings matrix and $\lambda_{ij}$ their singular values vector.
+#' The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
+#' \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
+#' and \eqn{b}{b} are two selected Principal Components, \eqn{P_{ab}}{P_ab} represents their
+#' loadings and \eqn{\lambda_{ab}}{lambda_ab} their singular values.
 #'
 #' @examples
 #'
@@ -38,18 +39,18 @@
 #' metadata <- data.frame(peaks)
 #'
 #' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-#' metadata = metadata, points_labs_rn = TRUE, color="peaks",
+#' metadata = metadata, addRownames = TRUE, color="peaks",
 #' shape = "peaks")
 #'
 #' # changing max.overlaps of ggrepel
 #' options(ggrepel.max.overlaps = 30)
 #' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
-#' metadata = metadata, points_labs_rn = TRUE, color="peaks",
+#' metadata = metadata, addRownames = TRUE, color="peaks",
 #' shape = "peaks", pl_n = 20)
 
 lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
                          axes = c(1,2),
-                         points_labs_rn = FALSE,
+                         addRownames = FALSE,
                          pl_n = 10,
                          metadata = NULL, drawOrigin = TRUE,
                          ...) {
@@ -115,22 +116,25 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   # distance measure and labels  ===================
 
+  if(hasArg("points_labs")){
+    addRownames = FALSE
+  }else{
+      labs <- colnames(resLmwPcaEffects$lmwDataList$outcomes)
+      dist_labels_fun <- function(effect, axes, labs){
+        load <- resLmwPcaEffects[[effect]][["loadings"]][,axes]
+        singvar <- resLmwPcaEffects[[effect]][["singvar"]][axes]
+        dista <- load^2%*%singvar^2
+        ids <- order(dista, decreasing = TRUE)[1:pl_n]
+        labs[-ids] <- ""
+        labs
+      }
 
-  if(!hasArg("points_labs")){
-    labs <- colnames(resLmwPcaEffects$lmwDataList$outcomes)
-  }
+      points_labels <- sapply(effectNames, dist_labels_fun,
+                              axes = axes, labs = labs, simplify = FALSE)
+      }
 
-  dist_labels_fun <- function(effect, axes, labs){
-    load <- resLmwPcaEffects[[effect]][["loadings"]][,axes]
-    singvar <- resLmwPcaEffects[[effect]][["singvar"]][axes]
-    dista <- load^2%*%singvar^2
-    ids <- order(dista, decreasing = TRUE)[1:pl_n]
-    labs[-ids] <- ""
-    labs
-  }
 
-  points_labels <- sapply(effectNames, dist_labels_fun,
-                          axes = axes, labs = labs, simplify = FALSE)
+
 
 
   # graphical parameters   ===================
@@ -162,7 +166,7 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
     # Building plots
 
-    if (points_labs_rn){
+    if (addRownames){
       if (!"xlab" %in% names(mcall)){
         if (!"ylab" %in% names(mcall)){
           fig <- plotScatter(Y = loadings[[effect]], xy = axes,

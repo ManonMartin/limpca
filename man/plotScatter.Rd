@@ -20,7 +20,8 @@ plotScatter(
   typeEl = c("norm", "t", "euclid"),
   levelEl = 0.9,
   alphaPoly = 0.4,
-  theme = theme_bw()
+  theme = theme_bw(),
+  drawOrigin = FALSE
 )
 }
 \arguments{
@@ -42,19 +43,21 @@ plotScatter(
 
 \item{ylab}{If not \code{NULL}, label for the y-axis.}
 
-\item{size}{The points size.}
+\item{size}{The points size, by default 2.}
 
-\item{size_lab}{The size of points labels.}
+\item{size_lab}{The size of points labels, by default 3.}
 
 \item{drawShapes}{Multiple shapes can be drawn based on the \code{color}: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).}
 
-\item{typeEl}{The type of ellipse, either \code{norm} (multivariate normal distribution), \code{t} (multivariate t-distribution) or \code{euclid} (draws a circle with the radius equal to level, representing the euclidean distance from the center).}
+\item{typeEl}{The type of ellipse, either \code{norm} (multivariate normal distribution, the default), \code{t} (multivariate t-distribution) or \code{euclid} (draws a circle with the radius equal to level, representing the euclidean distance from the center).}
 
-\item{levelEl}{The confidence level at which to draw an ellipse.}
+\item{levelEl}{The confidence level at which to draw an ellipse, by default 0.9.}
 
-\item{alphaPoly}{The degree of transparency for polygons.}
+\item{alphaPoly}{The degree of transparency for polygons, by default 0.4.}
 
-\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
+\item{theme}{ggplot theme (default: \code{theme_bw()}), see \code{?ggtheme} for more info.}
+
+\item{drawOrigin}{if \code{TRUE}, draws horizontal and vertical intercepts at (0,0).}
 }
 \value{
 A scatter plot (ggplot).

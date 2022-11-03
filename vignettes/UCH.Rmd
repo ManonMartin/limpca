@@ -466,12 +466,21 @@ lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
 Finally the loadings could also be represented as a scatter plot.
 
 ```{r ASCA loadings}
+lmwLoading2dPlot(resLmwPcaEffects=resASCA, 
+                 effectNames = c("Hippurate"), 
+                 axes = c(1,2))
 
-# adding labels to points for the Hippurate peaks
+lmwLoading2dPlot(resLmwPcaEffects=resASCA, 
+                 effectNames = c("Hippurate"), 
+                 axes = c(1,2), 
+                 addRownames = TRUE,pl_n = 10)
+
+# adding manually labels to points for the Hippurate peaks
 labels = substr(colnames(UCH$outcomes),1,4)
 labels[-c(369, 132, 150, 133, 149, 144, 145, 368, 151)] <- ""
 
-lmwLoading2dPlot(resASCA, effectNames = c("Hippurate"), 
+lmwLoading2dPlot(resLmwPcaEffects=resASCA, 
+                 effectNames = c("Hippurate"), 
                  axes = c(1,2), points_labs = labels)
 ```
 
