@@ -1,10 +1,10 @@
-contrastSS = function(resLmwModelMatrix){
+contrastSS = function(resLmpModelMatrix){
 
   # Attributing name
-  design = resLmwModelMatrix$lmwDataList$design
-  modelMatrixByEffect = resLmwModelMatrix$modelMatrixByEffect
-  effectsNamesUnique = resLmwModelMatrix$effectsNamesUnique
-  effectsNamesAll = resLmwModelMatrix$effectsNamesAll
+  design = resLmpModelMatrix$LmpDataList$design
+  modelMatrixByEffect = resLmpModelMatrix$modelMatrixByEffect
+  effectsNamesUnique = resLmpModelMatrix$effectsNamesUnique
+  effectsNamesAll = resLmpModelMatrix$effectsNamesAll
   neffect = length(effectsNamesUnique)
   nparam = length(effectsNamesAll)
 

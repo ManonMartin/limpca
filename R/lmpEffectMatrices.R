@@ -1,16 +1,16 @@
-#' @export lmwEffectMatrices
+#' @export lmpEffectMatrices
 #' @title Computes the effect matrices
 #'
 #' @description
-#' Estimates by OLS the effect matrices **M^(_0)**, **M^(_1)**, ...**M^(_f)**, ...**M^(_E)** for the outcomes and design matrix provided in object `resLmwModelMatrix` and calculates the linked percentage of variances.
+#' Estimates by OLS the effect matrices **M^(_0)**, **M^(_1)**, ...**M^(_f)**, ...**M^(_E)** for the outcomes and design matrix provided in object `resLmpModelMatrix` and calculates the linked percentage of variances.
 #'
-#' @param resLmwModelMatrix A list of 5 elements from \code{\link{lmwModelMatrix}}.
+#' @param resLmpModelMatrix A list of 5 elements from \code{\link{lmpModelMatrix}}.
 #' @param SS Logical. If `FALSE`, won't compute the percentage of variance for each effect.
 #' @param contrastList A list of contrast for each parameter. If `NA`, the function creates automatically the list by default.
 #'
 #' @return A list with the following elements:
 #'  \describe{
-#'    \item{\code{lmwDataList}}{The initial object: a list with outcomes, design and formula.}
+#'    \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula.}
 #'    \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
 #'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each effect.}
 #'    \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
@@ -26,35 +26,35 @@
 #'
 #' @examples
 #'  data('UCH')
-#'  resLmwModelMatrix <- lmwModelMatrix(UCH)
-#'  lmwEffectMatrices(resLmwModelMatrix)
+#'  resLmpModelMatrix <- lmpModelMatrix(UCH)
+#'  lmpEffectMatrices(resLmpModelMatrix)
 #'
 #' @import stringr
 #' @importFrom plyr laply aaply
 
 
 
-lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
+lmpEffectMatrices = function(resLmpModelMatrix, SS=TRUE, contrastList=NA){
 
   #Checking the object
-  if(!is.list(resLmwModelMatrix)){stop("Argument resLmwModelMatrix is not a list")}
-  if(length(resLmwModelMatrix)!=5){stop("List does not contain 5 elements")}
-  if(names(resLmwModelMatrix)[1]!="lmwDataList"|
-     names(resLmwModelMatrix)[2]!="modelMatrix"|
-     names(resLmwModelMatrix)[3]!="modelMatrixByEffect"|
-     names(resLmwModelMatrix)[4]!="effectsNamesUnique"|
-     names(resLmwModelMatrix)[5]!="effectsNamesAll"){stop("Argument is not a resLmwModelMatrix object")}
+  if(!is.list(resLmpModelMatrix)){stop("Argument resLmpModelMatrix is not a list")}
+  if(length(resLmpModelMatrix)!=5){stop("List does not contain 5 elements")}
+  if(names(resLmpModelMatrix)[1]!="lmpDataList"|
+     names(resLmpModelMatrix)[2]!="modelMatrix"|
+     names(resLmpModelMatrix)[3]!="modelMatrixByEffect"|
+     names(resLmpModelMatrix)[4]!="effectsNamesUnique"|
+     names(resLmpModelMatrix)[5]!="effectsNamesAll"){stop("Argument is not a resLmpModelMatrix object")}
   checkArg(SS,c("bool","length1"),can.be.null=FALSE)
 
   #Attribute a name in the function environment
-  formula = resLmwModelMatrix$lmwDataList$formula
-  design = resLmwModelMatrix$lmwDataList$design
-  outcomes = resLmwModelMatrix$lmwDataList$outcomes
-  lmwDataList = resLmwModelMatrix$lmwDataList
-  modelMatrix = resLmwModelMatrix$modelMatrix
-  modelMatrixByEffect = resLmwModelMatrix$modelMatrixByEffect
-  effectsNamesAll = resLmwModelMatrix$effectsNamesAll
-  effectsNamesUnique = resLmwModelMatrix$effectsNamesUnique
+  formula = resLmpModelMatrix$lmpDataList$formula
+  design = resLmpModelMatrix$lmpDataList$design
+  outcomes = resLmpModelMatrix$lmpDataList$outcomes
+  lmpDataList = resLmpModelMatrix$lmpDataList
+  modelMatrix = resLmpModelMatrix$modelMatrix
+  modelMatrixByEffect = resLmpModelMatrix$modelMatrixByEffect
+  effectsNamesAll = resLmpModelMatrix$effectsNamesAll
+  effectsNamesUnique = resLmpModelMatrix$effectsNamesUnique
   nEffect <- length(effectsNamesUnique)
 
   #Creating empty effects matrices
@@ -84,7 +84,7 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
     }
 
 
-  resLmwEffectMatrices = list(lmwDataList = lmwDataList,
+  resLmpEffectMatrices = list(lmpDataList = lmpDataList,
                              modelMatrix = modelMatrix,
                              modelMatrixByEffect = modelMatrixByEffect,
                              effectsNamesUnique = effectsNamesUnique,
@@ -96,11 +96,11 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
 
   # Compute the Sum of Squares Type 3
   if(SS==TRUE){
-    if(is.na(contrastList)){L = contrastSS(resLmwModelMatrix)}else{L = contrastList}
-    resLmwSS = lmwSS(resLmwEffectMatrices,L)
+    if(is.na(contrastList)){L = contrastSS(resLmpModelMatrix)}else{L = contrastList}
+    resLmpSS = lmpSS(resLmpEffectMatrices,L)
 
     # Plot of the total contribution
-    contrib <- as.data.frame(resLmwSS$variationPercentages)
+    contrib <- as.data.frame(resLmpSS$variationPercentages)
     rownames(contrib) = ModelAbbrev(rownames(contrib))
 
     plot <- ggplot2::ggplot(data=contrib,
@@ -111,12 +111,12 @@ lmwEffectMatrices = function(resLmwModelMatrix, SS=TRUE, contrastList=NA){
       ggplot2::ylab("Percentage of Variance")+
       ggplot2::theme_bw()
 
-    resLmwEffectMatrices = c(resLmwEffectMatrices,resLmwSS,
+    resLmpEffectMatrices = c(resLmpEffectMatrices,resLmpSS,
                              varPercentagesPlot = list(plot))
   }else{
-    resLmwEffectMatrices = c(resLmwEffectMatrices,type3SS=NA,
+    resLmpEffectMatrices = c(resLmpEffectMatrices,type3SS=NA,
                              variationPercentages=NA,varPercentagesPlot=NA)
   }
 
-  return(resLmwEffectMatrices)
+  return(resLmpEffectMatrices)
 }

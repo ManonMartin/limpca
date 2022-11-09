@@ -1,11 +1,11 @@
-#' @export lmwContributions
+#' @export lmpContributions
 #' @title Summary of the contributions of each effect
 #'
 #' @description
 #' Reports the contribution of each effect to the total variance, but also the contribution of each principal component to the total variance per effect. Moreover, these contributions are summarized in a barplot.
 #' Only meaningful for ASCA and ASCA-E methods since the principal components are derived from the pure effect matrices.
 #'
-#' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
+#' @param resLmpPcaEffects A list corresponding to the output value of \code{\link{lmpPcaEffects}}.
 #' @param nPC The number of Principal Components to display.
 #'
 #' @return A list of:
@@ -21,35 +21,35 @@
 #'
 #' @examples
 #' data('UCH')
-#' resLmwModelMatrix = lmwModelMatrix(UCH)
-#' resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#' resLmwPcaEffects = lmwPcaEffects(resLmwEffectMatrices, method="ASCA-E")
+#' resLmpModelMatrix = lmpModelMatrix(UCH)
+#' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+#' resLmpPcaEffects = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
 #'
-#' lmwContributions(resLmwPcaEffects)
+#' lmpContributions(resLmpPcaEffects)
 #'
 #' @import ggplot2
 
-lmwContributions=function(resLmwPcaEffects, nPC=5){
+lmpContributions=function(resLmpPcaEffects, nPC=5){
 
-  if (resLmwPcaEffects$method == "APCA"){
+  if (resLmpPcaEffects$method == "APCA"){
     stop("Tying to comupte the contributions based on the APCA method.
         The contribution of each principal component to the total variance
         per effect is only meaningful for ASCA and ASCA-E methods since
         the principal components are then derived from the
         pure effect matrices.")
   }
-  neffect = length(resLmwPcaEffects$effectsNamesUnique)
+  neffect = length(resLmpPcaEffects$effectsNamesUnique)
 
   # Effect table with the total contribution ===============
   total_contrib_table = matrix(data=NA,nrow=neffect,ncol=1)
-  rownames(total_contrib_table) = c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals")
+  rownames(total_contrib_table) = c(names(resLmpPcaEffects)[1:(neffect-1)], "Residuals")
   colnames(total_contrib_table) = "Percentage of Variance"
 
-  total_contrib_table[,1] = round(resLmwPcaEffects$variationPercentages, 2)
+  total_contrib_table[,1] = round(resLmpPcaEffects$variationPercentages, 2)
 
   # Effect table with the variance of each component ===============
   effect_table = matrix(data=NA,nrow=neffect,ncol=(nPC+1))
-  rownames(effect_table) = c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals")
+  rownames(effect_table) = c(names(resLmpPcaEffects)[1:(neffect-1)], "Residuals")
 
   # Colnames
   temp_colnames = vector()
@@ -61,9 +61,9 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
 
   # Filling table
   for(i in 1:(neffect-1)){
-    effect_table[i,1:nPC] = round(resLmwPcaEffects[[i]]$var[1:nPC],2)
+    effect_table[i,1:nPC] = round(resLmpPcaEffects[[i]]$var[1:nPC],2)
   }
-  effect_table[neffect,1:nPC] = round(resLmwPcaEffects[["Residuals"]]$var[1:nPC],2)
+  effect_table[neffect,1:nPC] = round(resLmpPcaEffects[["Residuals"]]$var[1:nPC],2)
   effect_table[,nPC+1] = c(rep(0,neffect))
   effect_table[,nPC+1] = apply(X=effect_table,MARGIN = 1,sum)
 
@@ -72,31 +72,31 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   # to the variance of the effect ===============
 
   contrib_table = matrix(data=NA,nrow=neffect,(nPC+1))
-  rownames(contrib_table) = c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals")
+  rownames(contrib_table) = c(names(resLmpPcaEffects)[1:(neffect-1)], "Residuals")
   temp_colnames = c(temp_colnames[1:nPC],"Contrib")
   colnames(contrib_table) = temp_colnames
 
   # Filling table
   for(i in 1:neffect){
-    contrib_table[i,1:nPC] = (effect_table[i,1:nPC]*resLmwPcaEffects$variationPercentages[i])/100
+    contrib_table[i,1:nPC] = (effect_table[i,1:nPC]*resLmpPcaEffects$variationPercentages[i])/100
   }
 
-  contrib_table[,(nPC+1)] = resLmwPcaEffects$variationPercentages
+  contrib_table[,(nPC+1)] = resLmpPcaEffects$variationPercentages
   contrib_table = round(contrib_table,2)
 
 
   # Effect table for combined effects ===============
-  if(length(resLmwPcaEffects)-5 != length(resLmwPcaEffects$effectsNamesUnique)){
-    neffectTot = length(resLmwPcaEffects)-5
+  if(length(resLmpPcaEffects)-5 != length(resLmpPcaEffects$effectsNamesUnique)){
+    neffectTot = length(resLmpPcaEffects)-5
     neffectComb = neffectTot - neffect
 
     combinedEffect_table = matrix(data=NA,nrow=neffectComb,ncol=(nPC+1))
-    rownames(combinedEffect_table) = names(resLmwPcaEffects)[neffect:(neffectTot-1)]
+    rownames(combinedEffect_table) = names(resLmpPcaEffects)[neffect:(neffectTot-1)]
     temp_colnames = c(temp_colnames[1:nPC],"Sum")
     colnames(combinedEffect_table) = temp_colnames
 
     # Filling table
-    resCombined = resLmwPcaEffects[neffect:(neffectTot-1)]
+    resCombined = resLmpPcaEffects[neffect:(neffectTot-1)]
 
     for(i in 1:length(resCombined)){
       combinedEffect_table[i,1:nPC] = round(resCombined[[i]]$var[1:nPC],2)
@@ -110,9 +110,9 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
   # Plots ===============
 
   # Plot of the total contribution
-  effect_name = ModelAbbrev(c(names(resLmwPcaEffects)[1:(neffect-1)], "Residuals"))
+  effect_name = ModelAbbrev(c(names(resLmpPcaEffects)[1:(neffect-1)], "Residuals"))
   dataTotal <- data.frame(effects = effect_name,
-                          varPercentage = unname(resLmwPcaEffects$variationPercentages))
+                          varPercentage = unname(resLmpPcaEffects$variationPercentages))
 
   plotTotal <- ggplot2::ggplot(data=dataTotal, ggplot2::aes(x=reorder(effects, -varPercentage),y=varPercentage))+
     ggplot2::geom_bar(stat="identity")+
@@ -145,22 +145,22 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
 
   # Output
 
-  if(all(is.na(resLmwPcaEffects$type3SS)) & all(is.na(resLmwPcaEffects$variationPercentages))){
+  if(all(is.na(resLmpPcaEffects$type3SS)) & all(is.na(resLmpPcaEffects$variationPercentages))){
     if(is.null(combinedEffect_table)){
-      resLmwContributions=list(effectTable=effect_table)
+      resLmpContributions=list(effectTable=effect_table)
     }else{
-      resLmwContributions=list(effectTable=effect_table,
+      resLmpContributions=list(effectTable=effect_table,
                                combinedEffectTable=combinedEffect_table)
     }
   }else{
     if(is.null(combinedEffect_table)){
-      resLmwContributions=list(totalContribTable=total_contrib_table,
+      resLmpContributions=list(totalContribTable=total_contrib_table,
                                effectTable=effect_table,
                                contribTable=contrib_table,
                                plotTotal=plotTotal,
                                plotContrib=plotContrib)
     }else{
-        resLmwContributions=list(totalContribTable=total_contrib_table,
+        resLmpContributions=list(totalContribTable=total_contrib_table,
                                  effectTable=effect_table,
                                  contribTable=contrib_table,
                                  combinedEffectTable=combinedEffect_table,
@@ -169,5 +169,5 @@ lmwContributions=function(resLmwPcaEffects, nPC=5){
     }
   }
 
-  return(resLmwContributions)
+  return(resLmpContributions)
 }

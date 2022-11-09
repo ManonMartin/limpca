@@ -1,10 +1,10 @@
-#' @export lmwLoading2dPlot
+#' @export lmpLoading2dPlot
 #' @title Loading plots on a 2D scatter plot
 #'
 #' @description
-#' Draws the Loading plots of each effect matrix provided in \code{\link{lmwPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
+#' Draws the Loading plots of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
 #'
-#' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
+#' @param resLmpPcaEffects A list corresponding to the output value of \code{\link{lmpPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param addRownames Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
@@ -16,7 +16,7 @@
 #' @return A list of loading plots (ggplot).
 #'
 #' @details
-#' `lmwLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
+#' `lmpLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
 #'
 #' The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
 #' \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
@@ -26,11 +26,11 @@
 #' @examples
 #'
 #' data('UCH')
-#' resLmwModelMatrix = lmwModelMatrix(UCH)
-#' resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#' resASCA = lmwPcaEffects(resLmwEffectMatrices)
+#' resLmpModelMatrix = lmpModelMatrix(UCH)
+#' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+#' resASCA = lmpPcaEffects(resLmpEffectMatrices)
 #'
-#' lmwLoading2dPlot(resASCA,effectNames = "Hippurate")
+#' lmpLoading2dPlot(resASCA,effectNames = "Hippurate")
 #'
 #' # adding color, shape and labels to points
 #' id_hip <- c(126:156,362:375)
@@ -38,17 +38,17 @@
 #' peaks[id_hip] <- "hip"
 #' metadata <- data.frame(peaks)
 #'
-#' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
+#' lmpLoading2dPlot(resASCA,effectNames = "Hippurate",
 #' metadata = metadata, addRownames = TRUE, color="peaks",
 #' shape = "peaks")
 #'
 #' # changing max.overlaps of ggrepel
 #' options(ggrepel.max.overlaps = 30)
-#' lmwLoading2dPlot(resASCA,effectNames = "Hippurate",
+#' lmpLoading2dPlot(resASCA,effectNames = "Hippurate",
 #' metadata = metadata, addRownames = TRUE, color="peaks",
 #' shape = "peaks", pl_n = 20)
 
-lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
+lmpLoading2dPlot <- function(resLmpPcaEffects, effectNames = NULL,
                          axes = c(1,2),
                          addRownames = FALSE,
                          pl_n = 10,
@@ -58,19 +58,19 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
   mcall = as.list(match.call())[-1L]
 
   # checks ===================
-  checkArg(resLmwPcaEffects,c("list"),can.be.null = FALSE)
+  checkArg(resLmpPcaEffects,c("list"),can.be.null = FALSE)
   checkArg(effectNames,c("str"),can.be.null = TRUE)
   checkArg(axes,c("int","pos"),can.be.null = FALSE)
   checkArg(metadata,"data.frame",can.be.null = TRUE)
 
-  if(!all(effectNames%in%names(resLmwPcaEffects))){stop("One of the effects from effectNames is not in resLmwPcaEffects.")}
+  if(!all(effectNames%in%names(resLmpPcaEffects))){stop("One of the effects from effectNames is not in resLmpPcaEffects.")}
 
-  if (!identical(names(resLmwPcaEffects[(length(resLmwPcaEffects)-5):length(resLmwPcaEffects)]),
-                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
-    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
+  if (!identical(names(resLmpPcaEffects[(length(resLmpPcaEffects)-5):length(resLmpPcaEffects)]),
+                 c("Residuals","lmpDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")}
 
   if(is.null(effectNames)){
-    effectNames <- resLmwPcaEffects$effectsNamesUnique
+    effectNames <- resLmpPcaEffects$effectsNamesUnique
     effectNames <- effectNames[effectNames != "Intercept"]
     effectNames <- c(effectNames, "Residuals")
   }
@@ -78,7 +78,7 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   # loadings   ===================
 
-  loadings <- lapply(effectNames, function(x) resLmwPcaEffects[[x]][["loadings"]])
+  loadings <- lapply(effectNames, function(x) resLmpPcaEffects[[x]][["loadings"]])
   names(loadings) <- effectNames
 
   if (length(axes) !=2){
@@ -96,7 +96,7 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   pc_var_fun <- function(effect){
 
-    pc_var <- resLmwPcaEffects[[effect]][["var"]]
+    pc_var <- resLmpPcaEffects[[effect]][["var"]]
     pc_var_x <- format(pc_var[pc_var>=0.1],digits = 2, trim=TRUE)
     pc_var_y <- format(pc_var[pc_var<0.1],digits = 2,
                        scientific = TRUE, trim=TRUE)
@@ -119,10 +119,10 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
   if(hasArg("points_labs")){
     addRownames = FALSE
   }else{
-      labs <- colnames(resLmwPcaEffects$lmwDataList$outcomes)
+      labs <- colnames(resLmpPcaEffects$lmpDataList$outcomes)
       dist_labels_fun <- function(effect, axes, labs){
-        load <- resLmwPcaEffects[[effect]][["loadings"]][,axes]
-        singvar <- resLmwPcaEffects[[effect]][["singvar"]][axes]
+        load <- resLmpPcaEffects[[effect]][["loadings"]][,axes]
+        singvar <- resLmpPcaEffects[[effect]][["singvar"]][axes]
         dista <- load^2%*%singvar^2
         ids <- order(dista, decreasing = TRUE)[1:pl_n]
         labs[-ids] <- ""
@@ -141,27 +141,27 @@ lmwLoading2dPlot <- function(resLmwPcaEffects, effectNames = NULL,
 
   buildFig <- function(effect){
 
-    title = paste(effect, ":", resLmwPcaEffects$method, "loading plot")
+    title = paste(effect, ":", resLmpPcaEffects$method, "loading plot")
 
     xlab_pc <- pc_axes[[effect]][1]
     ylab_pc <- pc_axes[[effect]][2]
 
-    xlim_val = c(1.4*min(resLmwPcaEffects[[effect]][["loadings"]][,axes[1]]),
-                 1.4*max(resLmwPcaEffects[[effect]][["loadings"]][,axes[1]]))
+    xlim_val = c(1.4*min(resLmpPcaEffects[[effect]][["loadings"]][,axes[1]]),
+                 1.4*max(resLmpPcaEffects[[effect]][["loadings"]][,axes[1]]))
 
     # Checking the second component
-    if(resLmwPcaEffects$method != "APCA"){
-      if(resLmwPcaEffects[[effect]][["var"]][axes[2]]<1){
+    if(resLmpPcaEffects$method != "APCA"){
+      if(resLmpPcaEffects[[effect]][["var"]][axes[2]]<1){
         warning("The variance of PC2 is inferior to 1%. Graph scaled")
-        ylim_val = c(100*min(resLmwPcaEffects[[effect]][["loadings"]][,axes[2]]),
-                     100*max(resLmwPcaEffects[[effect]][["loadings"]][,axes[2]]))
+        ylim_val = c(100*min(resLmpPcaEffects[[effect]][["loadings"]][,axes[2]]),
+                     100*max(resLmpPcaEffects[[effect]][["loadings"]][,axes[2]]))
       }else{
-        ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][["loadings"]][,axes[2]]),
-                     1.4*max(resLmwPcaEffects[[effect]][["loadings"]][,axes[2]]))
+        ylim_val = c(1.4*min(resLmpPcaEffects[[effect]][["loadings"]][,axes[2]]),
+                     1.4*max(resLmpPcaEffects[[effect]][["loadings"]][,axes[2]]))
       }
     }else{
-      ylim_val = c(1.4*min(resLmwPcaEffects[[effect]][["loadings"]][,axes[2]]),
-                   1.4*max(resLmwPcaEffects[[effect]][["loadings"]][,axes[2]]))
+      ylim_val = c(1.4*min(resLmpPcaEffects[[effect]][["loadings"]][,axes[2]]),
+                   1.4*max(resLmpPcaEffects[[effect]][["loadings"]][,axes[2]]))
     }
 
     # Building plots

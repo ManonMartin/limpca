@@ -1,10 +1,10 @@
-#' @export lmwScreePlot
+#' @export lmpScreePlot
 #' @title Scree Plot
 #'
 #' @description
-#' Plots barplots of the percentage of variance associated with each principal component and for each matrix effect on the basis of \code{\link{lmwContributions}} outputs.
+#' Plots barplots of the percentage of variance associated with each principal component and for each matrix effect on the basis of \code{\link{lmpContributions}} outputs.
 #'
-#' @param resLmwContributions A resLmwContributions list from the function \code{\link{lmwContributions}}.
+#' @param resLLmpContributions A resLLmpContributions list from the function \code{\link{lmpContributions}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.
 #' @param nPC An integer with the number of components to plot.
 #' @param theme `ggplot` theme
@@ -14,33 +14,33 @@
 #' @examples
 #'
 #'  data('UCH')
-#'  resLmwModelMatrix = lmwModelMatrix(UCH)
-#'  resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#'  resASCAE = lmwPcaEffects(resLmwEffectMatrices, method="ASCA-E")
-#'  resLmwContributions = lmwContributions(resASCAE)
-#'  lmwScreePlot(resLmwContributions, effectNames ="Hippurate:Citrate", nPC=4)
+#'  resLLmpModelMatrix = lmpModelMatrix(UCH)
+#'  resLLmpEffectMatrices = lmpEffectMatrices(resLLmpModelMatrix)
+#'  resASCAE = lmpPcaEffects(resLLmpEffectMatrices, method="ASCA-E")
+#'  resLLmpContributions = lmpContributions(resASCAE)
+#'  lmpScreePlot(resLLmpContributions, effectNames ="Hippurate:Citrate", nPC=4)
 #'
 #' @import ggplot2
 
-lmwScreePlot = function(resLmwContributions, effectNames = NULL,
+lmpScreePlot = function(resLLmpContributions, effectNames = NULL,
                         nPC=5, theme = theme_bw()){
 
   # checks ===================
-  checkArg(resLmwContributions,c("list"),can.be.null=FALSE)
+  checkArg(resLLmpContributions,c("list"),can.be.null=FALSE)
   checkArg(effectNames,c("str"),can.be.null=TRUE)
   checkArg(nPC,c("num","pos"),can.be.null=FALSE)
 
-  effectTable = resLmwContributions$effectTable
+  effectTable = resLLmpContributions$effectTable
   if(!nPC < ncol(effectTable)){
-    stop("nPC must be inferior or equal to the nPC chosen in lmwContributions")
+    stop("nPC must be inferior or equal to the nPC chosen in lmpContributions")
   }
 
   if(is.null(effectNames)){
-    effectNames <- c(rownames(resLmwContributions$effectTable))
+    effectNames <- c(rownames(resLLmpContributions$effectTable))
   }
 
-  if(!all(effectNames %in% rownames(resLmwContributions$effectTable))){
-    stop("One of the effects from effectNames is not in resLmwContributions.")
+  if(!all(effectNames %in% rownames(resLLmpContributions$effectTable))){
+    stop("One of the effects from effectNames is not in resLLmpContributions.")
   }
 
   # selecting the effect

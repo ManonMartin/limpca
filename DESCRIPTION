@@ -1,6 +1,6 @@
-Package: LMWiRe
+Package: limpca
 Type: Package
-Title: Linear Models for Wide Responses
+Title: limpca: an R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods.
 Version: 0.0.99
 Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
                      email = "bernadette.govaerts@uclouvain.be"),
@@ -16,8 +16,7 @@ Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
                     email="manon.martin@uclouvain.be"),
               person("Nadia", "Benaiche", role = "ctb",
                      email = "nadia.benaiche@student.uclouvain.be"))
-Description: This package brings a method to analyze Wide Response data with a
-    one or two-way ANOVA of class I. This method handles unbalanced design.
+Description: This package brings a method to analyze high-dimensional designed data. This method handles unbalanced design.
 License: GPL-2
 Encoding: UTF-8
 LazyData: true

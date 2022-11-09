@@ -1,14 +1,14 @@
-#' @export lmwModelMatrix
+#' @export lmpModelMatrix
 #' @title Creates the model matrix
 #'
 #' @description
 #' Creates the model matrix `X` from the design matrix and the formula of the model.
 #'
-#' @param lmwDataList A list containing the outcomes, the experimental design and the formula.
+#' @param lmpDataList A list containing the outcomes, the experimental design and the formula.
 #'
 #' @return A list with the 5 following named elements :
 #' \describe{
-#'    \item{\code{lmwDataList}}{The initial object: a list with outcomes, design and formula.}
+#'    \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula.}
 #'    \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
 #'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each model effect.}
 #'    \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
@@ -29,9 +29,9 @@
 #' @examples
 #'
 #' data('UCH')
-#' resLmwModelMatrix <- lmwModelMatrix(UCH)
+#' resLmpModelMatrix <- lmpModelMatrix(UCH)
 #'
-#' head(resLmwModelMatrix$modelMatrix)
+#' head(resLmpModelMatrix$modelMatrix)
 #'
 #' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
@@ -41,10 +41,10 @@
 #' @importFrom stats as.formula
 
 
-lmwModelMatrix <- function(lmwDataList) {
+lmpModelMatrix <- function(lmpDataList) {
 
-  formula = stats::as.formula(lmwDataList$formula)
-  design = lmwDataList$design
+  formula = stats::as.formula(lmpDataList$formula)
+  design = lmpDataList$design
 
   # Checking no missing argument and the class of the object
 
@@ -126,11 +126,11 @@ lmwModelMatrix <- function(lmwDataList) {
 
   }
 
-  resLmwModelMatrix = list(lmwDataList = lmwDataList,
+  resLmpModelMatrix = list(lmpDataList = lmpDataList,
                           modelMatrix = modelMatrix,
                           modelMatrixByEffect = modelMatrixByEffect,
                           effectsNamesUnique = effectsNamesUnique,
                           effectsNamesAll = effectsNamesAll)
 
-  return(resLmwModelMatrix)
+  return(resLmpModelMatrix)
 }

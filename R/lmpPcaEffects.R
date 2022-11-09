@@ -1,10 +1,10 @@
-#' @export lmwPcaEffects
+#' @export lmpPcaEffects
 #' @title PCA on the effect matrices
 #'
 #' @description
-#' Performs a PCA on each of the effect matrices from the outputs of \code{\link{lmwEffectMatrices}}. It has an option to determine the method applied: ASCA, APCA or ASCA-E. Combined effects (i.e. linear combinations of original effect matrices) can also be created and decomposed.
+#' Performs a PCA on each of the effect matrices from the outputs of \code{\link{lmpEffectMatrices}}. It has an option to determine the method applied: ASCA, APCA or ASCA-E. Combined effects (i.e. linear combinations of original effect matrices) can also be created and decomposed.
 #'
-#' @param resLmwEffectMatrices A resLmwEffectMatrices list from \code{\link{lmwEffectMatrices}}.
+#' @param resLmpEffectMatrices A resLmpEffectMatrices list from \code{\link{lmpEffectMatrices}}.
 #' @param method The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.
 #' @param combineEffects If not \code{NULL}, a list of vectors containing the names of the effects to be combined.
 #' @param verbose If \code{TRUE}, will display a message with the duration of execution.
@@ -22,7 +22,7 @@
 #'
 #'  There are also others outputs :
 #'  \describe{
-#'  \item{\code{lmwDataList}}{The initial object: a list of outcomes, design and formula.}
+#'  \item{\code{lmpDataList}}{The initial object: a list of outcomes, design and formula.}
 #'  \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model terms, each repeated once.}
 #'  \item{\code{method}}{The dimension reduction method used: \code{c("ASCA","APCA","ASCA-E")}.}
 #'  \item{\code{type3SS}}{A vector with the type III SS for each model term.}
@@ -41,34 +41,34 @@
 #'
 #' @examples
 #' data('UCH')
-#' resLmwModelMatrix = lmwModelMatrix(UCH)
-#' resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#' resLmwPcaEffects = lmwPcaEffects(resLmwEffectMatrices, method="ASCA-E")
+#' resLmpModelMatrix = lmpModelMatrix(UCH)
+#' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+#' resLmpPcaEffects = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
 
 
-lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
+lmpPcaEffects = function(resLmpEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
                          combineEffects=NULL,verbose = FALSE){
 
-  # Checking the resLmwEffectMatrices list
+  # Checking the resLmpEffectMatrices list
 
-  checkname = c("lmwDataList","modelMatrix","modelMatrixByEffect","effectsNamesUnique",
+  checkname = c("lmpDataList","modelMatrix","modelMatrixByEffect","effectsNamesUnique",
                 "effectsNamesAll","effectMatrices",
                 "predictedvalues","residuals","parameters",
                 "type3SS","variationPercentages", "varPercentagesPlot")
 
 
-  if(!is.list(resLmwEffectMatrices)){stop("Argument resLmwEffectMatrices is not a list")}
-  if(length(resLmwEffectMatrices)!=12){stop("List does not contain 12 arguments")}
-  if(!all(names(resLmwEffectMatrices)==checkname)){stop("Argument is not a resLmwEffectMatrices object")}
-  if(length(resLmwEffectMatrices$effectMatrices)!=length(resLmwEffectMatrices$effectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
+  if(!is.list(resLmpEffectMatrices)){stop("Argument resLmpEffectMatrices is not a list")}
+  if(length(resLmpEffectMatrices)!=12){stop("List does not contain 12 arguments")}
+  if(!all(names(resLmpEffectMatrices)==checkname)){stop("Argument is not a resLmpEffectMatrices object")}
+  if(length(resLmpEffectMatrices$effectMatrices)!=length(resLmpEffectMatrices$effectsNamesUnique)){stop("Number of effect matrices different from the number of effects")}
   # if(!method %in% c("ASCA","APCA","ASCA-E")){stop("Method must be one of: ASCA, ASCA-E, APCA")}
   method <- match.arg(method)
   checkArg(combineEffects,c("list"),can.be.null=TRUE)
 
   # Attributing name
 
-  lmwDataList = resLmwEffectMatrices$lmwDataList
-  effectsNamesUnique = resLmwEffectMatrices$effectsNamesUnique
+  lmpDataList = resLmpEffectMatrices$lmpDataList
+  effectsNamesUnique = resLmpEffectMatrices$effectsNamesUnique
 
   # Combining effects
 
@@ -77,23 +77,23 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
     combineMatrices <- function(combineVectors){
       matList <- list()
       combinedEffects <- list()
-      matList <- lapply(combineVectors, function(x) resLmwEffectMatrices$effectMatrices[[x]])
+      matList <- lapply(combineVectors, function(x) resLmpEffectMatrices$effectMatrices[[x]])
       combinedEffects <- Reduce('+', matList)
     }
 
     combinedMatrices <- lapply(combineEffects, combineMatrices)
     names(combinedMatrices) <- lapply(combineEffects, FUN = function(x) paste0(x, collapse = "+"))
 
-    resLmwEffectMatrices$effectMatrices <- c(resLmwEffectMatrices$effectMatrices,
+    resLmpEffectMatrices$effectMatrices <- c(resLmpEffectMatrices$effectMatrices,
                                            combinedMatrices)
   }
 
 
   # Construction of the list of pure effect matrix
 
-  EffectMatGLM <- resLmwEffectMatrices$effectMatrices[-1]  # minus intercept
+  EffectMatGLM <- resLmpEffectMatrices$effectMatrices[-1]  # minus intercept
   res <- vector(mode = "list")
-  res[[1]] <- resLmwEffectMatrices$residuals
+  res[[1]] <- resLmpEffectMatrices$residuals
   EffectMatGLM <- c(EffectMatGLM, Residuals = res)  # plus residuals
 
   if(!is.null(combineEffects)){
@@ -118,8 +118,8 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
 
     # Compute the augmented effect matrices
 
-    EffectMatGLM = resLmwEffectMatrices$effectMatrices[-1]  # effectMatrices minus intercept
-    EffectMatGLM = lapply(EffectMatGLM, function(x) x + resLmwEffectMatrices$residuals)
+    EffectMatGLM = resLmpEffectMatrices$effectMatrices[-1]  # effectMatrices minus intercept
+    EffectMatGLM = lapply(EffectMatGLM, function(x) x + resLmpEffectMatrices$residuals)
     EffectMatGLM = c(EffectMatGLM, Residuals = res)  # plus residuals
 
   }else if(method=="ASCA-E"){
@@ -137,10 +137,10 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
 
 # Run the PCA on the different effects
 
-  resLmwPcaEffects = vector(mode="list")
+  resLmpPcaEffects = vector(mode="list")
 
   for(i in 1:p){
-    resLmwPcaEffects[[i]]=pcaBySvd(EffectMatGLM[[i]])
+    resLmpPcaEffects[[i]]=pcaBySvd(EffectMatGLM[[i]])
   }
 
   # Updating the score for ASCA-E method
@@ -148,18 +148,18 @@ lmwPcaEffects = function(resLmwEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   if(method=="ASCA-E"){
     for(i in 1:p){
 
-      resLmwPcaEffects[[i]]$scores[,1:5] = (EffectMatGLM[[i]] + EffectMatGLM[[p]]) %*% resLmwPcaEffects[[i]]$loadings[,1:5]
+      resLmpPcaEffects[[i]]$scores[,1:5] = (EffectMatGLM[[i]] + EffectMatGLM[[p]]) %*% resLmpPcaEffects[[i]]$loadings[,1:5]
     }
   }
 
-  names(resLmwPcaEffects) = names(EffectMatGLM)
+  names(resLmpPcaEffects) = names(EffectMatGLM)
 
-  resLmwPcaEffects2 = list(lmwDataList = lmwDataList,
+  resLmpPcaEffects2 = list(lmpDataList = lmpDataList,
                            effectsNamesUnique = effectsNamesUnique)
 
-  resLmwPcaEffects = c(resLmwPcaEffects, resLmwPcaEffects2, method = method,
-                       type3SS = list(resLmwEffectMatrices$type3SS),
-                       variationPercentages = list(resLmwEffectMatrices$variationPercentages))
+  resLmpPcaEffects = c(resLmpPcaEffects, resLmpPcaEffects2, method = method,
+                       type3SS = list(resLmpEffectMatrices$type3SS),
+                       variationPercentages = list(resLmpEffectMatrices$variationPercentages))
 
-  return(resLmwPcaEffects)
+  return(resLmpPcaEffects)
 }

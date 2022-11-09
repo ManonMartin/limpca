@@ -1,17 +1,23 @@
-LMWiRe quickstart
+limpca quickstart
 ================
 
 <!-- badges: start -->
 
-[![R-CMD-check](https://github.com/ManonMartin/LMWiRe/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ManonMartin/LMWiRe/actions/workflows/check-standard.yaml)
+[![R-CMD-check](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
 # Installation
 
 ``` r
-remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE)
-library("LMWiRe")
+remotes::install_github("ManonMartin/limpca", dependencies = TRUE)
+library("limpca")
 ```
+
+Note that if you would like to build the vignettes, you have to install
+`BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and
+`rmarkdown` packages before installing `limpca` with the following
+command:
+`remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
 
 For any enquiry, you can send an email to the package authors:
 <bernadette.govaerts@uclouvain.be> ; <michel.thiel@uclouvain.be> or
@@ -46,7 +52,7 @@ plotDesign(design = UCH$design, x = "Hippurate",
            title = "Design of the UCH dataset")
 ```
 
-<img src="inst/doc/README-dataVisu-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-dataVisu-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
@@ -58,7 +64,7 @@ plotLine(Y = UCH$outcomes,
          ylab = "Intensity")
 ```
 
-<img src="inst/doc/README-dataVisu-2.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-dataVisu-2.png" width="70%" style="display: block; margin: auto;" />
 
 ## PCA
 
@@ -67,7 +73,7 @@ ResPCA = pcaBySvd(UCH$outcomes)
 pcaScreePlot(ResPCA, nPC = 6)
 ```
 
-<img src="inst/doc/README-PCA-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-PCA-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
@@ -77,16 +83,16 @@ pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
              points_labs_rn = FALSE)
 ```
 
-<img src="inst/doc/README-PCA-2.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-PCA-2.png" width="70%" style="display: block; margin: auto;" />
 
 ## Model estimation and effect matrix decomposition
 
 ``` r
 # Model matrix generation
-resMM = lmwModelMatrix(UCH)
+resMM = lmpModelMatrix(UCH)
 
 # Model estimation and effect matrices decomposition
-resEM = lmwEffectMatrices(resMM)
+resEM = lmpEffectMatrices(resMM)
 ```
 
 ## Effect matrix test of significance and importance measure
@@ -96,51 +102,51 @@ resEM = lmwEffectMatrices(resMM)
 resEM$varPercentagesPlot
 ```
 
-<img src="inst/doc/README-effectImpSign-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-effectImpSign-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
 # Bootstrap tests
-resBT = lmwBootstrapTests(resLmwEffectMatrices = resEM, nboot=100)
+resBT = lmpBootstrapTests(resLmpEffectMatrices = resEM, nboot=100)
 resBT$resultsTable
-#>                       Hippurate Citrate  Time     Hippurate:Citrate
-#> Bootstrap p-values    "< 0.01"  "< 0.01" "< 0.01" "0.16"           
-#> % of variance (T III) "39.31"   "29.91"  "16.24"  "1.54"           
-#>                       Hippurate:Time Citrate:Time Hippurate:Citrate:Time
-#> Bootstrap p-values    "< 0.01"       "0.42"       "0.08"                
-#> % of variance (T III) "6.23"         "0.54"       "1.68"                
-#>                       Residuals
-#> Bootstrap p-values    "-"      
-#> % of variance (T III) "4.3"
+#>                        % of variance (T III) Bootstrap p-values
+#> Hippurate                              39.31             < 0.01
+#> Citrate                                29.91             < 0.01
+#> Time                                   16.24             < 0.01
+#> Hippurate:Citrate                       1.54               0.17
+#> Hippurate:Time                          6.23             < 0.01
+#> Citrate:Time                            0.54               0.34
+#> Hippurate:Citrate:Time                  1.68               0.15
+#> Residuals                               4.30                  -
 ```
 
 ## ASCA-E decomposition
 
 ``` r
 # ASCA-E decomposition
-resASCAE = lmwPcaEffects(resLmwEffectMatrices = resEM, method="ASCA-E")
+resASCAE = lmpPcaEffects(resLmpEffectMatrices = resEM, method="ASCA-E")
 
 # Scores Plot for the hippurate
-lmwScorePlot(resASCAE, effectNames = "Hippurate", 
+lmpScorePlot(resASCAE, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
 ```
 
-<img src="inst/doc/README-ASCAE-1.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-ASCAE-1.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
 # Loadings Plot for the hippurate
-lmwLoading1dPlot(resASCAE, effectNames = c("Hippurate"), 
+lmpLoading1dPlot(resASCAE, effectNames = c("Hippurate"), 
                               axes = 1, xlab = "ppm")
 #> $Hippurate
 ```
 
-<img src="inst/doc/README-ASCAE-2.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-ASCAE-2.png" width="70%" style="display: block; margin: auto;" />
 
 ``` r
 
 # Scores ScatterPlot matrix
-lmwScoreScatterPlotM(resASCAE,PCdim=c(1,1,1,1,1,1,1,2),
+lmpScoreScatterPlotM(resASCAE,PCdim=c(1,1,1,1,1,1,1,2),
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
                      varname.colordown  = "Time",
@@ -149,4 +155,4 @@ lmwScoreScatterPlotM(resASCAE,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-<img src="inst/doc/README-ASCAE-3.png" width="70%" style="display: block; margin: auto;" />
+<img src="vignettes/README-ASCAE-3.png" width="70%" style="display: block; margin: auto;" />

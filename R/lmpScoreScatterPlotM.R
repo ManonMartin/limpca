@@ -1,10 +1,10 @@
-#' @export lmwScoreScatterPlotM
+#' @export lmpScoreScatterPlotM
 #' @title Score scatter plot matrix
 #'
 #' @description
 #' Plots the scores of all model effects simultaneously in a scatterplot matrix. By default, the first principal component only is kept for each model effect and, as a wrapper of \code{\link{plotScatterM}}, the choice markers and colors for factor levels allow to enrich the visualization of the factor effects on the responses.
 #'
-#' @param resLmwPcaEffects A list corresponding to the output value of \code{\link{lmwPcaEffects}}.
+#' @param resLmpPcaEffects A list corresponding to the output value of \code{\link{lmpPcaEffects}}.
 #' @param effectNames A character vector with the name of the effects to plot.
 #' @param PCdim A numeric vector with the same length than effectNames and indicating the number of component to plot.
 #' @param modelAbbrev A logical whether to abbreviate the interaction terms or not.
@@ -13,23 +13,23 @@
 #' @return A matrix of graphs
 #'
 #' @details
-#' `lmwScoreScatterPlotM` is a wrapper of \code{\link{plotScatterM}}.
+#' `lmpScoreScatterPlotM` is a wrapper of \code{\link{plotScatterM}}.
 #'
 #' @examples
 #'
 #'  data('UCH')
-#'  resLmwModelMatrix = lmwModelMatrix(UCH)
-#'  ResLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#'  resLmwPcaEffects = lmwPcaEffects(ResLmwEffectMatrices,method="ASCA-E")
+#'  resLmpModelMatrix = lmpModelMatrix(UCH)
+#'  ResLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+#'  resLmpPcaEffects = lmpPcaEffects(ResLmpEffectMatrices,method="ASCA-E")
 #'
-#'  lmwScoreScatterPlotM(resLmwPcaEffects,
+#'  lmpScoreScatterPlotM(resLmpPcaEffects,
 #'                  varname.colorup = "Citrate",
 #'                  varname.pchup="Hippurate",
 #'                  varname.pchdown = "Day",
 #'                  varname.colordown="Time")
 #'
 #'  # advanced setting
-#'  lmwScoreScatterPlotM(resLmwPcaEffects,
+#'  lmpScoreScatterPlotM(resLmpPcaEffects,
 #'                  modelAbbrev=FALSE,
 #'                  effectNames = c("Citrate","Hippurate","Hippurate:Citrate"),
 #'                  PCdim=c(2,2,2),
@@ -44,7 +44,7 @@
 #'
 #' @import graphics grDevices
 
-lmwScoreScatterPlotM = function(resLmwPcaEffects,
+lmpScoreScatterPlotM = function(resLmpPcaEffects,
                                 effectNames = NULL,
                                 PCdim = NULL,
                                 modelAbbrev=FALSE, ...){
@@ -57,19 +57,19 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
   }
 
   # Checking arguments ===============
-  checkArg(resLmwPcaEffects,"list",can.be.null=FALSE)
+  checkArg(resLmpPcaEffects,"list",can.be.null=FALSE)
   checkArg(PCdim,"num",can.be.null=TRUE)
   checkArg(effectNames,"str",can.be.null=TRUE)
   checkArg(modelAbbrev,"bool",can.be.null=FALSE)
 
-  #Checking resLmwPcaEffects object and match with effectNames
-  if (!identical(names(resLmwPcaEffects[(length(resLmwPcaEffects)-5):length(resLmwPcaEffects)]),
-                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
-    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
+  #Checking resLmpPcaEffects object and match with effectNames
+  if (!identical(names(resLmpPcaEffects[(length(resLmpPcaEffects)-5):length(resLmpPcaEffects)]),
+                 c("Residuals","lmpDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")}
 
     if(allEffect==FALSE){
       for(i in 1:length(effectNames)){
-        if(!effectNames[i]%in%names(resLmwPcaEffects)){"One of the elements from effectNames is not in resLmwPcaEffects"}
+        if(!effectNames[i]%in%names(resLmpPcaEffects)){"One of the elements from effectNames is not in resLmpPcaEffects"}
       }
     }
 
@@ -77,7 +77,7 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
   if(is.null(PCdim)){
     classicalPC = TRUE
     if(allEffect==TRUE){
-      effectsNamesUnique <- resLmwPcaEffects$effectsNamesUnique
+      effectsNamesUnique <- resLmpPcaEffects$effectsNamesUnique
       effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
       PCdim = rep(1,(length(effectsNamesUnique)+1)) # +1 for the residuals
       effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
@@ -87,7 +87,7 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
   }else{
     classicalPC=FALSE
     if(allEffect==TRUE){
-      effectsNamesUnique <- resLmwPcaEffects$effectsNamesUnique
+      effectsNamesUnique <- resLmpPcaEffects$effectsNamesUnique
       effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
       effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
     }
@@ -102,7 +102,7 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
 
   # Create the matrix for the "pairs" function ===============
   k = sum(PCdim) # Length of the diagonal of the plot
-  n = length(resLmwPcaEffects[[1]]$scores[,1]) # Find number of observations
+  n = length(resLmpPcaEffects[[1]]$scores[,1]) # Find number of observations
 
   var = c(rep(1,k))
 
@@ -112,26 +112,26 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
   if(allEffect==TRUE){
     if(classicalPC){ # Only PC1 to all effects
       for(i in 1:length(effectsNamesUniqueRes)){
-        coomatrix[,i] = resLmwPcaEffects[[effectsNamesUniqueRes[i]]]$scores[,PCdim[i]]
+        coomatrix[,i] = resLmpPcaEffects[[effectsNamesUniqueRes[i]]]$scores[,PCdim[i]]
         colnames(coomatrix)[i] = paste(effectsNamesUniqueRes[i],"PC1")
-        var[i] = (resLmwPcaEffects$variationPercentages[effectsNamesUniqueRes[i]] *
-                    resLmwPcaEffects[[effectsNamesUniqueRes[i]]]$var[1])/100}
+        var[i] = (resLmpPcaEffects$variationPercentages[effectsNamesUniqueRes[i]] *
+                    resLmpPcaEffects[[effectsNamesUniqueRes[i]]]$var[1])/100}
     }else{ # All effects but more than 1 PC
       l = 1
       for(j in 1:length(PCdim)){ # Some effects must be printed on PC2 or more
 
         if(PCdim[j] == 1){
-          coomatrix[,l] = resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$scores[,PCdim[j]]
+          coomatrix[,l] = resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$scores[,PCdim[j]]
           colnames(coomatrix)[l] = paste(effectsNamesUniqueRes[j],"PC1")
-          var[l] = (resLmwPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
-                      resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$var[1])/100
+          var[l] = (resLmpPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
+                      resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$var[1])/100
           l=l+1
         }else{
           for(m in 1:PCdim[j]){ # Get the others PC
-            coomatrix[,l] = resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$scores[,m]
-            colnames(coomatrix)[l] = paste(effectsNamesUniqueRes[j],colnames(resLmwPcaEffects[[j]]$scores)[m])
-            var[l] = (resLmwPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
-                        resLmwPcaEffects[[effectsNamesUniqueRes[j]]]$var[m])/100
+            coomatrix[,l] = resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$scores[,m]
+            colnames(coomatrix)[l] = paste(effectsNamesUniqueRes[j],colnames(resLmpPcaEffects[[j]]$scores)[m])
+            var[l] = (resLmpPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
+                        resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$var[m])/100
             l=l+1
           }
         }
@@ -143,14 +143,14 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
     l = 1
     for(i in 1:length(effectNames)){
 
-      iEffect_temp=which(names(resLmwPcaEffects)==effectNames[i])
-      iEffect = resLmwPcaEffects[[iEffect_temp]]
+      iEffect_temp=which(names(resLmpPcaEffects)==effectNames[i])
+      iEffect = resLmpPcaEffects[[iEffect_temp]]
 
       for(j in 1:PCdim[i]){
 
         coomatrix[,l] = iEffect$scores[,j]
-        colnames(coomatrix)[l] = paste(names(resLmwPcaEffects)[iEffect_temp],colnames(iEffect$scores)[j])
-        var[l] = (resLmwPcaEffects$variationPercentages[iEffect_temp] * resLmwPcaEffects[[iEffect_temp]]$var[j])/100
+        colnames(coomatrix)[l] = paste(names(resLmpPcaEffects)[iEffect_temp],colnames(iEffect$scores)[j])
+        var[l] = (resLmpPcaEffects$variationPercentages[iEffect_temp] * resLmpPcaEffects[[iEffect_temp]]$var[j])/100
         l = l + 1
       }
     }
@@ -173,7 +173,7 @@ lmwScoreScatterPlotM = function(resLmwPcaEffects,
 
   plotScatterM(Y = coomatrix,
                cols = 1:ncol(coomatrix),
-               design = resLmwPcaEffects$lmwDataList$design,
+               design = resLmpPcaEffects$lmpDataList$design,
                labelVector = labelvector, ...)
 
 }

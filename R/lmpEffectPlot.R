@@ -1,10 +1,10 @@
-#' @export lmwEffectPlot
+#' @export lmpEffectPlot
 #' @title Effect plot
 #'
 #' @description
 #' Plots the ASCA scores by effect levels for a given model effect (for one by principal component at a time). This graph is particularly appealing to interpret interactions or combined effects.
 #'
-#' @param resASCA A list corresponding to the ASCA output value of \code{\link{lmwPcaEffects}}.
+#' @param resASCA A list corresponding to the ASCA output value of \code{\link{lmpPcaEffects}}.
 #' @param effectName Name of the effect matrix used for the scores.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param x A character string giving the `design` factor whose levels will form the x axis.
@@ -16,19 +16,19 @@
 #' @return An effect plot (ggplot).
 #'
 #' @details
-#' `lmwEffectPlot` is a wrapper of \code{\link{plotMeans}}.
+#' `lmpEffectPlot` is a wrapper of \code{\link{plotMeans}}.
 #'
 #' @examples
 #'
-#'   resLmwModelMatrix = lmwModelMatrix(UCH)
-#'   resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
-#'   resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
+#'   resLmpModelMatrix = lmpModelMatrix(UCH)
+#'   resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+#'   resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
 #'method="ASCA", combineEffects = list(c("Hippurate", "Time",  "Hippurate:Time")))
-#'   lmwEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
+#'   lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
 #'
 #' @import ggplot2
 
-lmwEffectPlot <- function(resASCA, effectName, axes = 1,
+lmpEffectPlot <- function(resASCA, effectName, axes = 1,
                           x, z = NULL, w = NULL, hline = 0, ...){
 
   mcall = as.list(match.call())[-1L]
@@ -44,11 +44,11 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   checkArg(hline,"num", can.be.null = TRUE)
 
   if (!identical(names(resASCA[(length(resASCA)-5):length(resASCA)]),
-                 c("Residuals","lmwDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
-    stop("resLmwPcaEffects is not an output value of lmwPcaEffects")}
+                 c("Residuals","lmpDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")}
 
   if(resASCA$method != "ASCA"){
-    stop("resASCA does not correspond to an ASCA result of LmwEffectMatrices")
+    stop("resASCA does not correspond to an ASCA result of LmpEffectMatrices")
   }
 
   if(!effectName %in% names(resASCA)){
@@ -86,7 +86,7 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   if (!"title" %in% names(mcall)){
     if (!"ylab" %in% names(mcall)){
       fig <- plotMeans(Y = matEffect,
-                       design = resASCA$lmwDataList$design,
+                       design = resASCA$lmpDataList$design,
                        cols = axes,
                        x = x,
                        z = z,
@@ -97,7 +97,7 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
                        ...)
     }else {
       fig <- plotMeans(Y = matEffect,
-                       design = resASCA$lmwDataList$design,
+                       design = resASCA$lmpDataList$design,
                        cols = axes,
                        x = x,
                        z = z,
@@ -109,7 +109,7 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
   }else{
     if (!"ylab" %in% names(mcall)){
       fig <- plotMeans(Y = matEffect,
-                       design = resASCA$lmwDataList$design,
+                       design = resASCA$lmpDataList$design,
                        cols = axes,
                        x = x,
                        z = z,
@@ -119,7 +119,7 @@ lmwEffectPlot <- function(resASCA, effectName, axes = 1,
                        ...)
     }else {
       fig <- plotMeans(Y = matEffect,
-                       design = resASCA$lmwDataList$design,
+                       design = resASCA$lmpDataList$design,
                        cols = axes,
                        x = x,
                        z = z,

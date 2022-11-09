@@ -1,15 +1,15 @@
 ---
-title: "Application of the LMWiRe package on the UCH dataset"
+title: "Application of the limpca package on the UCH dataset"
 author: "Benaiche Nadia, Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts Bernadette"
 date: '`r format(Sys.time(), "%B %d, %Y")`'
-package: LMWiRe
+package: limpca
 output:
   BiocStyle::html_document:
     toc: true
     toc_depth: 3
     toc_float: true
 vignette: >
-   %\VignetteIndexEntry{Analysis of the UCH dataset with LMWiRe}
+   %\VignetteIndexEntry{Analysis of the UCH dataset with limpca}
    %\VignetteEncoding{UTF-8}
    %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
@@ -59,36 +59,35 @@ library(patchwork)
 
 # Introduction
 
-The purpose of this vignette is to show the possibilities offered by the LMWiRe package. 
+The purpose of this vignette is to show the possibilities offered by the `limpca` package. 
 
-LMWiRe stands for Linear Models for Wide Responses. This package was created to analyse models with wide responses and a multi-factor design of experiment and provide an implementation of ASCA and APCA derived methods.  
+limpca stands for linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. This package was created to analyse models with high-dimensional data and a multi-factor design of experiment and provide an implementation of ASCA and APCA derived methods.  
 
 The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results. Details on the methods used can be found in the articles of @Thiel2017 and @Guisset2019.
 
 # Installation
 
-The package is actually in its development stage and is available on GitHub: <https://github.com/ManonMartin/LMWiRe>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
+The package is actually in its development stage and is available on GitHub: <https://github.com/ManonMartin/limpca>. It can be installed via the `remotes::install_github()` function. The package needs to be loaded afterwards.
 
 ```{r Install, eval=FALSE}
 if (!requireNamespace("remotes"))
 install.packages(pkgs="remotes", dependencies="Depends")
-remotes::install_github("ManonMartin/LMWiRe", 
+remotes::install_github("ManonMartin/limpca", 
                         dependencies = TRUE)
 ```
 
-Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `LMWiRe` with the following command: `remotes::install_github("ManonMartin/LMWiRe", dependencies = TRUE, build_vignettes = TRUE)`.
+Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command: `remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
 
 
 ```{r Load, results=FALSE, message=FALSE}
-library("LMWiRe")
+library("limpca")
 ```
 
 # Data importation
 
-Before any analysis, the `UCH` data set needs to be loaded. The LMWiRe package contains the data set and it can be loaded with the `data()` function. The `load()` function is also useful to import your own data.
+Before any analysis, the `UCH` data set needs to be loaded. The limpca package contains the data set and it can be loaded with the `data()` function. The `load()` function is also useful to import your own data.
 
 ```{r Data Importation}
-
 data("UCH")
 UCH$formula <- "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate + Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time"
 ```
@@ -263,43 +262,43 @@ UCH$formula
 
 The first step of ASCA+ is to build the (GLM) model matrix from the experimental design matrix and the model. Each factor is reencoded with multiple binary variables using  `contr.sum` coding. The model matrix is a \emph(34xp) with p being the total number of parameter in the ANOVA model for one response.
 
-The function `lmwModelMatrix()` encodes the design matrix as a model matrix.
+The function `lmpModelMatrix()` encodes the design matrix as a model matrix.
 
 ```{r ModelMatrix}
 
-resLmwModelMatrix = lmwModelMatrix(UCH)
-pander::pander(head(resLmwModelMatrix$modelMatrix))
+resLmpModelMatrix = lmpModelMatrix(UCH)
+pander::pander(head(resLmpModelMatrix$modelMatrix))
 ```
 
 ## Model estimation and effect matrices decomposition
 
-`lmwEffectMatrices()` is the used to estimate the GLM model and decompose the outcomes matrix effect matrices for every model term.  This function calculates also type III effect contributions (in %) and generates a linked `barpot`.  
+`lmpEffectMatrices()` is the used to estimate the GLM model and decompose the outcomes matrix effect matrices for every model term.  This function calculates also type III effect contributions (in %) and generates a linked `barpot`.  
 
 ```{r EffectMatrices}
-resLmwEffectMatrices = lmwEffectMatrices(resLmwModelMatrix)
+resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
 ```
 
 ## Effects importance
 
-The contributions from each effect is outputted from `lmwEffectMatrices`.
+The contributions from each effect is outputted from `lmpEffectMatrices`.
 
 ```{r}
-pander(resLmwEffectMatrices$variationPercentages)
-resLmwEffectMatrices$varPercentagesPlot
+pander(resLmpEffectMatrices$variationPercentages)
+resLmpEffectMatrices$varPercentagesPlot
 ```
 
 ## Bootstrap tests and quantification of effects importance
 
-`lmwBootstrapTests()` allows to apply parametric bootstrap test to determine whether an effect is significant or not.  Use first a small value of `nboot` (e.g. nboot=100) to develop your code and increase then it (e.g. nboot=1000) in ordre to get an accurate value for the p-values.    
+`lmpBootstrapTests()` allows to apply parametric bootstrap test to determine whether an effect is significant or not.  Use first a small value of `nboot` (e.g. nboot=100) to develop your code and increase then it (e.g. nboot=1000) in ordre to get an accurate value for the p-values.    
 
 ```{r Bootstrap}
 
-resLmwBootstrapTests = 
-  lmwBootstrapTests(resLmwEffectMatrices = resLmwEffectMatrices, 
+resLmpBootstrapTests = 
+  lmpBootstrapTests(resLmpEffectMatrices = resLmpEffectMatrices, 
                                          nboot=100)
 
 # Print P-values
-pander::pander(t(resLmwBootstrapTests$resultsTable))
+pander::pander(t(resLmpBootstrapTests$resultsTable))
 
 ```
 
@@ -307,14 +306,14 @@ pander::pander(t(resLmwBootstrapTests$resultsTable))
 
 # ASCA/APCA/ASCA-E decomposition
 
-ASCA/APCA/ASCA-E decomposition allow to represent the information from the effect matrices in a space of reduced dimensions through PCA. The function `lmwPcaEffects()` has a method argument to define which method to use, namely `ASCA`, `APCA` or `ASCA-E`.
+ASCA/APCA/ASCA-E decomposition allow to represent the information from the effect matrices in a space of reduced dimensions through PCA. The function `lmpPcaEffects()` has a method argument to define which method to use, namely `ASCA`, `APCA` or `ASCA-E`.
 
 ## ASCA
 
 The ASCA method performs PCA on the pure effect matrices.
 
 ```{r ASCA PCA}
-resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
+resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
                         method="ASCA", 
                         combineEffects = list(c("Hippurate", "Time", 
                                                 "Hippurate:Time")))
@@ -322,30 +321,30 @@ resASCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
 
 ### Contributions
 
-The contribution of each principal component of the effects is estimated and reported in tables with the function `lmwContributions()`. 
+The contribution of each principal component of the effects is estimated and reported in tables with the function `lmpContributions()`. 
 
 ```{r ASCA Contrib}
-resLmwContributions = lmwContributions(resASCA)
+resLmpContributions = lmpContributions(resASCA)
 ```
 
-- The table of the percentage of contribution of each effect to the total variance outputted from `lmwEffectMatrices` is retained here.
+- The table of the percentage of contribution of each effect to the total variance outputted from `lmpEffectMatrices` is retained here.
 ```{r}
-pander::pander(resLmwContributions$totalContribTable)
+pander::pander(resLmpContributions$totalContribTable)
 ```
 
 - Table of the variance percentage explained by each Principal Component in each model effect decomposition.
 ```{r}
-pander::pander(resLmwContributions$effectTable)
+pander::pander(resLmpContributions$effectTable)
 ```
 
 - Table of the variance percentage explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance.
 ```{r}
-pander::pander(resLmwContributions$contribTable)
+pander::pander(resLmpContributions$contribTable)
 ```
 
-- Equivalent of the `effectTable` for the combination of effects mentioned in `lmwPcaEffects().`
+- Equivalent of the `effectTable` for the combination of effects mentioned in `lmpPcaEffects().`
 ```{r}
-pander::pander(resLmwContributions$combinedEffectTable)
+pander::pander(resLmpContributions$combinedEffectTable)
 ```
 
 
@@ -353,17 +352,17 @@ pander::pander(resLmwContributions$combinedEffectTable)
 
 
 ```{r}
-resLmwContributions$plotTotal
-resLmwContributions$plotContrib
+resLmpContributions$plotTotal
+resLmpContributions$plotContrib
 ```
 
 
 ### Scores and loadings Plots
 
-The loadings can be represented on a line plot with the function `lmwLoading1dPlot()` to conveniently compare them with the original spectral profiles. 
+The loadings can be represented on a line plot with the function `lmpLoading1dPlot()` to conveniently compare them with the original spectral profiles. 
 
 ```{r}
-all_loadings_pl <- lmwLoading1dPlot(resASCA, 
+all_loadings_pl <- lmpLoading1dPlot(resASCA, 
                               effectNames = c("Hippurate", "Citrate","Time",
                                               "Hippurate:Time",
                                               "Hippurate+Time+Hippurate:Time", 
@@ -372,13 +371,13 @@ all_loadings_pl <- lmwLoading1dPlot(resASCA,
 ```
 
 
-The score matrices are represented two components at a time on a scatterplot with the function `lmwScorePlot()`.   
+The score matrices are represented two components at a time on a scatterplot with the function `lmpScorePlot()`.   
 
 #### Main effects
 
 ```{r ASCA ScoresXY}
 # Hippurate
-hip_scores_pl <- lmwScorePlot(resASCA, effectNames = "Hippurate", 
+hip_scores_pl <- lmpScorePlot(resASCA, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
 
 hip_loadings_pl <- all_loadings_pl$Hippurate +  hip_peaks
@@ -386,14 +385,14 @@ hip_loadings_pl <- all_loadings_pl$Hippurate +  hip_peaks
 grid.arrange(hip_scores_pl,hip_loadings_pl, ncol=2)
   
 # Citrate
-cit_scores_pl <- lmwScorePlot(resASCA, effectNames = "Citrate", 
+cit_scores_pl <- lmpScorePlot(resASCA, effectNames = "Citrate", 
              color = "Citrate", shape = "Citrate")
 cit_loadings_pl <- all_loadings_pl$Citrate +  cit_peaks
 
 grid.arrange(cit_scores_pl,cit_loadings_pl, ncol=2)
 
 # Time
-tim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Time", color = "Time", 
+tim_scores_pl <- lmpScorePlot(resASCA, effectNames = "Time", color = "Time", 
                               shape = "Time")
 
 time_peaks <- annotate("rect", xmin=c(5.955364), xmax=c(6.155364), 
@@ -410,7 +409,7 @@ grid.arrange(tim_scores_pl,tim_loadings_pl, ncol=2)
 
 ```{r}
 # Hippurate:Time
-hiptim_scores_pl <- lmwScorePlot(resASCA, effectNames = "Hippurate:Time", 
+hiptim_scores_pl <- lmpScorePlot(resASCA, effectNames = "Hippurate:Time", 
                                  color = "Hippurate", shape = "Time")
 hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` + time_peaks + hip_peaks
 
@@ -423,7 +422,7 @@ Scores and loadings of a combination of effects, here `"Hippurate+Time+Hippurate
 
 ```{r}
 # Hippurate+Time+Hippurate:Time
-hiptimInter_scores_pl <- lmwScorePlot(resASCA, 
+hiptimInter_scores_pl <- lmpScorePlot(resASCA, 
                                  effectNames = "Hippurate+Time+Hippurate:Time", 
                                  color = "Hippurate", shape = "Time")
 
@@ -433,14 +432,14 @@ hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` +
 grid.arrange(hiptimInter_scores_pl,hiptimInter_loadings_pl, ncol=2)
 ```
 
-For interaction terms of combined effects however, a better graphical representation is possible with the function `lmwEffectPlot()` (see below).
+For interaction terms of combined effects however, a better graphical representation is possible with the function `lmpEffectPlot()` (see below).
 
 
 #### Model residuals
 
 ```{r Plot Residuals}
 
-resid_scores_pl <- lmwScorePlot(resASCA, effectNames = "Residuals",
+resid_scores_pl <- lmpScorePlot(resASCA, effectNames = "Residuals",
                                 color = "Day", shape = "Day", 
                                 drawShapes = "segment")
 
@@ -451,10 +450,10 @@ grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
 ```
 
 
-We can also represent the scores with a matrix of plots with `lmwScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
+We can also represent the scores with a matrix of plots with `lmpScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
 
 ```{r ASCA ScoresMatrix, fig.height=8}
-lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
+lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
                      varname.colordown  = "Time",
@@ -466,11 +465,11 @@ lmwScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
 Finally the loadings could also be represented as a scatter plot.
 
 ```{r ASCA loadings}
-lmwLoading2dPlot(resLmwPcaEffects=resASCA, 
+lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
                  effectNames = c("Hippurate"), 
                  axes = c(1,2))
 
-lmwLoading2dPlot(resLmwPcaEffects=resASCA, 
+lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
                  effectNames = c("Hippurate"), 
                  axes = c(1,2), 
                  addRownames = TRUE,pl_n = 10)
@@ -479,7 +478,7 @@ lmwLoading2dPlot(resLmwPcaEffects=resASCA,
 labels = substr(colnames(UCH$outcomes),1,4)
 labels[-c(369, 132, 150, 133, 149, 144, 145, 368, 151)] <- ""
 
-lmwLoading2dPlot(resLmwPcaEffects=resASCA, 
+lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
                  effectNames = c("Hippurate"), 
                  axes = c(1,2), points_labs = labels)
 ```
@@ -487,23 +486,23 @@ lmwLoading2dPlot(resLmwPcaEffects=resASCA,
 
 ### Effects plot
 
-The `lmwEffectPlot` function can only be applied with the `ASCA` method.
+The `lmpEffectPlot` function can only be applied with the `ASCA` method.
 
 #### Main effects
 
 ```{r}
-lmwEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
-lmwEffectPlot(resASCA, effectName = "Citrate", x = "Citrate")
-lmwEffectPlot(resASCA, effectName = "Time", x = "Time")
+lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
+lmpEffectPlot(resASCA, effectName = "Citrate", x = "Citrate")
+lmpEffectPlot(resASCA, effectName = "Time", x = "Time")
 ```
 
 
 #### Interaction `Hippurate:Time`
 
 ```{r}
-lmwEffectPlot(resASCA, effectName = "Hippurate:Time", 
+lmpEffectPlot(resASCA, effectName = "Hippurate:Time", 
               x = "Hippurate", z = "Time")
-lmwEffectPlot(resASCA, effectName = "Hippurate:Time", 
+lmpEffectPlot(resASCA, effectName = "Hippurate:Time", 
               x = "Time", z = "Hippurate")
 ```
 
@@ -513,9 +512,9 @@ lmwEffectPlot(resASCA, effectName = "Hippurate:Time",
 
 
 ```{r ASCA effects}
-lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
+lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
               x = "Hippurate", z = "Time")
-lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
+lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
               axes = c(1:3), x = "Time", z = "Hippurate")
 ```
 
@@ -527,7 +526,7 @@ lmwEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time",
 The APCA method performs PCAs on the effect matrices augmented by the residuals. The same functions are used.
 
 ```{r APCA PCA}
-resAPCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
+resAPCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
                         method="APCA")
 ```
 
@@ -536,27 +535,27 @@ resAPCA = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices,
 different shapes with `drawShapes` argument
 
 ```{r APCA ScoresXY}
-lmwScorePlot(resAPCA, effectNames = "Hippurate", 
+lmpScorePlot(resAPCA, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
 
-lmwScorePlot(resAPCA, effectNames = "Citrate", 
+lmpScorePlot(resAPCA, effectNames = "Citrate", 
              color = "Citrate", shape = "Citrate", drawShapes = "ellipse")
 
-lmwScorePlot(resAPCA, effectNames = "Time", 
+lmpScorePlot(resAPCA, effectNames = "Time", 
              color = "Time", shape = "Time", drawShapes = "ellipse")
-lmwScorePlot(resAPCA, effectNames = "Time", 
+lmpScorePlot(resAPCA, effectNames = "Time", 
              color = "Time", shape = "Time", drawShapes = "polygon")
-lmwScorePlot(resAPCA, effectNames = "Time", 
+lmpScorePlot(resAPCA, effectNames = "Time", 
              color = "Time", shape = "Time", drawShapes = "segment")
 
-lmwScorePlot(resAPCA, effectNames = "Hippurate:Time", 
+lmpScorePlot(resAPCA, effectNames = "Hippurate:Time", 
              color = "Hippurate", shape = "Time", drawShapes = "segment")
-lmwScorePlot(resAPCA, effectNames = "Hippurate:Time", 
+lmpScorePlot(resAPCA, effectNames = "Hippurate:Time", 
              color = "Hippurate", shape = "Time", drawShapes = "polygon")
 ```
 
 ```{r APCA ScoresMatrix}
-lmwScoreScatterPlotM(resAPCA,
+lmpScoreScatterPlotM(resAPCA,
                      effectNames = c("Hippurate", "Citrate", "Time",
                                      "Hippurate:Time"),
                      modelAbbrev = TRUE,
@@ -571,7 +570,7 @@ lmwScoreScatterPlotM(resAPCA,
 
 ```{r APCA loadings}
 
-lmwLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
+lmpLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
                                         "Time", "Hippurate:Time"), axes = 1)
 
 ```
@@ -581,7 +580,7 @@ lmwLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate",
 The ASCA-E method performs PCA on the effect matrices then adds the residuals to compute the augmented scores. 
 
 ```{r ASCAE PCA}
-resASCAE = lmwPcaEffects(resLmwEffectMatrices = resLmwEffectMatrices, 
+resASCAE = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
                          method="ASCA-E")
 ```
 
@@ -590,18 +589,18 @@ Contributions and loadings are similar to the ASCA results.
 ### Scores Plot
 
 ```{r ASCAE ScoresXY}
-lmwScorePlot(resASCAE, effectNames = "Hippurate", 
+lmpScorePlot(resASCAE, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
-lmwScorePlot(resASCAE, effectNames = "Citrate", 
+lmpScorePlot(resASCAE, effectNames = "Citrate", 
              color = "Citrate", shape = "Citrate")
-lmwScorePlot(resASCAE, effectNames = "Time", 
+lmpScorePlot(resASCAE, effectNames = "Time", 
              color = "Time", shape = "Time")
-lmwScorePlot(resASCAE, effectNames = "Hippurate:Time", 
+lmpScorePlot(resASCAE, effectNames = "Hippurate:Time", 
              color = "Hippurate", shape = "Time")
 ```
 
 ```{r ASCAE ScoresMatrix}
-lmwScoreScatterPlotM(resASCAE,
+lmpScoreScatterPlotM(resASCAE,
                      effectNames = c("Hippurate", "Citrate", "Time",
                                      "Hippurate:Time"),
                      modelAbbrev = TRUE,
