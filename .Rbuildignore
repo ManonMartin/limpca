@@ -5,3 +5,6 @@
 ^\.github$
 ^README.$
 doc/.*[.]png$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
