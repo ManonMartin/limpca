@@ -27,6 +27,6 @@ Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, ggrepel, reshape2,
     tidyverse
 Suggests: 
     BiocStyle,
-    rmarkdown
+    rmarkdown, patchwork
 RoxygenNote: 7.2.1
 Roxygen: list(markdown=TRUE)
