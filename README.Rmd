@@ -9,10 +9,10 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "vignettes/README-",
+  fig.path = "man/figures/README-",
   out.width = "70%",
   fig.align='center',
-  eval=FALSE
+  eval=TRUE
 )
 rm(list=ls())
 library("limpca")
