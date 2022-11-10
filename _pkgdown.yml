@@ -1,12 +1,13 @@
-url: ~
+url: https://manonmartin.github.io/limpca/
 template:
   bootstrap: 5
   bootswatch: flatly
 home:
   sidebar:
-    structure: [links, license, citation, authors, toc]
-  # links:
-  # - text: Browse source code
-  #   href: https://github.com/ManonMartin/limpca
-  # - text: Report a bug
-  #   href: https://github.com/ManonMartin/limpca/issues
+    structure:
+    - links
+    - license
+    - citation
+    - authors
+    - toc
+
