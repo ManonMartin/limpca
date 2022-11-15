@@ -129,6 +129,10 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
     }
   }
 
+  if (length(fig)==1){
+    fig <- fig[[1]]
+  }
+
 
   return(fig)
 

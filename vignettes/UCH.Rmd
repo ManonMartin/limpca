@@ -1,12 +1,12 @@
 ---
-title: "Application of the limpca package on the UCH dataset"
+title: "three-way ANOVA with fixed effects: UCH data"
 author: "Benaiche Nadia, Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts Bernadette"
 date: '`r format(Sys.time(), "%B %d, %Y")`'
 package: limpca
 output:
   BiocStyle::html_document:
     toc: true
-    toc_depth: 3
+    toc_depth: 4
     toc_float: true
 vignette: >
    %\VignetteIndexEntry{Analysis of the UCH dataset with limpca}
@@ -45,7 +45,8 @@ references:
 
 ```{r Setup,include=FALSE}
 # require(knitr)
-knitr::opts_chunk$set(message=FALSE,warning=FALSE,comment=NA, crop = NULL)
+knitr::opts_chunk$set(message=FALSE,warning=TRUE,comment=NA, crop = NULL,
+                      tidy.opts = list(width.cutoff = 60), tidy = TRUE)
 rm(list=ls())
 ```
 
@@ -53,7 +54,6 @@ rm(list=ls())
 library(pander)
 library(ggplot2)
 library(gridExtra)
-library(patchwork)
 ```
 
 
@@ -197,9 +197,9 @@ plotMeans(Y = UCH$outcomes,
 
 ```
 
-## Principal Component Analysis
+## PCA {#pca}
 
-The function `pcaBySvd` is useful to compute a PCA decomposition of the `outcomes` matrix. The linked usefull functions are :
+The function `pcaBySvd` is useful to compute a Principal Component Analysis (PCA) decomposition of the `outcomes` matrix. The linked usefull functions are :
 
 * `pcaScreePlot` to obtaine a scree plot
 * `pcaLoading1dPlot` for the loading plots
@@ -335,6 +335,7 @@ pander::pander(resLmpContributions$totalContribTable)
 ```
 
 - `effectTable`: Table of the **percentage of variance explained by each Principal Component in each model effect decomposition**.
+
 ```{r}
 pander::pander(resLmpContributions$effectTable)
 ```
@@ -344,7 +345,9 @@ pander::pander(resLmpContributions$effectTable)
 pander::pander(resLmpContributions$combinedEffectTable)
 ```
 
-- `contribTable`: Table of the **percentage of variance explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance**.
+- `contribTable`: Table of the **percentage of variance explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance**. This table gives an overview of the importance of each PC regardless of the effects.
+
+
 ```{r}
 pander::pander(resLmpContributions$contribTable)
 ```
@@ -353,39 +356,38 @@ pander::pander(resLmpContributions$contribTable)
 
 
 ```{r}
-pander("Ordered contributions per effect")
+pander("Ordered contributions per effect:")
 resLmpContributions$plotTotal
 
-pander("For each PC of the different effects")
+pander("For each PC of the different effects:")
 resLmpContributions$plotContrib
 ```
+
+In the following analysis, we will focus only on the first PC of the three main effects, the interaction `Hippurate:Time` and the residuals since the other PCs and effects account for less than 1% of the total variance.
 
 
 ### Scores and loadings Plots
 
-The loadings can be represented on a line plot with the function `lmpLoading1dPlot()` to conveniently compare them with the original spectral profiles. 
+The loadings can be represented either on a line plot with the function `lmpLoading1dPlot()` to conveniently compare them with the original spectral profiles or on a scatterplot with the function `lmpLoading2dPlot()`. 
 
-```{r}
-all_loadings_pl <- lmpLoading1dPlot(resASCA, 
+
+
+Here we create an object including the loading plots for all the effects included in the model as well as the combined effect.
+
+```{r, include=TRUE}
+all_loadings_pl <- lmpLoading1dPlot(resASCA,
                               effectNames = c("Hippurate", "Citrate","Time",
                                               "Hippurate:Time",
-                                              "Hippurate+Time+Hippurate:Time", 
-                                              "Residuals"), 
+                                              "Hippurate+Time+Hippurate:Time",
+                                              "Residuals"),
                               axes = 1, xlab = "ppm")
 ```
-
-
-Alternatively, they can be represented 2-by-2 as a scatterplot with `lmpLoading2dPlot()`. This function 
-
-```{r}
-lmpLoading2dPlot(resASCA, effectNames = c("Hippurate"), 
-                        axes = c(1,2), addRownames = TRUE, pl_n = 10)
-```
-
 
 The score matrices are represented two components at a time on a scatterplot with the function `lmpScorePlot()`.   
 
 #### Main effects
+
+The scores and loadings of the main effects included in the model are represented below.
 
 ```{r ASCA ScoresXY}
 # Hippurate
@@ -417,26 +419,33 @@ grid.arrange(tim_scores_pl,tim_loadings_pl, ncol=2)
 
 ```
 
+Hippurate and Citrate peaks are clearly and separately retrieved in the respective loading plots compares to the classical PCA (see Section \@ref(pca)) where peaks of these two chemicals are both present in the two first PCs. The loading profile of the `Time` effect shows a high peak on the left side of the removed water area.
+
+
 #### Interaction `Hippurate:Time`
+
+The scores and loadings fot the interaction term is represented here. It is not straighforward to interpret the scores plot of such an interaction term but the loadings of PC1 indicates a shift in the spectrum, along the whole spectral profile (but mostly around 3 ppm). 
 
 ```{r}
 # Hippurate:Time
 hiptim_scores_pl <- lmpScorePlot(resASCA, effectNames = "Hippurate:Time", 
                                  color = "Hippurate", shape = "Time")
-hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` + time_peaks + hip_peaks
+hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` + 
+  time_peaks + 
+  hip_peaks
 
 grid.arrange(hiptim_scores_pl,hiptim_loadings_pl, ncol=2)
 ```
 
 #### Combination of effects `Hippurate+Time+Hippurate:Time`
 
-Scores and loadings of a combination of effects, here `"Hippurate+Time+Hippurate:Time"` can also be represented.
+The scores and the loadings of a combination of effects, in this case `"Hippurate+Time+Hippurate:Time"` can also be rendered.
 
 ```{r}
 # Hippurate+Time+Hippurate:Time
 hiptimInter_scores_pl <- lmpScorePlot(resASCA, 
-                                 effectNames = "Hippurate+Time+Hippurate:Time", 
-                                 color = "Hippurate", shape = "Time")
+                            effectNames = "Hippurate+Time+Hippurate:Time", 
+                            color = "Hippurate", shape = "Time")
 
 hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` + 
                             time_peaks + hip_peaks
@@ -444,10 +453,12 @@ hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` +
 grid.arrange(hiptimInter_scores_pl,hiptimInter_loadings_pl, ncol=2)
 ```
 
-For interaction terms of combined effects however, a better graphical representation is possible with the function `lmpEffectPlot()` (see below).
+However, note that a better graphical representation is possible with the function `lmpEffectPlot()` (see Section \@ref(effects-plot)) to depict interaction terms or combinations of effects.
 
 
 #### Model residuals
+
+PCA on the model residuals can also be applied to spot outliers or an unexpected underlying structure of the data. The scores plot shows that the effect of `Day`, which was excluded in our modeling step, could have been included as well as it spans the two first PCs of the residuals. 
 
 ```{r Plot Residuals}
 
@@ -462,9 +473,13 @@ grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
 ```
 
 
-We can also represent the scores with a matrix of plots with `lmpScoreScatterPlotM()`. This graph allows to observe multiple variables simultaneously.
+### Other graphs
 
-```{r ASCA ScoresMatrix, fig.height=8}
+#### Scores scatter plot
+
+We can also represent the scores as a matrix of plots with `lmpScoreScatterPlotM()`. This graph enables to observe multiple variables simultaneously. For example, the PC1 scores of `Hippurate`  and `Citrate` clearly represent the orthogonal design. the interaction `Hippurate:Time` can also be visulised when comparing PC1 of `Hippurate` and the interaction term.
+
+```{r ASCA ScoresMatrix, fig.height=7}
 lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
@@ -474,13 +489,11 @@ lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-Finally the loadings could also be represented as a scatter plot.
+#### Loadings 2D
+
+Finally the loadings could also be represented 2-by-2 as a scatterplot with `lmpLoading2dPlot()`. 
 
 ```{r ASCA loadings}
-lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
-                 effectNames = c("Hippurate"), 
-                 axes = c(1,2))
-
 lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
                  effectNames = c("Hippurate"), 
                  axes = c(1,2), 
@@ -496,20 +509,23 @@ lmpLoading2dPlot(resLmpPcaEffects=resASCA,
 ```
 
 
-### Effects plot
+### Effects plot {#effects-plot}
 
-The `lmpEffectPlot` function can only be applied with the `ASCA` method.
+The `lmpEffectPlot()` function is particularly interesting to visualise an interaction term or a combination of effects. Note that this function can only be applied with the `ASCA` method.
 
-#### Main effects
+
+#### Main effects for `Hippurate`
+
+Here the first PC of the `Hippurate` is represented along the levels of this effect.
 
 ```{r}
 lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
-lmpEffectPlot(resASCA, effectName = "Citrate", x = "Citrate")
-lmpEffectPlot(resASCA, effectName = "Time", x = "Time")
 ```
 
 
 #### Interaction `Hippurate:Time`
+
+A more interesting application is the visualisation of interaction terms as line plots, here `Hippurate:Time`. This representation gives the impression of a quite important interaction effect.
 
 ```{r}
 lmpEffectPlot(resASCA, effectName = "Hippurate:Time", 
@@ -521,13 +537,13 @@ lmpEffectPlot(resASCA, effectName = "Hippurate:Time",
 
 #### Combination of effects `Hippurate+Time+Hippurate:Time`
 
-
+An alternative visualisation combines the main effects of `Hippurate`, `Time` and the interaction `Hippurate:Time`. Even if significant, the interaction effect is actually quite small compared to the main effects (`Hippurate` for PC1 and `Time` for PC2).
 
 ```{r ASCA effects}
 lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
               x = "Hippurate", z = "Time")
 lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
-              axes = c(1:3), x = "Time", z = "Hippurate")
+              axes = c(2), x = "Time", z = "Hippurate")
 ```
 
 
@@ -535,7 +551,7 @@ lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time",
 
 ## APCA
 
-The APCA method performs PCAs on the effect matrices augmented by the residuals. The same functions are used.
+The APCA method performs PCA on the effect matrices augmented by the residuals. The same functions than for ASCA are used.
 
 ```{r APCA PCA}
 resAPCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
@@ -544,15 +560,18 @@ resAPCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
 
 ### Scores Plot
 
-different shapes with `drawShapes` argument
+Different shapes with `drawShapes` argument highlight the data structure recovery.
 
 ```{r APCA ScoresXY}
+# Hippurate main effect
 lmpScorePlot(resAPCA, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
 
+# Citrate main effect
 lmpScorePlot(resAPCA, effectNames = "Citrate", 
              color = "Citrate", shape = "Citrate", drawShapes = "ellipse")
 
+# Time main effect
 lmpScorePlot(resAPCA, effectNames = "Time", 
              color = "Time", shape = "Time", drawShapes = "ellipse")
 lmpScorePlot(resAPCA, effectNames = "Time", 
@@ -560,11 +579,14 @@ lmpScorePlot(resAPCA, effectNames = "Time",
 lmpScorePlot(resAPCA, effectNames = "Time", 
              color = "Time", shape = "Time", drawShapes = "segment")
 
+# Interaction term
 lmpScorePlot(resAPCA, effectNames = "Hippurate:Time", 
              color = "Hippurate", shape = "Time", drawShapes = "segment")
 lmpScorePlot(resAPCA, effectNames = "Hippurate:Time", 
              color = "Hippurate", shape = "Time", drawShapes = "polygon")
 ```
+
+A scatterplot matrix can also be applied to visualise the relationship between the scores profiles of interest.
 
 ```{r APCA ScoresMatrix}
 lmpScoreScatterPlotM(resAPCA,
@@ -579,6 +601,9 @@ lmpScoreScatterPlotM(resAPCA,
 ```
 
 ### Loadings plot
+
+
+Note that the APCA loadings contain the residuals of the model and differ from the ASCA loadings in that respect.
 
 ```{r APCA loadings}
 
@@ -600,6 +625,8 @@ Contributions and loadings are similar to the ASCA results.
 
 ### Scores Plot
 
+For the main effects, all score plots show a clear separation between the different levels of the considered effects on the first PC. This separation of the groups suggests a strong effect of those factors, confirmed by their significance.
+
 ```{r ASCAE ScoresXY}
 lmpScorePlot(resASCAE, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
@@ -611,6 +638,7 @@ lmpScorePlot(resASCAE, effectNames = "Hippurate:Time",
              color = "Hippurate", shape = "Time")
 ```
 
+Again, the scores profiles can be compared 2 by 2 with ASCA-E.
 ```{r ASCAE ScoresMatrix}
 lmpScoreScatterPlotM(resASCAE,
                      effectNames = c("Hippurate", "Citrate", "Time",

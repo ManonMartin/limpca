@@ -60,6 +60,10 @@ pcaLoading1dPlot <- function(resPcaBySvd, axes = c(1,2),
                   rows = axes, facet_label = pc_var_char,
                   ...)
 
+  if (length(fig)==1){
+    fig <- fig[[1]]
+  }
+
   return(fig)
 
 }

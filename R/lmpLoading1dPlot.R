@@ -86,6 +86,11 @@ lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
   fig <- lapply(effectNames, buildFig)
   names(fig) <- effectNames
 
+
+  if (length(fig)==1){
+    fig <- fig[[1]]
+  }
+
   return(fig)
 
 }

@@ -29,8 +29,9 @@ Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, ggrepel, reshape2,
     tidyverse
 Suggests: 
     BiocStyle,
-    rmarkdown, patchwork
-biocViews: Infrastructure, MassSpectrometry, Proteomics, Metabolomics
+    rmarkdown
+biocViews: StatisticalMethod, PrincipalComponent, Regression, Visualization, 
+ExperimentalDesign, MultipleComparison
 RoxygenNote: 7.2.1
 Roxygen: list(markdown=TRUE)
 BugReports: https://github.com/ManonMartin/limpca/issues
