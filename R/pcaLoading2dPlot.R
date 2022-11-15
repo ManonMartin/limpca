@@ -100,8 +100,8 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
 
   # distance measure and labels  ===================
 
-  load <- ResPCA$loadings[,axes]
-  singvar <- ResPCA$singvar[axes]
+  load <- resPcaBySvd$loadings[, axes]
+  singvar <- resPcaBySvd$singvar[axes]
 
   dista <- load^2%*%singvar^2
 

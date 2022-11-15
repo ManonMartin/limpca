@@ -321,38 +321,42 @@ resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
 
 ### Contributions
 
-The contribution of each principal component of the effects is estimated and reported in tables with the function `lmpContributions()`. 
+The contribution of each principal component of the effects is estimated and reported in different tables and plots with the function `lmpContributions()`. 
 
 ```{r ASCA Contrib}
 resLmpContributions = lmpContributions(resASCA)
 ```
 
-- The table of the percentage of contribution of each effect to the total variance outputted from `lmpEffectMatrices` is retained here.
+The tables are:
+
+- `totalContribTable`: Table of the **contribution of each effect to the total variance in percentage** as outputted from `lmpEffectMatrices`.
 ```{r}
 pander::pander(resLmpContributions$totalContribTable)
 ```
 
-- Table of the variance percentage explained by each Principal Component in each model effect decomposition.
+- `effectTable`: Table of the **percentage of variance explained by each Principal Component in each model effect decomposition**.
 ```{r}
 pander::pander(resLmpContributions$effectTable)
 ```
 
-- Table of the variance percentage explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance.
-```{r}
-pander::pander(resLmpContributions$contribTable)
-```
-
-- Equivalent of the `effectTable` for the combination of effects mentioned in `lmpPcaEffects().`
+- `combinedEffectTable`: Equivalent of the previous `effectTable` but for the *combination of effects* mentioned in `lmpPcaEffects()`, here for `Hippurate+Time+Hippurate:Time`.
 ```{r}
 pander::pander(resLmpContributions$combinedEffectTable)
 ```
 
+- `contribTable`: Table of the **percentage of variance explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance**.
+```{r}
+pander::pander(resLmpContributions$contribTable)
+```
 
-- Moreover the function also outputs a barplot either with the ordered contributions per effect or across all the PCs of the different effects.
+- Moreover `lmpContributions()` also produces a barplot either with the ordered contributions per effect (`plotTotal`) or across all the PCs of the different effects (`plotContrib`).
 
 
 ```{r}
+pander("Ordered contributions per effect")
 resLmpContributions$plotTotal
+
+pander("For each PC of the different effects")
 resLmpContributions$plotContrib
 ```
 
@@ -368,6 +372,14 @@ all_loadings_pl <- lmpLoading1dPlot(resASCA,
                                               "Hippurate+Time+Hippurate:Time", 
                                               "Residuals"), 
                               axes = 1, xlab = "ppm")
+```
+
+
+Alternatively, they can be represented 2-by-2 as a scatterplot with `lmpLoading2dPlot()`. This function 
+
+```{r}
+lmpLoading2dPlot(resASCA, effectNames = c("Hippurate"), 
+                        axes = c(1,2), addRownames = TRUE, pl_n = 10)
 ```
 
 
