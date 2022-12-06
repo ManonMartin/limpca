@@ -1,7 +1,9 @@
 url: https://manonmartin.github.io/limpca/
 template:
   bootstrap: 5
-  bootswatch: flatly
+  bslib:
+    primary: "#096B72"
+    navbar-background: "#e6f3fc"
 home:
   sidebar:
     structure:
@@ -21,8 +23,8 @@ navbar:
     - text: UCH
       href: articles/UCH.html
     - text: -------
-    - text: Supplementary documentation
-      href: articles/suppl_files.html
+    - text: Supplementary information
+      href: articles/suppl_files/suppl_files.html
 
 articles:
 - title: Case studies
@@ -30,25 +32,25 @@ articles:
   navbar: ~
   contents:
   - UCH
-- title: Supplementary documentation
+- title: Supplementary information
   navbar: ~
   contents:
   - starts_with("suppl_files")
 
 reference:
 - title: Package
-  desc:  Package
+  desc:  ~
   contents:
   - limpca
 
 - title: Datasets
-  desc:  Datasets
+  desc:  ~
   contents:
   - UCH
   - trout
 
 - title: Data exploration
-  desc:  Data exploration
+  desc:  ~
   contents:
   - plotDesign
   - plotLine
@@ -63,14 +65,14 @@ reference:
 
 
 - title: Modeling
-  desc:  Modeling
+  desc:  ~
   contents:
   - lmpModelMatrix
   - lmpEffectMatrices
   - lmpBootstrapTests
 
 - title: Effect matrices visualisation
-  desc:  Effect matrices visualisation
+  desc:  ~
   contents:
   - lmpPcaEffects
   - lmpScreePlot
