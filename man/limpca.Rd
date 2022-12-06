@@ -43,11 +43,11 @@ Rousseau, R. (2011). \emph{Statistical contribution to the analysis of metabonom
   (Doctoral dissertation, PhD thesis. Institut de statistique, biostatistique et sciences actuarielles, Université catholique de Louvain, Belgium).
 
 
-Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
+Thiel M., Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
 
 
-Guisset S.,Martin M. and Govaerts B. (2019) \emph{Comparison of PARAFASCA, AComDim, and AMOPLS approaches in the multivariate GLM modelling of multi-factorial designs}, Chemometrics and Intelligent Laboratory Systems
+Guisset S., Martin M. and Govaerts B. (2019) \emph{Comparison of PARAFASCA, AComDim, and AMOPLS approaches in the multivariate GLM modelling of multi-factorial designs}, Chemometrics and Intelligent Laboratory Systems
 }
 
 

@@ -1,5 +1,5 @@
 ---
-title: limpca quickstart
+title: limpca
 output: github_document
 editor_options: 
   chunk_output_type: console
@@ -9,10 +9,9 @@ editor_options:
 knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
-  fig.path = "man/figures/README-",
   out.width = "70%",
   fig.align='center',
-  eval=TRUE
+  eval=FALSE
 )
 rm(list=ls())
 library("limpca")
@@ -23,7 +22,9 @@ library("limpca")
 [![R-CMD-check](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-# Installation
+## Installation
+
+Installation from GitHub:
 
 ```{r, eval=FALSE}
 remotes::install_github("ManonMartin/limpca", dependencies = TRUE)
@@ -32,34 +33,28 @@ library("limpca")
 
 Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command: `remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
 
-For any enquiry, you can send an email to the package authors: [bernadette.govaerts@uclouvain.be](mailto:bernadette.govaerts@uclouvain.be) ; [michel.thiel@uclouvain.be](mailto:michel.thiel@uclouvain.be) or [manon.martin@uclouvain.be](mailto:manon.martin@uclouvain.be)
+## Basic usage
 
-# Short application on the `UCH` dataset
+Here is a quick start based on the `UCH` dataset (see `?UCH` for more information on this dataset). 
 
-## Data object
+### Data object
 
+`UCH` contains a multivariate matrix (`outcomes`), a `design` data.frame and a `formula` as a character string:
 ```{r}
 str(UCH)
 ```
 
-
-## Data visualisation
-
+The design can be visualised with `plotDesign()`.
 ```{r dataVisu}
 # design
 plotDesign(design = UCH$design, x = "Hippurate", 
            y = "Citrate", rows = "Time",
            title = "Design of the UCH dataset")
-
-# row 3 of outcomes
-plotLine(Y = UCH$outcomes,
-         title = "H-NMR spectrum",
-         rows = c(3),
-         xlab = "ppm",
-         ylab = "Intensity")
 ```
 
-## PCA
+### PCA 
+
+Before applying ASCA, one can explore the multivariate structure of the outcomes with Principal Component Analysis (PCA).
 
 ```{r PCA}
 ResPCA = pcaBySvd(UCH$outcomes)
@@ -71,7 +66,7 @@ pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
              points_labs_rn = FALSE)
 ```
 
-## Model estimation and effect matrix decomposition
+### Model estimation and effect matrix decomposition
 
 ```{r modelEst}
 # Model matrix generation
@@ -81,7 +76,7 @@ resMM = lmpModelMatrix(UCH)
 resEM = lmpEffectMatrices(resMM)
 ```
 
-## Effect matrix test of significance and importance measure
+### Effect matrix test of significance and importance measure
 
 ```{r effectImpSign}
 # Effects importance
@@ -93,22 +88,22 @@ resBT$resultsTable
 ```
 
 
-## ASCA-E decomposition
+### ASCA decomposition
 
-```{r ASCAE}
-# ASCA-E decomposition
-resASCAE = lmpPcaEffects(resLmpEffectMatrices = resEM, method="ASCA-E")
+```{r ASCA}
+# ASCA decomposition
+resASCA = lmpPcaEffects(resLmpEffectMatrices = resEM, method="ASCA")
 
 # Scores Plot for the hippurate
-lmpScorePlot(resASCAE, effectNames = "Hippurate", 
+lmpScorePlot(resASCA, effectNames = "Hippurate", 
              color = "Hippurate", shape = "Hippurate")
 
 # Loadings Plot for the hippurate
-lmpLoading1dPlot(resASCAE, effectNames = c("Hippurate"), 
+lmpLoading1dPlot(resASCA, effectNames = c("Hippurate"), 
                               axes = 1, xlab = "ppm")
 
 # Scores ScatterPlot matrix
-lmpScoreScatterPlotM(resASCAE,PCdim=c(1,1,1,1,1,1,1,2),
+lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      modelAbbrev = TRUE,
                      varname.colorup = "Citrate",
                      varname.colordown  = "Time",
@@ -117,3 +112,6 @@ lmpScoreScatterPlotM(resASCAE,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
+## Additional information
+
+For any enquiry, you can open an [issue](https://github.com/ManonMartin/limpca/issues) on Github or send an email to the package authors: [bernadette.govaerts@uclouvain.be](mailto:bernadette.govaerts@uclouvain.be) ; [michel.thiel@uclouvain.be](mailto:michel.thiel@uclouvain.be) or [manon.martin@uclouvain.be](mailto:manon.martin@uclouvain.be).

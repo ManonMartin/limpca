@@ -10,4 +10,73 @@ home:
     - citation
     - authors
     - toc
+navbar:
+  structure:
+    left:  [intro, reference, articles, news]
+  components:
+   articles:
+    text: Article
+    menu:
+    - text: Vignettes
+    - text: UCH
+      href: articles/UCH.html
+    - text: -------
+    - text: Supplementary documentation
+      href: articles/suppl_files.html
 
+articles:
+- title: Case studies
+  desc: Vignettes with case studies
+  navbar: ~
+  contents:
+  - UCH
+- title: Supplementary documentation
+  navbar: ~
+  contents:
+  - starts_with("suppl_files")
+
+reference:
+- title: Package
+  desc:  Package
+  contents:
+  - limpca
+
+- title: Datasets
+  desc:  Datasets
+  contents:
+  - UCH
+  - trout
+
+- title: Data exploration
+  desc:  Data exploration
+  contents:
+  - plotDesign
+  - plotLine
+  - plotMeans
+  - plotScatter
+  - plotScatterM
+  - pcaBySvd
+  - pcaScreePlot
+  - pcaScorePlot
+  - pcaLoading2dPlot
+  - pcaLoading1dPlot
+
+
+- title: Modeling
+  desc:  Modeling
+  contents:
+  - lmpModelMatrix
+  - lmpEffectMatrices
+  - lmpBootstrapTests
+
+- title: Effect matrices visualisation
+  desc:  Effect matrices visualisation
+  contents:
+  - lmpPcaEffects
+  - lmpScreePlot
+  - lmpContributions
+  - lmpLoading1dPlot
+  - lmpLoading2dPlot
+  - lmpScorePlot
+  - lmpScoreScatterPlotM
+  - lmpEffectPlot

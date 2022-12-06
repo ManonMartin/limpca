@@ -41,6 +41,10 @@ references:
   type: article-journal
   issued:
     year: 2019
+resource_files:
+  - figs/ASCAMethodo.png
+  - figs/limpcaDEfunctions.png
+  - figs/limpcaASCAfunctions.png
 ---
 
 ```{r Setup,include=FALSE}
@@ -61,7 +65,7 @@ library(gridExtra)
 
 The purpose of this vignette is to show the possibilities offered by the `limpca` package. 
 
-limpca stands for linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. This package was created to analyse models with high-dimensional data and a multi-factor design of experiment and provide an implementation of ASCA and APCA derived methods.  
+`limpca` stands for linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. This package was created to analyse models with high-dimensional data and a multi-factor design of experiment and provides an implementation of ASCA and APCA derived methods.  
 
 The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results. Details on the methods used can be found in the articles of @Thiel2017 and @Guisset2019.
 
@@ -96,21 +100,26 @@ Before any analysis, the `UCH` data set needs to be loaded. The `limpca` package
 
 ```{r Data Importation}
 data("UCH")
-UCH$formula <- "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate + 
-                  Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time"
 ```
 
 # Data exploration
 
 The UCH (Urine-Citrate-Hippurate) data set is described in @Thiel2017 and @Guisset2019 and is issued form a metabolomics experiment.  In this experiment, 36 samples of a pool of rat urine samples were spiked with two molecules Citrate and Hippurate according to a $3^2$ full factorial design in the quantities of these two molecules.  The spiked samples were analyzed by ^1^H NMR at two different time after defrozing and over two different days.  Two of the spectra where finally missing at the end of the experiment.    
 
-The UCH data set is a list containing 3 elements: 
+The UCH data set is a list containing 2 elements: 
 
 * an `outcomes` matrix with 34 observations of 600 response variables representing the spectra from the ^1^H NMR spectroscopy, 
-* a `design` matrix with 34 observations and 4 explanatory variables and 
-* a `formula` for the General Linear Model (GLM) used. 
+* a `design` matrix with 34 observations and 4 explanatory variables 
+
+A `formula` with the general linear model to be estimated will be added to this list below. 
 
 For the purpose of this example, only 3 factors of interest will be studied : concentrations of Hippurate and Citrate and Time after defrozing.
+
+Here are the `limpca` functions that are available for data exploration.  
+
+
+![limpca data exploration functions](figs/limpcaDEfunctions.png "limpca data exploration functions")
+
 
 ## Design
 
@@ -136,6 +145,12 @@ The 600 response (`outcomes`) variables represent, for each observation, the int
 Here, annotations (`cit_peaks` and `hip_peaks`) are added to the `ggplot` objects in order to highlight the Hippurate (green) and Citrate (red) peaks. 
 
 ```{r Spectrum visualization}
+p1 <- plotLine(Y = UCH$outcomes,
+         title = "H-NMR spectrum",
+         rows = c(3),
+         xlab = "ppm",
+         ylab = "Intensity")
+
 cit_peaks <- annotate("rect", xmin=c(2.509), xmax=c(2.709), 
               ymin=-Inf, ymax=Inf, alpha=0.2, 
               fill=c("tomato")) 
@@ -177,7 +192,7 @@ plotScatter(Y = UCH$outcomes,
 
 ### `plotScatterM` function
 
-The `plotScatter` function allows to visualize the values of a series of outcomes variables with different colors or markers for the values of the design factors. Here, it is done for all the peaks of Citrate et Hippurate.
+The `plotScatter` function allows to visualize the values of a series of outcomes variables with different colors or markers for the values of the design factors. Here, it is done for the 4 peaks of Hippurate and single peak of Citrate.
 
 ```{r}
 
@@ -190,7 +205,7 @@ plotScatterM(Y = UCH$outcomes, cols = c(133, 145, 150, 369, 453),
 ### `plotMeans` function
 
 The `plotMeans` represents the mean values of a response variable for different levels of the design factors. Here we show the evolution of the Citrate peak height with respect to the three design factors of interest. 
-Note that the results of this function must be interpreted with caution for unbalanced designs. 
+Note that the results of this function must be interpreted with caution for unbalanced designs because simple means are biased estimators of expected means. 
 
 ```{r}
 
@@ -220,7 +235,7 @@ pcaScreePlot(ResPCA, nPC = 6)
 
 ```
 
-The score plots indicate that all tree factors from the design affect the spectral profiles, which will be more clearly highlighted by ASCA and APCA.  
+The score plots below indicate that all tree factors from the design affect the spectral profiles, which will be more clearly highlighted by ASCA and APCA.  
 
 ```{r Scores}
 
@@ -244,7 +259,7 @@ pcaScorePlot(resPcaBySvd = ResPCA, axes = c(3,4),
 
 ```
 
-In the first two loading plots, a mixture of Citrate and Hippurate peaks already appears.  
+In the first two loading plots, a mixture of Citrate and Hippurate peaks already appears but they are not separated.  
 
 ```{r Loadings}
 
@@ -256,6 +271,14 @@ p2 +  hip_peaks + cit_peaks
 
 ```
 
+# Application of ASCA+ and APCA+ 
+
+Here below, ASCA+ and APCA+ steps are illustrated on the `UCH` data set.  The following graph represents the steps of the methodology.   
+![ASCA+/APCA+ methodology ](figs/ASCAMethodo.png "ASCA+/APCA+ methodology")
+The next graph presents the functions available in `limpca` for this purpose.  They are all illustrated in the next sections.  
+
+![limpca ASCA/APCA functions](figs/limpcaASCAfunctions.png "limpca ASCA/PCA functions")
+
 # Model estimation and effect matrix decomposition
 
 ## Model formula
@@ -263,12 +286,13 @@ p2 +  hip_peaks + cit_peaks
 The formula of the ANOVA-GLM model used in this analysis is the 3 ways crossed ANOVA model:
 
 ```{r Formula}
-UCH$formula
+UCH$formula <- "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate + 
+                  Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time"
 ```
 
 ## Model matrix generation
 
-The first step of ASCA+ is to build the (GLM) model matrix from the experimental design matrix and the model. Each factor is reencoded with multiple binary variables using `contr.sum` coding. The model matrix is a \emph(34xp) with p being the total number of parameters in the ANOVA model for one response.
+The first step of ASCA+ is to build the (GLM) model matrix from the experimental design matrix and the model. Each factor is reencoded with multiple binary variables using `contr.sum` coding. The size of the model matrix is  34xp  with p being the total number of parameters in the ANOVA model for one response.
 
 The function `lmpModelMatrix` encodes the design matrix as a model matrix.
 
@@ -280,7 +304,7 @@ pander::pander(head(resLmpModelMatrix$modelMatrix))
 
 ## Model estimation and effect matrices decomposition
 
-`lmpEffectMatrices` is the used to estimate the GLM model and decomposes the multivariate outcomes into effect matrices for every model term. This function calculates also type III effect contributions (in %) and generates a `barpot` to visualise these contributions.  
+`lmpEffectMatrices` is the used to estimate the linear model and decomposes the multivariate outcomes into effect matrices for every model term. This function calculates also type III effect contributions (in %) and generates a `barpot` to visualise these contributions.  
 
 ```{r EffectMatrices}
 resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
@@ -297,7 +321,7 @@ resLmpEffectMatrices$varPercentagesPlot
 
 ## Bootstrap tests and quantification of effects importance
 
-`lmpBootstrapTests` applies a parametric bootstrap test to determine whether an effect is significant or not. We recomment the user to choose first a small value of `nboot` (e.g. nboot=100) to develop your code and increase it later on (e.g. nboot=1000) in order to get an accurate value for the p-values.    
+`lmpBootstrapTests` applies a parametric bootstrap test to determine whether an effect is significant or not. We recommend the user to choose first a small value of `nboot` (e.g. nboot=100) to develop its code and increase it later on (e.g. nboot=1000) in order to get an accurate value for the p-values.    
 
 ```{r Bootstrap}
 
@@ -313,11 +337,11 @@ pander::pander(t(resLmpBootstrapTests$resultsTable))
 
 # ASCA/APCA/ASCA-E decomposition
 
-The ASCA/APCA/ASCA-E decomposition enables to represent the information from the effect matrices in a space of reduced dimensions through PCA. The function `lmpPcaEffects` has a method argument to define which method to use, namely `ASCA`, `APCA` or `ASCA-E`.
+The ASCA/APCA/ASCA-E decomposition enables to represent the information from the effect matrices in a space of reduced dimension through PCA. The function `lmpPcaEffects` has a method argument to define which method to use, namely `ASCA`, `APCA` or `ASCA-E`.  Combined effects matrices can also be built and visualized by PCA.  
 
 ## ASCA
 
-The ASCA method performs PCA on the pure effect matrices.
+The ASCA method performs PCA on the pure effect matrices.  Here a combined effect matrix `Hippurate+Time+Hippurate:Time` is also built.  
 
 ```{r ASCA PCA}
 resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
@@ -328,7 +352,7 @@ resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
 
 ### Contributions
 
-The contribution of each principal component of the effects is estimated and reported in different tables and plots with the function `lmpContributions`. 
+The contribution of each principal component of the effects is calculated and reported in different tables and plots with the function `lmpContributions`. 
 
 ```{r ASCA Contrib}
 resLmpContributions = lmpContributions(resASCA)
@@ -377,8 +401,6 @@ In the following analysis, we will focus only on the first PC of the three main 
 
 The loadings can be represented either on a line plot with the function `lmpLoading1dPlot` to conveniently compare them with the original spectral profiles or on a scatterplot with the function `lmpLoading2dPlot`. 
 
-
-
 Here we create an object including the loading plots (as line plots) for all the effects included in the model as well as the combined effect and the residuals.
 
 ```{r, include=TRUE}
@@ -395,6 +417,8 @@ The score matrices are represented two components at a time on a scatterplot wit
 #### Main effects
 
 The scores and loadings of the main effects included in the model are represented below.
+
+They show that, thank to the ASCA analysis, Hippurate and Citrate peaks are clearly and separately retrieved in the respective loading plots compared to the classical PCA (see Section \@ref(pca)) where peaks of these two chemicals are both present in the two first PCs. The loading profile of the `Time` effect shows a high peak on the left side of the removed water area.
 
 ```{r ASCA ScoresXY}
 # Hippurate
@@ -425,8 +449,6 @@ tim_loadings_pl <- all_loadings_pl$Time +  time_peaks
 grid.arrange(tim_scores_pl,tim_loadings_pl, ncol=2)
 
 ```
-
-Hippurate and Citrate peaks are clearly and separately retrieved in the respective loading plots compared to the classical PCA (see Section \@ref(pca)) where peaks of these two chemicals are both present in the two first PCs. The loading profile of the `Time` effect shows a high peak on the left side of the removed water area.
 
 
 #### Interaction `Hippurate:Time`
@@ -484,7 +506,7 @@ grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
 
 #### Scores scatter plot
 
-We can also represent the scores as a matrix of plots with `lmpScoreScatterPlotM`. This graph has teh advantage to compare more than 2 variables simultaneously. For example, the PC1 scores of `Hippurate`  and `Citrate` clearly represent the orthogonal design of this experiment. The interaction `Hippurate:Time` can also be clearly represented when comparing les PC1s of `Hippurate` and the interaction term.
+We can also represent the scores as a matrix of plots with `lmpScoreScatterPlotM`. This graph has the advantage to compare more than 2 variables simultaneously. For example, the PC1 scores of `Hippurate`  and `Citrate` clearly represent the orthogonal design of this experiment. The interaction `Hippurate:Time` can also be clearly represented when comparing les PC1s of `Hippurate` and the interaction term.
 
 ```{r ASCA ScoresMatrix, fig.height=7}
 lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
@@ -496,9 +518,9 @@ lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-#### Loadings 2D
+#### 2D Loadings
 
-Finally the loadings can also be represented 2-by-2 as a scatterplot with `lmpLoading2dPlot`. 
+Finally the loadings can also be represented 2-by-2 as a scatterplot with `lmpLoading2dPlot`.  Such graphic is of course of limited interest for spectral data.  
 
 ```{r ASCA loadings}
 lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
@@ -523,7 +545,7 @@ The `lmpEffectPlot` function is particularly interesting to visualise an interac
 
 #### Main effects for `Hippurate`
 
-Here the first PC of the `Hippurate` is represented along the levels of this effect.
+Here the first PC of the `Hippurate` is represented along the levels of this effect showing an expected linear effect of Hippurate dose on the PC value.
 
 ```{r}
 lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
@@ -532,7 +554,7 @@ lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
 
 #### Interaction `Hippurate:Time`
 
-A more interesting application is the visualisation of interaction terms as line plots, here `Hippurate:Time` along the `Hippurate` or the `Time` effect. This representation gives the impression of a quite important interaction effect.
+A more interesting application is the visualization of interaction terms as line plots, here `Hippurate:Time` along the `Hippurate` or the `Time` effect. This representation gives the impression of a quite important interaction effect.
 
 ```{r}
 lmpEffectPlot(resASCA, effectName = "Hippurate:Time", 
@@ -621,7 +643,7 @@ lmpLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate",
 
 ## ASCA-E
 
-The ASCA-E method performs PCA on the effect matrices then adds the residuals to compute the augmented scores. 
+The ASCA-E method performs PCA on the pure effect matrices then projects the effect matrices augmented with residuals on the PC obtained.  
 
 ```{r ASCAE PCA}
 resASCAE = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 

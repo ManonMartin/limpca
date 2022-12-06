@@ -1,0 +1,26 @@
+---
+title: "Supplementary information"
+output: html_document
+bibliography: reference.bib  
+# nocite: '@*'
+---
+
+
+The list of articles related to this package is provided here:
+
+- Rousseau, Réjane. 2011. “Statistical Contributrion to the Analysis of Metabonomic Data in 1H-NMR Spectroscopy.” PhD thesis, UCL - SSH/LIDAM/ISBA - Institut de Statistique, Biostatistique et Sciences Actuarielles. http://hdl.handle.net/2078.1/75532.
+
+- Guisset, Séverine, Manon Martin, and Bernadette Govaerts. 2019. “Comparison of PARAFASCA, AComDim, and AMOPLS Approaches in the Multivariate GLM Modelling of Multi-Factorial Designs.” *Chemometrics and Intelligent Laboratory Systems* 184: 44–63. https://doi.org/10.1016/j.chemolab.2018.11.006.
+Open access to the preprint: http://hdl.handle.net/2078.1/207560
+
+- Thiel, Michel, Baptiste Féraud, and Bernadette Govaerts. 2017. “ASCA+ and APCA+: Extensions of ASCA and APCA in the Analysis of Unbalanced Multifactorial Designs.” *Journal of Chemometrics* 31 (6): e2895. https://doi.org/10.1002/cem.2895.
+Open access to the preprint: http://hdl.handle.net/2078.1/176979
+
+
+- Govaerts, Bernadette, Bernard G. Francq, Rebecca Marion, Manon Martin, and Michel Thiel. 2020. “The Essentials on Linear Regression, ANOVA, General Linear and Linear Mixed Models for the Chemist.” In *Comprehensive Chemometrics, Chemical and Biochemical Data Analysis*, edited by 2nd Edition. Elsevier. http://hdl.handle.net/2078.1/230895.
+Open access to the preprint: http://hdl.handle.net/2078.1/230335
+
+- Martin, Manon, and Bernadette Govaerts. 2020. “LiMM‐PCA: Combining ASCA+ and Linear Mixed Models to Analyse High‐dimensional Designed Data.” Journal of Chemometrics 34. https://doi.org/10.1002/cem.3232.
+Open access to the preprint: http://hdl.handle.net/2078.1/219772
+
+<!-- <div id="refs"></div> -->

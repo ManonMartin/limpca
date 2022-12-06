@@ -1,55 +1,67 @@
-limpca
-================
+---
+title: Get Started
+output: github_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  out.width = "70%",
+  fig.align='center',
+  eval=TRUE
+)
+rm(list=ls())
+library("limpca")
+```  
+
 
 <!-- badges: start -->
-
 [![R-CMD-check](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-## Installation
+# Installation
 
-Installation from GitHub:
-
-``` r
+```{r, eval=FALSE}
 remotes::install_github("ManonMartin/limpca", dependencies = TRUE)
 library("limpca")
 ```
 
-Note that if you would like to build the vignettes, you have to install
-`BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and
-`rmarkdown` packages before installing `limpca` with the following
-command:
-`remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
+Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command: `remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
 
-## Basic usage
+For any enquiry, you can send an email to the package authors: [bernadette.govaerts@uclouvain.be](mailto:bernadette.govaerts@uclouvain.be) ; [michel.thiel@uclouvain.be](mailto:michel.thiel@uclouvain.be) or [manon.martin@uclouvain.be](mailto:manon.martin@uclouvain.be)
 
-Here is a quick start based on the `UCH` dataset (see `?UCH` for more
-information on this dataset).
+# Short application on the `UCH` dataset
 
-### Data object
+## Data object
 
-`UCH` contains a multivariate matrix (`outcomes`), a `design` data.frame
-and a `formula` as a character string:
-
-``` r
+`UCH` contains a multivariate matrix (`outcomes`), a `design` data.frame and a `formula` as a character string:
+```{r}
 str(UCH)
 ```
 
+
+## Data visualisation
+
 The design can be visualised with `plotDesign()`.
 
-``` r
+```{r dataVisu}
 # design
 plotDesign(design = UCH$design, x = "Hippurate", 
            y = "Citrate", rows = "Time",
            title = "Design of the UCH dataset")
+
+# row 3 of outcomes
+plotLine(Y = UCH$outcomes,
+         title = "H-NMR spectrum",
+         rows = c(3),
+         xlab = "ppm",
+         ylab = "Intensity")
 ```
 
-### PCA
+## PCA
 
-Before applying ASCA, one can explore the multivariate structure of the
-outcomes with Principal Component Analysis (PCA).
-
-``` r
+```{r PCA}
 ResPCA = pcaBySvd(UCH$outcomes)
 pcaScreePlot(ResPCA, nPC = 6)
 pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
@@ -59,9 +71,9 @@ pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
              points_labs_rn = FALSE)
 ```
 
-### Model estimation and effect matrix decomposition
+## Model estimation and effect matrix decomposition
 
-``` r
+```{r modelEst}
 # Model matrix generation
 resMM = lmpModelMatrix(UCH)
 
@@ -69,9 +81,9 @@ resMM = lmpModelMatrix(UCH)
 resEM = lmpEffectMatrices(resMM)
 ```
 
-### Effect matrix test of significance and importance measure
+## Effect matrix test of significance and importance measure
 
-``` r
+```{r effectImpSign}
 # Effects importance
 resEM$varPercentagesPlot
 
@@ -80,9 +92,10 @@ resBT = lmpBootstrapTests(resLmpEffectMatrices = resEM, nboot=100)
 resBT$resultsTable
 ```
 
-### ASCA decomposition
 
-``` r
+## ASCA decomposition
+
+```{r ASCA}
 # ASCA decomposition
 resASCA = lmpPcaEffects(resLmpEffectMatrices = resEM, method="ASCA")
 
@@ -104,9 +117,3 @@ lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
-## Additional information
-
-For any enquiry, you can open an
-[issue](https://github.com/ManonMartin/limpca/issues) on Github or send
-an email to the package authors: <bernadette.govaerts@uclouvain.be> ;
-<michel.thiel@uclouvain.be> or <manon.martin@uclouvain.be>.
