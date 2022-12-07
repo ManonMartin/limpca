@@ -6,6 +6,9 @@ limpca
 [![R-CMD-check](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
+The web page of the package can be accessed here:
+<https://manonmartin.github.io/limpca/>
+
 ## Installation
 
 Installation from GitHub:
@@ -20,6 +23,8 @@ Note that if you would like to build the vignettes, you have to install
 `rmarkdown` packages before installing `limpca` with the following
 command:
 `remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
+
+## 
 
 ## Basic usage
 

@@ -1,5 +1,5 @@
 ---
-title: "Three-way ANOVA with fixed effects: UCH data"
+title: "Application of `limpca` on the UCH metabolomics dataset."
 author: "Benaiche Nadia, Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts Bernadette"
 date: '`r format(Sys.time(), "%B %d, %Y")`'
 package: limpca

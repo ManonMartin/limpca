@@ -22,6 +22,8 @@ navbar:
     - text: Vignettes
     - text: UCH
       href: articles/UCH.html
+    - text: Trout
+      href: articles/Trout.html
     - text: -------
     - text: Supplementary information
       href: articles/suppl_files/suppl_files.html
@@ -32,6 +34,7 @@ articles:
   navbar: ~
   contents:
   - UCH
+  - Trout
 - title: Supplementary information
   navbar: ~
   contents:

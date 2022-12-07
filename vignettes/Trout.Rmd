@@ -1,0 +1,495 @@
+---
+title: "Application of `limpca` on the Trout transcriptomic dataset."
+subtitle: "Balanced crossed three way design for fixed factors"
+author: "Benaiche Nadia, Bernadette Govaerts"
+date: '`r format(Sys.time(), "%B %d, %Y")`'
+package: limpca
+output:
+  BiocStyle::html_document:
+    toc: yes
+    toc_depth: 4
+    toc_float: yes
+vignette: >
+   %\VignetteIndexEntry{Application of limpca package on the Trout dataset}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r setup}
+# Install package if necessary (to be used before running the vignette)
+#if (!requireNamespace("remotes"))
+#install.packages(pkgs="remotes", dependencies="Depends")
+#remotes::install_github("ManonMartin/limpca", dependencies = TRUE)
+
+library(ggplot2)
+library(pander)
+library(car)
+library(limpca)
+library(gridExtra)
+
+knitr::opts_chunk$set(message=FALSE,warning=TRUE,comment=NA, crop = NULL,
+                      tidy.opts = list(width.cutoff = 60), tidy = TRUE,
+                      echo = TRUE)
+```
+
+# Dataset and model presentation
+
+This data set comes from the study of the modulation of immunity in rainbow trout (Oncorhynchus mykiss) by exposure to cadmium (Cd) combined with polyunsaturated fatty acids (PUFAs) enriched diets [Cornet et al., 2018].
+
+The responses were quantified by measuring the modification of the expression of 15 immune-related genes (m = 15) by RT-qPCR (reverse transcription quantitative polymerase chain reaction). The experiment was carried out on 72 trouts and 3 factors were considered in the experimental design:
+
+-   **Day**: Measurements on trouts were collected on days 28, 70 and 72
+-   **Treatment** : Four polyunsaturated fatty acid diets: alpha-linolenic acid (ALA), linoleic acid (LA), eicosapentaenoic acid (EPA) and docosahexaenoic acid (DHA)
+-   **Exposure**: Trouts were exposed (level = 2) or not (level = 0) to high cadmium concentrations.
+
+This gives a 3 × 4 × 2 factorial design. Each of the 24 trials corresponds to a different aquarium. Three fishes were analysed (3 replicates) for each condition, giving a total of 72 observations.
+
+In this limpca vignette the data are first explored in order to prepare an appropriate data set for ASCA/APCA analysis. Data are first represented by PCA and outliers removed. The remaining observations are then log transformed. Next the data of each aquarium are mean aggregated in order to avoid the inclusion of an aquarium random factor in the statistical model because limpca is not yet able to handle mixed linear models. The data are finally centered and scaled by column.
+
+The estimated model in then a (general) linear model for fixed factors including main effects and all two way interactions. The three way interaction is not included because the aggregated design has no replicate.     
+
+A detailed presentation and analysis of this dataset is also available in [Benaiche, 2022].
+
+# Data import and exploration
+
+## Data import and design visualization
+
+The `trout` data set is list of three objects : the model `outcomes`, the `design` and the model `formula`. 
+
+```{r Data Importation}
+data("trout")
+# print number of and response names 
+cat("\n Nb of Responses :  ",ncol(trout$outcomes),"\n ")
+cat("\nResponses :\n",colnames(trout$outcomes),"\n ")
+# Order responses by alphabetic order
+trout$outcomes <- trout$outcomes[,order(dimnames(trout$outcomes)[[2]])]
+cat("\n Ordered responses :\n  ",colnames(trout$outcomes),"\n ")
+# print factor names 
+cat("\nDesign factors :  ",colnames(trout$design),"\n ")
+# plot the design with plotDesign function
+limpca::plotDesign(design = trout$design, x = "Treatment",  y = "Day", cols  = "Exposure", 
+title = "Initial design of the trout dataset")
+```
+
+This graph confirms that the design is balanced.
+
+## Principal Component Analysis of row data
+
+Functions `pcaBySvd`, `pcaScreePlot` and `pcaScorePlot` are used to take a first look at the data by PCA. 
+
+This PCA shows that the data should be log transformed.
+
+```{r Exploratory PCA}
+resPCA <- limpca::pcaBySvd(trout$outcomes)
+limpca::pcaScreePlot(resPCA, nPC = 8)
+limpca::pcaScorePlot(resPcaBySvd = resPCA, axes = c(1,2), 
+title = "Score plot of original data ", 
+design = trout$design, color = "Aquarium",
+points_labs_rn = TRUE)
+```
+
+## Log10 transformation of the data and new PCA
+
+Data are log transfomed and a new PCA is applied.  
+
+The score plot show clearly two outliers (i.e. fishes D72EPA2.1 and D28EPA2.2).  They will removed of the analysis for the next steps.
+
+```{r Transformation}
+# Log Transformation
+trout_log <- trout
+trout_log$outcomes= as.matrix(log10(trout$outcomes))
+
+# new PCA
+resPCA1 <- limpca::pcaBySvd(trout_log$outcomes)
+limpca::pcaScreePlot(resPCA1, nPC = 8)
+limpca::pcaScorePlot(resPcaBySvd = resPCA1, axes = c(1,2), 
+title = "Score plot of Log10 data ", 
+design = trout_log$design, color = "Aquarium", drawShapes = "polygon",
+points_labs_rn = TRUE)
+```
+
+## New PCA without the outliers 
+
+New data are created without the 2 outliers and a new PCA performed.  The option `polygon` of `pcaScorePlot` function allows to group data by aquarium. In some aquariums, the 3 fishes shows very similar results and in other not.
+
+The data are now clean for further analysis
+
+```{r Remove Outliers}
+# Remove outliers and create new dataset
+trout_clean <- trout_log
+outliers <- match(c("D72EPA2.1","D28EPA2.2"),rownames(trout_log$outcomes))
+trout_clean$outcomes <- trout_log$outcomes[-outliers,]
+trout_clean$design <- trout_log$design[-outliers,]
+```
+
+```{r new PCA}
+# PCA
+resPCA2 <- limpca::pcaBySvd(trout_clean$outcomes)
+limpca::pcaScreePlot(resPCA2, nPC = 8)
+# Score plot Components 1 and 2
+limpca::pcaScorePlot(resPcaBySvd = resPCA2, axes = c(1,2), 
+title = "Score plot of Log10 data without outliers (PC 1&2)", 
+design = trout_clean$design, color = "Aquarium", drawShapes = "polygon",
+points_labs_rn = FALSE)
+# Score plot Components 3 and 4
+limpca::pcaScorePlot(resPcaBySvd = resPCA2, axes = c(3,4), 
+title = "Score plot of Log10 data without outliers (PC 3&4)", 
+design = trout_clean$design, color = "Aquarium", drawShapes = "polygon",
+points_labs_rn = FALSE)
+```
+
+The option `polygon` of `pcaScorePlot` function allows to group data by aquarium. In some aquariums, the 3 fishes shows very similar results and in other not.
+
+## Mean agregation by aquarium and scaling
+
+Data are now mean aggregated by aquarium. This will remove the hierarchy in the design and allow to apply a classical fixed effect general linear model to the data.
+
+Data are next centered and scaled by column. This will give the same importance to each response in the analysis.
+
+```{r Mean aggregation}
+# Mean aggregation
+mean_outcomes <- matrix(0, nrow = 24, ncol = 15)
+mean_design <- matrix(0, nrow = 24, ncol = 3)
+y = list(trout_clean$design[["Day"]], trout_clean$design[["Treatment"]],
+         trout_clean$design[["Exposure"]])
+for (i in 1:15) 
+  mean_outcomes[,i] <- aggregate(trout_clean$outcomes[,i], by=y, mean)[,4]
+mean_design <- aggregate(trout_clean$outcomes[,1], by=y, mean)[,c(1:3)]
+
+# Set row and col names
+colnames(mean_outcomes) <- colnames(trout_clean$outcomes)
+colnames(mean_design) <- colnames(trout_clean$design)[1:3]
+trout_mean_names <- apply(mean_design,1,paste,collapse="")
+rownames(mean_outcomes) <- trout_mean_names
+rownames(mean_design) <- trout_mean_names
+```
+
+```{r Centering and Scaling}
+# Outcomes centering and Scaling
+mean_outcomes <- scale(mean_outcomes,center = TRUE, scale = TRUE)
+# New data object creation
+trout_mean <- list("outcomes" = mean_outcomes, "design" = mean_design,"formula" = trout$formula)
+# Clean objects
+rm(resPCA, resPCA1, resPCA2, y, mean_design, mean_outcomes, trout_mean_names)
+```
+
+# Exploration of aggregated data
+
+Aggregated data are now explored. 
+
+## Design
+
+Note that there is no replicate in this new design. There is only one observation (i.e. one aquarium) for each of the 24 factor combinations.
+
+```{r Design}
+pander(head(trout_mean$design))
+limpca::plotDesign(design = trout_mean$design, 
+           title = "Design of mean aggregated trout dataset")
+```
+
+## Example of `lineplot` of the responses for two observations
+
+```{r Lineplot}
+limpca::plotLine(trout_mean$outcomes, rows = c(1,24), xaxis_type = "character", type = "s") +
+  ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+## PCA aggregated data
+
+```{r PCA}
+resPCA_mean <- limpca::pcaBySvd(trout_mean$outcomes)
+pcaScreePlot(resPCA_mean, nPC = 6)
+```
+
+### Score plots 
+
+The three score plots below show clearly that the Day is the more important effect. 
+
+```{r}
+limpca::pcaScorePlot(resPcaBySvd = resPCA_mean, axes = c(1,2), 
+title = "PCA score plot by Exposure and Day", 
+design = trout_mean$design,
+shape = "Exposure", color = "Day",
+points_labs_rn = FALSE)
+
+limpca::pcaScorePlot(resPcaBySvd = resPCA_mean, axes = c(1,2), 
+title = "PCA scores plot by Treatment and Day", 
+design = trout_mean$design,
+shape = "Day", color = "Treatment",
+points_labs_rn = FALSE)
+
+limpca::pcaScorePlot(resPcaBySvd = resPCA_mean, axes = c(1,2), 
+title = "PCA scores plot by Exposure and Treatment", 
+design = trout_mean$design,
+shape = "Treatment", color = "Exposure",
+points_labs_rn = FALSE)
+```
+
+### 1D Loading plots
+
+```{r}
+limpca::pcaLoading1dPlot(resPcaBySvd = resPCA_mean, axes = c(1,2), 
+               title = "PCA loadings plot trout", xlab = " ", ylab = "Expression",
+               xaxis_type = "character", type = "s") +
+  ggplot2::theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+### 2D Loading plots
+
+This 2D loading plot allows already to observe that most  responses are correlated with each others.  Igm, SOD and TLR9 behave quite differently.  
+
+```{r}
+limpca::pcaLoading2dPlot(resPcaBySvd = resPCA_mean, axes = c(1,2), 
+title = "PCA loadings plot trout", addRownames=TRUE) 
+```
+
+
+## Scatterplot matrix of all 15 responses
+
+The `plotScatterM` function allows to visualize the 2 by 2 relation between all (or some of) the responses simultaneously and choose different markers and colors above and below the diagonal according to factor levels.  Strong relations between expressions are confirmed here for most genes.  
+
+```{r Scatterplot Matrix,fig.width=10,fig.height=10}
+limpca::plotScatterM(Y = trout_mean$outcomes , cols = c(1:15), design = trout_mean$design,
+              varname.colorup = "Day",
+              vec.colorup = c("CadetBlue4", "pink", "orange"),
+              varname.colordown = "Day",
+              vec.colordown = c("CadetBlue4", "pink", "orange"),
+              varname.pchup = "Treatment",
+              varname.pchdown = "Exposure")
+```
+
+# GLM decomposition
+
+The estimated model is the following :
+
+`outcomes ~ Day + Treatment + Exposure + Day:Treatment + Day:Exposure + Treatment:Exposure`
+
+Since the design has only one replicate, the three way interaction has been removed because it is confounded with residuals.
+
+## Model matrix X generation
+
+```{r ModelMatrix}
+resLmpModelMatrix <- limpca::lmpModelMatrix(trout_mean)
+pander::pander(head(resLmpModelMatrix$modelMatrix))
+```
+
+## Computation of effect matrices and importances
+
+As observed before, the more important effect in the model is the Day main effect.
+
+```{r EffectMatrices}
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resLmpEffectMatrices$varPercentagesPlot 
+```
+
+## Bootstrap test of effect significance
+
+The bootstrap test shows that, in addition to the Day effect, the Treatment effect is also significant (p\<0.05) and the DxT effect is nearly significant (p close to 0.1).  The corresponding effect matrices will be studied more deeply by PCA in the next sections. 
+
+```{r Bootstrap}
+resLmpBootstrapTests <- lmpBootstrapTests(resLmpEffectMatrices = resLmpEffectMatrices, nboot=1000)
+
+# Print p-values
+pander::pander(t(resLmpBootstrapTests$resultsTable))
+```
+
+# ASCA and APCA
+
+Visualization of single or combined effect matrices using ASCA and APCA. ASCA-E is also provided in `limpca` but not shown here.
+
+## ASCA
+
+### PCA decomposition of effect matrices
+
+In addition to single model effects, a combined effect matrix `Day+Treatment+Day:Treatment` also is computed in order to visualize the combined effect of these two most important factors.
+
+```{r ASCA PCA}
+resASCA <- lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, method="ASCA", 
+combineEffects = list(c("Day", "Treatment", "Day:Treatment")))
+```
+
+### Contributions
+
+Print contributions of each model effect and of each PC for each  effect matrix decomposition by PCA.  This last result is given effect by effect and then reported to the global variance.   
+
+```{r ASCA Contrib}
+resLmpContributions <- lmpContributions(resASCA)
+```
+
+```{r ASCA ContribP}
+pander::pander(resLmpContributions$totalContribTable)
+pander::pander(resLmpContributions$effectTable)
+pander::pander(resLmpContributions$contribTable)
+pander::pander(resLmpContributions$combinedEffectTable)
+
+## Visualize the more important contributions
+resLmpContributions$plotContrib 
+```
+
+### Scores and loadings plots
+
+2D Score plots of the most important effects and of the residual matrix are given below with their related loading plots. These allow to see for which response each effect is or is not important
+
+#### Day effect
+
+```{r ASCA Day}
+A <- lmpScorePlot(resASCA, effectNames = "Day", color = "Day", shape = "Day")
+B <- lmpLoading2dPlot(resASCA, effectNames = "Day",points_labs=colnames(trout$outcomes))
+grid.arrange(A,B,ncol=2)
+```
+
+#### Treatment effect
+
+```{r ASCA Treatment}
+A <- lmpScorePlot(resASCA, effectNames = "Treatment", color = "Treatment", shape = "Treatment")
+B <- lmpLoading2dPlot(resASCA, effectNames = "Treatment",points_labs=colnames(trout$outcomes))
+grid.arrange(A,B,ncol=2)
+```
+
+#### Day:Treatment effect
+
+```{r ASCA DayTreatment}
+A <- lmpScorePlot(resASCA, effectNames = "Day:Treatment", color = "Treatment", shape = "Day")
+B <- lmpLoading2dPlot(resASCA, effectNames = "Day:Treatment",points_labs=colnames(trout$outcomes))
+grid.arrange(A,B,ncol=2)
+```
+
+#### Combined Day+Treatment+Day:Treatment effect
+
+```{r ASCA Combined effect}
+A <- lmpScorePlot(resASCA, effectNames = "Day+Treatment+Day:Treatment", color = "Treatment", shape = "Day")
+B <- lmpLoading2dPlot(resASCA, effectNames = "Day+Treatment+Day:Treatment",points_labs=colnames(trout$outcomes))
+grid.arrange(A,B,ncol=2)
+```
+
+#### Residual matrix decomposition
+
+The score and loading plot of the residual matrix does not show any special pattern.
+
+```{r ASCA Residuals}
+A=lmpScorePlot(resASCA, effectNames = "Residuals", color = "Treatment", shape = "Day")
+B=lmpLoading2dPlot(resASCA, effectNames = "Residuals", points_labs=colnames(trout$outcomes))
+grid.arrange(A,B,ncol=2)
+```
+
+### Effect plots on scores
+
+Interaction effects are difficult to visualize in 2D score plots. Effect plots are interesting in this context. It show the effect of one factor on a PC for different level of the other.
+
+Below the Day:Treament interaction effect is drawn alone and then combined with the two related main effects.
+
+The second graph shows that their is some interaction effect but small compared to the Day and even treatment main effects.
+
+```{r ASCA Effects}
+A <- lmpEffectPlot(resASCA, effectName = "Day:Treatment", x = "Day", z = "Treatment", axes = c(1,2))
+A$PC1=A$PC1+ggtitle( "PC1: Day:Treatment effect alone")
+A$PC2=A$PC2+ggtitle( "PC2: Day:Treatment effect alone")
+grid.arrange(A$PC1,A$PC2,ncol=2)
+
+A <- lmpEffectPlot(resASCA, effectName = "Day+Treatment+Day:Treatment", x = "Day", z = "Treatment", axes = c(1,2))
+A$PC1=A$PC1+ggtitle( "PC1: Combined D+T+D:T effects")
+A$PC2=A$PC2+ggtitle( "PC2: Combined D+T+D:T effects")
+grid.arrange(A$PC1,A$PC2,ncol=2)
+```
+
+## APCA
+
+APCA allows to visualize by PCA each model effect added to model residuals. It gives an idea of the effects signal to noise ratio and significance. Be care that the significance depends also crucially of the number of observations in the experiment.
+
+In APCA the score plots are the more interesting graphics to look at. We then only give them here for all model effects.
+
+```{r APCA PCA}
+resAPCA = lmpPcaEffects(resLmpEffectMatrices = 
+resLmpEffectMatrices, method="APCA")
+```
+
+```{r APCA Scores}
+# Day Effect
+lmpScorePlot(resAPCA, effectNames = "Day", 
+color = "Day", shape = "Day",drawShapes="ellipse")
+
+# Treatment Effect
+lmpScorePlot(resAPCA, effectNames = "Treatment",
+color = "Treatment", shape = "Treatment",drawShapes="ellipse")
+
+
+# Exposure Effect
+lmpScorePlot(resAPCA, effectNames = "Exposure", 
+color = "Exposure", shape = "Exposure",drawShapes="ellipse")
+
+# Day:Treatment Effect
+lmpScorePlot(resAPCA, effectNames = "Day:Treatment", 
+color = "Treatment", shape = "Day", drawShapes="polygon")
+```
+
+# Univariate ANOVA
+
+This part of the vignette links the results of the ASCA/APCA analysis to a more classical analysis applied in -omics transcriptomic data analysis (see e.g. `LIMMA` package).
+
+An ANOVA model is fitted to each response separately and then, for each model effect, p-values of effect significance are corrected by FDR and ordered. These results allow to detect for which responses each effect of interest is significant. E.g. find which gene is a potential biomarker to differentiate patients with or without a given disease.
+
+The code below applies such analysis and compares then responses importance based on FDR p-values to response loadings obtained by ASCA/APCA.
+
+## Parallel ANOVA modeling and FDR p-value corrections
+
+```{r Anova}
+# Creation of a matrix to store the p-values
+m <- ncol(trout_mean$outcomes)
+mat_pval <- matrix(nrow=m, ncol=6)
+dimnames(mat_pval) = list(dimnames(trout_mean$outcomes)[[2]],c("Day","Treatment","Exposure","Day:Treatment", "Day:Exposure","Treatment:Exposure"))
+
+# Parallel ANOVA modeling
+for(i in 1:m) {
+data=cbind(y=trout_mean$outcomes[,i],trout_mean$design)
+Modl <- lm(y ~ Day+Treatment+Exposure+Day:Treatment+Day:Exposure+Treatment:Exposure,
+contrasts=list(Day=contr.sum,Treatment=contr.sum,Exposure=contr.sum),
+data=data)
+tabanova <- Anova(Modl, type=3)
+mat_pval[i,] <- tabanova[2:7,4]
+}
+
+# FDR p-values correction
+for (i in 1:6) mat_pval[,i]<- p.adjust(mat_pval[,i], method = "BH")
+```
+
+## FDR corrected p_values (q-values)
+
+```{r}
+pander(mat_pval)
+heatmap(-log10(mat_pval),Rowv=NA,Colv="Rowv",cexCol=0.8,scale="none",main="Heatmap of -log10(q-values)")
+```
+
+## Plot ASCA loadings versus -log10(q-values)
+
+Plot the relation between the ASCA loadings and FDR p-values for the three more important effects of the model : Day, Treatment and Day:Treatment.
+
+FDR p-values are log transformed and loadings are summarized over the 2 first components.
+
+```{r, eval=FALSE}
+Effects <- c("Day","Treatment","Day:Treatment")
+for(i in 1:3){
+Pval_log <- -log10(mat_pval[,Effects[i]])
+resA=resASCA[[Effects[i]]]
+PC12Load <- as.vector(sqrt(resA$loadings[,1:2]^2%*%resA$singvar[1:2]^2))
+matres <- cbind(PC12Load,Pval_log)
+A[[i]] <- plotScatter(Y = matres, xy = c(1,2),
+points_labs = rownames(matres),xlab = "PC1&2 ASCA loadings", ylab = "-log10(p-values)",
+title = paste(Effects[i],"effect"))
+}
+A[[1]]
+A[[2]]
+A[[3]]
+```
+# Session info
+
+```{r}
+sessionInfo()
+```
+
+# References
+
+Benaiche, N., (2022), Stabilisation of the R package LMWiRe -- Linear Models for Wide Responses. *UCLouvain*, <http://hdl.handle.net/2078.1/thesis:33996>
+
+Cornet, V., Ouaach, A., Mandiki, S., Flamion, E., Ferain, A., Van Larebeke, M., Lemaire, B., Reyes Lopez F., Tort, L., Larondelle, Y. and Kestemont, P., (2018), Environmentally-realistic concentration of cadmium combined with polyunsaturated fatty acids enriched diets modulated non-specific immunity in rainbow trout. *Aquatic Toxicology*, **196**, 104--116. <https://doi.org/10.1016/j.aquatox.2018.01.012>
+
+Thiel, M., Feraud, B. and Govaerts, B. (2017), ASCA+ and APCA+: exten- sions of ASCA and APCA in the analysis of unbalanced multifactorial designs. *Journal of Chemometrics*. **31** <https://doi.org/10.1002/cem.2895>
