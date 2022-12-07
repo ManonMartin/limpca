@@ -1,6 +1,12 @@
 ---
 title: Get Started
-output: github_document
+description: >
+  Get started with limpca.
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Introduction to pkgdown}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
 ---
 
 ```{r setup, include = FALSE}
