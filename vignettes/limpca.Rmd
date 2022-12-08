@@ -1,10 +1,10 @@
 ---
-title: Get Started
+title: Get started with limpca.
 description: >
   Get started with limpca.
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Introduction to pkgdown}
+  %\VignetteIndexEntry{Get started with limpca.}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
