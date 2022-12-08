@@ -5,21 +5,21 @@
 #' Generates the response profile of one or more observation i.e. plots of one or more rows of the outcomes matrix on the y-axis against the m response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots are offered.
 #'
 #' @param Y A numerical matrix containing the rows to be drawn.
-#' @param rows A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s).
-#' @param type Type of graph to be drawn: "p" for point, "l" for line or "s" for segment.
+#' @param rows A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s). Default to 1.
+#' @param type Type of graph to be drawn: "p" for point, "l" for line (default) or "s" for segment.
 #' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
 #' @param ylab If not \code{NULL}, label for the y-axis.
-#' @param xaxis_type The data type of the x axis: either "numeric" or "character".
+#' @param xaxis_type The data type of the x axis: either "numeric" (default) or "character".
 #' @param stacked Logical. If `TRUE`, will draw stacked plots, otherwise will draw separate plots.
-#' @param ncol If stacked is `FALSE`, the number of columns to represent the separate plots.
+#' @param ncol If stacked is `FALSE`, the number of columns to represent the separate plots. Default to 1.
 #' @param nrow If stacked is `FALSE`, the number of rows to represent the separate plots.
 #' @param facet_label If stacked is `FALSE`, the labels of the separate plots.
-#' @param hline If not \code{NULL}, draws (a) horizontal line(s).
+#' @param hline If not \code{NULL}, draws (a) horizontal line(s), by default at y intercept = 0.
 #' @param size Argument of length 1 giving the points size (if `type` == "p") or the line size (if `type` == "l" or "s").
 #' @param color If not `NULL`, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.
-#' @param shape The points shape if `type` == "p" (argument of length 1).
-#' @param theme ggplot theme, see `?ggtheme` for more info.
+#' @param shape Argument of length 1 giving the points shape (default = 1) if `type` == "p".
+#' @param theme ggplot theme (default: `theme_bw()`), see `?ggtheme` for more info.
 #'
 #' @return A line plot (ggplot).
 #'

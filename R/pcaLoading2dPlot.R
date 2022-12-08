@@ -108,6 +108,7 @@ pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
   if(hasArg("points_labs")){
     addRownames = FALSE
   }else{
+    pl_n <- min(ncol(loadings), pl_n)
     points_labels <- rownames(loadings)
     ids <- order(dista, decreasing = TRUE)[1:pl_n]
     points_labels[-ids] <- ""
