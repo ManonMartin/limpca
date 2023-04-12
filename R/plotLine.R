@@ -20,6 +20,7 @@
 #' @param color If not `NULL`, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.
 #' @param shape Argument of length 1 giving the points shape (default = 1) if `type` == "p".
 #' @param theme ggplot theme (default: `theme_bw()`), see `?ggtheme` for more info.
+#' @param ang_x_axis If not `NULL`, rotation angle to rotate the x axis text (based on the argument `axis.text.x` from ggplot2::theme)
 #'
 #' @return A line plot (ggplot).
 #'
@@ -50,7 +51,8 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
                      title = "Line plot", xlab = NULL, ylab = NULL,
                      xaxis_type = c("numeric", "character"), stacked = FALSE,
                      ncol = 1, nrow = NULL, facet_label = NULL, hline = 0,
-                     size = 0.5, color = NULL, shape = 1, theme = theme_bw()) {
+                     size = 0.5, color = NULL, shape = 1, theme = theme_bw(),
+                     ang_x_axis = NULL) {
 
   # checks =========================
   checkArg(Y,"matrix",can.be.null = FALSE)
@@ -69,6 +71,7 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
   checkArg(shape, "length1", can.be.null = FALSE)
   checkArg(stacked, "bool", can.be.null = FALSE)
   checkArg(facet_label, c("str"), can.be.null = TRUE)
+  checkArg(ang_x_axis, "int", can.be.null = TRUE)
 
   type <- match.arg(type)
   xaxis_type <- match.arg(xaxis_type)
@@ -185,6 +188,12 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
         ggplot2::facet_wrap(~ rownames, ncol = ncol, nrow = nrow,
                             labeller = labeller(rownames = facet_label))
     }
+  }
+
+  if(!is.null(ang_x_axis)){
+    fig <- fig +
+      ggplot2::theme(axis.text.x = element_text(angle = ang_x_axis,
+                                                vjust = 0.5, hjust=1))
   }
 
   return(fig)

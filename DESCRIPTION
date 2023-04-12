@@ -31,7 +31,7 @@ Suggests:
     BiocStyle,
     rmarkdown, car
 biocViews: StatisticalMethod, PrincipalComponent, Regression, Visualization, ExperimentalDesign, MultipleComparison
-RoxygenNote: 7.2.1
+RoxygenNote: 7.2.3
 Roxygen: list(markdown=TRUE)
 BugReports: https://github.com/ManonMartin/limpca/issues
 URL: https://github.com/ManonMartin/limpca,
