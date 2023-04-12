@@ -138,10 +138,22 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
     }
   }
 
+
+
+
   # prepare the arguments  ==============================
   if (is.numeric(xy)){
-    xy <- colnames(Y)[xy]
+    if (is.null(colnames(Y)[xy])){
+      colnames(Y)[xy] = xy = paste0("C",xy)
+    }else{
+      xy <- colnames(Y)[xy]
+    }
+  }else{
+    if (!xy[1] %in% colnames(Y) | !xy[2] %in% colnames(Y)){
+      stop("values in xy do not match the colnames of Y")
+    }
   }
+
   mn_xy <- make.names(xy) # corrects the naming of variables
 
   if (is.null(xlab)) {
