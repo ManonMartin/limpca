@@ -25,6 +25,7 @@
 #'  res <- lmpBootstrapTests(resLmpEffectMatrices = resLmpEffectMatrices, nboot=10, nCores=2, verbose = TRUE)
 #'
 #' @references
+#'
 #' Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
 #'
