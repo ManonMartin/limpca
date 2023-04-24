@@ -2,7 +2,7 @@
 #' @title Performs a test on the effects from the model
 #'
 #' @description
-#' Tests the significance of the effects from the model using bootstrap. This function is based on the outputs of \code{\link{lmpEffectMatrices}}. Tests on combined effects are also provided.
+#' Tests the significance of the model effects using bootstrap. This function is based on the outputs of \code{\link{lmpEffectMatrices}}. Tests on combined effects are also provided.
 #'
 #' @param resLmpEffectMatrices A list of 12 from \code{\link{lmpEffectMatrices}}.
 #' @param nboot An integer with the number of iterations to perform.
