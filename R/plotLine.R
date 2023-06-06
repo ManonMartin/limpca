@@ -100,12 +100,13 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
 
   Y <- t(Y[rows,, drop=FALSE])
 
-  mn_xy <- make.names(rows) # corrects the naming of variables
+  # mn_xy <- make.names(rows) # corrects the naming of variables
+  # colnames(Y) <- mn_xy
 
   Y <- Y %>% as.data.frame() %>%
     tibble::rownames_to_column(var = "x_axis")
 
-  Y_long <-  Y %>% tidyr::pivot_longer(all_of(mn_xy), names_to = "rownames")
+  Y_long <-  Y %>% tidyr::pivot_longer(all_of(rows), names_to = "rownames")
 
   if (xaxis_type == "numeric") {
     rn <- Y_long$x_axis
@@ -177,7 +178,7 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
   }
 
 
-  if(! stacked){
+  if(!stacked){
     # facet_wrap
     if(is.null(facet_label)){
       fig <- fig +
