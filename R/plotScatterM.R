@@ -2,21 +2,21 @@
 #' @title Scatter plot matrix
 #'
 #' @description
-#' Produces a scatter plot matrix between the selected columns of the outcomes matrix `Y` choosing specific colors and markers for the design factors on the upper and lower diagonal.
+#' Produces a scatter plot matrix between the selected columns of the outcomes matrix \eqn{Y} choosing specific colors and symbols for up to four factors from the design on the upper and lower diagonals.
 #'
-#' @param Y nxm matrix with n observations and m variables.
-#' @param cols A vector with either the column names of the Y matrix to plot (character) or the column index positions.
-#' @param design A nxk "free encoded" experimental design data frame.
-#' @param labelVector Labels to display on the diagonal. If `NULL`, the `cols` names are used.
+#' @param Y \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.
+#' @param cols A vector with either the column names of the \eqn{Y} matrix to plot (character) or the column index positions.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
+#' @param labelVector Labels to display on the diagonal. If `NULL`, the column names are deduced from `cols`.
 #' @param title Title of the graph.
-#' @param varname.colorup A character with the name of the variable used to color the upper triangle.
-#' @param varname.colordown A character with the name of the variable used to color the lower triangle.
-#' @param varname.pchup A character with the name of the variable used to mark points for the upper triangle.
-#' @param varname.pchdown A character with the name of the variable used to mark points for the lower triangle.
-#' @param vec.colorup A color vector with a length equivalent to the number of levels of varname.colorup.
-#' @param vec.colordown A color vector with a length equivalent to the number of levels of varname.colordown.
-#' @param vec.pchup A pch vector with a length equivalent to the number of levels of varname.pchup.
-#' @param vec.pchdown A pch vector with a length equivalent to the number of levels of varname.pchdown.
+#' @param varname.colorup A character string with the name of the variable used to color the upper triangle.
+#' @param varname.colordown A character string with the name of the variable used to color the lower triangle.
+#' @param varname.pchup A character string with the name of the variable used to mark points for the upper triangle.
+#' @param varname.pchdown A character string with the name of the variable used to mark points for the lower triangle.
+#' @param vec.colorup A color vector (character or numeric) with a length equal to the number of levels of `varname.colorup`.
+#' @param vec.colordown A color vector (character or numeric) with a length equal to the number of levels of `varname.colordown`.
+#' @param vec.pchup A symbol vector (character or numeric) with a length equal to the number of levels of `varname.pchup`.
+#' @param vec.pchdown A symbol vector (character or numeric) with a length equal to the number of levels of `varname.pchdown`.
 #'
 #' @return A matrix of scatter plots.
 #'
@@ -27,9 +27,9 @@
 #' plotScatterM(Y = UCH$outcomes, cols = c(1:4), design = UCH$design,
 #'              varname.colorup = "Hippurate", varname.colordown = "Citrate",
 #'              varname.pchup = "Time", varname.pchdown = "Day",
-#'              vec.colorup = c("red","blue","black"),
+#'              vec.colorup = c(2,4,1),
 #'              vec.colordown = c("orange","purple","green"),
-#'              vec.pchup = c(1,2), vec.pchdown = c(15,16))
+#'              vec.pchup = c(1,2), vec.pchdown = c("a","b"))
 #'
 #' @import graphics grDevices
 #' @import ggsci

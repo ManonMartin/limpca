@@ -5,14 +5,14 @@
 \title{Scree Plot}
 \usage{
 lmpScreePlot(
-  resLLmpContributions,
+  resLmpContributions,
   effectNames = NULL,
   nPC = 5,
   theme = theme_bw()
 )
 }
 \arguments{
-\item{resLLmpContributions}{A resLLmpContributions list from the function \code{\link{lmpContributions}}.}
+\item{resLmpContributions}{A resLmpContributions list from the function \code{\link{lmpContributions}}.}
 
 \item{effectNames}{Names of the effects to be plotted. if \code{NULL}, all the effects are plotted.}
 
@@ -24,15 +24,15 @@ lmpScreePlot(
 A scree plot (ggplot).
 }
 \description{
-Plots barplots of the percentage of variance associated with each principal component and for each matrix effect on the basis of \code{\link{lmpContributions}} outputs.
+Provides a barplot of the percentage of variance associated to the PCs of the effect matrices ordered by importance based on the outputs of \code{\link{lmpContributions}}.
 }
 \examples{
 
  data('UCH')
- resLLmpModelMatrix = lmpModelMatrix(UCH)
- resLLmpEffectMatrices = lmpEffectMatrices(resLLmpModelMatrix)
- resASCAE = lmpPcaEffects(resLLmpEffectMatrices, method="ASCA-E")
- resLLmpContributions = lmpContributions(resASCAE)
- lmpScreePlot(resLLmpContributions, effectNames ="Hippurate:Citrate", nPC=4)
+ resLmpModelMatrix = lmpModelMatrix(UCH)
+ resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+ resASCAE = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
+ resLmpContributions = lmpContributions(resASCAE)
+ lmpScreePlot(resLmpContributions, effectNames ="Hippurate:Citrate", nPC=4)
 
 }

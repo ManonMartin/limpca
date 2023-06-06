@@ -2,17 +2,17 @@
 % Please edit documentation in R/pcaBySvd.R
 \name{pcaBySvd}
 \alias{pcaBySvd}
-\title{Singular value decomposition for PCA analysis}
+\title{Singular Value Decomposition for PCA analysis}
 \usage{
 pcaBySvd(Y, nPC = min(dim(Y)))
 }
 \arguments{
-\item{Y}{The nxm matrix with n observations and m response variables.}
+\item{Y}{The \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} (response) variables.}
 
-\item{nPC}{Number of Principal Components.}
+\item{nPC}{Number of Principal Components to extract.}
 }
 \value{
-A list with the following elements:
+A list containing the following elements:
 \describe{
 \item{\code{scores}}{Scores}
 \item{\code{loadings}}{Loadings}
@@ -26,8 +26,8 @@ A list with the following elements:
 }
 \description{
 Operates a Principal Component Analysis on the \code{Y} outcome/response matrix by a singular
-value decomposition (the pre-processing involves the mean-centering of \code{Y}).
-Outputs are represented with functions \code{\link{pcaScorePlot}},
+Value Decomposition (the pre-processing involves the mean-centering of \code{Y}).
+Outputs are represented with the functions \code{\link{pcaScorePlot}},
 \code{\link{pcaLoading1dPlot}}, \code{\link{pcaLoading2dPlot}} and \code{\link{pcaScreePlot}}.
 }
 \examples{

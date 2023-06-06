@@ -2,27 +2,34 @@
 #' @title Loadings represented on a line plot.
 #'
 #' @description
-#' Plots the loadings for each effect matrix from \code{\link{lmpPcaEffects}} outputs with line plots.
+#' Plots the loading vectors for each effect matrix from the \code{\link{lmpPcaEffects}} outputs with line plots. This is a wrapper of plotLine.
 #'
 #' @param resLmpPcaEffects A list corresponding to the output value of \code{\link{lmpPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. if `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
-#' @param ... Additional arguments to be passed to \code{\link{plotLine}}.
+#' @param ... Additional arguments to be passed to \code{\link{plotLine}} such as `xaxis_type`, `type` or `ang_x_axis`.
 #'
 #' @return A list of `ggplot` objects representing the loading plots.
 #'
 #' @details
-#' `lmpLoading1dPlot` is a wrapper of \code{\link{plotLine}}.
+#' `lmpLoading1dPlot` is a wrapper of \code{\link{plotLine}}. See `?plotLine` for more information on the additional arguments.
 #'
 #'
 #' @examples
 #'
+#' # Example of "spectral" type loadings (line and numerical x-axis)
 #' data('UCH')
 #' resLmpModelMatrix = lmpModelMatrix(UCH)
 #' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
 #' resASCA = lmpPcaEffects(resLmpEffectMatrices)
-#'
 #' lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
+#'
+#' # Example of "segment" and discrete type loadings (segments and character x-axis)
+#' data('trout')
+#' resLmpModelMatrix = lmpModelMatrix(trout)
+#' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+#' resASCA = lmpPcaEffects(resLmpEffectMatrices)
+#' lmpLoading1dPlot(resASCA,effectNames="Day",xaxis_type="character",type="s",ang_x_axis=90)
 
 
 lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,

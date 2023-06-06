@@ -15,25 +15,28 @@ plotDesign(
 )
 }
 \arguments{
-\item{design}{A nxk "free encoded" experimental design data frame.}
+\item{design}{A data.frame representing the \eqn{n \times k} "freely encoded" experimental design.}
 
-\item{x}{By default: the first column of \code{design}. If not \code{NULL}, a character string giving the column name of \code{design} to be used for the x axis.}
+\item{x}{By default, the first column of \code{design} ; otherwise if not \code{NULL}, a character string giving the column name of \code{design} to be used for the x-axis.}
 
-\item{y}{By default: the second column of \code{design}. If not \code{NULL}, a character string giving the column name of \code{design} to be used for the y axis.}
+\item{y}{By default, the second column of \code{design} if present ; otherwise if not \code{NULL}, a character string giving the column name of \code{design} to be used for the y-axis.}
 
-\item{rows}{By default: the fourth column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
+\item{rows}{By default, the fourth column of \code{design} if present ; otherwise if not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
 
-\item{cols}{By default: the third column of \code{design} if present. If not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
+\item{cols}{By default, the third column of \code{design} if present ; otherwise if not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
 
 \item{title}{Plot title.}
 
-\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
+\item{theme}{The \code{ggplot2} theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A plot of the design (ggplot).
+A \code{ggplot2} plot of the design matrix.
 }
 \description{
-Provides a graphical representation of the experimental design for up to 4 factors. It allows to visualize factors levels and check the balancing of the design.
+Provides a graphical representation of the experimental design. It allows to visualize factors levels and check the design balance.
+}
+\details{
+The default behavior (parameters \code{x}, \code{y}, \code{cols} and \code{rows} are \code{NULL}) uses the first four columns of \code{df}. If at least one of these arguments is not \code{NULL}, the function will only use the non \code{NULL} parameters to be displayed.
 }
 \examples{
 
@@ -44,6 +47,9 @@ df <-  mtcars \%>\%
   dplyr::select(cyl, vs, am, gear, carb) \%>\%
   as.data.frame() \%>\%
   dplyr::mutate(across(everything(), as.factor))
+
+# Default behavior: display the 4 first factors in the design
+plotDesign(design = df)
 
 # 2 factors
 plotDesign(design = df, x = "cyl", y = "vs",

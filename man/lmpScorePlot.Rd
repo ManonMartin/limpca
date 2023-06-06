@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmpScorePlot.R
 \name{lmpScorePlot}
 \alias{lmpScorePlot}
-\title{Score plots}
+\title{Score plots of effect matrices}
 \usage{
 lmpScorePlot(resLmpPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 }
@@ -19,7 +19,7 @@ lmpScorePlot(resLmpPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 A list of score plots (ggplot).
 }
 \description{
-Draws the score plots of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect score matrices for two components at a time with all options available in \code{\link{plotScatter}}.
+Draws the score plots of each (augmented) effect matrix provided in \code{\link{lmpPcaEffects}}. As a wrapper of the \code{\link{plotScatter}} function, it allows to visualize the scores of the effect matrices for two components at a time with all the available options in  \code{\link{plotScatter}}.
 }
 \details{
 \code{lmpScorePlot} is a wrapper of \code{\link{plotScatter}}.
@@ -29,12 +29,16 @@ Draws the score plots of each effect matrix provided in \code{\link{lmpPcaEffect
 data('UCH')
 resLmpModelMatrix = lmpModelMatrix(UCH)
 resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-resASCA = lmpPcaEffects(resLmpEffectMatrices)
 
+# PCA decomposition of effect matrices (ASCA)
+resASCA = lmpPcaEffects(resLmpEffectMatrices)
+# Score plot of Hippurate effect matrix
 lmpScorePlot(resASCA, effectNames = "Hippurate",
 color = "Hippurate", shape = "Hippurate")
 
-lmpScorePlot(resASCA, effectNames = "Hippurate:Time",
-color = "Hippurate", shape = "Time")
-
+# PCA decomposition of augmented effect matrices (APCA)
+resASCA = lmpPcaEffects(resLmpEffectMatrices,method="APCA")
+# Score plot of Hippurate augmented effect matrix
+lmpScorePlot(resASCA, effectNames = "Hippurate",
+color = "Hippurate", shape = "Hippurate",drawShapes = "ellipse")
 }

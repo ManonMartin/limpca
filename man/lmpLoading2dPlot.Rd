@@ -24,7 +24,7 @@ lmpLoading2dPlot(
 
 \item{addRownames}{Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the \code{points_labs} argument from \code{\link{plotScatter}}.}
 
-\item{pl_n}{The number of labels that should be plotted, based on a distance measure (\emph{see} Details).}
+\item{pl_n}{The number of labels that should be plotted, based on the distance measure \eqn{d} (\emph{see} Details).}
 
 \item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
 
@@ -36,10 +36,10 @@ lmpLoading2dPlot(
 A list of loading plots (ggplot).
 }
 \description{
-Draws the Loading plots of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
+Draws a 2D loading plot of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
 }
 \details{
-\code{lmpLoading2dPlot} is a wrapper of \code{\link{plotScatter}}.
+\code{lmpLoading2dPlot} is a wrapper of \code{\link{plotScatter}}. See \code{?plotScatter} for more information on the additional arguments.
 
 The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
 \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}

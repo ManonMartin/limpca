@@ -2,14 +2,14 @@
 #' @title PCA on the effect matrices
 #'
 #' @description
-#' Performs a PCA on each of the effect matrices from the outputs of \code{\link{lmpEffectMatrices}}. It has an option to determine the method applied: ASCA, APCA or ASCA-E. Combined effects (i.e. linear combinations of original effect matrices) can also be created and decomposed.
+#' Performs a PCA on each of the effect matrices from the outputs of \code{\link{lmpEffectMatrices}}. It has an option to choose the method applied: ASCA, APCA or ASCA-E. Combined effects (i.e. linear combinations of original effect matrices) can also be created and decomposed by PCA.
 #'
-#' @param resLmpEffectMatrices A resLmpEffectMatrices list from \code{\link{lmpEffectMatrices}}.
+#' @param resLmpEffectMatrices A resLmpEffectMatrices list resulting of \code{\link{lmpEffectMatrices}}.
 #' @param method The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.
 #' @param combineEffects If not \code{NULL}, a list of vectors containing the names of the effects to be combined.
 #' @param verbose If \code{TRUE}, will display a message with the duration of execution.
 #'
-#' @return A list of PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
+#' @return A list with first,the PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
 #'  \describe{
 #'   \item{\code{scores}}{Scores from the PCA for each principal component.}
 #'   \item{\code{loadings}}{Loadings from the PCA for each principal component.}
@@ -23,7 +23,7 @@
 #'  There are also others outputs :
 #'  \describe{
 #'  \item{\code{lmpDataList}}{The initial object: a list of outcomes, design and formula.}
-#'  \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model terms, each repeated once.}
+#'  \item{\code{effectsNamesUnique}}{A character vector with the \emph{F+1} names of the model terms, each repeated once.}
 #'  \item{\code{method}}{The dimension reduction method used: \code{c("ASCA","APCA","ASCA-E")}.}
 #'  \item{\code{type3SS}}{A vector with the type III SS for each model term.}
 #'  \item{\code{variationPercentages}}{A vector with the percentage of variance explained by each model term.}
@@ -33,17 +33,21 @@
 #'  The function allows 3 different methods :
 #'
 #'   \describe{
-#'   \item{ASCA}{The PCA is applied directly on the pure effect matrix.}
-#'   \item{ASCA-E}{The PCA is applied directly on the pure effect matrix but scores are updated.}
-#'   \item{APCA}{The PCA is applied on the augmented effect matrix.}
+#'   \item{ASCA}{PCA is applied directly on each pure effect matrix \eqn{\hat{\mathbf{M}}_f, f=1...F}.}
+#'   \item{ASCA-E}{PCA is applied on each pure effect matrix but then the augmented effect matrix is projected in the space of the ASCA components.}
+#'   \item{APCA}{PCA is applied on each augmented effect matrix : \eqn{\hat{\mathbf{M}}_f+\hat{\mathbf{E}}}.}
 #'  }
-#' The ASCA-E method adds the residuals to the scores. The APCA method adds the residuals to the effect matrix before the PCA.
 #'
 #' @examples
 #' data('UCH')
 #' resLmpModelMatrix = lmpModelMatrix(UCH)
 #' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
 #' resLmpPcaEffects = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
+#'
+#' @references Thiel M.,Feraud B. and Govaerts B. (2017) ASCA+ and APCA+: Extensions of ASCA and APCA
+#' in the analysis of unbalanced multifactorial designs. \emph{Journal of Chemometrics}. 31:e2895.
+#' \url{https://doi.org/10.1002/cem.2895}
+#'
 
 
 lmpPcaEffects = function(resLmpEffectMatrices, method=c("ASCA","APCA","ASCA-E"),

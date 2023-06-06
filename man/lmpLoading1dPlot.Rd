@@ -13,23 +13,30 @@ lmpLoading1dPlot(resLmpPcaEffects, effectNames = NULL, axes = c(1, 2), ...)
 
 \item{axes}{A numerical vector with the Principal Components axes to be drawn.}
 
-\item{...}{Additional arguments to be passed to \code{\link{plotLine}}.}
+\item{...}{Additional arguments to be passed to \code{\link{plotLine}} such as \code{xaxis_type}, \code{type} or \code{ang_x_axis}.}
 }
 \value{
 A list of \code{ggplot} objects representing the loading plots.
 }
 \description{
-Plots the loadings for each effect matrix from \code{\link{lmpPcaEffects}} outputs with line plots.
+Plots the loading vectors for each effect matrix from the \code{\link{lmpPcaEffects}} outputs with line plots. This is a wrapper of plotLine.
 }
 \details{
-\code{lmpLoading1dPlot} is a wrapper of \code{\link{plotLine}}.
+\code{lmpLoading1dPlot} is a wrapper of \code{\link{plotLine}}. See \code{?plotLine} for more information on the additional arguments.
 }
 \examples{
 
+# Example of "spectral" type loadings (line and numerical x-axis)
 data('UCH')
 resLmpModelMatrix = lmpModelMatrix(UCH)
 resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
 resASCA = lmpPcaEffects(resLmpEffectMatrices)
-
 lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
+
+# Example of "segment" and discrete type loadings (segments and character x-axis)
+data('trout')
+resLmpModelMatrix = lmpModelMatrix(trout)
+resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+resASCA = lmpPcaEffects(resLmpEffectMatrices)
+lmpLoading1dPlot(resASCA,effectNames="Day",xaxis_type="character",type="s",ang_x_axis=90)
 }

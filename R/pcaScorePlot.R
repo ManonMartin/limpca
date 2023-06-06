@@ -2,18 +2,18 @@
 #' @title Score plots
 #'
 #' @description
-#' Produces rich score plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
+#' Produces score plots from \code{\link{pcaBySvd}} output with the same graphical options as \code{\link{plotScatter}} as this is a wrapper of this function..
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
-#' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
+#' @param axes A numerical vector of length 2 with the Principal Components axes to be drawn.
 #' @param title Plot title.
 #' @param points_labs_rn Boolean indicating if the rownames of the scores matrix should be plotted.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
-#' @return A PCA score plot (ggplot).
+#' @return A `ggplot2` PCA score plot.
 #'
 #' @details
-#' `pcaScorePlot` is a wrapper of \code{\link{plotScatter}}.
+#' `pcaScorePlot` is a wrapper of \code{\link{plotScatter}}. See `?plotScatter` for more information on the additional arguments.
 #'
 #'
 #' @examples

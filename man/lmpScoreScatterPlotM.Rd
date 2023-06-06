@@ -2,7 +2,7 @@
 % Please edit documentation in R/lmpScoreScatterPlotM.R
 \name{lmpScoreScatterPlotM}
 \alias{lmpScoreScatterPlotM}
-\title{Score scatter plot matrix}
+\title{Scatterplot matrix of effect matrices scores}
 \usage{
 lmpScoreScatterPlotM(
   resLmpPcaEffects,
@@ -27,7 +27,8 @@ lmpScoreScatterPlotM(
 A matrix of graphs
 }
 \description{
-Plots the scores of all model effects simultaneously in a scatterplot matrix. By default, the first principal component only is kept for each model effect and, as a wrapper of \code{\link{plotScatterM}}, the choice markers and colors for factor levels allow to enrich the visualization of the factor effects on the responses.
+Plots the scores of all model effects simultaneously in a scatterplot matrix.
+By default, the first PC only is kept for each model effect and, as a wrapper of \code{\link{plotScatterM}}, the choice of symbols and colors to distinguish factor levels allows an enriched visualization of the factors’ effect on the responses.
 }
 \details{
 \code{lmpScoreScatterPlotM} is a wrapper of \code{\link{plotScatterM}}.

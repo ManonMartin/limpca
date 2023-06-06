@@ -11,17 +11,17 @@ lmpEffectMatrices(resLmpModelMatrix, SS = TRUE, contrastList = NA)
 
 \item{SS}{Logical. If \code{FALSE}, won't compute the percentage of variance for each effect.}
 
-\item{contrastList}{A list of contrast for each parameter. If \code{NA}, the function creates automatically the list by default.}
+\item{contrastList}{A list of contrasts for each parameter. If \code{NA}, the function creates automatically the list by default.}
 }
 \value{
 A list with the following elements:
 \describe{
 \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula.}
-\item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
-\item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each effect.}
-\item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
-\item{\code{effectsNamesAll}}{A character vector with the \emph{K} names of the model effects ordered and repeated as the column names of the model matrix.}
-\item{\code{effectMatrices}}{A list of \emph{p} effect matrices for each model effect.}
+\item{\code{modelMatrix}}{A \emph{nxp} model matrix specifically encoded for the ASCA-GLM method.}
+\item{\code{modelMatrixByEffect}}{A list of \emph{F+1} model matrices for each effect.}
+\item{\code{effectsNamesUnique}}{A character vector with the \emph{F+1} names of the model effects, each repeated once.}
+\item{\code{effectsNamesAll}}{A character vector with the \emph{p} names of the model effects ordered and repeated as the column names of the model matrix.}
+\item{\code{effectMatrices}}{A list of \emph{F+1} effect matrices for each model effect.}
 \item{\code{predictedvalues}}{The \emph{nxm} matrix of predicted outcome values.}
 \item{\code{residuals}}{The \emph{nxm} matrix of model residuals.}
 \item{\code{parameters}}{The \emph{pxm} matrix of the estimated parameters.}
@@ -31,11 +31,17 @@ A list with the following elements:
 }
 }
 \description{
-Estimates by OLS the effect matrices \strong{M^(_0)}, \strong{M^(_1)}, ...\strong{M^(_f)}, ...\strong{M^(_E)} for the outcomes and design matrix provided in object \code{resLmpModelMatrix} and calculates the linked percentage of variances.
+Estimates the model by OLS based on the outcomes and model matrices provided in the outputs of lmpModelMatrix function and calculates the estimated effect matrices
+\eqn{\hat{\mathbf{M}}_0, \hat{\mathbf{M}}_1, ...\hat{\mathbf{M}}_F}, ...  and residual matrix \eqn{\hat{\mathbf{E}}}.
+It calculates also the type III percentage of variance explained by each effect.
 }
 \examples{
  data('UCH')
  resLmpModelMatrix <- lmpModelMatrix(UCH)
  lmpEffectMatrices(resLmpModelMatrix)
 
+}
+\references{
+Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
+in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
 }

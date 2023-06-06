@@ -18,10 +18,10 @@ pcaScreePlot(
 
 \item{title}{Plot title.}
 
-\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
+\item{theme}{\code{ggplot2} theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A PCA scree plot
+A \code{ggplot2} PCA scree plot
 }
 \description{
 Returns a bar plot of the percentage of variance explained by each Principal Component calculated by \code{\link{pcaBySvd}}.

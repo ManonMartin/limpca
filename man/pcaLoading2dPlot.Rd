@@ -18,28 +18,28 @@ pcaLoading2dPlot(
 \arguments{
 \item{resPcaBySvd}{A list corresponding to the output value of \code{\link{pcaBySvd}}.}
 
-\item{axes}{A numerical vector with the 2 Principal Components axes to be drawn.}
+\item{axes}{A numerical vector of length 2 with the Principal Components axes to be drawn.}
 
 \item{title}{Plot title.}
 
 \item{addRownames}{Boolean indicating if the labels should be plotted. By default, uses the row names of the loadings matrix but it can be manually specified with the \code{points_labs} argument from \code{\link{plotScatter}}.}
 
-\item{pl_n}{The number of labels that should be plotted, based on a distance measure (\emph{see} Details).}
+\item{pl_n}{The number of labels that should be plotted, based on a distance measure (see Details).}
 
-\item{metadata}{A nxk "free encoded" data.frame corresponding to \code{design} in \code{\link{plotScatter}}.}
+\item{metadata}{A \eqn{n \times k} "freely encoded" data.frame corresponding to the \code{design} argument in \code{\link{plotScatter}}.}
 
 \item{drawOrigin}{if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
 \value{
-A \code{ggplot} object with the PCA loading plot.
+A \code{ggplot2} object with the PCA loading plot.
 }
 \description{
-Produces loading plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
+Produces 2D loading plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}} as this is a wrapper of this function.
 }
 \details{
-\code{pcaLoading2dPlot} is a wrapper of \code{\link{plotScatter}}.
+\code{pcaLoading2dPlot} is a wrapper of \code{\link{plotScatter}}. See \code{?plotScatter} for more information on the additional arguments.
 
 The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
 \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}

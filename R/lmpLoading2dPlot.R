@@ -2,13 +2,13 @@
 #' @title Loading plots on a 2D scatter plot
 #'
 #' @description
-#' Draws the Loading plots of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
+#' Draws a 2D loading plot of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
 #'
 #' @param resLmpPcaEffects A list corresponding to the output value of \code{\link{lmpPcaEffects}}.
 #' @param effectNames Names of the effects to be plotted. If `NULL`, all the effects are plotted.
 #' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
 #' @param addRownames Boolean indicating if the labels should be plotted. By default, uses the column names of the outcome matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
-#' @param pl_n The number of labels that should be plotted, based on a distance measure (*see* Details).
+#' @param pl_n The number of labels that should be plotted, based on the distance measure \eqn{d} (*see* Details).
 #' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
 #' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
@@ -16,7 +16,8 @@
 #' @return A list of loading plots (ggplot).
 #'
 #' @details
-#' `lmpLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
+#' `lmpLoading2dPlot` is a wrapper of \code{\link{plotScatter}}. See `?plotScatter` for more information on the additional arguments.
+#'
 #'
 #' The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
 #' \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
@@ -48,12 +49,15 @@
 #' metadata = metadata, addRownames = TRUE, color="peaks",
 #' shape = "peaks", pl_n = 20)
 
-lmpLoading2dPlot <- function(resLmpPcaEffects, effectNames = NULL,
-                         axes = c(1,2),
-                         addRownames = FALSE,
-                         pl_n = 10,
-                         metadata = NULL, drawOrigin = TRUE,
-                         ...) {
+
+lmpLoading2dPlot <- function(resLmpPcaEffects,
+                             effectNames = NULL,
+                             axes = c(1,2),
+                             addRownames = FALSE,
+                             pl_n = 10,
+                             metadata = NULL,
+                             drawOrigin = TRUE,
+                             ...) {
 
   mcall = as.list(match.call())[-1L]
 

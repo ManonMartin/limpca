@@ -2,27 +2,27 @@
 #' @title Line plot
 #'
 #' @description
-#' Generates the response profile of one or more observation i.e. plots of one or more rows of the outcomes matrix on the y-axis against the m response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots are offered.
+#' Generates the response profile of one or more observations i.e. plots of one or more rows of the outcomes matrix on the y-axis against the \eqn{m} response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots can be used.
 #'
 #' @param Y A numerical matrix containing the rows to be drawn.
-#' @param rows A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s). Default to 1.
-#' @param type Type of graph to be drawn: "p" for point, "l" for line (default) or "s" for segment.
+#' @param rows A vector with either the row name(s) of the \eqn{Y} matrix to plot (character) or the row index position(s) (integer). Default to 1.
+#' @param type Type of graph to be drawn: `"p"` for point, `"l"` for line (default) or `"s"` for segment.
 #' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
 #' @param ylab If not \code{NULL}, label for the y-axis.
-#' @param xaxis_type The data type of the x axis: either "numeric" (default) or "character".
+#' @param xaxis_type The data type of the x-axis: either `"numeric"` (default) or `"character"`.
 #' @param stacked Logical. If `TRUE`, will draw stacked plots, otherwise will draw separate plots.
-#' @param ncol If stacked is `FALSE`, the number of columns to represent the separate plots. Default to 1.
-#' @param nrow If stacked is `FALSE`, the number of rows to represent the separate plots.
-#' @param facet_label If stacked is `FALSE`, the labels of the separate plots.
+#' @param ncol If `stacked` is `FALSE`, the number of columns to represent the separate plots. Default to `1`.
+#' @param nrow If `stacked` is `FALSE`, the number of rows to represent the separate plots.
+#' @param facet_label If `stacked` is `FALSE`, the labels of the separate plots.
 #' @param hline If not \code{NULL}, draws (a) horizontal line(s), by default at y intercept = 0.
-#' @param size Argument of length 1 giving the points size (if `type` == "p") or the line size (if `type` == "l" or "s").
-#' @param color If not `NULL`, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.
-#' @param shape Argument of length 1 giving the points shape (default = 1) if `type` == "p".
-#' @param theme ggplot theme (default: `theme_bw()`), see `?ggtheme` for more info.
-#' @param ang_x_axis If not `NULL`, rotation angle to rotate the x axis text (based on the argument `axis.text.x` from ggplot2::theme)
+#' @param size Argument of length 1 giving the points size (if `type` ==` "p"`) or the line size (if `type` == `"l"` or `"s"`).
+#' @param color If not `NULL`, argument of length 1 with possible values: `"rows"`, a color name (character) or a numeric value representing a color.
+#' @param shape The points shape (default = `1`) if `type` == `"p"`.
+#' @param theme The `ggplot2` theme (default: `theme_bw()`), see `?ggtheme` for more info.
+#' @param ang_x_axis If not `NULL`, rotation angle to rotate the x-axis text (based on the argument `axis.text.x` from `ggplot2::theme()`)
 #'
-#' @return A line plot (ggplot).
+#' @return A `ggplot2` line plot.
 #'
 #' @examples
 #'

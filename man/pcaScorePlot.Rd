@@ -15,7 +15,7 @@ pcaScorePlot(
 \arguments{
 \item{resPcaBySvd}{A list corresponding to the output value of \code{\link{pcaBySvd}}.}
 
-\item{axes}{A numerical vector with the 2 Principal Components axes to be drawn.}
+\item{axes}{A numerical vector of length 2 with the Principal Components axes to be drawn.}
 
 \item{title}{Plot title.}
 
@@ -24,13 +24,13 @@ pcaScorePlot(
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
 \value{
-A PCA score plot (ggplot).
+A \code{ggplot2} PCA score plot.
 }
 \description{
-Produces rich score plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
+Produces score plots from \code{\link{pcaBySvd}} output with the same graphical options as \code{\link{plotScatter}} as this is a wrapper of this function..
 }
 \details{
-\code{pcaScorePlot} is a wrapper of \code{\link{plotScatter}}.
+\code{pcaScorePlot} is a wrapper of \code{\link{plotScatter}}. See \code{?plotScatter} for more information on the additional arguments.
 }
 \examples{
 

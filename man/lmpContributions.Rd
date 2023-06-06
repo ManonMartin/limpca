@@ -15,16 +15,17 @@ lmpContributions(resLmpPcaEffects, nPC = 5)
 A list of:
 \describe{
 \item{\code{totalContribTable}}{Table of the percentage of contribution of each effect to the total variance.}
-\item{\code{effectTable}}{Table of the variance percentage explained by each Principal Component in each model effect decomposition.}
-\item{\code{contribTable}}{Table of the variance percentage explained by each Principal Component of each effect reported to the percentage contribution of the given effect to the total variance.}
+\item{\code{effectTable}}{Table of the percentage of variance explained by each principal component in each model effect decomposition.}
+\item{\code{contribTable}}{Table of the percentage of variance explained by each principal component of each effect reported to the percentage contribution of the given effect to the total variance.}
 \item{\code{combinedEffectTable}}{Equivalent of the \emph{EffectTable} for combined effects.}
 \item{\code{plotTotal}}{Plot of the ordered contributions of \emph{TotalContribTable}.}
 \item{\code{plotContrib}}{Plot of the ordered contributions of \emph{ContribTable}.}
 }
 }
 \description{
-Reports the contribution of each effect to the total variance, but also the contribution of each principal component to the total variance per effect. Moreover, these contributions are summarized in a barplot.
-Only meaningful for ASCA and ASCA-E methods since the principal components are derived from the pure effect matrices.
+Reports the contribution of each effect to the total variance,
+but also the contribution of each PC to the total variance per effect.
+These contributions are also summarized in a barplot.
 }
 \examples{
 data('UCH')

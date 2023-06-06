@@ -2,25 +2,25 @@
 #' @title Means plot
 #'
 #' @description
-#' Draws, for a given response variable, a plot of the response means by levels of up to three categorical factors of the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
+#' For a given response variable, draws a plot of the response means by levels of up to three categorical factors from the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
 #'
 #' @param Y A numerical matrix containing the columns to be drawn.
-#' @param design A nxk "free encoded" experimental design data frame.
-#' @param cols A vector with either the column name(s) of the Y matrix to plot (character) or the column index position(s).
-#' @param x A character string giving the `design` factor whose levels will form the x axis.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
+#' @param cols A vector with either the column name(s) of the \eqn{Y} matrix to plot (character) or the column index position(s) (integer).
+#' @param x A character string giving the `design` factor whose levels will form the x-axis.
 #' @param z A character string giving the `design` factor whose levels will form the traces.
 #' @param w A character string giving the `design` factor whose levels will be used for the facet.
 #' @param title Plot title.
-#' @param xlab If not \code{NULL}, label for the x-axis.
-#' @param ylab If not \code{NULL}, label for the y-axis.
-#' @param color If not \code{NULL}, argument giving the color of the points and the line.
-#' @param shape If not \code{NULL}, argument giving the points shape.
-#' @param linetype If not \code{NULL}, argument giving the line type.
-#' @param size Argument of length 1 giving the points size.
+#' @param xlab If not \code{NULL}, the label for the x-axis.
+#' @param ylab If not \code{NULL}, the label for the y-axis.
+#' @param color If not \code{NULL}, the color of the points and the line.
+#' @param shape If not \code{NULL}, the points shape.
+#' @param linetype If not \code{NULL}, the line type.
+#' @param size Points size.
 #' @param hline If not \code{NULL}, draws (a) horizontal line(s).
-#' @param theme ggplot theme, see `?ggtheme` for more info.
+#' @param theme The `ggplot2` theme, see `?ggtheme` for more info.
 #'
-#' @return A means plot (ggplot).
+#' @return A list of `ggplot2` means plot(s).
 #'
 #' @examples
 #'

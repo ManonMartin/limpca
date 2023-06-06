@@ -25,11 +25,11 @@ plotMeans(
 \arguments{
 \item{Y}{A numerical matrix containing the columns to be drawn.}
 
-\item{design}{A nxk "free encoded" experimental design data frame.}
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
 
-\item{cols}{A vector with either the column name(s) of the Y matrix to plot (character) or the column index position(s).}
+\item{cols}{A vector with either the column name(s) of the \eqn{Y} matrix to plot (character) or the column index position(s) (integer).}
 
-\item{x}{A character string giving the \code{design} factor whose levels will form the x axis.}
+\item{x}{A character string giving the \code{design} factor whose levels will form the x-axis.}
 
 \item{z}{A character string giving the \code{design} factor whose levels will form the traces.}
 
@@ -37,27 +37,27 @@ plotMeans(
 
 \item{title}{Plot title.}
 
-\item{xlab}{If not \code{NULL}, label for the x-axis.}
+\item{xlab}{If not \code{NULL}, the label for the x-axis.}
 
-\item{ylab}{If not \code{NULL}, label for the y-axis.}
+\item{ylab}{If not \code{NULL}, the label for the y-axis.}
 
-\item{color}{If not \code{NULL}, argument giving the color of the points and the line.}
+\item{color}{If not \code{NULL}, the color of the points and the line.}
 
-\item{shape}{If not \code{NULL}, argument giving the points shape.}
+\item{shape}{If not \code{NULL}, the points shape.}
 
-\item{linetype}{If not \code{NULL}, argument giving the line type.}
+\item{linetype}{If not \code{NULL}, the line type.}
 
-\item{size}{Argument of length 1 giving the points size.}
+\item{size}{Points size.}
 
 \item{hline}{If not \code{NULL}, draws (a) horizontal line(s).}
 
-\item{theme}{ggplot theme, see \code{?ggtheme} for more info.}
+\item{theme}{The \code{ggplot2} theme, see \code{?ggtheme} for more info.}
 }
 \value{
-A means plot (ggplot).
+A list of \code{ggplot2} means plot(s).
 }
 \description{
-Draws, for a given response variable, a plot of the response means by levels of up to three categorical factors of the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
+For a given response variable, draws a plot of the response means by levels of up to three categorical factors from the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
 }
 \examples{
 

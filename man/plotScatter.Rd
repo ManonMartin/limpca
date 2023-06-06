@@ -25,11 +25,11 @@ plotScatter(
 )
 }
 \arguments{
-\item{Y}{A nxm matrix with n observations and m variables.}
+\item{Y}{A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.}
 
-\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the Y matrix to plot (character) or the index position(s).}
+\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).}
 
-\item{design}{A nxk "free encoded" experimental design data frame.}
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
 
 \item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color.}
 
@@ -43,33 +43,33 @@ plotScatter(
 
 \item{ylab}{If not \code{NULL}, label for the y-axis.}
 
-\item{size}{The points size, by default 2.}
+\item{size}{The points size, by default \code{2}.}
 
-\item{size_lab}{The size of points labels, by default 3.}
+\item{size_lab}{The size of points labels, by default \code{3}.}
 
-\item{drawShapes}{Multiple shapes can be drawn based on the \code{color}: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).}
+\item{drawShapes}{Multiple shapes can be drawn based on the \code{color}: \code{"none"} for no shape (default), \code{"ellipse"} (ellipses with \code{ggplot2::stat_ellipse()}), \code{"polygon"} (polygons with \code{ggplot2::geom_polygon()}) or \code{"segment"} (segment from the centroids with \code{ggplot2::geom_segment()}).}
 
-\item{typeEl}{The type of ellipse, either \code{norm} (multivariate normal distribution, the default), \code{t} (multivariate t-distribution) or \code{euclid} (draws a circle with the radius equal to level, representing the euclidean distance from the center).}
+\item{typeEl}{The type of ellipse, either \code{"norm"} (multivariate normal distribution, the default), \code{"t"} (multivariate t-distribution) or \code{"euclid"} (draws a circle with the radius equal to level, representing the euclidean distance from the center).}
 
-\item{levelEl}{The confidence level at which to draw an ellipse, by default 0.9.}
+\item{levelEl}{The confidence level at which to draw an ellipse, by default \code{0.9}.}
 
-\item{alphaPoly}{The degree of transparency for polygons, by default 0.4.}
+\item{alphaPoly}{The degree of transparency for polygons, by default \code{0.4}.}
 
-\item{theme}{ggplot theme (default: \code{theme_bw()}), see \code{?ggtheme} for more info.}
+\item{theme}{The \code{ggplot2} theme (default: \code{theme_bw()}), see \code{?ggtheme} for more info.}
 
-\item{drawOrigin}{if \code{TRUE}, draws horizontal and vertical intercepts at (0,0).}
+\item{drawOrigin}{If \code{TRUE}, draws horizontal and vertical intercepts at (0,0).}
 }
 \value{
-A scatter plot (ggplot).
+A \code{ggplot2} scatter plot.
 }
 \description{
-Produces a plot describing the relationship between two columns of the outcomes matrix \code{Y}. It allows to chose colors and markers for the levels of the design factors. Ellipses, polygones or segments can be added to group sets of points on the graph.
+Produces a plot describing the relationship between two columns of the outcomes matrix \eqn{Y}. Colors and symbols can be chosen for the levels of the design factors. Ellipses, polygons or segments can be added to group different sets of points on the graph.
 }
 \examples{
 
 data("UCH")
 
-# Without design
+# Without the design info
 plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 
 # With color and shape
@@ -77,7 +77,7 @@ plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             shape = "Citrate")
 
-# With color and drawShapes
+# With color and shapes
 plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             drawShapes = "ellipse")
@@ -90,7 +90,7 @@ plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), color = "Hippurate",
             drawShapes = "segment")
 
-# Customize shapes
+# With customized shapes
 library(ggplot2)
 plotScatter(Y = UCH$outcomes, design = UCH$design,
             xy = c(453, 369), shape = "Hippurate", size = 3) +

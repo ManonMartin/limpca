@@ -2,33 +2,33 @@
 #' @title Scatter plot
 #'
 #' @description
-#' Produces a plot describing the relationship between two columns of the outcomes matrix `Y`. It allows to chose colors and markers for the levels of the design factors. Ellipses, polygones or segments can be added to group sets of points on the graph.
+#' Produces a plot describing the relationship between two columns of the outcomes matrix \eqn{Y}. Colors and symbols can be chosen for the levels of the design factors. Ellipses, polygons or segments can be added to group different sets of points on the graph.
 #'
-#' @param Y A nxm matrix with n observations and m variables.
-#' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the Y matrix to plot (character) or the index position(s).
-#' @param design A nxk "free encoded" experimental design data frame.
+#' @param Y A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.
+#' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
 #' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color.
 #' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape.
 #' @param points_labs If not \code{NULL}, a character vector with point labels.
 #' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
 #' @param ylab If not \code{NULL}, label for the y-axis.
-#' @param size The points size, by default 2.
-#' @param size_lab The size of points labels, by default 3.
-#' @param drawShapes Multiple shapes can be drawn based on the `color`: "none" for non shape (default), "ellipse" (ellipses with ggplot2::stat_ellipse), "polygon" (polygons with ggplot2::geom_polygon) or "segment" (segment from the centroids with ggplot2::geom_segment).
-#' @param typeEl The type of ellipse, either `norm` (multivariate normal distribution, the default), `t` (multivariate t-distribution) or `euclid` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
-#' @param levelEl The confidence level at which to draw an ellipse, by default 0.9.
-#' @param alphaPoly The degree of transparency for polygons, by default 0.4.
-#' @param theme ggplot theme (default: `theme_bw()`), see `?ggtheme` for more info.
-#' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0).
+#' @param size The points size, by default `2`.
+#' @param size_lab The size of points labels, by default `3`.
+#' @param drawShapes Multiple shapes can be drawn based on the `color`: `"none"` for no shape (default), `"ellipse"` (ellipses with `ggplot2::stat_ellipse()`), `"polygon"` (polygons with `ggplot2::geom_polygon()`) or `"segment"` (segment from the centroids with `ggplot2::geom_segment()`).
+#' @param typeEl The type of ellipse, either `"norm"` (multivariate normal distribution, the default), `"t"` (multivariate t-distribution) or `"euclid"` (draws a circle with the radius equal to level, representing the euclidean distance from the center).
+#' @param levelEl The confidence level at which to draw an ellipse, by default `0.9`.
+#' @param alphaPoly The degree of transparency for polygons, by default `0.4`.
+#' @param theme The `ggplot2` theme (default: `theme_bw()`), see `?ggtheme` for more info.
+#' @param drawOrigin If \code{TRUE}, draws horizontal and vertical intercepts at (0,0).
 #'
-#' @return A scatter plot (ggplot).
+#' @return A `ggplot2` scatter plot.
 #'
 #' @examples
 #'
 #' data("UCH")
 #'
-#' # Without design
+#' # Without the design info
 #' plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 #'
 #' # With color and shape
@@ -36,7 +36,7 @@
 #'             xy = c(453, 369), color = "Hippurate",
 #'             shape = "Citrate")
 #'
-#' # With color and drawShapes
+#' # With color and shapes
 #' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "ellipse")
@@ -49,7 +49,7 @@
 #'             xy = c(453, 369), color = "Hippurate",
 #'             drawShapes = "segment")
 #'
-#' # Customize shapes
+#' # With customized shapes
 #' library(ggplot2)
 #' plotScatter(Y = UCH$outcomes, design = UCH$design,
 #'             xy = c(453, 369), shape = "Hippurate", size = 3) +

@@ -27,9 +27,9 @@ plotLine(
 \arguments{
 \item{Y}{A numerical matrix containing the rows to be drawn.}
 
-\item{rows}{A vector with either the row name(s) of the Y matrix to plot (character) or the row index position(s). Default to 1.}
+\item{rows}{A vector with either the row name(s) of the \eqn{Y} matrix to plot (character) or the row index position(s) (integer). Default to 1.}
 
-\item{type}{Type of graph to be drawn: "p" for point, "l" for line (default) or "s" for segment.}
+\item{type}{Type of graph to be drawn: \code{"p"} for point, \code{"l"} for line (default) or \code{"s"} for segment.}
 
 \item{title}{Plot title.}
 
@@ -37,33 +37,33 @@ plotLine(
 
 \item{ylab}{If not \code{NULL}, label for the y-axis.}
 
-\item{xaxis_type}{The data type of the x axis: either "numeric" (default) or "character".}
+\item{xaxis_type}{The data type of the x-axis: either \code{"numeric"} (default) or \code{"character"}.}
 
 \item{stacked}{Logical. If \code{TRUE}, will draw stacked plots, otherwise will draw separate plots.}
 
-\item{ncol}{If stacked is \code{FALSE}, the number of columns to represent the separate plots. Default to 1.}
+\item{ncol}{If \code{stacked} is \code{FALSE}, the number of columns to represent the separate plots. Default to \code{1}.}
 
-\item{nrow}{If stacked is \code{FALSE}, the number of rows to represent the separate plots.}
+\item{nrow}{If \code{stacked} is \code{FALSE}, the number of rows to represent the separate plots.}
 
-\item{facet_label}{If stacked is \code{FALSE}, the labels of the separate plots.}
+\item{facet_label}{If \code{stacked} is \code{FALSE}, the labels of the separate plots.}
 
 \item{hline}{If not \code{NULL}, draws (a) horizontal line(s), by default at y intercept = 0.}
 
-\item{size}{Argument of length 1 giving the points size (if \code{type} == "p") or the line size (if \code{type} == "l" or "s").}
+\item{size}{Argument of length 1 giving the points size (if \code{type} ==\code{ "p"}) or the line size (if \code{type} == \code{"l"} or \code{"s"}).}
 
-\item{color}{If not \code{NULL}, argument of length 1 with possible values: "rows", a color name (character) or a numeric value representing a color.}
+\item{color}{If not \code{NULL}, argument of length 1 with possible values: \code{"rows"}, a color name (character) or a numeric value representing a color.}
 
-\item{shape}{Argument of length 1 giving the points shape (default = 1) if \code{type} == "p".}
+\item{shape}{The points shape (default = \code{1}) if \code{type} == \code{"p"}.}
 
-\item{theme}{ggplot theme (default: \code{theme_bw()}), see \code{?ggtheme} for more info.}
+\item{theme}{The \code{ggplot2} theme (default: \code{theme_bw()}), see \code{?ggtheme} for more info.}
 
-\item{ang_x_axis}{If not \code{NULL}, rotation angle to rotate the x axis text (based on the argument \code{axis.text.x} from ggplot2::theme)}
+\item{ang_x_axis}{If not \code{NULL}, rotation angle to rotate the x-axis text (based on the argument \code{axis.text.x} from \code{ggplot2::theme()})}
 }
 \value{
-A line plot (ggplot).
+A \code{ggplot2} line plot.
 }
 \description{
-Generates the response profile of one or more observation i.e. plots of one or more rows of the outcomes matrix on the y-axis against the m response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots are offered.
+Generates the response profile of one or more observations i.e. plots of one or more rows of the outcomes matrix on the y-axis against the \eqn{m} response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots can be used.
 }
 \examples{
 

@@ -2,15 +2,17 @@
 #' @title Effect plot
 #'
 #' @description
-#' Plots the ASCA scores by effect levels for a given model effect (for one by principal component at a time). This graph is particularly appealing to interpret interactions or combined effects.
+#' Plots the ASCA scores by effect levels for a given model effect and for one PC at a time.
+#' This graph is especially appealing to interpret interactions or combined effects.
+#' It is a wrapper of plotMeans.
 #'
 #' @param resASCA A list corresponding to the ASCA output value of \code{\link{lmpPcaEffects}}.
-#' @param effectName Name of the effect matrix used for the scores.
+#' @param effectName Name of the effect to be used to plot the scores.
 #' @param axes A numerical vector with the Principal Components axes to be drawn.
 #' @param x A character string giving the `design` factor whose levels will form the x axis.
 #' @param z A character string giving the `design` factor whose levels will form the traces.
 #' @param w A character string giving the `design` factor whose levels will be used for the facet.
-#' @param hline If not \code{NULL}, draws (a) horizontal line(s).
+#' @param hline If not \code{NULL}, draws one or several horizontal line(s) at values given in `hline`.
 #' @param ... Additional arguments to be passed to \code{\link{plotMeans}}.
 #'
 #' @return An effect plot (ggplot).
@@ -24,7 +26,12 @@
 #'   resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
 #'   resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
 #'method="ASCA", combineEffects = list(c("Hippurate", "Time",  "Hippurate:Time")))
-#'   lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
+#'
+#'   # Effect plot for an interaction effect
+#'   lmpEffectPlot(resASCA, effectName = "Hippurate:Time", x = "Hippurate",z="Time")
+#'   # Effect plot for a combined effect
+#'   lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", x = "Hippurate",z="Time")
+
 #'
 #' @import ggplot2
 

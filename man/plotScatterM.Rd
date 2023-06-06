@@ -21,37 +21,37 @@ plotScatterM(
 )
 }
 \arguments{
-\item{Y}{nxm matrix with n observations and m variables.}
+\item{Y}{\eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.}
 
-\item{cols}{A vector with either the column names of the Y matrix to plot (character) or the column index positions.}
+\item{cols}{A vector with either the column names of the \eqn{Y} matrix to plot (character) or the column index positions.}
 
-\item{design}{A nxk "free encoded" experimental design data frame.}
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
 
-\item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the \code{cols} names are used.}
+\item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the column names are deduced from \code{cols}.}
 
 \item{title}{Title of the graph.}
 
-\item{varname.colorup}{A character with the name of the variable used to color the upper triangle.}
+\item{varname.colorup}{A character string with the name of the variable used to color the upper triangle.}
 
-\item{varname.colordown}{A character with the name of the variable used to color the lower triangle.}
+\item{varname.colordown}{A character string with the name of the variable used to color the lower triangle.}
 
-\item{varname.pchup}{A character with the name of the variable used to mark points for the upper triangle.}
+\item{varname.pchup}{A character string with the name of the variable used to mark points for the upper triangle.}
 
-\item{varname.pchdown}{A character with the name of the variable used to mark points for the lower triangle.}
+\item{varname.pchdown}{A character string with the name of the variable used to mark points for the lower triangle.}
 
-\item{vec.colorup}{A color vector with a length equivalent to the number of levels of varname.colorup.}
+\item{vec.colorup}{A color vector (character or numeric) with a length equal to the number of levels of \code{varname.colorup}.}
 
-\item{vec.colordown}{A color vector with a length equivalent to the number of levels of varname.colordown.}
+\item{vec.colordown}{A color vector (character or numeric) with a length equal to the number of levels of \code{varname.colordown}.}
 
-\item{vec.pchup}{A pch vector with a length equivalent to the number of levels of varname.pchup.}
+\item{vec.pchup}{A symbol vector (character or numeric) with a length equal to the number of levels of \code{varname.pchup}.}
 
-\item{vec.pchdown}{A pch vector with a length equivalent to the number of levels of varname.pchdown.}
+\item{vec.pchdown}{A symbol vector (character or numeric) with a length equal to the number of levels of \code{varname.pchdown}.}
 }
 \value{
 A matrix of scatter plots.
 }
 \description{
-Produces a scatter plot matrix between the selected columns of the outcomes matrix \code{Y} choosing specific colors and markers for the design factors on the upper and lower diagonal.
+Produces a scatter plot matrix between the selected columns of the outcomes matrix \eqn{Y} choosing specific colors and symbols for up to four factors from the design on the upper and lower diagonals.
 }
 \examples{
 
@@ -60,8 +60,8 @@ data("UCH")
 plotScatterM(Y = UCH$outcomes, cols = c(1:4), design = UCH$design,
              varname.colorup = "Hippurate", varname.colordown = "Citrate",
              varname.pchup = "Time", varname.pchdown = "Day",
-             vec.colorup = c("red","blue","black"),
+             vec.colorup = c(2,4,1),
              vec.colordown = c("orange","purple","green"),
-             vec.pchup = c(1,2), vec.pchdown = c(15,16))
+             vec.pchup = c(1,2), vec.pchdown = c("a","b"))
 
 }

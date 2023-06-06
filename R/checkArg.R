@@ -1,5 +1,6 @@
 #' @importFrom plyr is.formula
 
+# Check of the entry arguments
 checkArg = function(arg, checks, can.be.null = FALSE){
   check.list <- list(bool = c(is.logical, "a boolean"),
                      int = c(function(x) identical(as.numeric(x),round(as.numeric(x))), "an integer"),

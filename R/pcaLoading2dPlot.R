@@ -2,21 +2,22 @@
 #' @title Loading plots on a 2D scatter plot
 #'
 #' @description
-#' Produces loading plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}}.
+#' Produces 2D loading plots from \code{\link{pcaBySvd}} with the same graphical options as \code{\link{plotScatter}} as this is a wrapper of this function.
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
-#' @param axes A numerical vector with the 2 Principal Components axes to be drawn.
+#' @param axes A numerical vector of length 2 with the Principal Components axes to be drawn.
 #' @param title Plot title.
 #' @param addRownames Boolean indicating if the labels should be plotted. By default, uses the row names of the loadings matrix but it can be manually specified with the `points_labs` argument from \code{\link{plotScatter}}.
-#' @param pl_n The number of labels that should be plotted, based on a distance measure (*see* Details).
-#' @param metadata A nxk "free encoded" data.frame corresponding to `design` in \code{\link{plotScatter}}.
+#' @param pl_n The number of labels that should be plotted, based on a distance measure (see Details).
+#' @param metadata A \eqn{n \times k} "freely encoded" data.frame corresponding to the `design` argument in \code{\link{plotScatter}}.
 #' @param drawOrigin if \code{TRUE}, draws horizontal and vertical intercepts at (0,0) based on the \code{\link{plotScatter}} function.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
-#' @return A `ggplot` object with the PCA loading plot.
+#' @return A `ggplot2` object with the PCA loading plot.
 #'
 #' @details
-#' `pcaLoading2dPlot` is a wrapper of \code{\link{plotScatter}}.
+#' `pcaLoading2dPlot` is a wrapper of \code{\link{plotScatter}}. See `?plotScatter` for more information on the additional arguments.
+#'
 #'
 #' The distance measure \eqn{d}{d} that is used to rank the variables is based on the following formula:
 #' \deqn{d = \sqrt(P_{ab}^2*\lambda_{ab}^2)}{d = sqrt(P_ab^2 * lambda_ab^2)} where \eqn{a}{a}
@@ -54,10 +55,14 @@
 #'
 #' @import ggplot2
 
-pcaLoading2dPlot <- function(resPcaBySvd, axes = c(1,2),
-                         title = "PCA loading plot",
-                         addRownames = FALSE, pl_n = 10,
-                         metadata = NULL, drawOrigin = TRUE, ...) {
+pcaLoading2dPlot <- function(resPcaBySvd,
+                             axes = c(1,2),
+                             title = "PCA loading plot",
+                             addRownames = FALSE,
+                             pl_n = 10,
+                             metadata = NULL,
+                             drawOrigin = TRUE,
+                             ...) {
 
   mcall = as.list(match.call())[-1L]
 

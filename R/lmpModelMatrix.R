@@ -1,8 +1,8 @@
 #' @export lmpModelMatrix
-#' @title Creates the model matrix
+#' @title Creates the model matrix `X`
 #'
 #' @description
-#' Creates the model matrix `X` from the design matrix and the formula of the model.
+#' Creates the model matrix `X` from the design matrix and the model formula.
 #'
 #' @param lmpDataList A list containing the outcomes, the experimental design and the formula.
 #'
@@ -16,15 +16,13 @@
 #' }
 #'
 #' @details
-#' In typical ASCA-GLM analysis, the GLM model needs the design to be re-encoded with the commonly used in industrial experimental design \emph{sum coding}. The result is the model matrix.
+#' In typical ASCA-GLM (ASCA+) analysis, the effects of the GLM model must first be used to transform the design matrix to a model matrix where the design factors encoded usign \emph{sum coding} commonly used in industrial experimental design.
 #' Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors. After the transformation, the model matrix
-#' will be \emph{nxK}. For a parameter with \emph{a} levels, the re-encoding is \emph{a-1} columns with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
-#' \emph{K} is the sum of all the columns for every parameters.
+#' will be of size \emph{nxp}. For a fator with \emph{a} levels, the \emph{sum coding} creates \emph{a-1} columns in the model matrix with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
+#' \emph{p} is the total number parameter for each response (outcome) in the ASCA model.
+#' More information is available in the article (\emph{Thiel et al}, 2017)
 #'
 #' @seealso \code{\link{model.matrix}}
-#'
-#' More information about the specific encoding is available in the article from (\emph{Thiel et al}, 2017)
-#'
 #'
 #' @examples
 #'

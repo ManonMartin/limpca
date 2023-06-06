@@ -9,20 +9,20 @@ pcaLoading1dPlot(resPcaBySvd, axes = c(1, 2), title = "PCA loading plot", ...)
 \arguments{
 \item{resPcaBySvd}{A list corresponding to the output value of \code{\link{pcaBySvd}}.}
 
-\item{axes}{A numerical vector with the Principal Components axes to be drawn.}
+\item{axes}{A numerical vector of length 2 with the Principal Components axes to be drawn.}
 
 \item{title}{Plot title.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotLine}}.}
 }
 \value{
-A \code{ggplot} object with the PCA loading plot.
+A \code{ggplot2} object with the PCA loading plot.
 }
 \description{
-Plots the loadings from \code{\link{pcaBySvd}} with line plots.
+Plots the loading vectors from \code{\link{pcaBySvd}} output with different available line types.
 }
 \details{
-\code{pcaLoading1dPlot} is a wrapper of \code{\link{plotLine}}.
+\code{pcaLoading1dPlot} is a wrapper of \code{\link{plotLine}}. See \code{?plotLine} for more information on the additional arguments.
 }
 \examples{
 

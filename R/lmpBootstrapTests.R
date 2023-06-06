@@ -1,20 +1,20 @@
 #' @export lmpBootstrapTests
-#' @title Performs a test on the effects from the model
+#' @title Tests the significance of model effects by bootstrap.
 #'
 #' @description
 #' Tests the significance of the effects from the model using bootstrap. This function is based on the outputs of \code{\link{lmpEffectMatrices}}. Tests on combined effects are also provided.
 #'
 #' @param resLmpEffectMatrices A list of 12 from \code{\link{lmpEffectMatrices}}.
-#' @param nboot An integer with the number of iterations to perform.
+#' @param nboot An integer with the number of bootstrap sample to be drawn.
 #' @param nCores The number of cores to use for parallel execution.
 #' @param verbose If \code{TRUE}, will display a message with the duration of execution.
 #'
 #' @return A list with the following elements:
 #'  \describe{
-#'    \item{\code{f.obs}}{A vector of size F with the F statistics calculated on the initial data for each model term.}
-#'    \item{\code{f.boot}}{A b × F matrix with the F statistics calculated for the bootstrap samples.}
+#'    \item{\code{f.obs}}{A vector of size F (number of effects in the model) with the F statistics for each model term calculated on the initial data.}
+#'    \item{\code{f.boot}}{ b × F matrix with the F statistics calculated on the bootstrap samples.}
 #'    \item{\code{p.values}}{A vector of size F with the p-value for each model effect.}
-#'    \item{\code{resultsTable}}{A 2 × F matrix with the p-value and the variance percentage for each model effect.}
+#'    \item{\code{resultsTable}}{A 2 × F matrix with the p-value and the percentage of variance for each model effect.}
 #'  }
 #'
 #' @examples
@@ -28,6 +28,9 @@
 #' Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
 #'
+#' Thiel, M., Benaiche, N., Martin, M., Franceschini, S., Van Oirbeek, R., & Govaerts, B. (2023)
+#' \emph{limpca: an R package for the linear modeling of high dimensional designed data based on
+#' ASCA/APCA family of methods}, Journal of Chemometrics
 #' @import doParallel
 #' @import parallel
 #' @importFrom plyr laply llply

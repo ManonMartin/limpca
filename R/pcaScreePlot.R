@@ -7,9 +7,9 @@
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
 #' @param nPC An integer with the number of Principal Components to plot.
 #' @param title Plot title.
-#' @param theme ggplot theme, see `?ggtheme` for more info.
+#' @param theme `ggplot2` theme, see `?ggtheme` for more info.
 #'
-#' @return A PCA scree plot
+#' @return A `ggplot2` PCA scree plot
 #'
 #' @examples
 #'
