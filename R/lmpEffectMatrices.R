@@ -29,7 +29,8 @@
 #' @examples
 #'  data('UCH')
 #'  resLmpModelMatrix <- lmpModelMatrix(UCH)
-#'  lmpEffectMatrices(resLmpModelMatrix)
+#'  reslmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+#'  reslmpEffectMatrices$varPercentagesPlot
 #'
 #' @references Thiel M.,Feraud B. and Govaerts B. (2017) \emph{ASCA+ and APCA+: Extensions of ASCA and APCA
 #' in the analysis of unbalanced multifactorial designs}, Journal of Chemometrics
@@ -78,6 +79,7 @@ lmpEffectMatrices = function(resLmpModelMatrix, SS=TRUE, contrastList=NA){
   parameters <- t(plyr::laply(resGLM, function(xx) xx$coefficients))
   predictedValues <- t(plyr::laply(resGLM, function(xx) xx$fitted.values))
   residuals <- t(plyr::laply(resGLM, function(xx) xx$residuals))
+  colnames(residuals) <- colnames(predictedValues) <- colnames(outcomes)
 
   #Filling effectMatrices
   for(iEffect in 1:nEffect){
