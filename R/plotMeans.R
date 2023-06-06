@@ -75,10 +75,6 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
     }
   }
 
-  if (max(cols) > ncol(Y)){
-    stop(paste0("Columns (",paste0(cols, collapse = ",")
-                ,") is beyond the number of columns of Y (",ncol(Y),")"))
-  }
 
   if(!x %in% colnames(design)){
     stop(paste0(x," is not a factor of the design"))
@@ -121,6 +117,11 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
 
   if (is.character(cols)){
     cols <- grep(cols, colnames(Y))
+  }
+
+  if (max(cols) > ncol(Y)){
+    stop(paste0("Columns (",paste0(cols, collapse = ",")
+                ,") is beyond the number of columns of Y (",ncol(Y),")"))
   }
 
   dataplot <- stats::aggregate(Y[,cols], by = design[c(x,z,w)], mean)
