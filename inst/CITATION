@@ -1,0 +1,20 @@
+bibentry(
+	bibtype = "article",
+	author = c(person("Michel", "Thiel"),
+	           person("Nadia","Benaiche"),
+	           person("Manon","Martin"),
+	           person("Sébastien","Franceschini"),
+	           person("Robin","Van Oirbeek"),
+	           person("Bernadette","Govaerts")),
+	title = "limpca: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods",
+	journal = "Journal of Chemometrics",
+	year = 2015,
+	volume = 37,
+	number = 7,
+	pages = "e3482",
+	doi = "10.1002/cem.3482",
+
+	textVersion =
+	"Thiel, Michel, Benaiche, Nadia, Martin, Manon, Franceschini, Sébastien, Van Oirbeek, Robin, Govaerts, Bernadette. 2023. limpca: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. Journal of Chemometrics. 37(7):e3482. doi:10.1002/cem.3482"
+)
+

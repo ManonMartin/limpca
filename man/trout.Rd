@@ -14,7 +14,7 @@ The responses were quantified by measuring the modification of the expression of
 }
 This gives a 3 × 4 × 2 factorial design.  Each of the 24 trials corresponds to a different aquarium. Three fish were analysed (3 replicates) for each condition, giving a total of 72 observations.
 
-In the limpca vignette, some outliers are first detected and removed from the dataset. The data of each aquarium are then transformed in log10 and mean aggregated in order to avoid the use of an aquarium random factor in the statictical model. Data are then centered and scaled by column.  The ASCA+/APCA+ analysis is then applyed on the transformed data.
+In the limpca vignette, some outliers are first detected and removed from the dataset. The data of each aquarium are then transformed in log10 and mean aggregated in order to avoid the use of an aquarium random factor in the statictical model. Data are then centered and scaled by column. The ASCA+/APCA+ analysis is then applyed on the transformed data.
 }
 
 \usage{data("trout")}

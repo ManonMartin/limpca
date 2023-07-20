@@ -21,6 +21,9 @@ A list of length 3: the experimental design (`design`), the outcomes for every o
   }
 }
 \details{
+
+The UCH vignette can be accessed with: (\code{print(vignette(topic = "UCH", package = "limpca"))}).
+
 The database has been experimentally created in order to control the spectral locations of the biomarkers to find (i.e. \code{Hippurate} and \code{Citrate}). This property allows us to evaluate the performances of the data analysis of various statistical methods.
 This urine experimental database is also designed in order to explore the influence on spectra of intra-sample 1H NMR replications (\code{Time}), and inter-day 1H NMR measurements (\code{Day}).
 

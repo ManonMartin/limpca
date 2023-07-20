@@ -95,7 +95,7 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
 
   buildFig <- function(effect){
 
-    title = paste(effect, ":", resLmpPcaEffects$method, "score plot")
+    title = paste0(effect, ": ", resLmpPcaEffects$method, " score plot")
 
     xlab <- pc_axes[[effect]][1]
     ylab <- pc_axes[[effect]][2]
@@ -108,7 +108,7 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
       if(resLmpPcaEffects[[effect]][["var"]][axes[2]]<1){
         warning("The variance of PC2 is inferior to 1%. Graph scaled")
         ylim_val = c(100*min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]]),
-                     100*max(resLmpPcaEffects[[effect]][["scores"]][,axes[2]]))
+                     100*abs(min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]])))
       }else{
         ylim_val = c(1.4*min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]]),
                      1.4*max(resLmpPcaEffects[[effect]][["scores"]][,axes[2]]))
