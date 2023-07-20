@@ -53,9 +53,6 @@ License: \tab GPL-2\cr
 See the package vignettes (\code{vignette(package = "limpca")}) for detailed case studies.
 }
 
-\author{
-???
-}
 
 \references{
 Thiel, M., Benaiche, N., Martin, M., Franceschini, S., Van Oirbeek, R., Govaerts, B. (2023). limpca: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. \emph{Journal of Chemometrics}. e3482. \url{https://doi.org/10.1002/cem.3482}
