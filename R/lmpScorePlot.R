@@ -107,7 +107,7 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
     if(resLmpPcaEffects$method != "APCA"){
       if(resLmpPcaEffects[[effect]][["var"]][axes[2]]<1){
         warning("The variance of PC2 is inferior to 1%. Graph scaled")
-        ylim_val = c(100*min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]]),
+        ylim_val = c(-100*abs(min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]])),
                      100*abs(min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]])))
       }else{
         ylim_val = c(1.4*min(resLmpPcaEffects[[effect]][["scores"]][,axes[2]]),
