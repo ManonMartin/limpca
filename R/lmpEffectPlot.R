@@ -50,8 +50,10 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
   checkArg(w,c("str", "length1"), can.be.null = TRUE)
   checkArg(hline,"num", can.be.null = TRUE)
 
-  if (!identical(names(resASCA[(length(resASCA)-5):length(resASCA)]),
-                 c("Residuals","lmpDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
+  if (!identical(names(resASCA[(length(resASCA)-7):length(resASCA)]),
+                 c("Residuals","lmpDataList","effectsNamesUnique",
+                   "effectsNamesUniqueCombined", "method",
+                   "type3SS","variationPercentages","combineEffects"))){
     stop("resLmpPcaEffects is not an output value of lmpPcaEffects")}
 
   if(resASCA$method != "ASCA"){

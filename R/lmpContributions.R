@@ -33,7 +33,7 @@
 lmpContributions=function(resLmpPcaEffects, nPC=5){
 
   if (resLmpPcaEffects$method == "APCA"){
-    stop("Tying to comupte the contributions based on the APCA method.
+    stop("Trying to compute the contributions based on the APCA method.
         The contribution of each principal component to the total variance
         per effect is only meaningful for ASCA and ASCA-E methods since
         the principal components are then derived from the
@@ -87,8 +87,8 @@ lmpContributions=function(resLmpPcaEffects, nPC=5){
 
 
   # Effect table for combined effects ===============
-  if(length(resLmpPcaEffects)-5 != length(resLmpPcaEffects$effectsNamesUnique)){
-    neffectTot = length(resLmpPcaEffects)-5
+  if(length(resLmpPcaEffects)-6 != length(resLmpPcaEffects$effectsNamesUnique)){
+    neffectTot = length(resLmpPcaEffects)-6
     neffectComb = neffectTot - neffect
 
     combinedEffect_table = matrix(data=NA,nrow=neffectComb,ncol=(nPC+1))

@@ -38,7 +38,8 @@ It calculates also the type III percentage of variance explained by each effect.
 \examples{
  data('UCH')
  resLmpModelMatrix <- lmpModelMatrix(UCH)
- lmpEffectMatrices(resLmpModelMatrix)
+ reslmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+ reslmpEffectMatrices$varPercentagesPlot
 
 }
 \references{

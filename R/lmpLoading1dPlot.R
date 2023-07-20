@@ -43,12 +43,14 @@ lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
 
   if(!all(effectNames%in%names(resLmpPcaEffects))){stop("One of the effects from effectNames is not in resLmpPcaEffects.")}
 
-  if (!identical(names(resLmpPcaEffects[(length(resLmpPcaEffects)-5):length(resLmpPcaEffects)]),
-                 c("Residuals","lmpDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
-    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")}
+  if (!identical(names(resLmpPcaEffects[(length(resLmpPcaEffects)-7):length(resLmpPcaEffects)]),
+                 c("Residuals","lmpDataList","effectsNamesUnique","effectsNamesUniqueCombined",
+                   "method","type3SS","variationPercentages", "combineEffects"))){
+    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+    }
 
   if(is.null(effectNames)){
-    effectNames <- resLmpPcaEffects$effectsNamesUnique
+    effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
     effectNames <- effectNames[effectNames != "Intercept"]
     effectNames <- c(effectNames, "Residuals")
   }

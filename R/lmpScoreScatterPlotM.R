@@ -64,9 +64,11 @@ lmpScoreScatterPlotM = function(resLmpPcaEffects,
   checkArg(modelAbbrev,"bool",can.be.null=FALSE)
 
   #Checking resLmpPcaEffects object and match with effectNames
-  if (!identical(names(resLmpPcaEffects[(length(resLmpPcaEffects)-5):length(resLmpPcaEffects)]),
-                 c("Residuals","lmpDataList","effectsNamesUnique","method","type3SS","variationPercentages"))){
-    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")}
+  if (!identical(names(resLmpPcaEffects[(length(resLmpPcaEffects)-7):length(resLmpPcaEffects)]),
+                 c("Residuals","lmpDataList","effectsNamesUnique","effectsNamesUniqueCombined",
+                   "method","type3SS","variationPercentages", "combineEffects"))){
+    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+  }
 
     if(allEffect==FALSE){
       for(i in 1:length(effectNames)){
@@ -78,7 +80,7 @@ lmpScoreScatterPlotM = function(resLmpPcaEffects,
   if(is.null(PCdim)){
     classicalPC = TRUE
     if(allEffect==TRUE){
-      effectsNamesUnique <- resLmpPcaEffects$effectsNamesUnique
+      effectsNamesUnique <- resLmpPcaEffects$effectsNamesUniqueCombined
       effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
       PCdim = rep(1,(length(effectsNamesUnique)+1)) # +1 for the residuals
       effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
@@ -88,7 +90,7 @@ lmpScoreScatterPlotM = function(resLmpPcaEffects,
   }else{
     classicalPC=FALSE
     if(allEffect==TRUE){
-      effectsNamesUnique <- resLmpPcaEffects$effectsNamesUnique
+      effectsNamesUnique <- resLmpPcaEffects$effectsNamesUniqueCombined
       effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
       effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
     }

@@ -25,5 +25,6 @@ contrastSS = function(resLmpModelMatrix){
 
     starting_col = starting_col+npi
   }
+  names(L) = effectsNamesUnique
   return(L)
 }

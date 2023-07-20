@@ -72,7 +72,7 @@ lmpPcaEffects = function(resLmpEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   # Attributing name
 
   lmpDataList = resLmpEffectMatrices$lmpDataList
-  effectsNamesUnique = resLmpEffectMatrices$effectsNamesUnique
+  effectsNamesUnique = effectsNamesUniqueCombined = resLmpEffectMatrices$effectsNamesUnique
 
   # Combining effects
 
@@ -90,6 +90,8 @@ lmpPcaEffects = function(resLmpEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
 
     resLmpEffectMatrices$effectMatrices <- c(resLmpEffectMatrices$effectMatrices,
                                            combinedMatrices)
+
+    effectsNamesUniqueCombined <- c(effectsNamesUnique, names(combinedMatrices))
   }
 
 
@@ -159,11 +161,13 @@ lmpPcaEffects = function(resLmpEffectMatrices, method=c("ASCA","APCA","ASCA-E"),
   names(resLmpPcaEffects) = names(EffectMatGLM)
 
   resLmpPcaEffects2 = list(lmpDataList = lmpDataList,
-                           effectsNamesUnique = effectsNamesUnique)
+                           effectsNamesUnique = effectsNamesUnique,
+                           effectsNamesUniqueCombined = effectsNamesUniqueCombined)
 
   resLmpPcaEffects = c(resLmpPcaEffects, resLmpPcaEffects2, method = method,
                        type3SS = list(resLmpEffectMatrices$type3SS),
-                       variationPercentages = list(resLmpEffectMatrices$variationPercentages))
+                       variationPercentages = list(resLmpEffectMatrices$variationPercentages),
+                       combineEffects = list(combineEffects))
 
   return(resLmpPcaEffects)
 }
