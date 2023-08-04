@@ -21,7 +21,8 @@
 #' data('UCH')
 #' resLmpModelMatrix = lmpModelMatrix(UCH)
 #' resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-#' resASCA = lmpPcaEffects(resLmpEffectMatrices)
+#' resASCA = lmpPcaEffects(resLmpEffectMatrices, combineEffects = list(c("Time", "Hippurate:Time")))
+#' lmpLoading1dPlot(resASCA)
 #' lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
 #'
 #' # Example of "segment" and discrete type loadings (segments and character x-axis)

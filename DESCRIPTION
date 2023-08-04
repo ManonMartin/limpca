@@ -1,7 +1,7 @@
 Package: limpca
 Type: Package
 Title: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods.
-Version: 0.0.99
+Version: 0.99.0
 Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
                      email = "bernadette.govaerts@uclouvain.be"),
               person("Sebastien","Franceschini", role = "ctb",
@@ -21,14 +21,14 @@ Description: >
   This package brings a method to analyze high-dimensional designed data. This method handles unbalanced design.
 License: Artistic-2.0
 Encoding: UTF-8
-LazyData: true
+LazyData: TRUE
 LazyDataCompression: gzip
 VignetteBuilder: knitr
 Imports: ggplot2, stringr, plyr, knitr, pander, gridExtra, ggrepel, reshape2,
     grDevices, Rcpp, graphics, doParallel, parallel, dplyr, tibble, tidyr, ggsci,
     tidyverse
 Suggests: 
-    BiocStyle,
+    BiocStyle, pander, 
     rmarkdown, car
 biocViews: StatisticalMethod, PrincipalComponent, Regression, Visualization, ExperimentalDesign, MultipleComparison
 RoxygenNote: 7.2.3
@@ -36,3 +36,4 @@ Roxygen: list(markdown=TRUE)
 BugReports: https://github.com/ManonMartin/limpca/issues
 URL: https://github.com/ManonMartin/limpca,
     https://manonmartin.github.io/limpca/
+

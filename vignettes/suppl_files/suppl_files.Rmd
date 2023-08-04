@@ -10,6 +10,8 @@ The list of articles related to this package is provided here:
 
 > Thiel, Michel, Benaiche, Nadia, Martin, Manon, Franceschini, Sébastien, Van Oirbeek, Robin, Govaerts, Bernadette. 2023. limpca: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. Journal of Chemometrics. 37( 7):e3482. doi:10.1002/cem.3482
 
+**Open access** to the preprint: http://hdl.handle.net/2078.1/277096
+
 > Govaerts, Bernadette, Bernard G. Francq, Rebecca Marion, Manon Martin, and Michel Thiel. 2020. “The Essentials on Linear Regression, ANOVA, General Linear and Linear Mixed Models for the Chemist.” In *Comprehensive Chemometrics, Chemical and Biochemical Data Analysis*, edited by 2nd Edition. Elsevier. http://hdl.handle.net/2078.1/230895.
 
 **Open access** to the preprint: http://hdl.handle.net/2078.1/230335

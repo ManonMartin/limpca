@@ -18,14 +18,20 @@ vignette: >
 ```{r setup}
 # Install package if necessary (to be used before running the vignette)
 #if (!requireNamespace("remotes"))
-#install.packages(pkgs="remotes", dependencies="Depends")
+#install.packages(pkgs="remotes")
 #remotes::install_github("ManonMartin/limpca", dependencies = TRUE)
 
 library(ggplot2)
-library(pander)
-library(car)
 library(limpca)
 library(gridExtra)
+
+if (!requireNamespace('pander', quietly = TRUE))
+    stop("Install 'pander' to knit this vignette")
+library(pander)
+if (!requireNamespace('car', quietly = TRUE))
+    stop("Install 'pander' to knit this vignette")
+library(car)
+
 
 knitr::opts_chunk$set(message=FALSE,warning=TRUE,
                       comment=NA, crop = NULL,

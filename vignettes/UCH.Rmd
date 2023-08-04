@@ -55,7 +55,10 @@ rm(list=ls())
 ```
 
 ```{r}
+if (!requireNamespace('pander', quietly = TRUE))
+    stop("Install 'pander' to knit this vignette")
 library(pander)
+
 library(ggplot2)
 library(gridExtra)
 ```
@@ -75,7 +78,7 @@ The package is actually in its development stage and is available on GitHub: <ht
 
 ```{r Install, eval=FALSE}
 if (!requireNamespace("remotes"))
-install.packages(pkgs="remotes", dependencies="Depends")
+install.packages(pkgs="remotes", dependencies=TRUE)
 remotes::install_github("ManonMartin/limpca", 
                         dependencies = TRUE)
 ```
