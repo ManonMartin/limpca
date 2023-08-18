@@ -110,7 +110,7 @@ pcaLoading2dPlot <- function(resPcaBySvd,
 
   dista <- load^2%*%singvar^2
 
-  if(hasArg("points_labs")){
+  if(methods::hasArg("points_labs")){
     addRownames = FALSE
   }else{
     pl_n <- min(ncol(loadings), pl_n)

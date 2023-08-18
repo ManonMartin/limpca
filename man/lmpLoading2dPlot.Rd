@@ -70,4 +70,5 @@ options(ggrepel.max.overlaps = 30)
 lmpLoading2dPlot(resASCA,effectNames = "Hippurate",
 metadata = metadata, addRownames = TRUE, color="peaks",
 shape = "peaks", pl_n = 20)
+
 }

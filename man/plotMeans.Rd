@@ -61,6 +61,7 @@ For a given response variable, draws a plot of the response means by levels of u
 }
 \examples{
 
+data('UCH')
 # 1 factor
 plotMeans(Y = UCH$outcomes, design = UCH$design, cols = "4.0628702",
           x = "Hippurate", color = "blue")

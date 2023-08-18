@@ -26,6 +26,7 @@
 #'
 #' @examples
 #'
+#' data('UCH')
 #' plotLine(Y = UCH$outcomes)
 #'
 #' # separate plots
@@ -120,16 +121,19 @@ plotLine <- function(Y,  rows = 1, type = c("l", "p", "s"),
 
   if (!is.null(color)){
     if (color == "rows"){
-      fig <- ggplot2::ggplot(data = Y_long, ggplot2::aes(x = x_axis, y = value,
-                                                         group = rownames, color = rownames))
+      fig <- ggplot2::ggplot(data = Y_long,
+                             ggplot2::aes(x = x_axis, y = value,
+                                          group = rownames, color = rownames))
       color <- NULL
     } else {
-      fig <- ggplot2::ggplot(data = Y_long, ggplot2::aes(x = x_axis, y = value,
-                                                         group = rownames))
+      fig <- ggplot2::ggplot(data = Y_long,
+                             ggplot2::aes(x = x_axis, y = value,
+                                          group = rownames))
     }
   } else {
-      fig <- ggplot2::ggplot(data = Y_long, ggplot2::aes(x = x_axis, y = value,
-                                                         group = rownames))
+      fig <- ggplot2::ggplot(data = Y_long,
+                             ggplot2::aes(x = x_axis, y = value,
+                                          group = rownames))
   }
 
 

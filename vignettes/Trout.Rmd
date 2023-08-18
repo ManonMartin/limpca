@@ -23,6 +23,8 @@ vignette: >
 
 library(ggplot2)
 library(limpca)
+if (!requireNamespace('gridExtra', quietly = TRUE))
+    stop("Install 'pander' to knit this vignette")
 library(gridExtra)
 
 if (!requireNamespace('pander', quietly = TRUE))
@@ -523,7 +525,8 @@ A[[1]]
 A[[2]]
 A[[3]]
 ```
-# Session info
+
+# sessionInfo
 
 ```{r}
 sessionInfo()

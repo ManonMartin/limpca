@@ -67,6 +67,7 @@ Generates the response profile of one or more observations i.e. plots of one or 
 }
 \examples{
 
+data('UCH')
 plotLine(Y = UCH$outcomes)
 
 # separate plots

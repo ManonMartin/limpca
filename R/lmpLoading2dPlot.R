@@ -48,6 +48,8 @@
 #' lmpLoading2dPlot(resASCA,effectNames = "Hippurate",
 #' metadata = metadata, addRownames = TRUE, color="peaks",
 #' shape = "peaks", pl_n = 20)
+#'
+#' @importFrom methods hasArg
 
 
 lmpLoading2dPlot <- function(resLmpPcaEffects,
@@ -123,7 +125,7 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
 
   # distance measure and labels  ===================
 
-  if(hasArg("points_labs")){
+  if(methods::hasArg("points_labs")){
     addRownames = FALSE
   }else{
       labs <- colnames(resLmpPcaEffects$lmpDataList$outcomes)

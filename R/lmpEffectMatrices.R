@@ -75,7 +75,7 @@ lmpEffectMatrices = function(resLmpModelMatrix, SS=TRUE, contrastList=NA){
   #resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
 
   resGLM <- list()
-  for(i in 1:ncol(outcomes)) resGLM[[i]] <- glm.fit(modelMatrix, outcomes[,i])
+  for(i in 1:ncol(outcomes)) resGLM[[i]] <- stats::glm.fit(modelMatrix, outcomes[,i])
   parameters <- t(plyr::laply(resGLM, function(xx) xx$coefficients))
   predictedValues <- t(plyr::laply(resGLM, function(xx) xx$fitted.values))
   residuals <- t(plyr::laply(resGLM, function(xx) xx$residuals))
@@ -111,7 +111,8 @@ lmpEffectMatrices = function(resLmpModelMatrix, SS=TRUE, contrastList=NA){
     rownames(contrib) = ModelAbbrev(rownames(contrib))
 
     plot <- ggplot2::ggplot(data=contrib,
-                                          ggplot2::aes(x=reorder(rownames(contrib), -contrib[,1]),
+                                          ggplot2::aes(x=stats::reorder(rownames(contrib),
+                                                                        -contrib[,1]),
                                                        y=contrib[,1]))+
       ggplot2::geom_bar(stat="identity")+
       ggplot2::xlab("Effects")+

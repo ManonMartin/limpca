@@ -45,6 +45,7 @@ It is a wrapper of plotMeans.
 }
 \examples{
 
+  data('UCH')
   resLmpModelMatrix = lmpModelMatrix(UCH)
   resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
   resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,

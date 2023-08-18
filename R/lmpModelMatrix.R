@@ -36,7 +36,7 @@
 #'
 #'
 #' @import grDevices
-#' @importFrom stats as.formula
+#' @importFrom stats as.formula model.matrix
 
 
 lmpModelMatrix <- function(lmpDataList) {
@@ -89,13 +89,13 @@ lmpModelMatrix <- function(lmpDataList) {
     length(contrasts.arg.Values) <- length(varNamesFactors)
     names(contrasts.arg.Values) <- varNamesFactors
     for (iList in 1:length(contrasts.arg.Values)) contrasts.arg.Values[[iList]] <- "contr.sum"
-    modelMatrix <- (model.matrix(formulaDesignMatrix, contrasts.arg = contrasts.arg.Values,
+    modelMatrix <- (stats::model.matrix(formulaDesignMatrix, contrasts.arg = contrasts.arg.Values,
                                  data = design))
   }
 
   # If factors are not present (Currently not the case)
   if (length(varNamesFactors) == 0) {
-    modelMatrix <- (model.matrix(formulaDesignMatrix, data = design))
+    modelMatrix <- (stats::model.matrix(formulaDesignMatrix, data = design))
   }
 
   #Creating a list containing model matrices by effect

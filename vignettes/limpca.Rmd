@@ -43,6 +43,7 @@ For any enquiry, you can send an email to the package authors: [bernadette.govae
 
 `UCH` contains a multivariate matrix (`outcomes`), a `design` data.frame and a `formula` as a character string:
 ```{r}
+data("UCH")
 str(UCH)
 ```
 

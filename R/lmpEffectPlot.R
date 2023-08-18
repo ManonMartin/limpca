@@ -22,6 +22,7 @@
 #'
 #' @examples
 #'
+#'   data('UCH')
 #'   resLmpModelMatrix = lmpModelMatrix(UCH)
 #'   resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
 #'   resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
@@ -66,7 +67,8 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
 
   if(max(axes) > ncol(resASCA[[effectName]][["scores"]])){
     stop(paste0("PC (",paste0(axes, collapse = ",")
-                ,") is beyond the number of PC of scores (",ncol(scores),")"))
+                ,") is beyond the number of PC of scores (",
+                ncol(resASCA[[effectName]][["scores"]]),")"))
   }
 
   if(str_detect(string = effectName, pattern = "[+]")){
