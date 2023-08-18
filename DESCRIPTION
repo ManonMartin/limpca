@@ -35,3 +35,4 @@ Roxygen: list(markdown=TRUE)
 BugReports: https://github.com/ManonMartin/limpca/issues
 URL: https://github.com/ManonMartin/limpca,
     https://manonmartin.github.io/limpca/
+

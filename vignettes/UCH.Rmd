@@ -58,6 +58,7 @@ rm(list=ls())
 if (!requireNamespace('pander', quietly = TRUE))
     stop("Install 'pander' to knit this vignette")
 library(pander)
+
 library(ggplot2)
 if (!requireNamespace('gridExtra', quietly = TRUE))
     stop("Install 'pander' to knit this vignette")
