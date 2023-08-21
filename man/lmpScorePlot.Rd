@@ -26,19 +26,23 @@ Draws the score plots of each (augmented) effect matrix provided in \code{\link{
 }
 \examples{
 
-data('UCH')
-resLmpModelMatrix = lmpModelMatrix(UCH)
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 
 # PCA decomposition of effect matrices (ASCA)
-resASCA = lmpPcaEffects(resLmpEffectMatrices)
+resASCA <- lmpPcaEffects(resLmpEffectMatrices)
 # Score plot of Hippurate effect matrix
-lmpScorePlot(resASCA, effectNames = "Hippurate",
-color = "Hippurate", shape = "Hippurate")
+lmpScorePlot(resASCA,
+  effectNames = "Hippurate",
+  color = "Hippurate", shape = "Hippurate"
+)
 
 # PCA decomposition of augmented effect matrices (APCA)
-resASCA = lmpPcaEffects(resLmpEffectMatrices,method="APCA")
+resASCA <- lmpPcaEffects(resLmpEffectMatrices, method = "APCA")
 # Score plot of Hippurate augmented effect matrix
-lmpScorePlot(resASCA, effectNames = "Hippurate",
-color = "Hippurate", shape = "Hippurate",drawShapes = "ellipse")
+lmpScorePlot(resASCA,
+  effectNames = "Hippurate",
+  color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse"
+)
 }

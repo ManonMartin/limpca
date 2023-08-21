@@ -48,27 +48,31 @@ loadings and \eqn{\lambda_{ab}}{lambda_ab} their singular values.
 }
 \examples{
 
-data('UCH')
-resLmpModelMatrix = lmpModelMatrix(UCH)
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-resASCA = lmpPcaEffects(resLmpEffectMatrices)
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resASCA <- lmpPcaEffects(resLmpEffectMatrices)
 
-lmpLoading2dPlot(resASCA,effectNames = "Hippurate")
+lmpLoading2dPlot(resASCA, effectNames = "Hippurate")
 
 # adding color, shape and labels to points
-id_hip <- c(126:156,362:375)
+id_hip <- c(126:156, 362:375)
 peaks <- rep("other", ncol(UCH$outcomes))
 peaks[id_hip] <- "hip"
 metadata <- data.frame(peaks)
 
-lmpLoading2dPlot(resASCA,effectNames = "Hippurate",
-metadata = metadata, addRownames = TRUE, color="peaks",
-shape = "peaks")
+lmpLoading2dPlot(resASCA,
+  effectNames = "Hippurate",
+  metadata = metadata, addRownames = TRUE, color = "peaks",
+  shape = "peaks"
+)
 
 # changing max.overlaps of ggrepel
 options(ggrepel.max.overlaps = 30)
-lmpLoading2dPlot(resASCA,effectNames = "Hippurate",
-metadata = metadata, addRownames = TRUE, color="peaks",
-shape = "peaks", pl_n = 20)
+lmpLoading2dPlot(resASCA,
+  effectNames = "Hippurate",
+  metadata = metadata, addRownames = TRUE, color = "peaks",
+  shape = "peaks", pl_n = 20
+)
 
 }

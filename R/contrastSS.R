@@ -1,30 +1,29 @@
-contrastSS = function(resLmpModelMatrix){
-
+contrastSS <- function(resLmpModelMatrix) {
   # Attributing name
-  design = resLmpModelMatrix$LmpDataList$design
-  modelMatrixByEffect = resLmpModelMatrix$modelMatrixByEffect
-  effectsNamesUnique = resLmpModelMatrix$effectsNamesUnique
-  effectsNamesAll = resLmpModelMatrix$effectsNamesAll
-  neffect = length(effectsNamesUnique)
-  nparam = length(effectsNamesAll)
+  design <- resLmpModelMatrix$LmpDataList$design
+  modelMatrixByEffect <- resLmpModelMatrix$modelMatrixByEffect
+  effectsNamesUnique <- resLmpModelMatrix$effectsNamesUnique
+  effectsNamesAll <- resLmpModelMatrix$effectsNamesAll
+  neffect <- length(effectsNamesUnique)
+  nparam <- length(effectsNamesAll)
 
   # Creating empy list
-  L= list()
+  L <- list()
 
   # Filling the list for every effect
-  starting_col = 1
-  Mat = diag(nparam)
+  starting_col <- 1
+  Mat <- diag(nparam)
 
-  for(iEffect in 1:neffect){
-    selection = which(names(modelMatrixByEffect) == effectsNamesUnique[iEffect])
-    MatEffect = modelMatrixByEffect[[selection]]
-    npi = ncol(MatEffect)
+  for (iEffect in 1:neffect) {
+    selection <- which(names(modelMatrixByEffect) == effectsNamesUnique[iEffect])
+    MatEffect <- modelMatrixByEffect[[selection]]
+    npi <- ncol(MatEffect)
 
-    L_iEffect = Mat[starting_col:(starting_col+npi-1),]
-    L[[iEffect]] = L_iEffect
+    L_iEffect <- Mat[starting_col:(starting_col + npi - 1), ]
+    L[[iEffect]] <- L_iEffect
 
-    starting_col = starting_col+npi
+    starting_col <- starting_col + npi
   }
-  names(L) = effectsNamesUnique
+  names(L) <- effectsNamesUnique
   return(L)
 }

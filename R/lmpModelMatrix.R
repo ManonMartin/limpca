@@ -26,7 +26,7 @@
 #'
 #' @examples
 #'
-#' data('UCH')
+#' data("UCH")
 #' resLmpModelMatrix <- lmpModelMatrix(UCH)
 #'
 #' head(resLmpModelMatrix$modelMatrix)
@@ -40,22 +40,22 @@
 
 
 lmpModelMatrix <- function(lmpDataList) {
-
-  formula = stats::as.formula(lmpDataList$formula)
-  design = lmpDataList$design
+  formula <- stats::as.formula(lmpDataList$formula)
+  design <- lmpDataList$design
 
   # Checking no missing argument and the class of the object
 
-  checkArg(formula,"formula",can.be.null = FALSE)
-  checkArg(design,"data.frame",can.be.null = FALSE)
+  checkArg(formula, "formula", can.be.null = FALSE)
+  checkArg(design, "data.frame", can.be.null = FALSE)
 
   # Checking formula
 
-  formulaChar = as.character(formula)
+  formulaChar <- as.character(formula)
   if (length(formulaChar) == 3) {
-    formulaDesignMatrix <- stats::as.formula(paste(formulaChar[1], formulaChar[3]))
+    formulaDesignMatrix <- stats::as.formula(paste(formulaChar[1],
+                                                   formulaChar[3]))
   } else if (length(formulaChar) == 2) {
-    formulaDesignMatrix = formula
+    formulaDesignMatrix <- formula
   } else {
     stop("Please put the formula argument in its right form")
   }
@@ -65,17 +65,21 @@ lmpModelMatrix <- function(lmpDataList) {
   varNames <- all.vars(formulaDesignMatrix)
   matchesVarNames <- varNames %in% names(design)
   if (!all(matchesVarNames, na.rm = FALSE)) {
-    stop("Some of the variable names, present in the formula argument, do not correspond to one of the column names of the design argument. Please adapt either one of both arguments.")
+    stop("Some of the variable names, present in the formula argument,
+         do not correspond to one of the column names of the design argument.
+         Please adapt either one of both arguments.")
   }
 
   # Checking if all variables are factors
 
-  if(all(names(Filter(is.factor, design))!=colnames(design))){
-    NoFactor = vector()
-    for(i in 1:length(colnames(design))){
-      NoFactor[i] = is.factor(design[,i])
+  if (all(names(Filter(is.factor, design)) != colnames(design))) {
+    NoFactor <- vector()
+    for (i in 1:length(colnames(design))) {
+      NoFactor[i] <- is.factor(design[, i])
     }
-    stop(paste("Some of the variables from the design matrix are not factors :",colnames(design)[!NoFactor]))
+    stop(paste("Some of the variables from the design
+               matrix are not factors :",
+               colnames(design)[!NoFactor]))
   }
 
   # Checking which variables are factors
@@ -88,47 +92,55 @@ lmpModelMatrix <- function(lmpDataList) {
     contrasts.arg.Values <- list()
     length(contrasts.arg.Values) <- length(varNamesFactors)
     names(contrasts.arg.Values) <- varNamesFactors
-    for (iList in 1:length(contrasts.arg.Values)) contrasts.arg.Values[[iList]] <- "contr.sum"
-    modelMatrix <- (stats::model.matrix(formulaDesignMatrix, contrasts.arg = contrasts.arg.Values,
-                                 data = design))
+    for (iList in 1:length(contrasts.arg.Values)){
+      contrasts.arg.Values[[iList]] <- "contr.sum"
+    }
+    modelMatrix <- (stats::model.matrix(formulaDesignMatrix,
+      contrasts.arg = contrasts.arg.Values,
+      data = design
+    ))
   }
 
   # If factors are not present (Currently not the case)
   if (length(varNamesFactors) == 0) {
-    modelMatrix <- (stats::model.matrix(formulaDesignMatrix, data = design))
+    modelMatrix <- (stats::model.matrix(formulaDesignMatrix,
+                                        data = design))
   }
 
-  #Creating a list containing model matrices by effect
+  # Creating a list containing model matrices by effect
 
-    # Finding all unique variables
+  # Finding all unique variables
   dummyVarNames <- colnames(modelMatrix)
-  presencePolynomialEffects <- stringr::str_detect(dummyVarNames, '\\^[0-9]') # Detect exponent
+  presencePolynomialEffects <- stringr::str_detect(dummyVarNames,
+                                                   "\\^[0-9]") # Detect exponent
   effectsNamesAll <- character(length = length(dummyVarNames))
   effectsNamesAll[presencePolynomialEffects] <- dummyVarNames[presencePolynomialEffects]
-  effectsNamesAll[!presencePolynomialEffects] <- gsub('[0-9]', '', dummyVarNames[!presencePolynomialEffects])
-  effectsNamesAll[effectsNamesAll == '(Intercept)'] <- 'Intercept'
+  effectsNamesAll[!presencePolynomialEffects] <- gsub("[0-9]", "",
+                                                      dummyVarNames[!presencePolynomialEffects])
+  effectsNamesAll[effectsNamesAll == "(Intercept)"] <- "Intercept"
   effectsNamesUnique <- unique(effectsNamesAll)
   nEffect <- length(effectsNamesUnique)
 
-    #Creating empty model matrices by effect
+  # Creating empty model matrices by effect
   modelMatrixByEffect <- list()
   length(modelMatrixByEffect) <- nEffect
   names(modelMatrixByEffect) <- effectsNamesUnique
 
-    #Filling model matrices by effect
-  for(iEffect in 1:nEffect){
+  # Filling model matrices by effect
+  for (iEffect in 1:nEffect) {
     selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
     selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
-    #Model matrices by effect
+    # Model matrices by effect
     modelMatrixByEffect[[iEffect]] <- as.matrix(modelMatrix[, selection])
-
   }
 
-  resLmpModelMatrix = list(lmpDataList = lmpDataList,
-                          modelMatrix = modelMatrix,
-                          modelMatrixByEffect = modelMatrixByEffect,
-                          effectsNamesUnique = effectsNamesUnique,
-                          effectsNamesAll = effectsNamesAll)
+  resLmpModelMatrix <- list(
+    lmpDataList = lmpDataList,
+    modelMatrix = modelMatrix,
+    modelMatrixByEffect = modelMatrixByEffect,
+    effectsNamesUnique = effectsNamesUnique,
+    effectsNamesAll = effectsNamesAll
+  )
 
   return(resLmpModelMatrix)
 }

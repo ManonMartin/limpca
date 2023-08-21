@@ -27,17 +27,19 @@ Plots the loading vectors for each effect matrix from the \code{\link{lmpPcaEffe
 \examples{
 
 # Example of "spectral" type loadings (line and numerical x-axis)
-data('UCH')
-resLmpModelMatrix = lmpModelMatrix(UCH)
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-resASCA = lmpPcaEffects(resLmpEffectMatrices, combineEffects = list(c("Time", "Hippurate:Time")))
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resASCA <- lmpPcaEffects(resLmpEffectMatrices,
+combineEffects = list(c("Time", "Hippurate:Time")))
 lmpLoading1dPlot(resASCA)
 lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
 
 # Example of "segment" and discrete type loadings (segments and character x-axis)
-data('trout')
-resLmpModelMatrix = lmpModelMatrix(trout)
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-resASCA = lmpPcaEffects(resLmpEffectMatrices)
-lmpLoading1dPlot(resASCA,effectNames="Day",xaxis_type="character",type="s",ang_x_axis=90)
+data("trout")
+resLmpModelMatrix <- lmpModelMatrix(trout)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resASCA <- lmpPcaEffects(resLmpEffectMatrices)
+lmpLoading1dPlot(resASCA, effectNames = "Day",
+xaxis_type = "character", type = "s", ang_x_axis = 90)
 }

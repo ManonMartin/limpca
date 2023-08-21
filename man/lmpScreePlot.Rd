@@ -28,11 +28,11 @@ Provides a barplot of the percentage of variance associated to the PCs of the ef
 }
 \examples{
 
- data('UCH')
- resLmpModelMatrix = lmpModelMatrix(UCH)
- resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
- resASCAE = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
- resLmpContributions = lmpContributions(resASCAE)
- lmpScreePlot(resLmpContributions, effectNames ="Hippurate:Citrate", nPC=4)
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resASCAE <- lmpPcaEffects(resLmpEffectMatrices, method = "ASCA-E")
+resLmpContributions <- lmpContributions(resASCAE)
+lmpScreePlot(resLmpContributions, effectNames = "Hippurate:Citrate", nPC = 4)
 
 }

@@ -32,6 +32,6 @@ Outputs are represented with the functions \code{\link{pcaScorePlot}},
 }
 \examples{
 
-data('UCH')
-PCA.res = pcaBySvd(UCH$outcomes)
+data("UCH")
+PCA.res <- pcaBySvd(UCH$outcomes)
 }

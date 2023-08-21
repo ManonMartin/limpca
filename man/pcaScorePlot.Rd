@@ -34,11 +34,13 @@ Produces score plots from \code{\link{pcaBySvd}} output with the same graphical 
 }
 \examples{
 
-data('UCH')
-ResPCA = pcaBySvd(UCH$outcomes)
+data("UCH")
+ResPCA <- pcaBySvd(UCH$outcomes)
 
-pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2),
-title = "PCA score plot UCH", design = UCH$design,
-color = "Hippurate", shape = "Citrate")
+pcaScorePlot(
+  resPcaBySvd = ResPCA, axes = c(1, 2),
+  title = "PCA score plot UCH", design = UCH$design,
+  color = "Hippurate", shape = "Citrate"
+)
 
 }

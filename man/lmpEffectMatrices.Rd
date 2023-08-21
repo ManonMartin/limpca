@@ -36,10 +36,10 @@ Estimates the model by OLS based on the outcomes and model matrices provided in 
 It calculates also the type III percentage of variance explained by each effect.
 }
 \examples{
- data('UCH')
- resLmpModelMatrix <- lmpModelMatrix(UCH)
- reslmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
- reslmpEffectMatrices$varPercentagesPlot
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+reslmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+reslmpEffectMatrices$varPercentagesPlot
 
 }
 \references{

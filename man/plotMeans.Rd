@@ -61,17 +61,23 @@ For a given response variable, draws a plot of the response means by levels of u
 }
 \examples{
 
-data('UCH')
+data("UCH")
 # 1 factor
-plotMeans(Y = UCH$outcomes, design = UCH$design, cols = "4.0628702",
-          x = "Hippurate", color = "blue")
+plotMeans(
+  Y = UCH$outcomes, design = UCH$design, cols = "4.0628702",
+  x = "Hippurate", color = "blue"
+)
 
 # 2 factors
-plotMeans(Y = UCH$outcomes, design = UCH$design, cols = c(364,365),
-          x = "Hippurate", z = "Time", shape = c(15,1))
+plotMeans(
+  Y = UCH$outcomes, design = UCH$design, cols = c(364, 365),
+  x = "Hippurate", z = "Time", shape = c(15, 1)
+)
 
 # 3 factors
-plotMeans(Y = UCH$outcomes, design = UCH$design, cols = c(364,365),
-          x = "Hippurate", z = "Time", w = "Citrate", linetype = c(3,3))
+plotMeans(
+  Y = UCH$outcomes, design = UCH$design, cols = c(364, 365),
+  x = "Hippurate", z = "Time", w = "Citrate", linetype = c(3, 3)
+)
 
 }
