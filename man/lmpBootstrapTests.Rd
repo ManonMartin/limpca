@@ -33,12 +33,14 @@ A list with the following elements:
 Tests the significance of the effects from the model using bootstrap. This function is based on the outputs of \code{\link{lmpEffectMatrices}}. Tests on combined effects are also provided.
 }
 \examples{
- data('UCH')
- resLmpModelMatrix <- lmpModelMatrix(UCH)
- resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix = resLmpModelMatrix)
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix = resLmpModelMatrix)
 
- res <- lmpBootstrapTests(resLmpEffectMatrices = resLmpEffectMatrices,
- nboot=10, nCores=2, verbose = TRUE)
+res <- lmpBootstrapTests(
+  resLmpEffectMatrices = resLmpEffectMatrices,
+  nboot = 10, nCores = 2, verbose = TRUE
+)
 
 }
 \references{

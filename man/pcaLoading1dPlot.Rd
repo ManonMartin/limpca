@@ -26,9 +26,11 @@ Plots the loading vectors from \code{\link{pcaBySvd}} output with different avai
 }
 \examples{
 
-data('UCH')
-ResPCA = pcaBySvd(UCH$outcomes)
+data("UCH")
+ResPCA <- pcaBySvd(UCH$outcomes)
 
-pcaLoading1dPlot(resPcaBySvd = ResPCA, axes = c(1,2),
-title = "PCA loading plot UCH", xlab = "ppm", ylab = "Values")
+pcaLoading1dPlot(
+  resPcaBySvd = ResPCA, axes = c(1, 2),
+  title = "PCA loading plot UCH", xlab = "ppm", ylab = "Values"
+)
 }

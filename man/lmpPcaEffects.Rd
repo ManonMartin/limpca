@@ -54,10 +54,10 @@ The function allows 3 different methods :
 }
 }
 \examples{
-data('UCH')
-resLmpModelMatrix = lmpModelMatrix(UCH)
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-resLmpPcaEffects = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resLmpPcaEffects <- lmpPcaEffects(resLmpEffectMatrices, method = "ASCA-E")
 
 }
 \references{

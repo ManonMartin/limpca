@@ -45,15 +45,17 @@ It is a wrapper of plotMeans.
 }
 \examples{
 
-  data('UCH')
-  resLmpModelMatrix = lmpModelMatrix(UCH)
-  resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-  resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices,
-method="ASCA", combineEffects = list(c("Hippurate", "Time",  "Hippurate:Time")))
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resASCA <- lmpPcaEffects(
+  resLmpEffectMatrices = resLmpEffectMatrices,
+  method = "ASCA", combineEffects = list(c("Hippurate", "Time", "Hippurate:Time"))
+)
 
-  # Effect plot for an interaction effect
-  lmpEffectPlot(resASCA, effectName = "Hippurate:Time", x = "Hippurate",z="Time")
-  # Effect plot for a combined effect
-  lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", x = "Hippurate",z="Time")
+# Effect plot for an interaction effect
+lmpEffectPlot(resASCA, effectName = "Hippurate:Time", x = "Hippurate", z = "Time")
+# Effect plot for a combined effect
+lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", x = "Hippurate", z = "Time")
 
 }

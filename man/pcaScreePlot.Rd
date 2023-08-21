@@ -28,8 +28,8 @@ Returns a bar plot of the percentage of variance explained by each Principal Com
 }
 \examples{
 
- data('UCH')
- resPCA = pcaBySvd(UCH$outcomes)
- pcaScreePlot(resPCA, nPC=4)
+data("UCH")
+resPCA <- pcaBySvd(UCH$outcomes)
+pcaScreePlot(resPCA, nPC = 4)
 
 }

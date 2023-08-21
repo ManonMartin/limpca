@@ -28,10 +28,10 @@ but also the contribution of each PC to the total variance per effect.
 These contributions are also summarized in a barplot.
 }
 \examples{
-data('UCH')
-resLmpModelMatrix = lmpModelMatrix(UCH)
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
-resLmpPcaEffects = lmpPcaEffects(resLmpEffectMatrices, method="ASCA-E")
+data("UCH")
+resLmpModelMatrix <- lmpModelMatrix(UCH)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
+resLmpPcaEffects <- lmpPcaEffects(resLmpEffectMatrices, method = "ASCA-E")
 
 lmpContributions(resLmpPcaEffects)
 

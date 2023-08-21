@@ -31,7 +31,7 @@ More information is available in the article (\emph{Thiel et al}, 2017)
 }
 \examples{
 
-data('UCH')
+data("UCH")
 resLmpModelMatrix <- lmpModelMatrix(UCH)
 
 head(resLmpModelMatrix$modelMatrix)
