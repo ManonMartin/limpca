@@ -7,7 +7,7 @@ contrastSS <- function(resLmpModelMatrix) {
   neffect <- length(effectsNamesUnique)
   nparam <- length(effectsNamesAll)
 
-  # Creating empy list
+  # Creating empty list
   L <- list()
 
   # Filling the list for every effect
