@@ -1,5 +1,5 @@
 #' @export lmpLoading2dPlot
-#' @title Loading plots on a 2D scatter plot.
+#' @title PCA loading plots on a 2D scatter plot
 #'
 #' @description
 #' Draws a 2D loading plot of each effect matrix provided in \code{\link{lmpPcaEffects}} outputs. As a wrapper of the \code{\link{plotScatter}} function, it allows the visualization of effect loading matrices for two components at a time with all options available in \code{\link{plotScatter}}.
