@@ -224,7 +224,7 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
   if (!is.null(points_labs)) {
     fig <- fig +
       ggrepel::geom_text_repel(
-        show.legend = F,
+        show.legend = FALSE,
         size = size_lab
       )
   }
