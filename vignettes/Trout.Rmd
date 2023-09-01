@@ -37,10 +37,10 @@ library(car)
 
 knitr::opts_chunk$set(message=FALSE,warning=TRUE,
                       comment=NA, crop = NULL,
-                      width = 50)
+                      width = 50, dpi = 70, 
+                      fig.width = 6, 
+                      fig.height = 4.5)
 
-# tidy.opts = list(width.cutoff = 60, indent=2), 
-#                       tidy = TRUE, 
 ```
 
 # Dataset and model presentation

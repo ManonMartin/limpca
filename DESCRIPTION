@@ -18,7 +18,14 @@ Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
               person("Nadia", "Benaiche", role = "ctb",
                      email = "nadia.benaiche@student.uclouvain.be"))
 Description: >
-  This package brings a method to analyze high-dimensional designed data. This method handles unbalanced design.
+ This package has for objectives to provide a method to make Linear Models 
+ for high-dimensional designed data. limpca applies a GLM (General Linear Model) 
+ version of ASCA and APCA to analyse multivariate sample profiles generated 
+ by an experimental design. ASCA/APCA provide powerful visualization 
+ tools for multivariate structures in the space of each effect of 
+ the statistical model linked to the experimental design and contrarily 
+ to MANOVA, it can deal with mutlivariate datasets having more variables 
+ than observations. This method can handle unbalanced design.
 License: Artistic-2.0
 Encoding: UTF-8
 LazyData: FALSE

@@ -49,8 +49,11 @@ resource_files:
 
 ```{r Setup,include=FALSE}
 # require(knitr)
-knitr::opts_chunk$set(message=FALSE,warning=TRUE,comment=NA, crop = NULL,
-                      tidy.opts = list(width.cutoff = 60), tidy = TRUE)
+knitr::opts_chunk$set(message=FALSE,warning=TRUE,comment=NA, 
+                      crop = NULL,
+                      tidy.opts = list(width.cutoff = 60), 
+                      tidy = TRUE, dpi = 68, 
+                      fig.width = 6, fig.height = 4.5)
 rm(list=ls())
 ```
 
