@@ -4,6 +4,8 @@ template:
   bslib:
     primary: "#096B72"
     navbar-background: "#e6f3fc"
+development:
+  mode: auto
 home:
   sidebar:
     structure:
