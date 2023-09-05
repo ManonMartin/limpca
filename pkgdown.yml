@@ -1,0 +1,13 @@
+pandoc: 2.19.2
+pkgdown: 2.0.7
+pkgdown_sha: ~
+articles:
+  Trout: Trout.html
+  UCH: UCH.html
+  limpca: limpca.html
+  suppl_files: suppl_files/suppl_files.html
+last_built: 2023-09-05T09:38Z
+urls:
+  reference: https://manonmartin.github.io/limpca/reference
+  article: https://manonmartin.github.io/limpca/articles
+
