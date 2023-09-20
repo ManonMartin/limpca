@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.99.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.1</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -83,7 +83,7 @@
 Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts
 Bernadette</h4>
             
-            <h4 data-toc-skip class="date">September 05, 2023</h4>
+            <h4 data-toc-skip class="date">September 20, 2023</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ManonMartin/limpca/blob/HEAD/vignettes/UCH.Rmd" class="external-link"><code>vignettes/UCH.Rmd</code></a></small>
       <div class="d-none name"><code>UCH.Rmd</code></div>
@@ -257,7 +257,7 @@ useful to visualise the design.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotDesign.html">plotDesign</a></span><span class="op">(</span>design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>, x <span class="op">=</span> <span class="st">"Hippurate"</span>, </span>
 <span>           y <span class="op">=</span> <span class="st">"Citrate"</span>, rows <span class="op">=</span> <span class="st">"Time"</span>,</span>
 <span>           title <span class="op">=</span> <span class="st">"Design of the UCH dataset"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Design%20visualization-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Design%20visualization-1.png" width="250"></p>
 <p>This plot confirms that the design is a full 3x3x2 factorial design
 replicated twice with 2 missing values. Hence, the design is not
 balanced.</p>
@@ -298,7 +298,7 @@ Hippurate (green) and Citrate (red) peaks.</p>
 <span>         ylab <span class="op">=</span> <span class="st">"Intensity"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p1</span> <span class="op">+</span> <span class="va">cit_peaks</span> <span class="op">+</span> <span class="va">hip_peaks</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Spectrum%20visualization-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Spectrum%20visualization-1.png" width="250"></p>
 </div>
 <div class="section level4">
 <h4 id="plotscatter-function">
@@ -316,7 +316,7 @@ spectra.</p>
 <span>            design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span>
 <span>            color <span class="op">=</span> <span class="st">"Hippurate"</span>, </span>
 <span>            shape <span class="op">=</span> <span class="st">"Citrate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-2-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-2-1.png" width="250"></p>
 <div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Or refering to the variables names (ppm values here)</span></span>
 <span><span class="fu"><a href="../reference/plotScatter.html">plotScatter</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>,</span>
@@ -324,7 +324,7 @@ spectra.</p>
 <span>            design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span>
 <span>            color <span class="op">=</span> <span class="st">"Hippurate"</span>, </span>
 <span>            shape <span class="op">=</span> <span class="st">"Citrate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-2-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-2-2.png" width="250"></p>
 </div>
 <div class="section level4">
 <h4 id="plotscatterm-function">
@@ -338,7 +338,7 @@ Hippurate and single peak of Citrate.</p>
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/plotScatterM.html">plotScatterM</a></span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">133</span>, <span class="fl">145</span>, <span class="fl">150</span>, <span class="fl">369</span>, <span class="fl">453</span><span class="op">)</span>, </span>
 <span>             design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,varname.colorup <span class="op">=</span> <span class="st">"Hippurate"</span>, </span>
 <span>             varname.colordown <span class="op">=</span> <span class="st">"Citrate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-3-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-3-1.png" width="300"></p>
 </div>
 <div class="section level4">
 <h4 id="plotmeans-function">
@@ -360,7 +360,7 @@ biased estimators of expected means.</p>
 <span>          ylab <span class="op">=</span> <span class="st">"Intensity"</span>,</span>
 <span>          title<span class="op">=</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Mean reponse for main Citrate peak"</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <pre><code>$`2.6092056`</code></pre>
-<p><img src="UCH_files/figure-html/unnamed-chunk-4-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-4-1.png" width="250"></p>
 </div>
 </div>
 <div class="section level3">
@@ -381,7 +381,7 @@ matrix. Several functions can be applied to the output value of
 <div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ResPCA</span> <span class="op">=</span> <span class="fu"><a href="../reference/pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pcaScreePlot.html">pcaScreePlot</a></span><span class="op">(</span><span class="va">ResPCA</span>, nPC <span class="op">=</span> <span class="fl">6</span><span class="op">)</span> </span></code></pre></div>
-<p><img src="UCH_files/figure-html/PCA-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/PCA-1.png" width="250"></p>
 <p>The score plots below indicate that all tree factors from the design
 affect the spectral profiles, which will be more clearly highlighted by
 ASCA and APCA.</p>
@@ -391,21 +391,21 @@ ASCA and APCA.</p>
 <span>             design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span>
 <span>             color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Citrate"</span>,</span>
 <span>             points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Scores-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Scores-1.png" width="250"></p>
 <div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span>resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, </span>
 <span>             title <span class="op">=</span> <span class="st">"PCA scores plot: PC1 and PC2"</span>, </span>
 <span>             design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span>
 <span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Hippurate"</span>,</span>
 <span>             points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Scores-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Scores-2.png" width="250"></p>
 <div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span>resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>,<span class="fl">4</span><span class="op">)</span>, </span>
 <span>             title <span class="op">=</span> <span class="st">"PCA scores plot: PC3 and PC4"</span>, </span>
 <span>             design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span>
 <span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Citrate"</span>,</span>
 <span>             points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Scores-3.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Scores-3.png" width="250"></p>
 <p>In the first two loading plots, a mixture of Citrate and Hippurate
 peaks already appears but they are not separated.</p>
 <div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
@@ -414,7 +414,7 @@ peaks already appears but they are not separated.</p>
 <span>               ylab <span class="op">=</span> <span class="st">"Intensity"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="va">p2</span> <span class="op">+</span>  <span class="va">hip_peaks</span> <span class="op">+</span> <span class="va">cit_peaks</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Loadings-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Loadings-1.png" width="250"></p>
 </div>
 </div>
 <div class="section level2">
@@ -833,7 +833,7 @@ these contributions.</p>
 </table>
 <div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpEffectMatrices</span><span class="op">$</span><span class="va">varPercentagesPlot</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-5-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-5-1.png" width="250"></p>
 </div>
 <div class="section level3">
 <h3 id="bootstrap-tests-and-quantification-of-effects-importance">Bootstrap tests and quantification of effects importance<a class="anchor" aria-label="anchor" href="#bootstrap-tests-and-quantification-of-effects-importance"></a>
@@ -879,7 +879,7 @@ get an accurate value for the p-values.</p>
 <td align="center">&lt; 0.01</td>
 <td align="center">&lt; 0.01</td>
 <td align="center">&lt; 0.01</td>
-<td align="center">0.11</td>
+<td align="center">0.13</td>
 </tr>
 </tbody>
 </table>
@@ -927,7 +927,7 @@ get an accurate value for the p-values.</p>
 </tr>
 <tr class="even">
 <td align="center"><strong>Bootstrap p-values</strong></td>
-<td align="center">0.16</td>
+<td align="center">0.15</td>
 <td align="center">-</td>
 </tr>
 </tbody>
@@ -1281,13 +1281,13 @@ either with the ordered contributions per effect
 <p>Ordered contributions per effect:</p>
 <div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">plotTotal</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-10-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-10-1.png" width="250"></p>
 <div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="st">"For each PC of the different effects:"</span><span class="op">)</span></span></code></pre></div>
 <p>For each PC of the different effects:</p>
 <div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">plotContrib</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-10-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-10-2.png" width="250"></p>
 <p>In the following analysis, we will focus only on the first PC of the
 three main effects, the interaction <code>Hippurate:Time</code> and the
 residuals since the other PCs and effects account for less than 1% of
@@ -1331,7 +1331,7 @@ left side of the removed water area.</p>
 <span><span class="va">hip_loadings_pl</span> <span class="op">&lt;-</span> <span class="va">all_loadings_pl</span><span class="op">$</span><span class="va">Hippurate</span> <span class="op">+</span>  <span class="va">hip_peaks</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">hip_scores_pl</span>,<span class="va">hip_loadings_pl</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20ScoresXY-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCA%20ScoresXY-1.png" width="250"></p>
 <div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Citrate</span></span>
 <span><span class="va">cit_scores_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectNames <span class="op">=</span> <span class="st">"Citrate"</span>, </span>
@@ -1339,7 +1339,7 @@ left side of the removed water area.</p>
 <span><span class="va">cit_loadings_pl</span> <span class="op">&lt;-</span> <span class="va">all_loadings_pl</span><span class="op">$</span><span class="va">Citrate</span> <span class="op">+</span>  <span class="va">cit_peaks</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">cit_scores_pl</span>,<span class="va">cit_loadings_pl</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20ScoresXY-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCA%20ScoresXY-2.png" width="250"></p>
 <div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Time</span></span>
 <span><span class="va">tim_scores_pl</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectNames <span class="op">=</span> <span class="st">"Time"</span>, color <span class="op">=</span> <span class="st">"Time"</span>, </span>
@@ -1354,7 +1354,7 @@ scaled</code></pre>
 <span><span class="va">tim_loadings_pl</span> <span class="op">&lt;-</span> <span class="va">all_loadings_pl</span><span class="op">$</span><span class="va">Time</span> <span class="op">+</span>  <span class="va">time_peaks</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">tim_scores_pl</span>,<span class="va">tim_loadings_pl</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20ScoresXY-3.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCA%20ScoresXY-3.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="interaction-hippuratetime">Interaction <code>Hippurate:Time</code><a class="anchor" aria-label="anchor" href="#interaction-hippuratetime"></a>
@@ -1373,7 +1373,7 @@ ppm).</p>
 <span>  <span class="va">hip_peaks</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">hiptim_scores_pl</span>,<span class="va">hiptim_loadings_pl</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-12-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-12-1.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="combination-of-effects-hippuratetimehippuratetime">Combination of effects
@@ -1391,7 +1391,7 @@ ppm).</p>
 <span>                            <span class="va">time_peaks</span> <span class="op">+</span> <span class="va">hip_peaks</span></span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">hiptimInter_scores_pl</span>,<span class="va">hiptimInter_loadings_pl</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-13-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-13-1.png" width="250"></p>
 <p>However, note that a better graphical representation is possible with
 the function <code>lmpEffectPlot</code> (see Section @ref(effects-plot))
 to depict interaction terms or combinations of effects.</p>
@@ -1413,7 +1413,7 @@ residuals.</p>
 <span><span class="va">resid_loadings_pl</span> <span class="op">&lt;-</span> <span class="va">all_loadings_pl</span><span class="op">$</span><span class="va">Residuals</span> </span>
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">resid_scores_pl</span>,<span class="va">resid_loadings_pl</span>, ncol<span class="op">=</span><span class="fl">2</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/Plot%20Residuals-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/Plot%20Residuals-1.png" width="250"></p>
 </div>
 </div>
 <div class="section level4">
@@ -1438,7 +1438,7 @@ term.</p>
 <span>                     varname.pchup<span class="op">=</span><span class="st">"Hippurate"</span>,</span>
 <span>                     varname.pchdown<span class="op">=</span><span class="st">"Time"</span>,</span>
 <span>                     title <span class="op">=</span> <span class="st">"ASCA scores scatterplot matrix"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20ScoresMatrix-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCA%20ScoresMatrix-1.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="d-loadings">2D Loadings<a class="anchor" aria-label="anchor" href="#d-loadings"></a>
@@ -1451,8 +1451,10 @@ interest for spectral data.</p>
 <span>                 effectNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hippurate"</span><span class="op">)</span>, </span>
 <span>                 axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, </span>
 <span>                 addRownames <span class="op">=</span> <span class="cn">TRUE</span>,pl_n <span class="op">=</span> <span class="fl">10</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20loadings-1.png" width="408"></p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<pre><code>Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider
+increasing max.overlaps</code></pre>
+<p><img src="UCH_files/figure-html/ASCA%20loadings-1.png" width="250"></p>
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># adding manually labels to points for the Hippurate peaks</span></span>
 <span><span class="va">labels</span> <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/substr.html" class="external-link">substr</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span>,<span class="fl">1</span>,<span class="fl">4</span><span class="op">)</span></span>
 <span><span class="va">labels</span><span class="op">[</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">369</span>, <span class="fl">132</span>, <span class="fl">150</span>, <span class="fl">133</span>, <span class="fl">149</span>, <span class="fl">144</span>, <span class="fl">145</span>, <span class="fl">368</span>, <span class="fl">151</span><span class="op">)</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">""</span></span>
@@ -1462,7 +1464,7 @@ interest for spectral data.</p>
 <span>                 axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>,<span class="fl">2</span><span class="op">)</span>, points_labs <span class="op">=</span> <span class="va">labels</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider
 increasing max.overlaps</code></pre>
-<p><img src="UCH_files/figure-html/ASCA%20loadings-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCA%20loadings-2.png" width="250"></p>
 </div>
 </div>
 <div class="section level4">
@@ -1477,9 +1479,9 @@ this function can only be applied with the <code>ASCA</code> method.</p>
 <p>Here the first PC of the <code>Hippurate</code> is represented along
 the levels of this effect showing an expected linear effect of Hippurate
 dose on the PC value.</p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate"</span>, x <span class="op">=</span> <span class="st">"Hippurate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-14-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-14-1.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="interaction-hippuratetime-1">Interaction <code>Hippurate:Time</code><a class="anchor" aria-label="anchor" href="#interaction-hippuratetime-1"></a>
@@ -1489,14 +1491,14 @@ terms as line plots, here <code>Hippurate:Time</code> along the
 <code>Hippurate</code> or the <code>Time</code> effect. This
 representation gives the impression of a quite important interaction
 effect.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate:Time"</span>, </span>
-<span>              x <span class="op">=</span> <span class="st">"Hippurate"</span>, z <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-15-1.png" width="408"></p>
 <div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate:Time"</span>, </span>
+<span>              x <span class="op">=</span> <span class="st">"Hippurate"</span>, z <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="UCH_files/figure-html/unnamed-chunk-15-1.png" width="250"></p>
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate:Time"</span>, </span>
 <span>              x <span class="op">=</span> <span class="st">"Time"</span>, z <span class="op">=</span> <span class="st">"Hippurate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/unnamed-chunk-15-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/unnamed-chunk-15-2.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="combination-of-effects-hippuratetimehippuratetime-1">Combination of effects
@@ -1507,14 +1509,14 @@ effects of <code>Hippurate</code>, <code>Time</code> and the interaction
 <code>Hippurate:Time</code>. Even if significant, the interaction effect
 is actually quite small compared to the main effects
 (<code>Hippurate</code> for PC1 and <code>Time</code> for PC2).</p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate+Time+Hippurate:Time"</span>, </span>
-<span>              x <span class="op">=</span> <span class="st">"Hippurate"</span>, z <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20effects-1.png" width="408"></p>
 <div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate+Time+Hippurate:Time"</span>, </span>
+<span>              x <span class="op">=</span> <span class="st">"Hippurate"</span>, z <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="UCH_files/figure-html/ASCA%20effects-1.png" width="250"></p>
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>, effectName <span class="op">=</span> <span class="st">"Hippurate+Time+Hippurate:Time"</span>, </span>
 <span>              axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span><span class="op">)</span>, x <span class="op">=</span> <span class="st">"Time"</span>, z <span class="op">=</span> <span class="st">"Hippurate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCA%20effects-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCA%20effects-2.png" width="250"></p>
 </div>
 </div>
 </div>
@@ -1523,7 +1525,7 @@ is actually quite small compared to the main effects
 </h3>
 <p>The APCA method performs PCA on the effect matrices augmented by the
 residuals. The same functions already used for ASCA can be applied.</p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resAPCA</span> <span class="op">=</span> <span class="fu"><a href="../reference/lmpPcaEffects.html">lmpPcaEffects</a></span><span class="op">(</span>resLmpEffectMatrices <span class="op">=</span> <span class="va">resLmpEffectMatrices</span>, </span>
 <span>                        method<span class="op">=</span><span class="st">"APCA"</span><span class="op">)</span></span></code></pre></div>
 <div class="section level4">
@@ -1531,41 +1533,41 @@ residuals. The same functions already used for ASCA can be applied.</p>
 </h4>
 <p>Different shapes with the <code>drawShapes</code> argument highlight
 the data structure recovery.</p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Hippurate main effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Hippurate"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Hippurate"</span>, drawShapes <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-1.png" width="408"></p>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-1.png" width="250"></p>
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Citrate main effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Citrate"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Citrate"</span>, shape <span class="op">=</span> <span class="st">"Citrate"</span>, drawShapes <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-2.png" width="408"></p>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-2.png" width="250"></p>
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Time main effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Time"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"ellipse"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-3.png" width="408"></p>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Time"</span>, </span>
-<span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"polygon"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-4.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-3.png" width="250"></p>
 <div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Time"</span>, </span>
-<span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"segment"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-5.png" width="408"></p>
+<span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"polygon"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-4.png" width="250"></p>
 <div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Time"</span>, </span>
+<span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"segment"</span><span class="op">)</span></span></code></pre></div>
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-5.png" width="250"></p>
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Interaction term</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Hippurate:Time"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"segment"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-6.png" width="408"></p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-6.png" width="250"></p>
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Hippurate:Time"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Time"</span>, drawShapes <span class="op">=</span> <span class="st">"polygon"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresXY-7.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20ScoresXY-7.png" width="250"></p>
 <p>A scatterplot matrix can also be applied to visualise the
 relationship between the scores profiles of interest.</p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScoreScatterPlotM.html">lmpScoreScatterPlotM</a></span><span class="op">(</span><span class="va">resAPCA</span>,</span>
 <span>                     effectNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hippurate"</span>, <span class="st">"Citrate"</span>, <span class="st">"Time"</span>,</span>
 <span>                                     <span class="st">"Hippurate:Time"</span><span class="op">)</span>,</span>
@@ -1575,27 +1577,27 @@ relationship between the scores profiles of interest.</p>
 <span>                     varname.pchup<span class="op">=</span><span class="st">"Hippurate"</span>,</span>
 <span>                     varname.pchdown<span class="op">=</span><span class="st">"Time"</span>,</span>
 <span>                     title <span class="op">=</span> <span class="st">"APCA scores scatterplot matrix"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/APCA%20ScoresMatrix-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20ScoresMatrix-1.png" width="250"></p>
 </div>
 <div class="section level4">
 <h4 id="loadings-plot">Loadings plot<a class="anchor" aria-label="anchor" href="#loadings-plot"></a>
 </h4>
 <p>Note that the APCA loadings contain the residuals of the model and
 differ from the ASCA loadings in that respect.</p>
-<div class="sourceCode" id="cb62"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpLoading1dPlot.html">lmpLoading1dPlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hippurate"</span>, <span class="st">"Citrate"</span>, </span>
 <span>                                        <span class="st">"Time"</span>, <span class="st">"Hippurate:Time"</span><span class="op">)</span>, axes <span class="op">=</span> <span class="fl">1</span><span class="op">)</span></span></code></pre></div>
 <pre><code>$Hippurate</code></pre>
-<p><img src="UCH_files/figure-html/APCA%20loadings-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20loadings-1.png" width="250"></p>
 <pre><code>
 $Citrate</code></pre>
-<p><img src="UCH_files/figure-html/APCA%20loadings-2.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20loadings-2.png" width="250"></p>
 <pre><code>
 $Time</code></pre>
-<p><img src="UCH_files/figure-html/APCA%20loadings-3.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20loadings-3.png" width="250"></p>
 <pre><code>
 $`Hippurate:Time`</code></pre>
-<p><img src="UCH_files/figure-html/APCA%20loadings-4.png" width="408"></p>
+<p><img src="UCH_files/figure-html/APCA%20loadings-4.png" width="250"></p>
 </div>
 </div>
 <div class="section level3">
@@ -1604,7 +1606,7 @@ $`Hippurate:Time`</code></pre>
 <p>The ASCA-E method performs PCA on the pure effect matrices then
 projects the effect matrices augmented with residuals on the PC
 obtained.</p>
-<div class="sourceCode" id="cb67"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resASCAE</span> <span class="op">=</span> <span class="fu"><a href="../reference/lmpPcaEffects.html">lmpPcaEffects</a></span><span class="op">(</span>resLmpEffectMatrices <span class="op">=</span> <span class="va">resLmpEffectMatrices</span>, </span>
 <span>                         method<span class="op">=</span><span class="st">"ASCA-E"</span><span class="op">)</span></span></code></pre></div>
 <p>The contributions and loadings are identical to the ASCA results.</p>
@@ -1615,26 +1617,26 @@ obtained.</p>
 the different levels of the considered effects on the first PC. This
 separation of the groups suggests a strong effect of those factors,
 confirmed by their significance.</p>
-<div class="sourceCode" id="cb68"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCAE</span>, effectNames <span class="op">=</span> <span class="st">"Hippurate"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Hippurate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-1.png" width="408"></p>
-<div class="sourceCode" id="cb69"><pre class="downlit sourceCode r">
+<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-1.png" width="250"></p>
+<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCAE</span>, effectNames <span class="op">=</span> <span class="st">"Citrate"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Citrate"</span>, shape <span class="op">=</span> <span class="st">"Citrate"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-2.png" width="408"></p>
-<div class="sourceCode" id="cb70"><pre class="downlit sourceCode r">
+<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-2.png" width="250"></p>
+<div class="sourceCode" id="cb71"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCAE</span>, effectNames <span class="op">=</span> <span class="st">"Time"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Time"</span>, shape <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
 <pre><code>Warning in FUN(X[[i]], ...): The variance of PC2 is inferior to 1%. Graph
 scaled</code></pre>
-<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-3.png" width="408"></p>
-<div class="sourceCode" id="cb72"><pre class="downlit sourceCode r">
+<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-3.png" width="250"></p>
+<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCAE</span>, effectNames <span class="op">=</span> <span class="st">"Hippurate:Time"</span>, </span>
 <span>             color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Time"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-4.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCAE%20ScoresXY-4.png" width="250"></p>
 <p>Again, the scores profiles can be compared 2 by 2 with ASCA-E.</p>
-<div class="sourceCode" id="cb73"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/lmpScoreScatterPlotM.html">lmpScoreScatterPlotM</a></span><span class="op">(</span><span class="va">resASCAE</span>,</span>
 <span>                     effectNames <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Hippurate"</span>, <span class="st">"Citrate"</span>, <span class="st">"Time"</span>,</span>
 <span>                                     <span class="st">"Hippurate:Time"</span><span class="op">)</span>,</span>
@@ -1644,14 +1646,14 @@ scaled</code></pre>
 <span>                     varname.pchup<span class="op">=</span><span class="st">"Hippurate"</span>,</span>
 <span>                     varname.pchdown<span class="op">=</span><span class="st">"Time"</span>,</span>
 <span>                     title <span class="op">=</span> <span class="st">"ASCA-E scores scatterplot matrix"</span><span class="op">)</span></span></code></pre></div>
-<p><img src="UCH_files/figure-html/ASCAE%20ScoresMatrix-1.png" width="408"></p>
+<p><img src="UCH_files/figure-html/ASCAE%20ScoresMatrix-1.png" width="250"></p>
 </div>
 </div>
 </div>
 <div class="section level2">
 <h2 id="sessioninfo">sessionInfo<a class="anchor" aria-label="anchor" href="#sessioninfo"></a>
 </h2>
-<div class="sourceCode" id="cb74"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb75"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
 <pre><code>R version 4.3.1 (2023-06-16)
 Platform: x86_64-pc-linux-gnu (64-bit)
@@ -1674,8 +1676,8 @@ attached base packages:
 [1] stats     graphics  grDevices utils     datasets  methods   base     
 
 other attached packages:
-[1] limpca_0.99.0    gridExtra_2.3    ggplot2_3.4.3    pander_0.6.5    
-[5] BiocStyle_2.28.0
+[1] limpca_0.99.1    gridExtra_2.3    ggplot2_3.4.3    pander_0.6.5    
+[5] BiocStyle_2.28.1
 
 loaded via a namespace (and not attached):
  [1] tidyr_1.3.0         sass_0.4.7          utf8_1.2.3         
@@ -1695,11 +1697,10 @@ loaded via a namespace (and not attached):
 [43] fs_1.6.3            ragg_1.2.5          pkgconfig_2.0.3    
 [46] desc_1.4.2          pkgdown_2.0.7       bslib_0.5.1        
 [49] pillar_1.9.0        gtable_0.3.4        glue_1.6.2         
-[52] Rcpp_1.0.11         systemfonts_1.0.4   highr_0.10         
-[55] xfun_0.40           tibble_3.2.1        tidyselect_1.2.0   
-[58] knitr_1.43          farver_2.1.1        htmltools_0.5.6    
-[61] labeling_0.4.3      ggsci_3.0.0         rmarkdown_2.24     
-[64] compiler_4.3.1     </code></pre>
+[52] Rcpp_1.0.11         systemfonts_1.0.4   xfun_0.40          
+[55] tibble_3.2.1        tidyselect_1.2.0    knitr_1.44         
+[58] farver_2.1.1        htmltools_0.5.6     labeling_0.4.3     
+[61] ggsci_3.0.0         rmarkdown_2.25      compiler_4.3.1     </code></pre>
 </div>
 <div class="section level2">
 <h2 class="unnumbered" id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
