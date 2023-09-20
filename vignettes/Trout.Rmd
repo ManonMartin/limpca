@@ -37,9 +37,9 @@ library(car)
 
 knitr::opts_chunk$set(message=FALSE,warning=TRUE,
                       comment=NA, crop = NULL,
-                      width = 50, dpi = 70, 
-                      fig.width = 6, 
-                      fig.height = 4.5)
+                      width = 60, dpi = 50, 
+                      fig.width = 5, 
+                      fig.height = 3.5, dev="png")
 
 ```
 

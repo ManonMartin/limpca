@@ -52,8 +52,8 @@ resource_files:
 knitr::opts_chunk$set(message=FALSE,warning=TRUE,comment=NA, 
                       crop = NULL,
                       tidy.opts = list(width.cutoff = 60), 
-                      tidy = TRUE, dpi = 68, 
-                      fig.width = 6, fig.height = 4.5)
+                      tidy = TRUE, dpi = 50, dev="png",
+                      fig.width = 5, fig.height = 3.5)
 rm(list=ls())
 ```
 
@@ -202,7 +202,7 @@ plotScatter(Y = UCH$outcomes,
 
 The `plotScatter` function allows to visualize the values of a series of outcomes variables with different colors or markers for the values of the design factors. Here, it is done for the 4 peaks of Hippurate and single peak of Citrate.
 
-```{r}
+```{r, fig.width=6,fig.height=7}
 
 plotScatterM(Y = UCH$outcomes, cols = c(133, 145, 150, 369, 453), 
              design = UCH$design,varname.colorup = "Hippurate", 
