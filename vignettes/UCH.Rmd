@@ -41,6 +41,25 @@ references:
   type: article-journal
   issued:
     year: 2019
+- id: Thiel2023
+  title: "limpca : an R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods"
+  author:
+  - family: Thiel
+    given: Michel
+  - family: Benaiche
+    given: Nadia
+  - family: Martin
+    given: Manon
+  - family: Franceschini
+    given: Sebastien
+  - family: Van Oirbeek
+    given: Robin
+  - family: Govaerts
+    given: Bernadette
+  container-title: Journal of Chemometrics
+  type: "article-journal"
+  issued:
+    year: 2023
 resource_files:
   - figs/ASCAMethodo.png
   - figs/limpcaDEfunctions.png
@@ -75,7 +94,11 @@ The purpose of this vignette is to show the possibilities offered by the `limpca
 
 `limpca` stands for linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. This package was created to analyse models with high-dimensional data and a multi-factor design of experiment and provides an implementation of ASCA and APCA derived methods.  
 
-The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results. Details on the methods used can be found in the articles of @Thiel2017 and @Guisset2019.
+The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results. Details on the methods used and the package implementation can be found in the articles of @Thiel2017, @Guisset2019 and @Thiel2023.
+
+The motivation of publishing `limpca` in `bioconductor` is twofold. 
+First, no `bioconductor` package includes ASCA/APCA methods and other `R` packages implementing them are very basic as explained in the literature review of @Thiel2023. 
+Secondly, ASCA/APCA are highly informative methods to analyse -omics data tables in a multivariate framework as a complement to differential analyses packages like `limma`. 
 
 # Installation
 
