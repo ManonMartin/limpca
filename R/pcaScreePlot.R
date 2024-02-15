@@ -35,13 +35,14 @@ pcaScreePlot <- function(resPcaBySvd, nPC = 5,
   }
 
   # plot ===================
-  res <- as.data.frame(resPcaBySvd$var[1:nPC])
+  res <- data.frame(var = resPcaBySvd$var[1:nPC])
+  res <- res %>% rownames_to_column("PC")
 
   ggplot2::ggplot(
     data = res,
     ggplot2::aes(
-      x = rownames(res),
-      y = res[, 1]
+      x = factor(PC,levels = PC),
+      y = var
     )
   ) +
     ggplot2::geom_bar(stat = "identity") +
