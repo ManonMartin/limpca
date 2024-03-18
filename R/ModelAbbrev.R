@@ -7,16 +7,19 @@ ModelAbbrev <- function(vectorname) {
 
   ModelTerms_abbrev <- ModelTerms # Abbreviated model terms
   index <- gregexpr(":", ModelTerms)
-  for (i in 1:length(ModelTerms)) {
+  for (i in seq_along(ModelTerms)) {
     if (index[[i]][1] != -1) {
       ModelTerms_abbrev[i] <- substr(ModelTerms[i], 1, 1)
       index2 <- index[[i]]
-      for (k in 1:length(index2)) {
+      for (k in seq_along(index2)) {
         ModelTerms_abbrev[i] <- paste(ModelTerms_abbrev[i],
-                                      substr(ModelTerms[i],
-                                             index2[k] + 1,
-                                             index2[k] + 1),
-                                      sep = "x")
+          substr(
+            ModelTerms[i],
+            index2[k] + 1,
+            index2[k] + 1
+          ),
+          sep = "x"
+        )
       }
     }
   }

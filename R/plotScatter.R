@@ -121,8 +121,10 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
 
   if (drawShapes != "none") {
     if (is.null(color)) {
-      stop(paste0("drawShapes is set to ", drawShapes,
-                  " but color is NULL"))
+      stop(
+        "drawShapes is set to ", drawShapes,
+        " but color is NULL"
+      )
     }
   }
 
@@ -233,8 +235,10 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
 
   if (drawShapes != "none") {
     if (drawShapes == "ellipse") {
-      fig <- fig + ggplot2::stat_ellipse(type = typeEl,
-                                         level = levelEl)
+      fig <- fig + ggplot2::stat_ellipse(
+        type = typeEl,
+        level = levelEl
+      )
     } else if (drawShapes == "polygon") {
       # getting the convex hull of each unique point set
       find_hull <- function(df) df[chull(df[, mn_xy[1]], df[, mn_xy[2]]), ]

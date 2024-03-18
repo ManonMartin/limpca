@@ -36,9 +36,10 @@ pcaBySvd <- function(Y, nPC = min(dim(Y))) {
   outcomes <- Y
   # column centering of outcomes
   outcomes <- outcomes - matrix(apply(outcomes, 2, mean),
-                                nrow = dim(outcomes)[1],
-                                ncol = dim(outcomes)[2],
-                                byrow = TRUE) # centering of outcomes over the columns
+    nrow = dim(outcomes)[1],
+    ncol = dim(outcomes)[2],
+    byrow = TRUE
+  ) # centering of outcomes over the columns
 
   # SVD of outcomes
   outcomes.svd <- svd(outcomes) # Compute the singular-value decomposition
@@ -46,48 +47,58 @@ pcaBySvd <- function(Y, nPC = min(dim(Y))) {
   outcomes.normscores <- outcomes.svd$u # normalised scores
   outcomes.loadings <- outcomes.svd$v # loadings
   outcomes.singularval <- outcomes.svd$d # singular values
-  names(outcomes.singularval) <- paste0("PC", 1:length(outcomes.singularval))
+  names(outcomes.singularval) <- paste0("PC", seq_along(outcomes.singularval))
 
   # X-Variance explained
   outcomes.vars <- outcomes.singularval^2 / (nrow(outcomes) - 1)
   outcomes.eigval <- outcomes.singularval^2
-  names(outcomes.eigval) <- paste0("PC", 1:length(outcomes.eigval))
+  names(outcomes.eigval) <- paste0("PC", seq_along(outcomes.eigval))
 
   outcomes.totalvar <- sum(outcomes.vars)
   outcomes.relvars <- outcomes.vars / outcomes.totalvar
 
   outcomes.variances <- 100 * outcomes.relvars # variance
-  names(outcomes.variances) <- paste0("PC",
-                                      1:length(outcomes.variances))
+  names(outcomes.variances) <- paste0(
+    "PC",
+    seq_along(outcomes.variances)
+  )
 
   outcomes.cumvariances <- cumsum(outcomes.variances) # cumulative variance
-  names(outcomes.cumvariances) <- paste0("PC",
-                                         1:length(outcomes.cumvariances))
+  names(outcomes.cumvariances) <- paste0(
+    "PC",
+    seq_along(outcomes.cumvariances)
+  )
 
   # as matrix
 
   outcomes.scores <- as.matrix(outcomes.scores)
-  dimnames(outcomes.scores) <- list(rownames(outcomes),
-                                    paste0("PC", 1:ncol(outcomes.scores)))
+  dimnames(outcomes.scores) <- list(
+    rownames(outcomes),
+    paste0("PC", seq_len(ncol(outcomes.scores)))
+  )
 
   outcomes.normscores <- as.matrix(outcomes.normscores)
-  dimnames(outcomes.normscores) <- list(rownames(outcomes),
-                                        paste0("PC", 1:ncol(outcomes.normscores)))
+  dimnames(outcomes.normscores) <- list(
+    rownames(outcomes),
+    paste0("PC", seq_len(ncol(outcomes.normscores)))
+  )
 
   outcomes.loadings <- as.matrix(outcomes.loadings)
-  dimnames(outcomes.loadings) <- list(colnames(outcomes),
-                                      paste0("PC", 1:ncol(outcomes.loadings)))
+  dimnames(outcomes.loadings) <- list(
+    colnames(outcomes),
+    paste0("PC", seq_len(ncol(outcomes.loadings)))
+  )
 
 
   # selection of the first n components
 
-  outcomes.scores <- outcomes.scores[, 1:nPC]
-  outcomes.normscores <- outcomes.normscores[, 1:nPC]
-  outcomes.loadings <- outcomes.loadings[, 1:nPC]
-  outcomes.singularval <- outcomes.singularval[1:nPC]
+  outcomes.scores <- outcomes.scores[, seq_len(nPC)]
+  outcomes.normscores <- outcomes.normscores[, seq_len(nPC)]
+  outcomes.loadings <- outcomes.loadings[, seq_len(nPC)]
+  outcomes.singularval <- outcomes.singularval[seq_len(nPC)]
 
-  outcomes.variances <- outcomes.variances[1:nPC]
-  outcomes.cumvariances <- outcomes.cumvariances[1:nPC]
+  outcomes.variances <- outcomes.variances[seq_len(nPC)]
+  outcomes.cumvariances <- outcomes.cumvariances[seq_len(nPC)]
 
 
 

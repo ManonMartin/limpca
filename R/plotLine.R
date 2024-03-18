@@ -30,18 +30,18 @@
 #' plotLine(Y = UCH$outcomes)
 #'
 #' # separate plots
-#' plotLine(Y = UCH$outcomes, rows = c(1:4), hline = NULL)
-#' plotLine(Y = UCH$outcomes, rows = c(1:4), color = 2)
-#' plotLine(Y = UCH$outcomes, rows = c(1:8), ncol = 2)
+#' plotLine(Y = UCH$outcomes, rows = seq(1, 8), hline = NULL)
+#' plotLine(Y = UCH$outcomes, rows = seq(1, 8), color = 2)
+#' plotLine(Y = UCH$outcomes, rows = seq(1, 8), ncol = 2)
 #' plotLine(
 #'   Y = UCH$outcomes, type = "p",
-#'   rows = c(1:8), ncol = 2
+#'   rows = seq(1, 8), ncol = 2
 #' )
 #'
 #' # stacked plots
 #' library(ggplot2)
 #' plotLine(
-#'   Y = UCH$outcomes, rows = c(1:4),
+#'   Y = UCH$outcomes, rows = seq(1, 1),
 #'   stacked = TRUE, color = "rows"
 #' ) +
 #'   scale_color_brewer(palette = "Set1")
@@ -89,8 +89,8 @@ plotLine <- function(Y, rows = 1, type = c("l", "p", "s"),
   }
 
   if (!is.null(facet_label) && length(rows) != length(facet_label)) {
-    stop(paste0("the number of facet_label differs
-                from the number of rows"))
+    stop("the number of facet_label differs
+                from the number of rows")
   }
 
   # prepare the arguments  ==============================
@@ -176,8 +176,10 @@ plotLine <- function(Y, rows = 1, type = c("l", "p", "s"),
 
   if (type == "l") {
     if (!is.null(color)) {
-      fig <- fig + ggplot2::geom_line(color = color,
-                                      size = size)
+      fig <- fig + ggplot2::geom_line(
+        color = color,
+        size = size
+      )
     } else {
       fig <- fig + ggplot2::geom_line(size = size)
     }
@@ -187,11 +189,15 @@ plotLine <- function(Y, rows = 1, type = c("l", "p", "s"),
 
   if (type == "p") {
     if (!is.null(color)) {
-      fig <- fig + ggplot2::geom_point(size = size,
-                                       shape = shape, color = color)
+      fig <- fig + ggplot2::geom_point(
+        size = size,
+        shape = shape, color = color
+      )
     } else {
-      fig <- fig + ggplot2::geom_point(size = size,
-                                       shape = shape)
+      fig <- fig + ggplot2::geom_point(
+        size = size,
+        shape = shape
+      )
     }
   }
 

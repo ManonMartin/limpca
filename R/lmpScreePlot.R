@@ -46,7 +46,7 @@ lmpScreePlot <- function(resLmpContributions, effectNames = NULL,
 
   # selecting the effect
 
-  resdf <- as.data.frame(t(effectTable[, c(1:nPC)]))
+  resdf <- as.data.frame(t(effectTable[, c(seq_len(nPC))]))
 
   buildFig <- function(x) {
     iEffect <- which(colnames(resdf) == effectNames[x])
@@ -59,12 +59,14 @@ lmpScreePlot <- function(resLmpContributions, effectNames = NULL,
       geom_bar(stat = "identity") +
       xlab("Principal Components") +
       ylab("Variance Percentage") +
-      ggtitle(paste("Percentage of variance by PC for:",
-                    effectNames[x])) +
+      ggtitle(paste(
+        "Percentage of variance by PC for:",
+        effectNames[x]
+      )) +
       theme
   }
 
-  fig <- lapply(c(1:length(effectNames)), FUN = buildFig)
+  fig <- lapply(c(seq_along(effectNames)), FUN = buildFig)
   names(fig) <- effectNames
 
   return(fig)

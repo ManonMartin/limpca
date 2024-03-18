@@ -63,41 +63,41 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
 
   if (!is.null(varname.colorup)) {
     if (!(varname.colorup %in% colnames(design))) {
-      stop(paste0(
+      stop(
         "varname.colorup (", varname.colorup,
         ") is not matching column names of design: ",
-        paste0(colnames(design), collapse = ", ")
-      ))
+        paste(colnames(design), collapse = ", ")
+      )
     }
   }
 
   if (!is.null(varname.colordown)) {
     if (!(varname.colordown %in% colnames(design))) {
-      stop(paste0(
+      stop(
         "varname.colordown (", varname.colordown,
         ") is not matching column names of design: ",
-        paste0(colnames(design), collapse = ", ")
-      ))
+        paste(colnames(design), collapse = ", ")
+      )
     }
   }
 
   if (!is.null(varname.pchup)) {
     if (!(varname.pchup %in% colnames(design))) {
-      stop(paste0(
+      stop(
         "varname.pchup (", varname.pchup,
         ") is not matching column names of design: ",
-        paste0(colnames(design), collapse = ", ")
-      ))
+        paste(colnames(design), collapse = ", ")
+      )
     }
   }
 
   if (!is.null(varname.pchdown)) {
     if (!(varname.pchdown %in% colnames(design))) {
-      stop(paste0(
+      stop(
         "varname.pchdown (", varname.pchdown,
         ") is not matching column names of design: ",
-        paste0(colnames(design), collapse = ", ")
-      ))
+        paste(colnames(design), collapse = ", ")
+      )
     }
   }
 
@@ -224,9 +224,9 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
     } else {
       varname.pchdown <- varname.pchup
       if (is.null(vec.pchup)) {
-        # vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
-        pchs <- c(4, 16, 2, 1, 3, 0, 8, 6, 7, 5, 9:15, 17:25)
-        vec.pchdown <- pchs[c(1:(length(levels(design[, which(names(design) == varname.pchdown)]))))]
+        # vec.pchdown = c(seq_along(levels(design[,which(names(design)==varname.pchdown)])))
+        pchs <- c(4, 16, 2, 1, 3, 0, 8, 6, 7, 5, seq(9, 15), seq(17, 25))
+        vec.pchdown <- pchs[seq_along(levels(design[, which(names(design) == varname.pchdown)]))]
       } else {
         vec.pchdown <- vec.pchup
       }
@@ -234,13 +234,13 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
   } else {
     if (is.null(vec.pchdown)) {
       if (is.null(vec.pchup)) {
-        # vec.pchdown = c(1:(length(levels(design[,which(names(design)==varname.pchdown)]))))
-        pchs <- c(4, 16, 2, 1, 3, 0, 8, 6, 7, 5, 9:15, 17:25)
-        vec.pchdown <- pchs[c(1:(length(levels(design[, which(names(design) == varname.pchdown)]))))]
+        # vec.pchdown = c(seq_along(levels(design[,which(names(design)==varname.pchdown)])))
+        pchs <- c(4, 16, 2, 1, 3, 0, 8, 6, 7, 5, seq(9, 15), seq(17, 25))
+        vec.pchdown <- pchs[seq_along(levels(design[, which(names(design) == varname.pchdown)]))]
       } else if (varname.pchdown == varname.pchup) {
         vec.pchdown <- vec.pchup
       } else {
-        vec.pchdown <- c(1:(length(levels(design[, which(names(design) == varname.pchdown)]))))
+        vec.pchdown <- seq_along(levels(design[, which(names(design) == varname.pchdown)]))
       }
     }
   }
@@ -253,19 +253,19 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
       if (is.null(vec.pchdown)) {
         vec.pchup <- vec.pchdown
       } else {
-        vec.pchup <- c(20:(20 + (length(levels(design[, which(names(design) == varname.pchup)])))))
+        vec.pchup <- seq(20, (20 + (length(levels(design[, which(names(design) == varname.pchup)])))))
       }
     }
   } else {
     if (is.null(vec.pchup)) {
       # if(is.null(vec.pchdown)){
-      #   vec.pchup = c(1:(length(levels(design[,which(names(design)==varname.pchup)]))))
+      #   vec.pchup = c(seq_along(levels(design[,which(names(design)==varname.pchup)])))
       # }else
       if (varname.pchdown == varname.pchup) {
         vec.pchup <- vec.pchdown
       } else {
-        vec.pchup <- c(20:(20 +
-                             (length(levels(design[, which(names(design) == varname.pchup)])))))
+        vec.pchup <- seq(20, (20 +
+          (length(levels(design[, which(names(design) == varname.pchup)])))))
       }
     }
   }
@@ -281,10 +281,10 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
     colorvector <- vector()
     pchvector <- vector()
 
-    for (i in 1:length(var.color.level)) {
+    for (i in seq_along(var.color.level)) {
       colorvector[iEffect.color == var.color.level[i]] <- vec.colorup[i]
     }
-    for (i in 1:length(var.pch.level)) {
+    for (i in seq_along(var.pch.level)) {
       pchvector[iEffect.pch == var.pch.level[i]] <- vec.pchup[i]
     }
 
@@ -302,10 +302,10 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
     colorvector <- vector()
     pchvector <- vector()
 
-    for (i in 1:length(var.color.level)) {
+    for (i in seq_along(var.color.level)) {
       colorvector[iEffect.color == var.color.level[i]] <- vec.colordown[i]
     }
-    for (i in 1:length(var.pch.level)) {
+    for (i in seq_along(var.pch.level)) {
       pchvector[iEffect.pch == var.pch.level[i]] <- vec.pchdown[i]
     }
 
@@ -321,17 +321,17 @@ plotScatterM <- function(Y, cols, design, labelVector = NULL,
     spacebyline <- 0.85 / totallegend
 
     spacecolup <- c(0.05 + length(vec.pchup) * spacebyline +
-                      length(vec.pchdown) * spacebyline +
-                      length(vec.colordown) * spacebyline, 0.9)
+      length(vec.pchdown) * spacebyline +
+      length(vec.colordown) * spacebyline, 0.9)
     spacepchup <- c(0.05 + length(vec.pchup) * spacebyline +
-                      length(vec.pchdown) * spacebyline, 0.05 +
-                      length(vec.pchup) * spacebyline +
-                      length(vec.pchdown) * spacebyline +
-                      length(vec.colordown) * spacebyline)
+      length(vec.pchdown) * spacebyline, 0.05 +
+      length(vec.pchup) * spacebyline +
+      length(vec.pchdown) * spacebyline +
+      length(vec.colordown) * spacebyline)
     spacepchdown <- c(0.05, 0.05 + length(vec.pchup) * spacebyline)
     spacecoldown <- c(0.05 + length(vec.pchup) * spacebyline, 0.05 +
-                        length(vec.pchup) * spacebyline +
-                        length(vec.pchdown) * spacebyline)
+      length(vec.pchup) * spacebyline +
+      length(vec.pchdown) * spacebyline)
 
     # Plotting legend
 

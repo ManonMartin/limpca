@@ -73,7 +73,7 @@ lmpPcaEffects <- function(resLmpEffectMatrices, method = c("ASCA", "APCA", "ASCA
     stop("Argument is not a resLmpEffectMatrices object")
   }
   if (length(resLmpEffectMatrices$effectMatrices) !=
-      length(resLmpEffectMatrices$effectsNamesUnique)) {
+    length(resLmpEffectMatrices$effectsNamesUnique)) {
     stop("Number of effect matrices different from the number of effects")
   }
   # if(!method %in% c("ASCA","APCA","ASCA-E")){stop("Method must be one of: ASCA, ASCA-E, APCA")}
@@ -92,23 +92,30 @@ lmpPcaEffects <- function(resLmpEffectMatrices, method = c("ASCA", "APCA", "ASCA
     combineMatrices <- function(combineVectors) {
       matList <- list()
       combinedEffects <- list()
-      matList <- lapply(combineVectors, function(x)
-        resLmpEffectMatrices$effectMatrices[[x]])
+      matList <- lapply(combineVectors, function(x) {
+        resLmpEffectMatrices$effectMatrices[[x]]
+      })
       combinedEffects <- Reduce("+", matList)
     }
 
     combinedMatrices <- lapply(combineEffects, combineMatrices)
     names(combinedMatrices) <- lapply(combineEffects,
-                                      FUN = function(x) paste0(x,
-                                                               collapse = "+"))
+      FUN = function(x) {
+        paste0(x,
+          collapse = "+"
+        )
+      }
+    )
 
     resLmpEffectMatrices$effectMatrices <- c(
       resLmpEffectMatrices$effectMatrices,
       combinedMatrices
     )
 
-    effectsNamesUniqueCombined <- c(effectsNamesUnique,
-                                    names(combinedMatrices))
+    effectsNamesUniqueCombined <- c(
+      effectsNamesUnique,
+      names(combinedMatrices)
+    )
   }
 
 
@@ -130,22 +137,24 @@ lmpPcaEffects <- function(resLmpEffectMatrices, method = c("ASCA", "APCA", "ASCA
 
   if (method == "ASCA") {
     if (verbose) {
-      print("ASCA method used : PCA on the pure effect matrices")
+      message("ASCA method used : PCA on the pure effect matrices")
     }
   } else if (method == "APCA") {
     if (verbose) {
-      print("APCA method used : PCA on the augmented effect matrices")
+      message("APCA method used : PCA on the augmented effect matrices")
     }
 
     # Compute the augmented effect matrices
 
     EffectMatGLM <- resLmpEffectMatrices$effectMatrices[-1] # effectMatrices minus intercept
-    EffectMatGLM <- lapply(EffectMatGLM, function(x) x +
-                             resLmpEffectMatrices$residuals)
+    EffectMatGLM <- lapply(EffectMatGLM, function(x) {
+      x +
+        resLmpEffectMatrices$residuals
+    })
     EffectMatGLM <- c(EffectMatGLM, Residuals = res) # plus residuals
   } else if (method == "ASCA-E") {
     if (verbose) {
-      print("ASCA-E method used : PCA on the pure effect matrices
+      message("ASCA-E method used : PCA on the pure effect matrices
             but scores are updated")
     }
   } else {
@@ -157,16 +166,16 @@ lmpPcaEffects <- function(resLmpEffectMatrices, method = c("ASCA", "APCA", "ASCA
 
   resLmpPcaEffects <- vector(mode = "list")
 
-  for (i in 1:p) {
+  for (i in seq_len(p)) {
     resLmpPcaEffects[[i]] <- pcaBySvd(EffectMatGLM[[i]])
   }
 
   # Updating the score for ASCA-E method
 
   if (method == "ASCA-E") {
-    for (i in 1:p) {
-      resLmpPcaEffects[[i]]$scores[, 1:5] <- (EffectMatGLM[[i]] +
-                                                EffectMatGLM[[p]]) %*% resLmpPcaEffects[[i]]$loadings[, 1:5]
+    for (i in seq_len(p)) {
+      resLmpPcaEffects[[i]]$scores[, seq_len(5)] <- (EffectMatGLM[[i]] +
+        EffectMatGLM[[p]]) %*% resLmpPcaEffects[[i]]$loadings[, seq_len(5)]
     }
   }
 

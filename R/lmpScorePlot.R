@@ -70,8 +70,9 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
 
 
   # scores
-  scores <- lapply(effectNames, function(x)
-    resLmpPcaEffects[[x]][["scores"]])
+  scores <- lapply(effectNames, function(x) {
+    resLmpPcaEffects[[x]][["scores"]]
+  })
   names(scores) <- effectNames
 
   if (length(axes) != 2) {
@@ -79,10 +80,10 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
   }
 
   if (max(axes) > ncol(scores[[effectNames[1]]])) {
-    stop(paste0(
-      "axes (", paste0(axes, collapse = ","),
+    stop(
+      "axes (", paste(axes, collapse = ","),
       ") is beyond the ncol of scores (", ncol(scores), ")"
-    ))
+    )
   }
 
   # percentage of explained variance   ===================
@@ -90,7 +91,8 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
   pc_var_fun <- function(effect) {
     pc_var <- resLmpPcaEffects[[effect]][["var"]]
     pc_var_x <- format(pc_var[pc_var >= 0.1],
-                       digits = 2, trim = TRUE)
+      digits = 2, trim = TRUE
+    )
     pc_var_y <- format(pc_var[pc_var < 0.1],
       digits = 2,
       scientific = TRUE, trim = TRUE
@@ -99,8 +101,10 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
     pc_var_char[pc_var >= 0.1] <- pc_var_x
     pc_var_char[pc_var < 0.1] <- pc_var_y
 
-    pc_var_char <- paste0("PC", axes, " (",
-                          pc_var_char[axes], "%)")
+    pc_var_char <- paste0(
+      "PC", axes, " (",
+      pc_var_char[axes], "%)"
+    )
 
     return(pc_var_char)
   }
@@ -112,8 +116,10 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
   # graphical parameters   ===================
 
   buildFig <- function(effect) {
-    title <- paste0(effect, ": ",
-                    resLmpPcaEffects$method, " score plot")
+    title <- paste0(
+      effect, ": ",
+      resLmpPcaEffects$method, " score plot"
+    )
 
     xlab <- pc_axes[[effect]][1]
     ylab <- pc_axes[[effect]][2]

@@ -69,15 +69,15 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
   }
 
   if (!effectName %in% names(resASCA)) {
-    stop(paste0(effectName, " is not an effect of resASCA"))
+    stop(effectName, " is not an effect of resASCA")
   }
 
   if (max(axes) > ncol(resASCA[[effectName]][["scores"]])) {
-    stop(paste0(
-      "PC (", paste0(axes, collapse = ","),
+    stop(
+      "PC (", paste(axes, collapse = ","),
       ") is beyond the number of PC of scores (",
       ncol(resASCA[[effectName]][["scores"]]), ")"
-    ))
+    )
   }
 
   if (str_detect(string = effectName, pattern = "[+]")) {
@@ -101,8 +101,10 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
   matEffect <- resASCA[[effectName]][["scores"]]
 
   title <- paste0(effectName, " scores as a function of ", x, ": PC", axes)
-  ylab <- paste0("Scores (", round(resASCA[[effectName]][["var"]][axes], 2),
-                 "% of variation explained)")
+  ylab <- paste0(
+    "Scores (", round(resASCA[[effectName]][["var"]][axes], 2),
+    "% of variation explained)"
+  )
 
   if (!"title" %in% names(mcall)) {
     if (!"ylab" %in% names(mcall)) {

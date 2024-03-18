@@ -22,7 +22,8 @@
 #' resLmpModelMatrix <- lmpModelMatrix(UCH)
 #' resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 #' resASCA <- lmpPcaEffects(resLmpEffectMatrices,
-#' combineEffects = list(c("Time", "Hippurate:Time")))
+#'   combineEffects = list(c("Time", "Hippurate:Time"))
+#' )
 #' lmpLoading1dPlot(resASCA)
 #' lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
 #'
@@ -31,10 +32,10 @@
 #' resLmpModelMatrix <- lmpModelMatrix(trout)
 #' resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 #' resASCA <- lmpPcaEffects(resLmpEffectMatrices)
-#' lmpLoading1dPlot(resASCA, effectNames = "Day",
-#' xaxis_type = "character", type = "s", ang_x_axis = 90)
-
-
+#' lmpLoading1dPlot(resASCA,
+#'   effectNames = "Day",
+#'   xaxis_type = "character", type = "s", ang_x_axis = 90
+#' )
 lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
                              axes = c(1, 2), ...) {
   # checks   ===================
@@ -69,8 +70,9 @@ lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
 
   # loadings
 
-  loadings <- lapply(effectNames, function(x)
-    t(resLmpPcaEffects[[x]][["loadings"]]))
+  loadings <- lapply(effectNames, function(x) {
+    t(resLmpPcaEffects[[x]][["loadings"]])
+  })
   names(loadings) <- effectNames
 
   # percentage of explained variance   ===================
@@ -78,7 +80,8 @@ lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
   pc_var_fun <- function(effect) {
     pc_var <- resLmpPcaEffects[[effect]][["var"]]
     pc_var_x <- format(pc_var[pc_var >= 0.1],
-                       digits = 2, trim = TRUE)
+      digits = 2, trim = TRUE
+    )
     pc_var_y <- format(pc_var[pc_var < 0.1],
       digits = 2,
       scientific = TRUE, trim = TRUE
@@ -87,8 +90,10 @@ lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
     pc_var_char[pc_var >= 0.1] <- pc_var_x
     pc_var_char[pc_var < 0.1] <- pc_var_y
 
-    pc_var_char <- paste0("PC", axes, " (",
-                          pc_var_char[axes], "%)")
+    pc_var_char <- paste0(
+      "PC", axes, " (",
+      pc_var_char[axes], "%)"
+    )
 
     return(pc_var_char)
   }
@@ -102,8 +107,10 @@ lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
   buildFig <- function(effect) {
     title <- paste(effect, ": loading plot")
 
-    plotLine(Y = loadings[[effect]], title = title,
-             rows = axes, facet_label = lab[[effect]], ...)
+    plotLine(
+      Y = loadings[[effect]], title = title,
+      rows = axes, facet_label = lab[[effect]], ...
+    )
   }
 
   fig <- lapply(effectNames, buildFig)

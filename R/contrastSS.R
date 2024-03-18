@@ -14,7 +14,7 @@ contrastSS <- function(resLmpModelMatrix) {
   starting_col <- 1
   Mat <- diag(nparam)
 
-  for (iEffect in 1:neffect) {
+  for (iEffect in seq_len(neffect)) {
     selection <- which(names(modelMatrixByEffect) == effectsNamesUnique[iEffect])
     MatEffect <- modelMatrixByEffect[[selection]]
     npi <- ncol(MatEffect)

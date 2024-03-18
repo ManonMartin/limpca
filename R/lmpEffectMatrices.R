@@ -80,21 +80,24 @@ lmpEffectMatrices <- function(resLmpModelMatrix, SS = TRUE, contrastList = NA) {
   # resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
 
   resGLM <- list()
-  for (i in 1:ncol(outcomes)) resGLM[[i]] <- stats::glm.fit(modelMatrix, outcomes[, i])
+  for (i in seq_len(ncol(outcomes))) resGLM[[i]] <- stats::glm.fit(modelMatrix, outcomes[, i])
   parameters <- t(plyr::laply(resGLM, function(xx) xx$coefficients))
   predictedValues <- t(plyr::laply(resGLM, function(xx) xx$fitted.values))
   residuals <- t(plyr::laply(resGLM, function(xx) xx$residuals))
   colnames(residuals) <- colnames(predictedValues) <- colnames(outcomes)
 
   # Filling effectMatrices
-  for (iEffect in 1:nEffect) {
+  for (iEffect in seq_len(nEffect)) {
     selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
     selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
     # Effect matrices
-    effectMatrices[[iEffect]] <- t(plyr::aaply(parameters, 2,
-                                               function(xx)
-                                                 as.matrix(modelMatrix[, selection]) %*%
-                                                 xx[selection]))
+    effectMatrices[[iEffect]] <- t(plyr::aaply(
+      parameters, 2,
+      function(xx) {
+        as.matrix(modelMatrix[, selection]) %*%
+          xx[selection]
+      }
+    ))
     colnames(effectMatrices[[iEffect]]) <- colnames(outcomes)
   }
 

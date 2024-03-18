@@ -19,18 +19,24 @@ lmpSS <- function(resLmpEffectMatrices, listcontrast) {
     resLmpEffectMatrices$effectMatrices$Intercept
   denom <- norm(x = data.matrix(Y_withoutIntercept), "F")^2
 
-  for (i in 1:length(L)) {
-    result[i] <- computeSS(Xmat = resLmpEffectMatrices$modelMatrix, L = L[[i]],
-                           coef = resLmpEffectMatrices$parameters)
+  for (i in seq_along(L)) {
+    result[i] <- computeSS(
+      Xmat = resLmpEffectMatrices$modelMatrix, L = L[[i]],
+      coef = resLmpEffectMatrices$parameters
+    )
     var_percentage[i] <- (result[i] / denom) * 100
   }
   # all effects plus residuals
-  result <- c(result, ((norm(x = resLmpEffectMatrices$residuals,
-                             "F")^2) / denom) * 100)
+  result <- c(result, ((norm(
+    x = resLmpEffectMatrices$residuals,
+    "F"
+  )^2) / denom) * 100)
   names(result) <- c(names(L), "Residuals")
 
-  var_percentage <- c(var_percentage, ((norm(x = resLmpEffectMatrices$residuals,
-                                             "F")^2) / denom) * 100)
+  var_percentage <- c(var_percentage, ((norm(
+    x = resLmpEffectMatrices$residuals,
+    "F"
+  )^2) / denom) * 100)
   names(var_percentage) <- c(names(L), "Residuals")
 
   var_percentage <- var_percentage[names(var_percentage) != "Intercept"]

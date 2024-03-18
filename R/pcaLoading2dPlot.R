@@ -35,8 +35,8 @@
 #' )
 #'
 #' # adding color,  shape and labels to points
-#' id_cit <- 446:459
-#' id_hip <- c(126:156, 362:375)
+#' id_cit <- seq(446, 459)
+#' id_hip <- c(seq(126, 156), seq(362, 375))
 #' peaks <- rep("other", ncol(UCH$outcomes))
 #' peaks[id_hip] <- "hip"
 #' peaks[id_cit] <- "cit"
@@ -93,10 +93,10 @@ pcaLoading2dPlot <- function(resPcaBySvd,
   }
 
   if (max(axes) > ncol(loadings)) {
-    stop(paste0(
-      "axes (", paste0(axes, collapse = ","),
+    stop(
+      "axes (", paste(axes, collapse = ","),
       ") is beyond the ncol of loadings (", ncol(loadings), ")"
-    ))
+    )
   }
 
 
@@ -125,7 +125,7 @@ pcaLoading2dPlot <- function(resPcaBySvd,
   } else {
     pl_n <- min(ncol(loadings), pl_n)
     points_labels <- rownames(loadings)
-    ids <- order(dista, decreasing = TRUE)[1:pl_n]
+    ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
     points_labels[-ids] <- ""
   }
 

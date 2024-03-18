@@ -45,16 +45,18 @@ pcaLoading1dPlot <- function(resPcaBySvd,
   checkArg(loadings, c("matrix"), can.be.null = FALSE)
 
   if (max(axes) > nrow(loadings)) {
-    stop(paste0(
-      "axes (", paste0(axes, collapse = ","),
+    stop(
+      "axes (", paste(axes, collapse = ","),
       ") is beyond the ncol of loadings (", nrow(loadings), ")"
-    ))
+    )
   }
 
   # percentage of explained variance   ===================
   pc_var <- resPcaBySvd$var
-  pc_var_x <- format(pc_var[pc_var >= 0.1], digits = 2,
-                     trim = TRUE)
+  pc_var_x <- format(pc_var[pc_var >= 0.1],
+    digits = 2,
+    trim = TRUE
+  )
   pc_var_y <- format(pc_var[pc_var < 0.1],
     digits = 2,
     scientific = TRUE, trim = TRUE
@@ -63,8 +65,10 @@ pcaLoading1dPlot <- function(resPcaBySvd,
   pc_var_char[pc_var >= 0.1] <- pc_var_x
   pc_var_char[pc_var < 0.1] <- pc_var_y
 
-  pc_var_char <- paste0("PC", axes, " (",
-                        pc_var_char[axes], "%)")
+  pc_var_char <- paste0(
+    "PC", axes, " (",
+    pc_var_char[axes], "%)"
+  )
 
   # Loadings plot  ===================
   fig <- plotLine(

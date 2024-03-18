@@ -66,7 +66,7 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
 
   # Checking resLmpPcaEffects object and match with effectNames
   if (!identical(
-    names(resLmpPcaEffects[(length(resLmpPcaEffects) - 7):length(resLmpPcaEffects)]),
+    names(resLmpPcaEffects[seq((length(resLmpPcaEffects) - 7), length(resLmpPcaEffects))]),
     c(
       "Residuals", "lmpDataList", "effectsNamesUnique",
       "effectsNamesUniqueCombined",
@@ -78,7 +78,7 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
   }
 
   if (allEffect == FALSE) {
-    for (i in 1:length(effectNames)) {
+    for (i in seq_along(effectNames)) {
       if (!effectNames[i] %in% names(resLmpPcaEffects)) {
         "One of the elements from effectNames is not in resLmpPcaEffects"
       }
@@ -120,11 +120,11 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
   var <- c(rep(1, k))
 
   coomatrix <- matrix(data = NA, nrow = n, ncol = k)
-  colnames(coomatrix) <- seq(1:k)
+  colnames(coomatrix) <- seq_len(k)
 
   if (allEffect == TRUE) {
     if (classicalPC) { # Only PC1 to all effects
-      for (i in 1:length(effectsNamesUniqueRes)) {
+      for (i in seq_along(effectsNamesUniqueRes)) {
         coomatrix[, i] <- resLmpPcaEffects[[effectsNamesUniqueRes[i]]]$scores[, PCdim[i]]
         colnames(coomatrix)[i] <- paste(effectsNamesUniqueRes[i], "PC1")
         var[i] <- (resLmpPcaEffects$variationPercentages[effectsNamesUniqueRes[i]] *
@@ -132,7 +132,7 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
       }
     } else { # All effects but more than 1 PC
       l <- 1
-      for (j in 1:length(PCdim)) { # Some effects must be printed on PC2 or more
+      for (j in seq_along(PCdim)) { # Some effects must be printed on PC2 or more
 
         if (PCdim[j] == 1) {
           coomatrix[, l] <- resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$scores[, PCdim[j]]
@@ -141,10 +141,12 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
             resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$var[1]) / 100
           l <- l + 1
         } else {
-          for (m in 1:PCdim[j]) { # Get the others PC
+          for (m in seq_len(PCdim[j])) { # Get the others PC
             coomatrix[, l] <- resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$scores[, m]
-            colnames(coomatrix)[l] <- paste(effectsNamesUniqueRes[j],
-                                            colnames(resLmpPcaEffects[[j]]$scores)[m])
+            colnames(coomatrix)[l] <- paste(
+              effectsNamesUniqueRes[j],
+              colnames(resLmpPcaEffects[[j]]$scores)[m]
+            )
             var[l] <- (resLmpPcaEffects$variationPercentages[effectsNamesUniqueRes[j]] *
               resLmpPcaEffects[[effectsNamesUniqueRes[j]]]$var[m]) / 100
             l <- l + 1
@@ -155,16 +157,18 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
   } else { # Not all effect and on one or more PC
 
     l <- 1
-    for (i in 1:length(effectNames)) {
+    for (i in seq_along(effectNames)) {
       iEffect_temp <- which(names(resLmpPcaEffects) == effectNames[i])
       iEffect <- resLmpPcaEffects[[iEffect_temp]]
 
-      for (j in 1:PCdim[i]) {
+      for (j in seq_len(PCdim[i])) {
         coomatrix[, l] <- iEffect$scores[, j]
-        colnames(coomatrix)[l] <- paste(names(resLmpPcaEffects)[iEffect_temp],
-                                        colnames(iEffect$scores)[j])
+        colnames(coomatrix)[l] <- paste(
+          names(resLmpPcaEffects)[iEffect_temp],
+          colnames(iEffect$scores)[j]
+        )
         var[l] <- (resLmpPcaEffects$variationPercentages[iEffect_temp] *
-                     resLmpPcaEffects[[iEffect_temp]]$var[j]) / 100
+          resLmpPcaEffects[[iEffect_temp]]$var[j]) / 100
         l <- l + 1
       }
     }
@@ -173,15 +177,17 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
   # Creation of the labels
   labelvector <- vector()
 
-  for (i in 1:k) {
+  for (i in seq_len(k)) {
     div_name <- strsplit(x = colnames(coomatrix)[i], split = " ")
     div_name <- div_name[[1]]
     effect_name <- div_name
     if (modelAbbrev == TRUE) {
       effect_name <- ModelAbbrev(div_name)
     } # Abbrev interaction term
-    labelvector[i] <- paste(effect_name[1], "\n",
-                            div_name[2], "\n", round(var[i], 2), "%")
+    labelvector[i] <- paste(
+      effect_name[1], "\n",
+      div_name[2], "\n", round(var[i], 2), "%"
+    )
   }
 
 
@@ -190,7 +196,7 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
 
   plotScatterM(
     Y = coomatrix,
-    cols = 1:ncol(coomatrix),
+    cols = seq_len(ncol(coomatrix)),
     design = resLmpPcaEffects$lmpDataList$design,
     labelVector = labelvector, ...
   )

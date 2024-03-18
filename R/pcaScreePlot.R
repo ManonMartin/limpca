@@ -35,13 +35,13 @@ pcaScreePlot <- function(resPcaBySvd, nPC = 5,
   }
 
   # plot ===================
-  res <- data.frame(var = resPcaBySvd$var[1:nPC])
+  res <- data.frame(var = resPcaBySvd$var[seq_len(nPC)])
   res <- res %>% rownames_to_column("PC")
 
   ggplot2::ggplot(
     data = res,
     ggplot2::aes(
-      x = factor(PC,levels = PC),
+      x = factor(PC, levels = PC),
       y = var
     )
   ) +

@@ -34,7 +34,7 @@
 #' lmpLoading2dPlot(resASCA, effectNames = "Hippurate")
 #'
 #' # adding color, shape and labels to points
-#' id_hip <- c(126:156, 362:375)
+#' id_hip <- c(seq(126, 156), seq(362, 375))
 #' peaks <- rep("other", ncol(UCH$outcomes))
 #' peaks[id_hip] <- "hip"
 #' metadata <- data.frame(peaks)
@@ -77,7 +77,7 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
   }
 
   if (!identical(
-    names(resLmpPcaEffects[(length(resLmpPcaEffects) - 7):length(resLmpPcaEffects)]),
+    names(resLmpPcaEffects[seq((length(resLmpPcaEffects) - 7), length(resLmpPcaEffects))]),
     c(
       "Residuals", "lmpDataList", "effectsNamesUnique",
       "effectsNamesUniqueCombined",
@@ -98,8 +98,9 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
 
   # loadings   ===================
 
-  loadings <- lapply(effectNames, function(x)
-    resLmpPcaEffects[[x]][["loadings"]])
+  loadings <- lapply(effectNames, function(x) {
+    resLmpPcaEffects[[x]][["loadings"]]
+  })
   names(loadings) <- effectNames
 
   if (length(axes) != 2) {
@@ -107,10 +108,10 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
   }
 
   if (max(axes) > ncol(loadings[[effectNames[1]]])) {
-    stop(paste0(
-      "axes (", paste0(axes, collapse = ","),
+    stop(
+      "axes (", paste(axes, collapse = ","),
       ") is beyond the ncol of loadings (", ncol(loadings), ")"
-    ))
+    )
   }
 
 
@@ -120,7 +121,8 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
   pc_var_fun <- function(effect) {
     pc_var <- resLmpPcaEffects[[effect]][["var"]]
     pc_var_x <- format(pc_var[pc_var >= 0.1],
-                       digits = 2, trim = TRUE)
+      digits = 2, trim = TRUE
+    )
     pc_var_y <- format(pc_var[pc_var < 0.1],
       digits = 2,
       scientific = TRUE, trim = TRUE
@@ -129,8 +131,10 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
     pc_var_char[pc_var >= 0.1] <- pc_var_x
     pc_var_char[pc_var < 0.1] <- pc_var_y
 
-    pc_var_char <- paste0("PC", axes, " (",
-                          pc_var_char[axes], "%)")
+    pc_var_char <- paste0(
+      "PC", axes, " (",
+      pc_var_char[axes], "%)"
+    )
 
     return(pc_var_char)
   }
@@ -149,15 +153,16 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
       load <- resLmpPcaEffects[[effect]][["loadings"]][, axes]
       singvar <- resLmpPcaEffects[[effect]][["singvar"]][axes]
       dista <- load^2 %*% singvar^2
-      ids <- order(dista, decreasing = TRUE)[1:pl_n]
+      ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
       labs[-ids] <- ""
       labs
     }
 
     points_labels <- lapply(effectNames, dist_labels_fun,
-                             axes = axes, labs = labs)
+      axes = axes, labs = labs
+    )
 
-    names(points_labels) = effectNames
+    names(points_labels) <- effectNames
   }
 
 
@@ -167,8 +172,10 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
   # graphical parameters   ===================
 
   buildFig <- function(effect) {
-    title <- paste(effect, ":", resLmpPcaEffects$method,
-                   "loading plot")
+    title <- paste(
+      effect, ":", resLmpPcaEffects$method,
+      "loading plot"
+    )
 
     xlab_pc <- pc_axes[[effect]][1]
     ylab_pc <- pc_axes[[effect]][2]

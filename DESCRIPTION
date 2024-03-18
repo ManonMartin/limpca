@@ -34,11 +34,17 @@ Imports: ggplot2, stringr, plyr, ggrepel, reshape2,
     grDevices, graphics, doParallel, parallel, dplyr, tibble, tidyr, ggsci,
     tidyverse, methods, stats
 Suggests: 
-    BiocStyle, pander, 
-    rmarkdown, car, gridExtra, knitr
+    BiocStyle,
+    pander,
+    rmarkdown,
+    car,
+    gridExtra,
+    knitr,
+    testthat (>= 3.0.0)
 biocViews: StatisticalMethod, PrincipalComponent, Regression, Visualization, ExperimentalDesign, MultipleComparison, GeneExpression, Metabolomics
 RoxygenNote: 7.2.3
 Roxygen: list(markdown=TRUE)
 BugReports: https://github.com/ManonMartin/limpca/issues
 URL: https://github.com/ManonMartin/limpca,
     https://manonmartin.github.io/limpca/
+Config/testthat/edition: 3

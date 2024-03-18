@@ -4,9 +4,15 @@
 checkArg <- function(arg, checks, can.be.null = FALSE) {
   check.list <- list(
     bool = c(is.logical, "a boolean"),
-    int = c(function(x) identical(as.numeric(x),
-                                  round(as.numeric(x))),
-            "an integer"),
+    int = c(
+      function(x) {
+        identical(
+          as.numeric(x),
+          round(as.numeric(x))
+        )
+      },
+      "an integer"
+    ),
     num = c(is.numeric, "a numeric"),
     str = c(is.character, "a character string"),
     pos = c(function(x) {
@@ -31,8 +37,10 @@ checkArg <- function(arg, checks, can.be.null = FALSE) {
   } else {
     for (cc in checks) {
       if (!check.list[[cc]][[1]](arg)) {
-        stop(deparse(substitute(arg)), " is not ",
-             check.list[[cc]][[2]], ".")
+        stop(
+          deparse(substitute(arg)), " is not ",
+          check.list[[cc]][[2]], "."
+        )
       }
     }
   }

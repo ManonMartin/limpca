@@ -56,17 +56,19 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
   }
 
   if (max(axes) > ncol(scores)) {
-    stop(paste0(
-      "axes (", paste0(axes, collapse = ","),
+    stop(
+      "axes (", paste(axes, collapse = ","),
       ") is beyond the ncol of scores (", ncol(scores), ")"
-    ))
+    )
   }
 
 
   # percentage of explained variance   ===================
   pc_var <- resPcaBySvd$var
-  pc_var_x <- format(pc_var[pc_var >= 0.1], digits = 2,
-                     trim = TRUE)
+  pc_var_x <- format(pc_var[pc_var >= 0.1],
+    digits = 2,
+    trim = TRUE
+  )
   pc_var_y <- format(pc_var[pc_var < 0.1],
     digits = 2,
     scientific = TRUE, trim = TRUE
@@ -75,8 +77,10 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
   pc_var_char[pc_var >= 0.1] <- pc_var_x
   pc_var_char[pc_var < 0.1] <- pc_var_y
 
-  pc_var_char <- paste0("PC", axes, " (",
-                        pc_var_char[axes], "%)")
+  pc_var_char <- paste0(
+    "PC", axes, " (",
+    pc_var_char[axes], "%)"
+  )
 
   # graphical parameters   ===================
   xlab <- pc_var_char[1]

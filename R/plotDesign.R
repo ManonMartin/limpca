@@ -79,8 +79,11 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
 
   if (is.null(x) & is.null(y)) xynull <- TRUE else xynull <- FALSE
 
-  if (length(colnames(design)) == 1) design <- cbind(design,
-                                                     count = "n")
+  if (length(colnames(design)) == 1) {
+    design <- cbind(design,
+      count = "n"
+    )
+  }
 
   if (!is.null(x)) {
     x <- match.arg(x, choices = colnames(design))
@@ -96,11 +99,11 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
 
   if (!is.null(cols)) {
     if (!all(cols %in% colnames(design))) {
-      stop(paste0(
-        "cols (", paste0(cols, collapse = ", "),
+      stop(
+        "cols (", paste(cols, collapse = ", "),
         ") is not matching column names of design: ",
-        paste0(colnames(design), collapse = ", ")
-      ))
+        paste(colnames(design), collapse = ", ")
+      )
     }
   } else {
     cn <- colnames(design)[3]
@@ -111,11 +114,11 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
 
   if (!is.null(rows)) {
     if (!all(rows %in% colnames(design))) {
-      stop(paste0(
-        "rows (", paste0(rows, collapse = ", "),
+      stop(
+        "rows (", paste(rows, collapse = ", "),
         ") is not matching column names of design: ",
-        paste0(colnames(design), collapse = ", ")
-      ))
+        paste(colnames(design), collapse = ", ")
+      )
     }
   } else {
     cn <- colnames(design)[4]
@@ -150,7 +153,7 @@ plotDesign <- function(design, x = NULL, y = NULL, rows = NULL, cols = NULL,
   p <- p + ggplot2::geom_text(aes_string(label = "n"))
 
   if (is.numeric(df_count[, y])) {
-    cat("\n y numeric")
+    message("\n y numeric")
     maxy <- max(df_count[, y])
     miny <- min(df_count[, y])
     delta <- (maxy - miny) / 10

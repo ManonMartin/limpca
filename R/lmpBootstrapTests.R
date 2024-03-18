@@ -60,14 +60,14 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     stop("Argument is not a resLmpEffectMatrices object")
   }
   if (length(resLmpEffectMatrices$effectMatrices) !=
-      length(resLmpEffectMatrices$effectsNamesUnique)) {
+    length(resLmpEffectMatrices$effectsNamesUnique)) {
     stop("Number of effect matrices differs from the number of effects")
   }
 
   # check if SS = TRUE
 
   if (all(is.na(resLmpEffectMatrices$type3SS)) &
-      all(is.na(resLmpEffectMatrices$variationPercentages))) {
+    all(is.na(resLmpEffectMatrices$variationPercentages))) {
     stop("lmpBootstrapTests can't be performed if
          resLmpEffectMatrices doesn't include the effect percentage variations (SS=FALSE)")
   }
@@ -89,7 +89,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
 
   # Recreate resLmpModelMatrix
 
-  resLmpModelMatrix <- resLmpEffectMatrices[1:6]
+  resLmpModelMatrix <- resLmpEffectMatrices[seq_len(6)]
 
   # Parallel computing
 
@@ -113,7 +113,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     listModelMatrixByEffectPartial_temp <- list()
     listModelMatrixByEffectPartial_temp[[1]] <- modelMatrixByEffect[[selectionComplement_tmp[1]]]
 
-    for (i in 2:length(selectionComplement_tmp)) {
+    for (i in seq(2, length(selectionComplement_tmp))) {
       # Create Model Matrix for the partial model
       modelMatrixPartial <- cbind(
         modelMatrixPartial,
@@ -155,7 +155,8 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     # Compute the partial models
 
     listResultPartial <- lmpEffectMatrices(Pseudo_resLmpModelMatrix,
-                                           SS = TRUE)
+      SS = TRUE
+    )
 
     # Compute Fobs
 
@@ -165,19 +166,24 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     return(list(listResultPartial = listResultPartial, Fobs = Fobs))
   }
 
-  res_partial_mod_fun <- plyr::llply(1:nEffect, partial_mod_fun,
-                                     .parallel = TRUE)
+  res_partial_mod_fun <- plyr::llply(seq_len(nEffect), partial_mod_fun,
+    .parallel = TRUE
+  )
 
 
-  listResultPartial <- lapply(res_partial_mod_fun,
-                              function(x) x[["listResultPartial"]])
-  Fobs <- lapply(res_partial_mod_fun[2:nEffect],
-                 function(x) x[["Fobs"]])
+  listResultPartial <- lapply(
+    res_partial_mod_fun,
+    function(x) x[["listResultPartial"]]
+  )
+  Fobs <- lapply(
+    res_partial_mod_fun[seq(2, nEffect)],
+    function(x) x[["Fobs"]]
+  )
 
   # Formating the output
   names(listResultPartial) <- effectsNamesUnique
   Fobs <- unlist(Fobs)
-  names(Fobs) <- effectsNamesUnique[2:nEffect]
+  names(Fobs) <- effectsNamesUnique[seq(2, nEffect)]
 
   #### Bootstrap #####
 
@@ -193,7 +199,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
       LB <- L %*% coef
       BL <- t(LB)
       mat <- BL %*% solve(L %*% solve(t(Xmat) %*% Xmat) %*%
-                            t(L)) %*% LB
+        t(L)) %*% LB
       SS <- sum(diag(mat))
       return(SS)
     }
@@ -241,14 +247,14 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
 
     # Y_boot_list (simulated outcomes with partial models) for all the effects
 
-    E_boot_list <- plyr::llply(listResultPartial[2:nEffect],
+    E_boot_list <- plyr::llply(listResultPartial[seq(2, nEffect)],
       function(x) x$residuals[E_sample, ],
       .parallel = FALSE
     )
 
-    Y_boot_list <- plyr::llply(1:length(E_boot_list),
+    Y_boot_list <- plyr::llply(seq_along(E_boot_list),
       function(i) {
-        listResultPartial[2:nEffect][[i]]$predictedvalues +
+        listResultPartial[seq(2, nEffect)][[i]]$predictedvalues +
           E_boot_list[[i]]
       },
       .parallel = FALSE
@@ -289,14 +295,14 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     )
 
     Intercept_list <- plyr::llply(effectMatrices_list,
-                                  function(x) x[["Intercept"]],
+      function(x) x[["Intercept"]],
       .parallel = FALSE
     )
 
 
     # residuals
 
-    residuals_list <- plyr::llply(1:length(Y_boot_list),
+    residuals_list <- plyr::llply(seq_along(Y_boot_list),
       function(i) {
         Y_boot_list[[i]] -
           Reduce("+", effectMatrices_list[[i]])
@@ -317,7 +323,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
       parameters = parameters_list
     )
 
-    Res_list <- plyr::llply(1:length(Y_boot_list),
+    Res_list <- plyr::llply(seq_along(Y_boot_list),
       function(x) {
         list(
           outcomes = Res$outcomes[[x]],
@@ -360,7 +366,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
       .parallel = FALSE
     )
 
-    Fboot <- plyr::laply(1:length(effect_names),
+    Fboot <- plyr::laply(seq_along(effect_names),
       function(x) {
         Fboot_fun(
           x, result_boot,
@@ -376,8 +382,12 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
 
   # sample the observations for bootstrap
 
-  E_sample <- lapply(1:nboot, function(x) sample(c(1:nObs),
-                                                 nObs, replace = TRUE))
+  E_sample <- lapply(seq_len(nboot), function(x) {
+    sample(seq_len(nObs),
+      nObs,
+      replace = TRUE
+    )
+  })
 
   # compute Fboot for simulated data
   Fboot <- plyr::laply(E_sample,
@@ -397,7 +407,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
   matrix_temp <- rbind(Fobs, Fboot)
 
   ComputePval <- function(Effect, Fobs) {
-    result <- 1 - sum(Effect[1] > Effect[2:(nboot + 1)]) / nboot
+    result <- 1 - sum(Effect[1] > Effect[seq(2, (nboot + 1))]) / nboot
     return(result)
   }
 
@@ -406,31 +416,41 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
   result <- signif(result, digits = log10(nboot))
   colnames(Fboot) <- names(Fobs)
 
-  result <- replace(result, result == 0, paste0("< ",
-                                                format(1 / nboot, digits = 1,
-                                                       scientific = FALSE)))
+  result <- replace(result, result == 0, paste0(
+    "< ",
+    format(1 / nboot,
+      digits = 1,
+      scientific = FALSE
+    )
+  ))
 
   resultsTable_temp <- rbind(
     result,
-    round(resLmpEffectMatrices$variationPercentages[1:length(Fobs)], 2)
+    round(resLmpEffectMatrices$variationPercentages[seq_along(Fobs)], 2)
   )
-  resultsTable <- cbind(resultsTable_temp, c("-",
-                                             round(resLmpEffectMatrices$variationPercentages[["Residuals"]], 2)))
+  resultsTable <- cbind(resultsTable_temp, c(
+    "-",
+    round(resLmpEffectMatrices$variationPercentages[["Residuals"]], 2)
+  ))
   rownames(resultsTable) <- c("Bootstrap p-values", "% of variance (T III)")
-  colnames(resultsTable) <- c(resLmpEffectMatrices$effectsNamesUnique[-1],
-                              "Residuals")
+  colnames(resultsTable) <- c(
+    resLmpEffectMatrices$effectsNamesUnique[-1],
+    "Residuals"
+  )
 
   resultsTable <- t(resultsTable)
   resultsTable <- as.data.frame(resultsTable[, c(2, 1)])
   resultsTable[, 1] <- as.numeric(resultsTable[, 1])
 
-  resLmpBootstrapTests <- list(f.obs = Fobs, f.boot = Fboot,
-                               p.values = result,
-                               resultsTable = resultsTable)
+  resLmpBootstrapTests <- list(
+    f.obs = Fobs, f.boot = Fboot,
+    p.values = result,
+    resultsTable = resultsTable
+  )
 
   doParallel::stopImplicitCluster
   if (verbose) {
-    print(Sys.time() - start_time)
+    message(Sys.time() - start_time)
   }
 
   return(resLmpBootstrapTests)

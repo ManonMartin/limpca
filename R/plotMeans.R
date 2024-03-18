@@ -75,21 +75,21 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
 
   if (is.null(cols)) {
     if (ncol(Y) < 10) {
-      cols <- c(1:ncol(Y))
+      cols <- c(seq_len(ncol(Y)))
     } else {
-      cols <- c(1:10)
+      cols <- seq_len(10)
     }
   }
 
 
   if (!x %in% colnames(design)) {
-    stop(paste0(x, " is not a factor of the design"))
+    stop(x, " is not a factor of the design")
   }
   if (!is.null(z) && !z %in% colnames(design)) {
-    stop(paste0(z, " is not a factor of the design"))
+    stop(z, " is not a factor of the design")
   }
   if (!is.null(w) && !w %in% colnames(design)) {
-    stop(paste0(w, " is not a factor of the design"))
+    stop(w, " is not a factor of the design")
   }
 
   if (is.null(z) & !is.null(w)) {
@@ -126,26 +126,31 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
   }
 
   if (max(cols) > ncol(Y)) {
-    stop(paste0(
-      "Columns (", paste0(cols, collapse = ","),
+    stop(
+      "Columns (", paste(cols, collapse = ","),
       ") is beyond the number of columns of Y (",
       ncol(Y), ")"
-    ))
+    )
   }
 
   dataplot <- stats::aggregate(Y[, cols],
-                               by = design[c(x, z, w)], mean)
+    by = design[c(x, z, w)], mean
+  )
   names(dataplot) <- c(x, z, w, colnames(Y)[cols])
 
   if (is.null(title)) {
     if (is.null(z)) {
       title <- paste0("Mean response as a function of ", x)
     } else if (!is.null(z) & is.null(w)) {
-      title <- paste0("Mean response as a function of ",
-                      x, " and ", z)
+      title <- paste0(
+        "Mean response as a function of ",
+        x, " and ", z
+      )
     } else if (!is.null(w)) {
-      title <- paste0("Mean response as a function of ",
-                      x, ", ", z, " and ", w)
+      title <- paste0(
+        "Mean response as a function of ",
+        x, ", ", z, " and ", w
+      )
     }
   }
   title <- rep(title, times = length(cols))
@@ -265,7 +270,7 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
 
   # color
   if (!is.null(color)) {
-    fig <- lapply(1:length(cols), function(x) {
+    fig <- lapply(seq_along(cols), function(x) {
       fig[[x]] +
         ggplot2::scale_color_manual(values = color)
     })
@@ -273,7 +278,7 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
 
   # shape
   if (!is.null(shape)) {
-    fig <- lapply(1:length(cols), function(x) {
+    fig <- lapply(seq_along(cols), function(x) {
       fig[[x]] +
         ggplot2::scale_shape_manual(values = shape)
     })
@@ -281,16 +286,18 @@ plotMeans <- function(Y, design, cols = NULL, x, z = NULL, w = NULL,
 
   # linetype
   if (!is.null(linetype)) {
-    fig <- lapply(1:length(cols), function(x) {
+    fig <- lapply(seq_along(cols), function(x) {
       fig[[x]] +
         ggplot2::scale_linetype_manual(values = linetype)
     })
   }
 
-  fig <- lapply(1:length(cols), function(x) {
+  fig <- lapply(seq_along(cols), function(x) {
     fig[[x]] +
-      ggplot2::labs(title = title[x],
-                    x = xlab, y = ylab[x]) + theme
+      ggplot2::labs(
+        title = title[x],
+        x = xlab, y = ylab[x]
+      ) + theme
   })
 
   if (!is.null(hline)) {

@@ -52,8 +52,10 @@ lmpModelMatrix <- function(lmpDataList) {
 
   formulaChar <- as.character(formula)
   if (length(formulaChar) == 3) {
-    formulaDesignMatrix <- stats::as.formula(paste(formulaChar[1],
-                                                   formulaChar[3]))
+    formulaDesignMatrix <- stats::as.formula(paste(
+      formulaChar[1],
+      formulaChar[3]
+    ))
   } else if (length(formulaChar) == 2) {
     formulaDesignMatrix <- formula
   } else {
@@ -74,12 +76,14 @@ lmpModelMatrix <- function(lmpDataList) {
 
   if (all(names(Filter(is.factor, design)) != colnames(design))) {
     NoFactor <- vector()
-    for (i in 1:length(colnames(design))) {
+    for (i in seq_along(colnames(design))) {
       NoFactor[i] <- is.factor(design[, i])
     }
-    stop(paste("Some of the variables from the design
+    stop(
+      "Some of the variables from the design
                matrix are not factors :",
-               colnames(design)[!NoFactor]))
+      colnames(design)[!NoFactor]
+    )
   }
 
   # Checking which variables are factors
@@ -92,7 +96,7 @@ lmpModelMatrix <- function(lmpDataList) {
     contrasts.arg.Values <- list()
     length(contrasts.arg.Values) <- length(varNamesFactors)
     names(contrasts.arg.Values) <- varNamesFactors
-    for (iList in 1:length(contrasts.arg.Values)){
+    for (iList in seq_along(contrasts.arg.Values)) {
       contrasts.arg.Values[[iList]] <- "contr.sum"
     }
     modelMatrix <- (stats::model.matrix(formulaDesignMatrix,
@@ -104,19 +108,24 @@ lmpModelMatrix <- function(lmpDataList) {
   # If factors are not present (Currently not the case)
   if (length(varNamesFactors) == 0) {
     modelMatrix <- (stats::model.matrix(formulaDesignMatrix,
-                                        data = design))
+      data = design
+    ))
   }
 
   # Creating a list containing model matrices by effect
 
   # Finding all unique variables
   dummyVarNames <- colnames(modelMatrix)
-  presencePolynomialEffects <- stringr::str_detect(dummyVarNames,
-                                                   "\\^[0-9]") # Detect exponent
+  presencePolynomialEffects <- stringr::str_detect(
+    dummyVarNames,
+    "\\^[0-9]"
+  ) # Detect exponent
   effectsNamesAll <- character(length = length(dummyVarNames))
   effectsNamesAll[presencePolynomialEffects] <- dummyVarNames[presencePolynomialEffects]
-  effectsNamesAll[!presencePolynomialEffects] <- gsub("[0-9]", "",
-                                                      dummyVarNames[!presencePolynomialEffects])
+  effectsNamesAll[!presencePolynomialEffects] <- gsub(
+    "[0-9]", "",
+    dummyVarNames[!presencePolynomialEffects]
+  )
   effectsNamesAll[effectsNamesAll == "(Intercept)"] <- "Intercept"
   effectsNamesUnique <- unique(effectsNamesAll)
   nEffect <- length(effectsNamesUnique)
@@ -127,7 +136,7 @@ lmpModelMatrix <- function(lmpDataList) {
   names(modelMatrixByEffect) <- effectsNamesUnique
 
   # Filling model matrices by effect
-  for (iEffect in 1:nEffect) {
+  for (iEffect in seq_len(nEffect)) {
     selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
     selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
     # Model matrices by effect
