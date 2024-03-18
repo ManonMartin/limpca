@@ -29,10 +29,10 @@ checkArg <- function(arg, checks, can.be.null = FALSE) {
       stop(deparse(substitute(arg)), " is null.")
     }
   } else {
-    for (c in checks) {
-      if (!check.list[[c]][[1]](arg)) {
+    for (cc in checks) {
+      if (!check.list[[cc]][[1]](arg)) {
         stop(deparse(substitute(arg)), " is not ",
-             check.list[[c]][[2]], ".")
+             check.list[[cc]][[2]], ".")
       }
     }
   }
