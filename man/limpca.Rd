@@ -1,5 +1,6 @@
 \name{limpca}
 \alias{limpca}
+\docType{package}
 \title{Linear modeling of high-dimensional designed data based on ASCA/APCA family of methods}
 
 \description{
