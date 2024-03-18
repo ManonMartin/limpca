@@ -30,7 +30,7 @@ data("UCH")
 ResPCA <- pcaBySvd(UCH$outcomes)
 
 pcaLoading1dPlot(
-  resPcaBySvd = ResPCA, axes = c(1, 2),
-  title = "PCA loading plot UCH", xlab = "ppm", ylab = "Values"
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA loading plot UCH", xlab = "ppm", ylab = "Values"
 )
 }

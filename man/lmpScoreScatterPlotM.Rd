@@ -41,25 +41,25 @@ ResLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 resLmpPcaEffects <- lmpPcaEffects(ResLmpEffectMatrices, method = "ASCA-E")
 
 lmpScoreScatterPlotM(resLmpPcaEffects,
-  varname.colorup = "Citrate",
-  varname.pchup = "Hippurate",
-  varname.pchdown = "Day",
-  varname.colordown = "Time"
+    varname.colorup = "Citrate",
+    varname.pchup = "Hippurate",
+    varname.pchdown = "Day",
+    varname.colordown = "Time"
 )
 
 # advanced setting
 lmpScoreScatterPlotM(resLmpPcaEffects,
-  modelAbbrev = FALSE,
-  effectNames = c("Citrate", "Hippurate", "Hippurate:Citrate"),
-  PCdim = c(2, 2, 2),
-  varname.colorup = "Citrate",
-  vec.colorup = c("red", "blue", "green"),
-  varname.pchup = "Hippurate",
-  vec.pchup = c(1, 2, 3),
-  varname.pchdown = "Day",
-  vec.pchdown = c(4, 5),
-  varname.colordown = "Time",
-  vec.colordown = c("brown", "grey")
+    modelAbbrev = FALSE,
+    effectNames = c("Citrate", "Hippurate", "Hippurate:Citrate"),
+    PCdim = c(2, 2, 2),
+    varname.colorup = "Citrate",
+    vec.colorup = c("red", "blue", "green"),
+    varname.pchup = "Hippurate",
+    vec.pchup = c(1, 2, 3),
+    varname.pchdown = "Day",
+    vec.pchdown = c(4, 5),
+    varname.colordown = "Time",
+    vec.colordown = c("brown", "grey")
 )
 
 }

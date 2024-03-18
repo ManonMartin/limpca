@@ -26,8 +26,8 @@
 #' resLmpModelMatrix <- lmpModelMatrix(UCH)
 #' resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 #' resASCA <- lmpPcaEffects(
-#'   resLmpEffectMatrices = resLmpEffectMatrices,
-#'   method = "ASCA", combineEffects = list(c("Hippurate", "Time", "Hippurate:Time"))
+#'     resLmpEffectMatrices = resLmpEffectMatrices,
+#'     method = "ASCA", combineEffects = list(c("Hippurate", "Time", "Hippurate:Time"))
 #' )
 #'
 #' # Effect plot for an interaction effect
@@ -40,130 +40,130 @@
 
 lmpEffectPlot <- function(resASCA, effectName, axes = 1,
                           x, z = NULL, w = NULL, hline = 0, ...) {
-  mcall <- as.list(match.call())[-1L]
+    mcall <- as.list(match.call())[-1L]
 
-  # checks =========================
+    # checks =========================
 
-  checkArg(resASCA, c("list"), can.be.null = FALSE)
-  checkArg(effectName, c("str", "length1"), can.be.null = FALSE)
-  checkArg(axes, c("int", "pos"), can.be.null = FALSE)
-  checkArg(x, c("str", "length1"), can.be.null = FALSE)
-  checkArg(z, c("str", "length1"), can.be.null = TRUE)
-  checkArg(w, c("str", "length1"), can.be.null = TRUE)
-  checkArg(hline, "num", can.be.null = TRUE)
+    checkArg(resASCA, c("list"), can.be.null = FALSE)
+    checkArg(effectName, c("str", "length1"), can.be.null = FALSE)
+    checkArg(axes, c("int", "pos"), can.be.null = FALSE)
+    checkArg(x, c("str", "length1"), can.be.null = FALSE)
+    checkArg(z, c("str", "length1"), can.be.null = TRUE)
+    checkArg(w, c("str", "length1"), can.be.null = TRUE)
+    checkArg(hline, "num", can.be.null = TRUE)
 
-  if (!identical(
-    names(resASCA[(length(resASCA) - 7):length(resASCA)]),
-    c(
-      "Residuals", "lmpDataList", "effectsNamesUnique",
-      "effectsNamesUniqueCombined", "method",
-      "type3SS", "variationPercentages", "combineEffects"
-    )
-  )) {
-    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
-  }
+    if (!identical(
+        names(resASCA[(length(resASCA) - 7):length(resASCA)]),
+        c(
+            "Residuals", "lmpDataList", "effectsNamesUnique",
+            "effectsNamesUniqueCombined", "method",
+            "type3SS", "variationPercentages", "combineEffects"
+        )
+    )) {
+        stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+    }
 
-  if (resASCA$method != "ASCA") {
-    stop("resASCA does not correspond to an ASCA result
+    if (resASCA$method != "ASCA") {
+        stop("resASCA does not correspond to an ASCA result
          of LmpEffectMatrices")
-  }
+    }
 
-  if (!effectName %in% names(resASCA)) {
-    stop(effectName, " is not an effect of resASCA")
-  }
+    if (!effectName %in% names(resASCA)) {
+        stop(effectName, " is not an effect of resASCA")
+    }
 
-  if (max(axes) > ncol(resASCA[[effectName]][["scores"]])) {
-    stop(
-      "PC (", paste(axes, collapse = ","),
-      ") is beyond the number of PC of scores (",
-      ncol(resASCA[[effectName]][["scores"]]), ")"
+    if (max(axes) > ncol(resASCA[[effectName]][["scores"]])) {
+        stop(
+            "PC (", paste(axes, collapse = ","),
+            ") is beyond the number of PC of scores (",
+            ncol(resASCA[[effectName]][["scores"]]), ")"
+        )
+    }
+
+    if (str_detect(string = effectName, pattern = "[+]")) {
+        numComb <- str_split(effectName, "[+]")
+        numEffects <- unlist(str_split(numComb[[1]], ":"))
+    } else {
+        numEffects <- unlist(str_split(effectName, ":"))
+    }
+
+    if (!x %in% numEffects) {
+        stop("x should appear in effectName")
+    }
+    if (!is.null(z) && !z %in% numEffects) {
+        stop("z should appear in effectName")
+    }
+    if (!is.null(w) && !w %in% numEffects) {
+        stop("w should appear in effectName")
+    }
+
+    # prepare the arguments  ==============================
+    matEffect <- resASCA[[effectName]][["scores"]]
+
+    title <- paste0(effectName, " scores as a function of ", x, ": PC", axes)
+    ylab <- paste0(
+        "Scores (", round(resASCA[[effectName]][["var"]][axes], 2),
+        "% of variation explained)"
     )
-  }
 
-  if (str_detect(string = effectName, pattern = "[+]")) {
-    numComb <- str_split(effectName, "[+]")
-    numEffects <- unlist(str_split(numComb[[1]], ":"))
-  } else {
-    numEffects <- unlist(str_split(effectName, ":"))
-  }
-
-  if (!x %in% numEffects) {
-    stop("x should appear in effectName")
-  }
-  if (!is.null(z) && !z %in% numEffects) {
-    stop("z should appear in effectName")
-  }
-  if (!is.null(w) && !w %in% numEffects) {
-    stop("w should appear in effectName")
-  }
-
-  # prepare the arguments  ==============================
-  matEffect <- resASCA[[effectName]][["scores"]]
-
-  title <- paste0(effectName, " scores as a function of ", x, ": PC", axes)
-  ylab <- paste0(
-    "Scores (", round(resASCA[[effectName]][["var"]][axes], 2),
-    "% of variation explained)"
-  )
-
-  if (!"title" %in% names(mcall)) {
-    if (!"ylab" %in% names(mcall)) {
-      fig <- plotMeans(
-        Y = matEffect,
-        design = resASCA$lmpDataList$design,
-        cols = axes,
-        x = x,
-        z = z,
-        w = w,
-        title = title,
-        ylab = ylab,
-        hline = hline,
-        ...
-      )
+    if (!"title" %in% names(mcall)) {
+        if (!"ylab" %in% names(mcall)) {
+            fig <- plotMeans(
+                Y = matEffect,
+                design = resASCA$lmpDataList$design,
+                cols = axes,
+                x = x,
+                z = z,
+                w = w,
+                title = title,
+                ylab = ylab,
+                hline = hline,
+                ...
+            )
+        } else {
+            fig <- plotMeans(
+                Y = matEffect,
+                design = resASCA$lmpDataList$design,
+                cols = axes,
+                x = x,
+                z = z,
+                w = w,
+                title = title,
+                hline = hline,
+                ...
+            )
+        }
     } else {
-      fig <- plotMeans(
-        Y = matEffect,
-        design = resASCA$lmpDataList$design,
-        cols = axes,
-        x = x,
-        z = z,
-        w = w,
-        title = title,
-        hline = hline,
-        ...
-      )
+        if (!"ylab" %in% names(mcall)) {
+            fig <- plotMeans(
+                Y = matEffect,
+                design = resASCA$lmpDataList$design,
+                cols = axes,
+                x = x,
+                z = z,
+                w = w,
+                ylab = ylab,
+                hline = hline,
+                ...
+            )
+        } else {
+            fig <- plotMeans(
+                Y = matEffect,
+                design = resASCA$lmpDataList$design,
+                cols = axes,
+                x = x,
+                z = z,
+                w = w,
+                hline = hline,
+                ...
+            )
+        }
     }
-  } else {
-    if (!"ylab" %in% names(mcall)) {
-      fig <- plotMeans(
-        Y = matEffect,
-        design = resASCA$lmpDataList$design,
-        cols = axes,
-        x = x,
-        z = z,
-        w = w,
-        ylab = ylab,
-        hline = hline,
-        ...
-      )
-    } else {
-      fig <- plotMeans(
-        Y = matEffect,
-        design = resASCA$lmpDataList$design,
-        cols = axes,
-        x = x,
-        z = z,
-        w = w,
-        hline = hline,
-        ...
-      )
+
+    if (length(fig) == 1) {
+        fig <- fig[[1]]
     }
-  }
-
-  if (length(fig) == 1) {
-    fig <- fig[[1]]
-  }
 
 
-  return(fig)
+    return(fig)
 }

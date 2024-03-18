@@ -30,8 +30,8 @@
 #' ResPCA <- pcaBySvd(UCH$outcomes)
 #'
 #' pcaLoading2dPlot(
-#'   resPcaBySvd = ResPCA, axes = c(1, 2),
-#'   title = "PCA loading plot UCH"
+#'     resPcaBySvd = ResPCA, axes = c(1, 2),
+#'     title = "PCA loading plot UCH"
 #' )
 #'
 #' # adding color,  shape and labels to points
@@ -43,18 +43,18 @@
 #' metadata <- data.frame(peaks)
 #'
 #' pcaLoading2dPlot(
-#'   resPcaBySvd = ResPCA, axes = c(1, 2),
-#'   title = "PCA loading plot UCH", metadata = metadata,
-#'   color = "peaks", shape = "peaks", addRownames = TRUE
+#'     resPcaBySvd = ResPCA, axes = c(1, 2),
+#'     title = "PCA loading plot UCH", metadata = metadata,
+#'     color = "peaks", shape = "peaks", addRownames = TRUE
 #' )
 #'
 #' # changing max.overlaps of ggrepel
 #' options(ggrepel.max.overlaps = 30)
 #' pcaLoading2dPlot(
-#'   resPcaBySvd = ResPCA, axes = c(1, 2),
-#'   title = "PCA loading plot UCH", metadata = metadata,
-#'   color = "peaks", shape = "peaks", addRownames = TRUE,
-#'   pl_n = 35
+#'     resPcaBySvd = ResPCA, axes = c(1, 2),
+#'     title = "PCA loading plot UCH", metadata = metadata,
+#'     color = "peaks", shape = "peaks", addRownames = TRUE,
+#'     pl_n = 35
 #' )
 #'
 #' @import ggplot2
@@ -67,162 +67,162 @@ pcaLoading2dPlot <- function(resPcaBySvd,
                              metadata = NULL,
                              drawOrigin = TRUE,
                              ...) {
-  mcall <- as.list(match.call())[-1L]
+    mcall <- as.list(match.call())[-1L]
 
-  # checks ===================
-  checkArg(resPcaBySvd, c("list"), can.be.null = FALSE)
-  checkArg(axes, c("int", "pos"), can.be.null = FALSE)
-  checkArg(title, c("str", "length1"), can.be.null = FALSE)
-  checkArg(addRownames, c("bool"), can.be.null = FALSE)
-  checkArg(pl_n, c("int", "pos", "length1"), can.be.null = FALSE)
-  checkArg(metadata, "data.frame", can.be.null = TRUE)
+    # checks ===================
+    checkArg(resPcaBySvd, c("list"), can.be.null = FALSE)
+    checkArg(axes, c("int", "pos"), can.be.null = FALSE)
+    checkArg(title, c("str", "length1"), can.be.null = FALSE)
+    checkArg(addRownames, c("bool"), can.be.null = FALSE)
+    checkArg(pl_n, c("int", "pos", "length1"), can.be.null = FALSE)
+    checkArg(metadata, "data.frame", can.be.null = TRUE)
 
-  if (!identical(names(resPcaBySvd), c(
-    "scores", "loadings", "eigval", "singvar",
-    "var", "cumvar", "original.dataset"
-  ))) {
-    stop("resPcaBySvd is not an output value of pcaBySvd")
-  }
+    if (!identical(names(resPcaBySvd), c(
+        "scores", "loadings", "eigval", "singvar",
+        "var", "cumvar", "original.dataset"
+    ))) {
+        stop("resPcaBySvd is not an output value of pcaBySvd")
+    }
 
-  # loadings   ===================
-  loadings <- resPcaBySvd$loadings
-  checkArg(loadings, c("matrix"), can.be.null = FALSE)
+    # loadings   ===================
+    loadings <- resPcaBySvd$loadings
+    checkArg(loadings, c("matrix"), can.be.null = FALSE)
 
-  if (length(axes) != 2) {
-    stop("axes is not of length 2")
-  }
+    if (length(axes) != 2) {
+        stop("axes is not of length 2")
+    }
 
-  if (max(axes) > ncol(loadings)) {
-    stop(
-      "axes (", paste(axes, collapse = ","),
-      ") is beyond the ncol of loadings (", ncol(loadings), ")"
+    if (max(axes) > ncol(loadings)) {
+        stop(
+            "axes (", paste(axes, collapse = ","),
+            ") is beyond the ncol of loadings (", ncol(loadings), ")"
+        )
+    }
+
+
+    # percentage of explained variance   ===================
+    pc_var <- resPcaBySvd$var
+    pc_var_x <- format(pc_var[pc_var >= 0.1], digits = 2, trim = TRUE)
+    pc_var_y <- format(pc_var[pc_var < 0.1],
+        digits = 2,
+        scientific = TRUE, trim = TRUE
     )
-  }
+    pc_var_char <- as.character(pc_var)
+    pc_var_char[pc_var >= 0.1] <- pc_var_x
+    pc_var_char[pc_var < 0.1] <- pc_var_y
 
+    pc_var_char <- paste0("PC", axes, " (", pc_var_char[axes], "%)")
 
-  # percentage of explained variance   ===================
-  pc_var <- resPcaBySvd$var
-  pc_var_x <- format(pc_var[pc_var >= 0.1], digits = 2, trim = TRUE)
-  pc_var_y <- format(pc_var[pc_var < 0.1],
-    digits = 2,
-    scientific = TRUE, trim = TRUE
-  )
-  pc_var_char <- as.character(pc_var)
-  pc_var_char[pc_var >= 0.1] <- pc_var_x
-  pc_var_char[pc_var < 0.1] <- pc_var_y
+    # distance measure and labels  ===================
 
-  pc_var_char <- paste0("PC", axes, " (", pc_var_char[axes], "%)")
+    load <- resPcaBySvd$loadings[, axes]
+    singvar <- resPcaBySvd$singvar[axes]
 
-  # distance measure and labels  ===================
+    dista <- load^2 %*% singvar^2
 
-  load <- resPcaBySvd$loadings[, axes]
-  singvar <- resPcaBySvd$singvar[axes]
-
-  dista <- load^2 %*% singvar^2
-
-  if (methods::hasArg("points_labs")) {
-    addRownames <- FALSE
-  } else {
-    pl_n <- min(ncol(loadings), pl_n)
-    points_labels <- rownames(loadings)
-    ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
-    points_labels[-ids] <- ""
-  }
-
-  # graphical parameters   ===================
-  xlab <- pc_var_char[1]
-  ylab <- pc_var_char[2]
-
-  xlim1 <- max(abs(loadings[, axes[1]]))
-  xlim_val <- c(-xlim1, xlim1)
-
-  ylim1 <- max(abs(loadings[, axes[2]]))
-  ylim_val <- c(-ylim1, ylim1)
-
-  if (addRownames) {
-    if (!"xlab" %in% names(mcall)) {
-      if (!"ylab" %in% names(mcall)) {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes, xlab = xlab, ylab = ylab,
-          points_labs = points_labels,
-          design = metadata,
-          drawOrigin = drawOrigin,
-          ...
-        )
-      } else {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes, xlab = xlab,
-          points_labs = points_labels,
-          design = metadata,
-          drawOrigin = drawOrigin,
-          ...
-        )
-      }
+    if (methods::hasArg("points_labs")) {
+        addRownames <- FALSE
     } else {
-      if (!"ylab" %in% names(mcall)) {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes, ylab = ylab,
-          points_labs = points_labels,
-          design = metadata,
-          drawOrigin = drawOrigin,
-          ...
-        )
-      } else {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes,
-          points_labs = points_labels,
-          design = metadata,
-          drawOrigin = drawOrigin,
-          ...
-        )
-      }
+        pl_n <- min(ncol(loadings), pl_n)
+        points_labels <- rownames(loadings)
+        ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
+        points_labels[-ids] <- ""
     }
-  } else {
-    if (!"xlab" %in% names(mcall)) {
-      if (!"ylab" %in% names(mcall)) {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes, xlab = xlab, ylab = ylab,
-          design = metadata,
-          drawOrigin = drawOrigin, ...
-        )
-      } else {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes, xlab = xlab,
-          design = metadata,
-          drawOrigin = drawOrigin, ...
-        )
-      }
+
+    # graphical parameters   ===================
+    xlab <- pc_var_char[1]
+    ylab <- pc_var_char[2]
+
+    xlim1 <- max(abs(loadings[, axes[1]]))
+    xlim_val <- c(-xlim1, xlim1)
+
+    ylim1 <- max(abs(loadings[, axes[2]]))
+    ylim_val <- c(-ylim1, ylim1)
+
+    if (addRownames) {
+        if (!"xlab" %in% names(mcall)) {
+            if (!"ylab" %in% names(mcall)) {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes, xlab = xlab, ylab = ylab,
+                    points_labs = points_labels,
+                    design = metadata,
+                    drawOrigin = drawOrigin,
+                    ...
+                )
+            } else {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes, xlab = xlab,
+                    points_labs = points_labels,
+                    design = metadata,
+                    drawOrigin = drawOrigin,
+                    ...
+                )
+            }
+        } else {
+            if (!"ylab" %in% names(mcall)) {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes, ylab = ylab,
+                    points_labs = points_labels,
+                    design = metadata,
+                    drawOrigin = drawOrigin,
+                    ...
+                )
+            } else {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes,
+                    points_labs = points_labels,
+                    design = metadata,
+                    drawOrigin = drawOrigin,
+                    ...
+                )
+            }
+        }
     } else {
-      if (!"ylab" %in% names(mcall)) {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes, ylab = ylab,
-          design = metadata,
-          drawOrigin = drawOrigin, ...
-        )
-      } else {
-        fig <- plotScatter(
-          Y = loadings, title = title,
-          xy = axes,
-          design = metadata,
-          drawOrigin = drawOrigin, ...
-        )
-      }
+        if (!"xlab" %in% names(mcall)) {
+            if (!"ylab" %in% names(mcall)) {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes, xlab = xlab, ylab = ylab,
+                    design = metadata,
+                    drawOrigin = drawOrigin, ...
+                )
+            } else {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes, xlab = xlab,
+                    design = metadata,
+                    drawOrigin = drawOrigin, ...
+                )
+            }
+        } else {
+            if (!"ylab" %in% names(mcall)) {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes, ylab = ylab,
+                    design = metadata,
+                    drawOrigin = drawOrigin, ...
+                )
+            } else {
+                fig <- plotScatter(
+                    Y = loadings, title = title,
+                    xy = axes,
+                    design = metadata,
+                    drawOrigin = drawOrigin, ...
+                )
+            }
+        }
     }
-  }
 
-  # loadings plot  ===================
-  fig <- fig + ggplot2::xlim(xlim_val) + ggplot2::ylim(ylim_val)
+    # loadings plot  ===================
+    fig <- fig + ggplot2::xlim(xlim_val) + ggplot2::ylim(ylim_val)
 
-  if (length(fig) == 1) {
-    fig <- fig[[1]]
-  }
+    if (length(fig) == 1) {
+        fig <- fig[[1]]
+    }
 
-  return(fig)
+    return(fig)
 }

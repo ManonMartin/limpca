@@ -68,22 +68,26 @@ resource_files:
 
 ```{r Setup,include=FALSE}
 # require(knitr)
-knitr::opts_chunk$set(message=FALSE,warning=TRUE,comment=NA, 
-                      crop = NULL,
-                      tidy.opts = list(width.cutoff = 60), 
-                      tidy = TRUE, dpi = 50, dev="png",
-                      fig.width = 5, fig.height = 3.5)
-rm(list=ls())
+knitr::opts_chunk$set(
+    message = FALSE, warning = TRUE, comment = NA,
+    crop = NULL,
+    tidy.opts = list(width.cutoff = 60),
+    tidy = TRUE, dpi = 50, dev = "png",
+    fig.width = 5, fig.height = 3.5
+)
+rm(list = ls())
 ```
 
 ```{r}
-if (!requireNamespace('pander', quietly = TRUE))
+if (!requireNamespace("pander", quietly = TRUE)) {
     stop("Install 'pander' to knit this vignette")
+}
 library(pander)
 
 library(ggplot2)
-if (!requireNamespace('gridExtra', quietly = TRUE))
-    stop("Install 'pander' to knit this vignette")
+if (!requireNamespace("gridExtra", quietly = TRUE)) {
+    stop("Install 'gridExtra' to knit this vignette")
+}
 library(gridExtra)
 ```
 
@@ -105,10 +109,12 @@ Secondly, ASCA/APCA are highly informative methods to analyse -omics data tables
 The package is actually in its development stage and is available on GitHub: <https://github.com/ManonMartin/limpca>. It can be installed via the `remotes::install_github` function. The package needs to be loaded afterwards.
 
 ```{r Install, eval=FALSE}
-if (!requireNamespace("remotes"))
-install.packages(pkgs="remotes", dependencies=TRUE)
-remotes::install_github("ManonMartin/limpca", 
-                        dependencies = TRUE)
+if (!requireNamespace("remotes")) {
+    install.packages(pkgs = "remotes", dependencies = TRUE)
+}
+remotes::install_github("ManonMartin/limpca",
+    dependencies = TRUE
+)
 ```
 
 
@@ -119,8 +125,10 @@ library("limpca")
 Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command:
 
 ```{r InstallVign, eval=FALSE}
-remotes::install_github("ManonMartin/limpca", dependencies = TRUE, 
-                        build_vignettes = TRUE)
+remotes::install_github("ManonMartin/limpca",
+    dependencies = TRUE,
+    build_vignettes = TRUE
+)
 ```
 
 
@@ -129,7 +137,7 @@ remotes::install_github("ManonMartin/limpca", dependencies = TRUE,
 
 Before any analysis, the `UCH` data set needs to be loaded. The `limpca` package contains the data set and it can be loaded with the `data` function. The `load` function is also useful to import your own data in an R format.
 
-```{r Data Importation}
+```{r Data_Importation}
 data("UCH")
 ```
 
@@ -156,13 +164,13 @@ Here are the `limpca` functions that are available for data exploration.
 
 The design matrix contains the information about each observation for the four variables: Hippurate, Citrate, Day and Time. Only 3 of these variables are used in the model. The function `plotDesign` is useful to visualise the design.
 
-```{r Design visualization}
-
+```{r Design_visualization}
 pander(head(UCH$design))
-plotDesign(design = UCH$design, x = "Hippurate", 
-           y = "Citrate", rows = "Time",
-           title = "Design of the UCH dataset")
-
+plotDesign(
+    design = UCH$design, x = "Hippurate",
+    y = "Citrate", rows = "Time",
+    title = "Design of the UCH dataset"
+)
 ```
 
 This plot confirms that the design is a full 3x3x2 factorial design replicated twice with 2 missing values.  Hence, the design is not balanced. 
@@ -175,29 +183,36 @@ The 600 response (`outcomes`) variables represent, for each observation, the int
 
 Here, annotations (`cit_peaks` and `hip_peaks`) are added to the `ggplot` objects in order to highlight the Hippurate (green) and Citrate (red) peaks. 
 
-```{r Spectrum visualization}
-p1 <- plotLine(Y = UCH$outcomes,
-         title = "H-NMR spectrum",
-         rows = c(3),
-         xlab = "ppm",
-         ylab = "Intensity")
+```{r Spectrum_visualization}
+p1 <- plotLine(
+    Y = UCH$outcomes,
+    title = "H-NMR spectrum",
+    rows = c(3),
+    xlab = "ppm",
+    ylab = "Intensity"
+)
 
-cit_peaks <- annotate("rect", xmin=c(2.509), xmax=c(2.709), 
-              ymin=-Inf, ymax=Inf, alpha=0.2, 
-              fill=c("tomato")) 
+cit_peaks <- annotate("rect",
+    xmin = c(2.509), xmax = c(2.709),
+    ymin = -Inf, ymax = Inf, alpha = 0.2,
+    fill = c("tomato")
+)
 
-hip_peaks <- annotate("rect", xmin=c(7.458,3.881), xmax=c(7.935,4.041), 
-              ymin=-Inf, ymax=Inf, alpha=0.2, 
-              fill=c("yellowgreen"))
+hip_peaks <- annotate("rect",
+    xmin = c(7.458, 3.881), xmax = c(7.935, 4.041),
+    ymin = -Inf, ymax = Inf, alpha = 0.2,
+    fill = c("yellowgreen")
+)
 
-p1 <- plotLine(Y = UCH$outcomes,
-         title = "H-NMR spectrum",
-         rows = c(3),
-         xlab = "ppm",
-         ylab = "Intensity")
+p1 <- plotLine(
+    Y = UCH$outcomes,
+    title = "H-NMR spectrum",
+    rows = c(3),
+    xlab = "ppm",
+    ylab = "Intensity"
+)
 
 p1 + cit_peaks + hip_peaks
-  
 ```
 
 ### `plotScatter` function
@@ -205,20 +220,22 @@ p1 + cit_peaks + hip_peaks
 The `plotScatter` function enables to visualize the values of two outcomes variables with different colors or markers for the values of the design factors.  Here, it is used to show that the $3^2$ factorial design can be recovered from the intensities of the Hippurate and Citrate peaks in the spectra.  
 
 ```{r}
-
 # xy corresponds to citrate (453) and hippurate peaks (369)
-plotScatter(Y = UCH$outcomes,
-            xy = c(453, 369),
-            design = UCH$design,
-            color = "Hippurate", 
-            shape = "Citrate")
+plotScatter(
+    Y = UCH$outcomes,
+    xy = c(453, 369),
+    design = UCH$design,
+    color = "Hippurate",
+    shape = "Citrate"
+)
 # Or refering to the variables names (ppm values here)
-plotScatter(Y = UCH$outcomes,
-            xy = c("2.6092056","3.9811536"),
-            design = UCH$design,
-            color = "Hippurate", 
-            shape = "Citrate")
-
+plotScatter(
+    Y = UCH$outcomes,
+    xy = c("2.6092056", "3.9811536"),
+    design = UCH$design,
+    color = "Hippurate",
+    shape = "Citrate"
+)
 ```
 
 ### `plotScatterM` function
@@ -226,11 +243,11 @@ plotScatter(Y = UCH$outcomes,
 The `plotScatter` function allows to visualize the values of a series of outcomes variables with different colors or markers for the values of the design factors. Here, it is done for the 4 peaks of Hippurate and single peak of Citrate.
 
 ```{r, fig.width=6,fig.height=7}
-
-plotScatterM(Y = UCH$outcomes, cols = c(133, 145, 150, 369, 453), 
-             design = UCH$design,varname.colorup = "Hippurate", 
-             varname.colordown = "Citrate")
-
+plotScatterM(
+    Y = UCH$outcomes, cols = c(133, 145, 150, 369, 453),
+    design = UCH$design, varname.colorup = "Hippurate",
+    varname.colordown = "Citrate"
+)
 ```
 
 ### `plotMeans` function
@@ -239,16 +256,16 @@ The `plotMeans` represents the mean values of a response variable for different 
 Note that the results of this function must be interpreted with caution for unbalanced designs because simple means are biased estimators of expected means. 
 
 ```{r}
-
-plotMeans(Y = UCH$outcomes,
-          design = UCH$design,
-          cols = c(453),
-           x = c("Citrate"),
-          w = c("Hippurate"),
-          z = c("Time"),
-          ylab = "Intensity",
-          title=c("Mean reponse for main Citrate peak"))
-
+plotMeans(
+    Y = UCH$outcomes,
+    design = UCH$design,
+    cols = c(453),
+    x = c("Citrate"),
+    w = c("Hippurate"),
+    z = c("Time"),
+    ylab = "Intensity",
+    title = c("Mean reponse for main Citrate peak")
+)
 ```
 
 ## PCA {#pca}
@@ -260,46 +277,48 @@ The function `pcaBySvd` is useful to compute a Principal Component Analysis (PCA
 * `pcaScorePlot` for the score plots
 
 ```{r PCA}
-
-ResPCA = pcaBySvd(UCH$outcomes)
-pcaScreePlot(ResPCA, nPC = 6) 
-
+ResPCA <- pcaBySvd(UCH$outcomes)
+pcaScreePlot(ResPCA, nPC = 6)
 ```
 
 The score plots below indicate that all tree factors from the design affect the spectral profiles, which will be more clearly highlighted by ASCA and APCA.  
 
 ```{r Scores}
+pcaScorePlot(
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA scores plot: PC1 and PC2",
+    design = UCH$design,
+    color = "Hippurate", shape = "Citrate",
+    points_labs_rn = FALSE
+)
 
-pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-             title = "PCA scores plot: PC1 and PC2", 
-             design = UCH$design,
-             color = "Hippurate", shape = "Citrate",
-             points_labs_rn = FALSE)
+pcaScorePlot(
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA scores plot: PC1 and PC2",
+    design = UCH$design,
+    color = "Time", shape = "Hippurate",
+    points_labs_rn = FALSE
+)
 
-pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-             title = "PCA scores plot: PC1 and PC2", 
-             design = UCH$design,
-             color = "Time", shape = "Hippurate",
-             points_labs_rn = FALSE)
-
-pcaScorePlot(resPcaBySvd = ResPCA, axes = c(3,4), 
-             title = "PCA scores plot: PC3 and PC4", 
-             design = UCH$design,
-             color = "Time", shape = "Citrate",
-             points_labs_rn = FALSE)
-
+pcaScorePlot(
+    resPcaBySvd = ResPCA, axes = c(3, 4),
+    title = "PCA scores plot: PC3 and PC4",
+    design = UCH$design,
+    color = "Time", shape = "Citrate",
+    points_labs_rn = FALSE
+)
 ```
 
 In the first two loading plots, a mixture of Citrate and Hippurate peaks already appears but they are not separated.  
 
 ```{r Loadings}
+p2 <- pcaLoading1dPlot(
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA loadings plot UCH", xlab = "ppm",
+    ylab = "Intensity"
+)
 
-p2 <- pcaLoading1dPlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-               title = "PCA loadings plot UCH", xlab = "ppm", 
-               ylab = "Intensity")
-
-p2 +  hip_peaks + cit_peaks
-
+p2 + hip_peaks + cit_peaks
 ```
 
 # Application of ASCA+ and APCA+ 
@@ -317,7 +336,7 @@ The next graph presents the functions available in `limpca` for this purpose.  T
 The formula of the ANOVA-GLM model used in this analysis is the 3 ways crossed ANOVA model:
 
 ```{r Formula}
-UCH$formula <- "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate + 
+UCH$formula <- "outcomes ~ Hippurate + Citrate + Time + Hippurate:Citrate +
                   Time:Hippurate + Time:Citrate + Hippurate:Citrate:Time"
 ```
 
@@ -328,8 +347,7 @@ The first step of ASCA+ is to build the (GLM) model matrix from the experimental
 The function `lmpModelMatrix` encodes the design matrix as a model matrix.
 
 ```{r ModelMatrix}
-
-resLmpModelMatrix = lmpModelMatrix(UCH)
+resLmpModelMatrix <- lmpModelMatrix(UCH)
 pander::pander(head(resLmpModelMatrix$modelMatrix))
 ```
 
@@ -338,7 +356,7 @@ pander::pander(head(resLmpModelMatrix$modelMatrix))
 `lmpEffectMatrices` is the used to estimate the linear model and decomposes the multivariate outcomes into effect matrices for every model term. This function calculates also type III effect contributions (in %) and generates a `barpot` to visualise these contributions.  
 
 ```{r EffectMatrices}
-resLmpEffectMatrices = lmpEffectMatrices(resLmpModelMatrix)
+resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 ```
 
 ## Effects importance
@@ -355,14 +373,14 @@ resLmpEffectMatrices$varPercentagesPlot
 `lmpBootstrapTests` applies a parametric bootstrap test to determine whether an effect is significant or not. We recommend the user to choose first a small value of `nboot` (e.g. nboot=100) to develop its code and increase it later on (e.g. nboot=1000) in order to get an accurate value for the p-values.    
 
 ```{r Bootstrap}
-
-resLmpBootstrapTests = 
-  lmpBootstrapTests(resLmpEffectMatrices = resLmpEffectMatrices, 
-                                         nboot=100)
+resLmpBootstrapTests <-
+    lmpBootstrapTests(
+        resLmpEffectMatrices = resLmpEffectMatrices,
+        nboot = 100
+    )
 
 # Print P-values
 pander::pander(t(resLmpBootstrapTests$resultsTable))
-
 ```
 
 
@@ -374,19 +392,23 @@ The ASCA/APCA/ASCA-E decomposition enables to represent the information from the
 
 The ASCA method performs PCA on the pure effect matrices.  Here a combined effect matrix `Hippurate+Time+Hippurate:Time` is also built.  
 
-```{r ASCA PCA}
-resASCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
-                        method="ASCA", 
-                        combineEffects = list(c("Hippurate", "Time", 
-                                                "Hippurate:Time")))
+```{r ASCA_PCA}
+resASCA <- lmpPcaEffects(
+    resLmpEffectMatrices = resLmpEffectMatrices,
+    method = "ASCA",
+    combineEffects = list(c(
+        "Hippurate", "Time",
+        "Hippurate:Time"
+    ))
+)
 ```
 
 ### Contributions
 
 The contribution of each principal component of the effects is calculated and reported in different tables and plots with the function `lmpContributions`. 
 
-```{r ASCA Contrib}
-resLmpContributions = lmpContributions(resASCA)
+```{r ASCA_Contrib}
+resLmpContributions <- lmpContributions(resASCA)
 ```
 
 The tables are:
@@ -436,11 +458,14 @@ Here we create an object including the loading plots (as line plots) for all the
 
 ```{r, include=TRUE}
 all_loadings_pl <- lmpLoading1dPlot(resASCA,
-                              effectNames = c("Hippurate", "Citrate","Time",
-                                              "Hippurate:Time",
-                                              "Hippurate+Time+Hippurate:Time",
-                                              "Residuals"),
-                              axes = 1, xlab = "ppm")
+    effectNames = c(
+        "Hippurate", "Citrate", "Time",
+        "Hippurate:Time",
+        "Hippurate+Time+Hippurate:Time",
+        "Residuals"
+    ),
+    axes = 1, xlab = "ppm"
+)
 ```
 
 The score matrices are represented two components at a time on a scatterplot with the function `lmpScorePlot`.   
@@ -451,34 +476,41 @@ The scores and loadings of the main effects included in the model are represente
 
 They show that, thank to the ASCA analysis, Hippurate and Citrate peaks are clearly and separately retrieved in the respective loading plots compared to the classical PCA (see Section \@ref(pca)) where peaks of these two chemicals are both present in the two first PCs. The loading profile of the `Time` effect shows a high peak on the left side of the removed water area.
 
-```{r ASCA ScoresXY}
+```{r ASCA_ScoresXY}
 # Hippurate
-hip_scores_pl <- lmpScorePlot(resASCA, effectNames = "Hippurate", 
-             color = "Hippurate", shape = "Hippurate")
+hip_scores_pl <- lmpScorePlot(resASCA,
+    effectNames = "Hippurate",
+    color = "Hippurate", shape = "Hippurate"
+)
 
-hip_loadings_pl <- all_loadings_pl$Hippurate +  hip_peaks
+hip_loadings_pl <- all_loadings_pl$Hippurate + hip_peaks
 
-grid.arrange(hip_scores_pl,hip_loadings_pl, ncol=2)
-  
+grid.arrange(hip_scores_pl, hip_loadings_pl, ncol = 2)
+
 # Citrate
-cit_scores_pl <- lmpScorePlot(resASCA, effectNames = "Citrate", 
-             color = "Citrate", shape = "Citrate")
-cit_loadings_pl <- all_loadings_pl$Citrate +  cit_peaks
+cit_scores_pl <- lmpScorePlot(resASCA,
+    effectNames = "Citrate",
+    color = "Citrate", shape = "Citrate"
+)
+cit_loadings_pl <- all_loadings_pl$Citrate + cit_peaks
 
-grid.arrange(cit_scores_pl,cit_loadings_pl, ncol=2)
+grid.arrange(cit_scores_pl, cit_loadings_pl, ncol = 2)
 
 # Time
-tim_scores_pl <- lmpScorePlot(resASCA, effectNames = "Time", color = "Time", 
-                              shape = "Time")
+tim_scores_pl <- lmpScorePlot(resASCA,
+    effectNames = "Time", color = "Time",
+    shape = "Time"
+)
 
-time_peaks <- annotate("rect", xmin=c(5.955364), xmax=c(6.155364), 
-              ymin=-Inf, ymax=Inf, alpha=0.2, 
-              fill=c("royalblue")) 
+time_peaks <- annotate("rect",
+    xmin = c(5.955364), xmax = c(6.155364),
+    ymin = -Inf, ymax = Inf, alpha = 0.2,
+    fill = c("royalblue")
+)
 
-tim_loadings_pl <- all_loadings_pl$Time +  time_peaks
+tim_loadings_pl <- all_loadings_pl$Time + time_peaks
 
-grid.arrange(tim_scores_pl,tim_loadings_pl, ncol=2)
-
+grid.arrange(tim_scores_pl, tim_loadings_pl, ncol = 2)
 ```
 
 
@@ -488,13 +520,15 @@ The scores and loadings fot the interaction term is represented here. It is not 
 
 ```{r}
 # Hippurate:Time
-hiptim_scores_pl <- lmpScorePlot(resASCA, effectNames = "Hippurate:Time", 
-                                 color = "Hippurate", shape = "Time")
-hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` + 
-  time_peaks + 
-  hip_peaks
+hiptim_scores_pl <- lmpScorePlot(resASCA,
+    effectNames = "Hippurate:Time",
+    color = "Hippurate", shape = "Time"
+)
+hiptim_loadings_pl <- all_loadings_pl$`Hippurate:Time` +
+    time_peaks +
+    hip_peaks
 
-grid.arrange(hiptim_scores_pl,hiptim_loadings_pl, ncol=2)
+grid.arrange(hiptim_scores_pl, hiptim_loadings_pl, ncol = 2)
 ```
 
 #### Combination of effects `Hippurate+Time+Hippurate:Time`
@@ -503,14 +537,15 @@ The scores and the loadings of a combination of effects, in this case `"Hippurat
 
 ```{r}
 # Hippurate+Time+Hippurate:Time
-hiptimInter_scores_pl <- lmpScorePlot(resASCA, 
-                            effectNames = "Hippurate+Time+Hippurate:Time", 
-                            color = "Hippurate", shape = "Time")
+hiptimInter_scores_pl <- lmpScorePlot(resASCA,
+    effectNames = "Hippurate+Time+Hippurate:Time",
+    color = "Hippurate", shape = "Time"
+)
 
-hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` + 
-                            time_peaks + hip_peaks
+hiptimInter_loadings_pl <- all_loadings_pl$`Hippurate:Time` +
+    time_peaks + hip_peaks
 
-grid.arrange(hiptimInter_scores_pl,hiptimInter_loadings_pl, ncol=2)
+grid.arrange(hiptimInter_scores_pl, hiptimInter_loadings_pl, ncol = 2)
 ```
 
 However, note that a better graphical representation is possible with the function `lmpEffectPlot` (see Section \@ref(effects-plot)) to depict interaction terms or combinations of effects.
@@ -520,16 +555,17 @@ However, note that a better graphical representation is possible with the functi
 
 PCA on the model residuals can also be applied to spot outliers or an unexpected underlying structure of the data. The scores plot shows that the effect of `Day`, which was excluded in our modeling step, could have been included as well as it spans the two first PCs of the residuals. 
 
-```{r Plot Residuals}
+```{r Plot_Residuals}
+resid_scores_pl <- lmpScorePlot(resASCA,
+    effectNames = "Residuals",
+    color = "Day", shape = "Day",
+    drawShapes = "segment"
+)
 
-resid_scores_pl <- lmpScorePlot(resASCA, effectNames = "Residuals",
-                                color = "Day", shape = "Day", 
-                                drawShapes = "segment")
 
+resid_loadings_pl <- all_loadings_pl$Residuals
 
-resid_loadings_pl <- all_loadings_pl$Residuals 
-
-grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
+grid.arrange(resid_scores_pl, resid_loadings_pl, ncol = 2)
 ```
 
 
@@ -539,33 +575,39 @@ grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
 
 We can also represent the scores as a matrix of plots with `lmpScoreScatterPlotM`. This graph has the advantage to compare more than 2 variables simultaneously. For example, the PC1 scores of `Hippurate`  and `Citrate` clearly represent the orthogonal design of this experiment. The interaction `Hippurate:Time` can also be clearly represented when comparing les PC1s of `Hippurate` and the interaction term.
 
-```{r ASCA ScoresMatrix, fig.height=7}
-lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
-                     modelAbbrev = TRUE,
-                     varname.colorup = "Citrate",
-                     varname.colordown  = "Time",
-                     varname.pchup="Hippurate",
-                     varname.pchdown="Time",
-                     title = "ASCA scores scatterplot matrix")
+```{r ASCA_ScoresMatrix, fig.height=7}
+lmpScoreScatterPlotM(resASCA,
+    PCdim = c(1, 1, 1, 1, 1, 1, 1, 2),
+    modelAbbrev = TRUE,
+    varname.colorup = "Citrate",
+    varname.colordown = "Time",
+    varname.pchup = "Hippurate",
+    varname.pchdown = "Time",
+    title = "ASCA scores scatterplot matrix"
+)
 ```
 
 #### 2D Loadings
 
 Finally the loadings can also be represented 2-by-2 as a scatterplot with `lmpLoading2dPlot`.  Such graphic is of course of limited interest for spectral data.  
 
-```{r ASCA loadings}
-lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
-                 effectNames = c("Hippurate"), 
-                 axes = c(1,2), 
-                 addRownames = TRUE,pl_n = 10)
+```{r ASCA_loadings}
+lmpLoading2dPlot(
+    resLmpPcaEffects = resASCA,
+    effectNames = c("Hippurate"),
+    axes = c(1, 2),
+    addRownames = TRUE, pl_n = 10
+)
 
 # adding manually labels to points for the Hippurate peaks
-labels = substr(colnames(UCH$outcomes),1,4)
+labels <- substr(colnames(UCH$outcomes), 1, 4)
 labels[-c(369, 132, 150, 133, 149, 144, 145, 368, 151)] <- ""
 
-lmpLoading2dPlot(resLmpPcaEffects=resASCA, 
-                 effectNames = c("Hippurate"), 
-                 axes = c(1,2), points_labs = labels)
+lmpLoading2dPlot(
+    resLmpPcaEffects = resASCA,
+    effectNames = c("Hippurate"),
+    axes = c(1, 2), points_labs = labels
+)
 ```
 
 
@@ -588,10 +630,14 @@ lmpEffectPlot(resASCA, effectName = "Hippurate", x = "Hippurate")
 A more interesting application is the visualization of interaction terms as line plots, here `Hippurate:Time` along the `Hippurate` or the `Time` effect. This representation gives the impression of a quite important interaction effect.
 
 ```{r}
-lmpEffectPlot(resASCA, effectName = "Hippurate:Time", 
-              x = "Hippurate", z = "Time")
-lmpEffectPlot(resASCA, effectName = "Hippurate:Time", 
-              x = "Time", z = "Hippurate")
+lmpEffectPlot(resASCA,
+    effectName = "Hippurate:Time",
+    x = "Hippurate", z = "Time"
+)
+lmpEffectPlot(resASCA,
+    effectName = "Hippurate:Time",
+    x = "Time", z = "Hippurate"
+)
 ```
 
 
@@ -599,11 +645,15 @@ lmpEffectPlot(resASCA, effectName = "Hippurate:Time",
 
 An alternative visualisation of this interaction combines the main effects of `Hippurate`, `Time` and the interaction `Hippurate:Time`. Even if significant, the interaction effect is actually quite small compared to the main effects (`Hippurate` for PC1 and `Time` for PC2).
 
-```{r ASCA effects}
-lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
-              x = "Hippurate", z = "Time")
-lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time", 
-              axes = c(2), x = "Time", z = "Hippurate")
+```{r ASCA_effects}
+lmpEffectPlot(resASCA,
+    effectName = "Hippurate+Time+Hippurate:Time",
+    x = "Hippurate", z = "Time"
+)
+lmpEffectPlot(resASCA,
+    effectName = "Hippurate+Time+Hippurate:Time",
+    axes = c(2), x = "Time", z = "Hippurate"
+)
 ```
 
 
@@ -613,51 +663,70 @@ lmpEffectPlot(resASCA, effectName = "Hippurate+Time+Hippurate:Time",
 
 The APCA method performs PCA on the effect matrices augmented by the residuals. The same functions already used for ASCA can be applied.
 
-```{r APCA PCA}
-resAPCA = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
-                        method="APCA")
+```{r APCA_PCA}
+resAPCA <- lmpPcaEffects(
+    resLmpEffectMatrices = resLmpEffectMatrices,
+    method = "APCA"
+)
 ```
 
 ### Scores Plot
 
 Different shapes with the `drawShapes` argument highlight the data structure recovery.
 
-```{r APCA ScoresXY}
+```{r APCA_ScoresXY}
 # Hippurate main effect
-lmpScorePlot(resAPCA, effectNames = "Hippurate", 
-             color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse")
+lmpScorePlot(resAPCA,
+    effectNames = "Hippurate",
+    color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse"
+)
 
 # Citrate main effect
-lmpScorePlot(resAPCA, effectNames = "Citrate", 
-             color = "Citrate", shape = "Citrate", drawShapes = "ellipse")
+lmpScorePlot(resAPCA,
+    effectNames = "Citrate",
+    color = "Citrate", shape = "Citrate", drawShapes = "ellipse"
+)
 
 # Time main effect
-lmpScorePlot(resAPCA, effectNames = "Time", 
-             color = "Time", shape = "Time", drawShapes = "ellipse")
-lmpScorePlot(resAPCA, effectNames = "Time", 
-             color = "Time", shape = "Time", drawShapes = "polygon")
-lmpScorePlot(resAPCA, effectNames = "Time", 
-             color = "Time", shape = "Time", drawShapes = "segment")
+lmpScorePlot(resAPCA,
+    effectNames = "Time",
+    color = "Time", shape = "Time", drawShapes = "ellipse"
+)
+lmpScorePlot(resAPCA,
+    effectNames = "Time",
+    color = "Time", shape = "Time", drawShapes = "polygon"
+)
+lmpScorePlot(resAPCA,
+    effectNames = "Time",
+    color = "Time", shape = "Time", drawShapes = "segment"
+)
 
 # Interaction term
-lmpScorePlot(resAPCA, effectNames = "Hippurate:Time", 
-             color = "Hippurate", shape = "Time", drawShapes = "segment")
-lmpScorePlot(resAPCA, effectNames = "Hippurate:Time", 
-             color = "Hippurate", shape = "Time", drawShapes = "polygon")
+lmpScorePlot(resAPCA,
+    effectNames = "Hippurate:Time",
+    color = "Hippurate", shape = "Time", drawShapes = "segment"
+)
+lmpScorePlot(resAPCA,
+    effectNames = "Hippurate:Time",
+    color = "Hippurate", shape = "Time", drawShapes = "polygon"
+)
 ```
 
 A scatterplot matrix can also be applied to visualise the relationship between the scores profiles of interest.
 
-```{r APCA ScoresMatrix}
+```{r APCA_ScoresMatrix}
 lmpScoreScatterPlotM(resAPCA,
-                     effectNames = c("Hippurate", "Citrate", "Time",
-                                     "Hippurate:Time"),
-                     modelAbbrev = TRUE,
-                     varname.colorup = "Citrate",
-                     varname.colordown  = "Time",
-                     varname.pchup="Hippurate",
-                     varname.pchdown="Time",
-                     title = "APCA scores scatterplot matrix")
+    effectNames = c(
+        "Hippurate", "Citrate", "Time",
+        "Hippurate:Time"
+    ),
+    modelAbbrev = TRUE,
+    varname.colorup = "Citrate",
+    varname.colordown = "Time",
+    varname.pchup = "Hippurate",
+    varname.pchdown = "Time",
+    title = "APCA scores scatterplot matrix"
+)
 ```
 
 ### Loadings plot
@@ -665,20 +734,22 @@ lmpScoreScatterPlotM(resAPCA,
 
 Note that the APCA loadings contain the residuals of the model and differ from the ASCA loadings in that respect.
 
-```{r APCA loadings}
-
-lmpLoading1dPlot(resAPCA, effectNames = c("Hippurate", "Citrate", 
-                                        "Time", "Hippurate:Time"), axes = 1)
-
+```{r APCA_loadings}
+lmpLoading1dPlot(resAPCA, effectNames = c(
+    "Hippurate", "Citrate",
+    "Time", "Hippurate:Time"
+), axes = 1)
 ```
 
 ## ASCA-E
 
 The ASCA-E method performs PCA on the pure effect matrices then projects the effect matrices augmented with residuals on the PC obtained.  
 
-```{r ASCAE PCA}
-resASCAE = lmpPcaEffects(resLmpEffectMatrices = resLmpEffectMatrices, 
-                         method="ASCA-E")
+```{r ASCAE_PCA}
+resASCAE <- lmpPcaEffects(
+    resLmpEffectMatrices = resLmpEffectMatrices,
+    method = "ASCA-E"
+)
 ```
 
 The contributions and loadings are identical to the ASCA results.
@@ -687,28 +758,39 @@ The contributions and loadings are identical to the ASCA results.
 
 For the main effects, all score plots show a clear separation between the different levels of the considered effects on the first PC. This separation of the groups suggests a strong effect of those factors, confirmed by their significance.
 
-```{r ASCAE ScoresXY}
-lmpScorePlot(resASCAE, effectNames = "Hippurate", 
-             color = "Hippurate", shape = "Hippurate")
-lmpScorePlot(resASCAE, effectNames = "Citrate", 
-             color = "Citrate", shape = "Citrate")
-lmpScorePlot(resASCAE, effectNames = "Time", 
-             color = "Time", shape = "Time")
-lmpScorePlot(resASCAE, effectNames = "Hippurate:Time", 
-             color = "Hippurate", shape = "Time")
+```{r ASCAE_ScoresXY}
+lmpScorePlot(resASCAE,
+    effectNames = "Hippurate",
+    color = "Hippurate", shape = "Hippurate"
+)
+lmpScorePlot(resASCAE,
+    effectNames = "Citrate",
+    color = "Citrate", shape = "Citrate"
+)
+lmpScorePlot(resASCAE,
+    effectNames = "Time",
+    color = "Time", shape = "Time"
+)
+lmpScorePlot(resASCAE,
+    effectNames = "Hippurate:Time",
+    color = "Hippurate", shape = "Time"
+)
 ```
 
 Again, the scores profiles can be compared 2 by 2 with ASCA-E.
-```{r ASCAE ScoresMatrix}
+```{r ASCAE_ScoresMatrix}
 lmpScoreScatterPlotM(resASCAE,
-                     effectNames = c("Hippurate", "Citrate", "Time",
-                                     "Hippurate:Time"),
-                     modelAbbrev = TRUE,
-                     varname.colorup = "Citrate",
-                     varname.colordown  = "Time",
-                     varname.pchup="Hippurate",
-                     varname.pchdown="Time",
-                     title = "ASCA-E scores scatterplot matrix")
+    effectNames = c(
+        "Hippurate", "Citrate", "Time",
+        "Hippurate:Time"
+    ),
+    modelAbbrev = TRUE,
+    varname.colorup = "Citrate",
+    varname.colordown = "Time",
+    varname.pchup = "Hippurate",
+    varname.pchdown = "Time",
+    title = "ASCA-E scores scatterplot matrix"
+)
 ```
 
 

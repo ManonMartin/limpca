@@ -44,37 +44,37 @@ The default behavior (parameters \code{x}, \code{y}, \code{cols} and \code{rows}
 data(mtcars)
 library(tidyverse)
 df <- mtcars \%>\%
-  dplyr::select(cyl, vs, am, gear, carb) \%>\%
-  as.data.frame() \%>\%
-  dplyr::mutate(across(everything(), as.factor))
+    dplyr::select(cyl, vs, am, gear, carb) \%>\%
+    as.data.frame() \%>\%
+    dplyr::mutate(across(everything(), as.factor))
 
 # Default behavior: display the 4 first factors in the design
 plotDesign(design = df)
 
 # 2 factors
 plotDesign(
-  design = df, x = "cyl", y = "vs",
-  cols = NULL, rows = NULL
+    design = df, x = "cyl", y = "vs",
+    cols = NULL, rows = NULL
 )
 # 3 factors
 plotDesign(
-  design = df, x = "cyl", y = "vs",
-  cols = NULL, rows = c("am")
+    design = df, x = "cyl", y = "vs",
+    cols = NULL, rows = c("am")
 )
 # 4 factors
 plotDesign(
-  design = df, x = "cyl", y = "vs",
-  cols = c("gear"), rows = c("am")
+    design = df, x = "cyl", y = "vs",
+    cols = c("gear"), rows = c("am")
 )
 # 5 factors
 plotDesign(
-  design = df, x = "cyl", y = "vs",
-  cols = c("gear"), rows = c("am", "carb")
+    design = df, x = "cyl", y = "vs",
+    cols = c("gear"), rows = c("am", "carb")
 )
 
 plotDesign(
-  design = df, x = "cyl", y = "vs",
-  cols = c("vs"), rows = c("am", "carb")
+    design = df, x = "cyl", y = "vs",
+    cols = c("vs"), rows = c("am", "carb")
 )
 
 ### UCH

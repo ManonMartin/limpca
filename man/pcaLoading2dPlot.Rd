@@ -52,31 +52,31 @@ data("UCH")
 ResPCA <- pcaBySvd(UCH$outcomes)
 
 pcaLoading2dPlot(
-  resPcaBySvd = ResPCA, axes = c(1, 2),
-  title = "PCA loading plot UCH"
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA loading plot UCH"
 )
 
 # adding color,  shape and labels to points
-id_cit <- 446:459
-id_hip <- c(126:156, 362:375)
+id_cit <- seq(446, 459)
+id_hip <- c(seq(126, 156), seq(362, 375))
 peaks <- rep("other", ncol(UCH$outcomes))
 peaks[id_hip] <- "hip"
 peaks[id_cit] <- "cit"
 metadata <- data.frame(peaks)
 
 pcaLoading2dPlot(
-  resPcaBySvd = ResPCA, axes = c(1, 2),
-  title = "PCA loading plot UCH", metadata = metadata,
-  color = "peaks", shape = "peaks", addRownames = TRUE
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA loading plot UCH", metadata = metadata,
+    color = "peaks", shape = "peaks", addRownames = TRUE
 )
 
 # changing max.overlaps of ggrepel
 options(ggrepel.max.overlaps = 30)
 pcaLoading2dPlot(
-  resPcaBySvd = ResPCA, axes = c(1, 2),
-  title = "PCA loading plot UCH", metadata = metadata,
-  color = "peaks", shape = "peaks", addRownames = TRUE,
-  pl_n = 35
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA loading plot UCH", metadata = metadata,
+    color = "peaks", shape = "peaks", addRownames = TRUE,
+    pl_n = 35
 )
 
 }

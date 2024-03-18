@@ -71,20 +71,20 @@ data("UCH")
 plotLine(Y = UCH$outcomes)
 
 # separate plots
-plotLine(Y = UCH$outcomes, rows = c(1:4), hline = NULL)
-plotLine(Y = UCH$outcomes, rows = c(1:4), color = 2)
-plotLine(Y = UCH$outcomes, rows = c(1:8), ncol = 2)
+plotLine(Y = UCH$outcomes, rows = seq(1, 8), hline = NULL)
+plotLine(Y = UCH$outcomes, rows = seq(1, 8), color = 2)
+plotLine(Y = UCH$outcomes, rows = seq(1, 8), ncol = 2)
 plotLine(
-  Y = UCH$outcomes, type = "p",
-  rows = c(1:8), ncol = 2
+    Y = UCH$outcomes, type = "p",
+    rows = seq(1, 8), ncol = 2
 )
 
 # stacked plots
 library(ggplot2)
 plotLine(
-  Y = UCH$outcomes, rows = c(1:4),
-  stacked = TRUE, color = "rows"
+    Y = UCH$outcomes, rows = seq(1, 1),
+    stacked = TRUE, color = "rows"
 ) +
-  scale_color_brewer(palette = "Set1")
+    scale_color_brewer(palette = "Set1")
 
 }

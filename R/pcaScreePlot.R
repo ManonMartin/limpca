@@ -22,32 +22,32 @@
 pcaScreePlot <- function(resPcaBySvd, nPC = 5,
                          title = "PCA scree plot",
                          theme = theme_bw()) {
-  # checks ===================
-  checkArg(resPcaBySvd, c("list"), can.be.null = FALSE)
-  checkArg(nPC, c("num", "pos", "length1"), can.be.null = FALSE)
-  checkArg(title, c("str", "length1"), can.be.null = FALSE)
+    # checks ===================
+    checkArg(resPcaBySvd, c("list"), can.be.null = FALSE)
+    checkArg(nPC, c("num", "pos", "length1"), can.be.null = FALSE)
+    checkArg(title, c("str", "length1"), can.be.null = FALSE)
 
-  if (!identical(names(resPcaBySvd), c(
-    "scores", "loadings", "eigval", "singvar",
-    "var", "cumvar", "original.dataset"
-  ))) {
-    stop("resPcaBySvd is not an output value of pcaBySvd")
-  }
+    if (!identical(names(resPcaBySvd), c(
+        "scores", "loadings", "eigval", "singvar",
+        "var", "cumvar", "original.dataset"
+    ))) {
+        stop("resPcaBySvd is not an output value of pcaBySvd")
+    }
 
-  # plot ===================
-  res <- data.frame(var = resPcaBySvd$var[seq_len(nPC)])
-  res <- res %>% rownames_to_column("PC")
+    # plot ===================
+    res <- data.frame(var = resPcaBySvd$var[seq_len(nPC)])
+    res <- res %>% rownames_to_column("PC")
 
-  ggplot2::ggplot(
-    data = res,
-    ggplot2::aes(
-      x = factor(PC, levels = PC),
-      y = var
-    )
-  ) +
-    ggplot2::geom_bar(stat = "identity") +
-    ggplot2::xlab("Principal Components") +
-    ggplot2::ylab("Percentage of Variance") +
-    ggplot2::ggtitle(title) +
-    theme
+    ggplot2::ggplot(
+        data = res,
+        ggplot2::aes(
+            x = factor(PC, levels = PC),
+            y = var
+        )
+    ) +
+        ggplot2::geom_bar(stat = "identity") +
+        ggplot2::xlab("Principal Components") +
+        ggplot2::ylab("Percentage of Variance") +
+        ggplot2::ggtitle(title) +
+        theme
 }

@@ -31,7 +31,8 @@ data("UCH")
 resLmpModelMatrix <- lmpModelMatrix(UCH)
 resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 resASCA <- lmpPcaEffects(resLmpEffectMatrices,
-combineEffects = list(c("Time", "Hippurate:Time")))
+    combineEffects = list(c("Time", "Hippurate:Time"))
+)
 lmpLoading1dPlot(resASCA)
 lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
 
@@ -40,6 +41,8 @@ data("trout")
 resLmpModelMatrix <- lmpModelMatrix(trout)
 resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 resASCA <- lmpPcaEffects(resLmpEffectMatrices)
-lmpLoading1dPlot(resASCA, effectNames = "Day",
-xaxis_type = "character", type = "s", ang_x_axis = 90)
+lmpLoading1dPlot(resASCA,
+    effectNames = "Day",
+    xaxis_type = "character", type = "s", ang_x_axis = 90
+)
 }

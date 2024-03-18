@@ -74,57 +74,57 @@ plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 
 # With color and shape
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), color = "Hippurate",
-  shape = "Citrate"
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), color = "Hippurate",
+    shape = "Citrate"
 )
 
 # With color and shapes
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), color = "Hippurate",
-  drawShapes = "ellipse"
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), color = "Hippurate",
+    drawShapes = "ellipse"
 )
 
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), color = "Hippurate",
-  drawShapes = "polygon"
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), color = "Hippurate",
+    drawShapes = "polygon"
 )
 
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), color = "Hippurate",
-  drawShapes = "segment"
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), color = "Hippurate",
+    drawShapes = "segment"
 )
 
 # With customized shapes
 library(ggplot2)
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), shape = "Hippurate", size = 3
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), shape = "Hippurate", size = 3
 ) +
-  scale_discrete_identity(
-    aesthetics = "shape",
-    guide = "legend"
-  )
+    scale_discrete_identity(
+        aesthetics = "shape",
+        guide = "legend"
+    )
 
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), shape = "Hippurate"
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), shape = "Hippurate"
 ) +
-  scale_shape_discrete(solid = FALSE)
+    scale_shape_discrete(solid = FALSE)
 
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), shape = "Hippurate"
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), shape = "Hippurate"
 ) +
-  scale_shape_manual(values = c(15, 16, 17))
+    scale_shape_manual(values = c(15, 16, 17))
 
 # With labels
 plotScatter(
-  Y = UCH$outcomes, design = UCH$design,
-  xy = c(453, 369), points_labs = rownames(UCH$design)
+    Y = UCH$outcomes, design = UCH$design,
+    xy = c(453, 369), points_labs = rownames(UCH$design)
 )
 
 }

@@ -56,23 +56,23 @@ resASCA <- lmpPcaEffects(resLmpEffectMatrices)
 lmpLoading2dPlot(resASCA, effectNames = "Hippurate")
 
 # adding color, shape and labels to points
-id_hip <- c(126:156, 362:375)
+id_hip <- c(seq(126, 156), seq(362, 375))
 peaks <- rep("other", ncol(UCH$outcomes))
 peaks[id_hip] <- "hip"
 metadata <- data.frame(peaks)
 
 lmpLoading2dPlot(resASCA,
-  effectNames = "Hippurate",
-  metadata = metadata, addRownames = TRUE, color = "peaks",
-  shape = "peaks"
+    effectNames = "Hippurate",
+    metadata = metadata, addRownames = TRUE, color = "peaks",
+    shape = "peaks"
 )
 
 # changing max.overlaps of ggrepel
 options(ggrepel.max.overlaps = 30)
 lmpLoading2dPlot(resASCA,
-  effectNames = "Hippurate",
-  metadata = metadata, addRownames = TRUE, color = "peaks",
-  shape = "peaks", pl_n = 20
+    effectNames = "Hippurate",
+    metadata = metadata, addRownames = TRUE, color = "peaks",
+    shape = "peaks", pl_n = 20
 )
 
 }

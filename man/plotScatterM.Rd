@@ -58,12 +58,12 @@ Produces a scatter plot matrix between the selected columns of the outcomes matr
 data("UCH")
 
 plotScatterM(
-  Y = UCH$outcomes, cols = c(1:4), design = UCH$design,
-  varname.colorup = "Hippurate", varname.colordown = "Citrate",
-  varname.pchup = "Time", varname.pchdown = "Day",
-  vec.colorup = c(2, 4, 1),
-  vec.colordown = c("orange", "purple", "green"),
-  vec.pchup = c(1, 2), vec.pchdown = c("a", "b")
+    Y = UCH$outcomes, cols = c(1:4), design = UCH$design,
+    varname.colorup = "Hippurate", varname.colordown = "Citrate",
+    varname.pchup = "Time", varname.pchdown = "Day",
+    vec.colorup = c(2, 4, 1),
+    vec.colordown = c("orange", "purple", "green"),
+    vec.pchup = c(1, 2), vec.pchdown = c("a", "b")
 )
 
 }

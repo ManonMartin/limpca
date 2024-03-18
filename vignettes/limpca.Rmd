@@ -11,13 +11,13 @@ vignette: >
 
 ```{r setup, include = FALSE}
 knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>",
-  out.width = "70%",
-  fig.align='center',
-  eval=TRUE
+    collapse = TRUE,
+    comment = "#>",
+    out.width = "70%",
+    fig.align = "center",
+    eval = TRUE
 )
-rm(list=ls())
+rm(list = ls())
 library("limpca")
 ```  
 
@@ -54,38 +54,44 @@ The design can be visualised with `plotDesign()`.
 
 ```{r dataVisu}
 # design
-plotDesign(design = UCH$design, x = "Hippurate", 
-           y = "Citrate", rows = "Time",
-           title = "Design of the UCH dataset")
+plotDesign(
+    design = UCH$design, x = "Hippurate",
+    y = "Citrate", rows = "Time",
+    title = "Design of the UCH dataset"
+)
 
 # row 3 of outcomes
-plotLine(Y = UCH$outcomes,
-         title = "H-NMR spectrum",
-         rows = c(3),
-         xlab = "ppm",
-         ylab = "Intensity")
+plotLine(
+    Y = UCH$outcomes,
+    title = "H-NMR spectrum",
+    rows = c(3),
+    xlab = "ppm",
+    ylab = "Intensity"
+)
 ```
 
 ## PCA
 
 ```{r PCA}
-ResPCA = pcaBySvd(UCH$outcomes)
+ResPCA <- pcaBySvd(UCH$outcomes)
 pcaScreePlot(ResPCA, nPC = 6)
-pcaScorePlot(resPcaBySvd = ResPCA, axes = c(1,2), 
-             title = "PCA scores plot: PC1 and PC2", 
-             design = UCH$design,
-             color = "Hippurate", shape = "Citrate",
-             points_labs_rn = FALSE)
+pcaScorePlot(
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA scores plot: PC1 and PC2",
+    design = UCH$design,
+    color = "Hippurate", shape = "Citrate",
+    points_labs_rn = FALSE
+)
 ```
 
 ## Model estimation and effect matrix decomposition
 
 ```{r modelEst}
 # Model matrix generation
-resMM = lmpModelMatrix(UCH)
+resMM <- lmpModelMatrix(UCH)
 
 # Model estimation and effect matrices decomposition
-resEM = lmpEffectMatrices(resMM)
+resEM <- lmpEffectMatrices(resMM)
 ```
 
 ## Effect matrix test of significance and importance measure
@@ -95,7 +101,7 @@ resEM = lmpEffectMatrices(resMM)
 resEM$varPercentagesPlot
 
 # Bootstrap tests
-resBT = lmpBootstrapTests(resLmpEffectMatrices = resEM, nboot=100)
+resBT <- lmpBootstrapTests(resLmpEffectMatrices = resEM, nboot = 100)
 resBT$resultsTable
 ```
 
@@ -104,24 +110,30 @@ resBT$resultsTable
 
 ```{r ASCA}
 # ASCA decomposition
-resASCA = lmpPcaEffects(resLmpEffectMatrices = resEM, method="ASCA")
+resASCA <- lmpPcaEffects(resLmpEffectMatrices = resEM, method = "ASCA")
 
 # Scores Plot for the hippurate
-lmpScorePlot(resASCA, effectNames = "Hippurate", 
-             color = "Hippurate", shape = "Hippurate")
+lmpScorePlot(resASCA,
+    effectNames = "Hippurate",
+    color = "Hippurate", shape = "Hippurate"
+)
 
 # Loadings Plot for the hippurate
-lmpLoading1dPlot(resASCA, effectNames = c("Hippurate"), 
-                              axes = 1, xlab = "ppm")
+lmpLoading1dPlot(resASCA,
+    effectNames = c("Hippurate"),
+    axes = 1, xlab = "ppm"
+)
 
 # Scores ScatterPlot matrix
-lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
-                     modelAbbrev = TRUE,
-                     varname.colorup = "Citrate",
-                     varname.colordown  = "Time",
-                     varname.pchup="Hippurate",
-                     varname.pchdown="Time",
-                     title = "ASCA scores scatterplot matrix")
+lmpScoreScatterPlotM(resASCA,
+    PCdim = c(1, 1, 1, 1, 1, 1, 1, 2),
+    modelAbbrev = TRUE,
+    varname.colorup = "Citrate",
+    varname.colordown = "Time",
+    varname.pchup = "Hippurate",
+    varname.pchdown = "Time",
+    title = "ASCA scores scatterplot matrix"
+)
 ```
 
 

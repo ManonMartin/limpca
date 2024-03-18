@@ -24,50 +24,50 @@
 
 lmpScreePlot <- function(resLmpContributions, effectNames = NULL,
                          nPC = 5, theme = theme_bw()) {
-  # checks ===================
-  checkArg(resLmpContributions, c("list"), can.be.null = FALSE)
-  checkArg(effectNames, c("str"), can.be.null = TRUE)
-  checkArg(nPC, c("num", "pos"), can.be.null = FALSE)
+    # checks ===================
+    checkArg(resLmpContributions, c("list"), can.be.null = FALSE)
+    checkArg(effectNames, c("str"), can.be.null = TRUE)
+    checkArg(nPC, c("num", "pos"), can.be.null = FALSE)
 
-  effectTable <- resLmpContributions$effectTable
-  if (!nPC < ncol(effectTable)) {
-    stop("nPC must be inferior or equal to the nPC chosen
+    effectTable <- resLmpContributions$effectTable
+    if (!nPC < ncol(effectTable)) {
+        stop("nPC must be inferior or equal to the nPC chosen
          in lmpContributions")
-  }
+    }
 
-  if (is.null(effectNames)) {
-    effectNames <- c(rownames(resLmpContributions$effectTable))
-  }
+    if (is.null(effectNames)) {
+        effectNames <- c(rownames(resLmpContributions$effectTable))
+    }
 
-  if (!all(effectNames %in% rownames(resLmpContributions$effectTable))) {
-    stop("One of the effects from effectNames is not
+    if (!all(effectNames %in% rownames(resLmpContributions$effectTable))) {
+        stop("One of the effects from effectNames is not
          in resLmpContributions.")
-  }
+    }
 
-  # selecting the effect
+    # selecting the effect
 
-  resdf <- as.data.frame(t(effectTable[, c(seq_len(nPC))]))
+    resdf <- as.data.frame(t(effectTable[, c(seq_len(nPC))]))
 
-  buildFig <- function(x) {
-    iEffect <- which(colnames(resdf) == effectNames[x])
+    buildFig <- function(x) {
+        iEffect <- which(colnames(resdf) == effectNames[x])
 
-    # Plotting the effect
-    ggplot(
-      data = resdf,
-      aes(x = rownames(resdf), y = resdf[, iEffect])
-    ) +
-      geom_bar(stat = "identity") +
-      xlab("Principal Components") +
-      ylab("Variance Percentage") +
-      ggtitle(paste(
-        "Percentage of variance by PC for:",
-        effectNames[x]
-      )) +
-      theme
-  }
+        # Plotting the effect
+        ggplot(
+            data = resdf,
+            aes(x = rownames(resdf), y = resdf[, iEffect])
+        ) +
+            geom_bar(stat = "identity") +
+            xlab("Principal Components") +
+            ylab("Variance Percentage") +
+            ggtitle(paste(
+                "Percentage of variance by PC for:",
+                effectNames[x]
+            )) +
+            theme
+    }
 
-  fig <- lapply(c(seq_along(effectNames)), FUN = buildFig)
-  names(fig) <- effectNames
+    fig <- lapply(c(seq_along(effectNames)), FUN = buildFig)
+    names(fig) <- effectNames
 
-  return(fig)
+    return(fig)
 }

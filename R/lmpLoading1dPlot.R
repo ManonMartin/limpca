@@ -22,7 +22,7 @@
 #' resLmpModelMatrix <- lmpModelMatrix(UCH)
 #' resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 #' resASCA <- lmpPcaEffects(resLmpEffectMatrices,
-#'   combineEffects = list(c("Time", "Hippurate:Time"))
+#'     combineEffects = list(c("Time", "Hippurate:Time"))
 #' )
 #' lmpLoading1dPlot(resASCA)
 #' lmpLoading1dPlot(resASCA, effectNames = c("Hippurate", "Citrate"))
@@ -33,93 +33,93 @@
 #' resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 #' resASCA <- lmpPcaEffects(resLmpEffectMatrices)
 #' lmpLoading1dPlot(resASCA,
-#'   effectNames = "Day",
-#'   xaxis_type = "character", type = "s", ang_x_axis = 90
+#'     effectNames = "Day",
+#'     xaxis_type = "character", type = "s", ang_x_axis = 90
 #' )
 lmpLoading1dPlot <- function(resLmpPcaEffects, effectNames = NULL,
                              axes = c(1, 2), ...) {
-  # checks   ===================
+    # checks   ===================
 
-  checkArg(resLmpPcaEffects, c("list"), can.be.null = FALSE)
-  checkArg(effectNames, c("str"), can.be.null = TRUE)
-  checkArg(axes, c("int", "pos"), can.be.null = FALSE)
+    checkArg(resLmpPcaEffects, c("list"), can.be.null = FALSE)
+    checkArg(effectNames, c("str"), can.be.null = TRUE)
+    checkArg(axes, c("int", "pos"), can.be.null = FALSE)
 
-  if (!all(effectNames %in% names(resLmpPcaEffects))) {
-    stop("One of the effects from effectNames is not in resLmpPcaEffects.")
-  }
+    if (!all(effectNames %in% names(resLmpPcaEffects))) {
+        stop("One of the effects from effectNames is not in resLmpPcaEffects.")
+    }
 
-  if (!identical(
-    names(resLmpPcaEffects[(length(resLmpPcaEffects) - 7):length(resLmpPcaEffects)]),
-    c(
-      "Residuals", "lmpDataList", "effectsNamesUnique",
-      "effectsNamesUniqueCombined",
-      "method", "type3SS", "variationPercentages",
-      "combineEffects"
-    )
-  )) {
-    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
-  }
+    if (!identical(
+        names(resLmpPcaEffects[(length(resLmpPcaEffects) - 7):length(resLmpPcaEffects)]),
+        c(
+            "Residuals", "lmpDataList", "effectsNamesUnique",
+            "effectsNamesUniqueCombined",
+            "method", "type3SS", "variationPercentages",
+            "combineEffects"
+        )
+    )) {
+        stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+    }
 
-  if (is.null(effectNames)) {
-    effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
-    effectNames <- effectNames[effectNames != "Intercept"]
-    effectNames <- c(effectNames, "Residuals")
-  }
-
-
-
-  # loadings
-
-  loadings <- lapply(effectNames, function(x) {
-    t(resLmpPcaEffects[[x]][["loadings"]])
-  })
-  names(loadings) <- effectNames
-
-  # percentage of explained variance   ===================
-
-  pc_var_fun <- function(effect) {
-    pc_var <- resLmpPcaEffects[[effect]][["var"]]
-    pc_var_x <- format(pc_var[pc_var >= 0.1],
-      digits = 2, trim = TRUE
-    )
-    pc_var_y <- format(pc_var[pc_var < 0.1],
-      digits = 2,
-      scientific = TRUE, trim = TRUE
-    )
-    pc_var_char <- as.character(pc_var)
-    pc_var_char[pc_var >= 0.1] <- pc_var_x
-    pc_var_char[pc_var < 0.1] <- pc_var_y
-
-    pc_var_char <- paste0(
-      "PC", axes, " (",
-      pc_var_char[axes], "%)"
-    )
-
-    return(pc_var_char)
-  }
-
-  lab <- lapply(effectNames, pc_var_fun)
-  names(lab) <- effectNames
+    if (is.null(effectNames)) {
+        effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
+        effectNames <- effectNames[effectNames != "Intercept"]
+        effectNames <- c(effectNames, "Residuals")
+    }
 
 
-  # Loadings plot  ===================
 
-  buildFig <- function(effect) {
-    title <- paste(effect, ": loading plot")
+    # loadings
 
-    plotLine(
-      Y = loadings[[effect]], title = title,
-      rows = axes, facet_label = lab[[effect]], ...
-    )
-  }
+    loadings <- lapply(effectNames, function(x) {
+        t(resLmpPcaEffects[[x]][["loadings"]])
+    })
+    names(loadings) <- effectNames
 
-  fig <- lapply(effectNames, buildFig)
-  names(fig) <- effectNames
+    # percentage of explained variance   ===================
+
+    pc_var_fun <- function(effect) {
+        pc_var <- resLmpPcaEffects[[effect]][["var"]]
+        pc_var_x <- format(pc_var[pc_var >= 0.1],
+            digits = 2, trim = TRUE
+        )
+        pc_var_y <- format(pc_var[pc_var < 0.1],
+            digits = 2,
+            scientific = TRUE, trim = TRUE
+        )
+        pc_var_char <- as.character(pc_var)
+        pc_var_char[pc_var >= 0.1] <- pc_var_x
+        pc_var_char[pc_var < 0.1] <- pc_var_y
+
+        pc_var_char <- paste0(
+            "PC", axes, " (",
+            pc_var_char[axes], "%)"
+        )
+
+        return(pc_var_char)
+    }
+
+    lab <- lapply(effectNames, pc_var_fun)
+    names(lab) <- effectNames
 
 
-  if (length(fig) == 1) {
-    fig <- fig[[1]]
-  }
+    # Loadings plot  ===================
 
-  return(fig)
+    buildFig <- function(effect) {
+        title <- paste(effect, ": loading plot")
+
+        plotLine(
+            Y = loadings[[effect]], title = title,
+            rows = axes, facet_label = lab[[effect]], ...
+        )
+    }
+
+    fig <- lapply(effectNames, buildFig)
+    names(fig) <- effectNames
+
+
+    if (length(fig) == 1) {
+        fig <- fig[[1]]
+    }
+
+    return(fig)
 }
