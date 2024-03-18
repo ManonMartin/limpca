@@ -84,7 +84,7 @@ way design for fixed factors</h3>
                         <h4 data-toc-skip class="author">Benaiche Nadia,
 Bernadette Govaerts</h4>
             
-            <h4 data-toc-skip class="date">February 16, 2024</h4>
+            <h4 data-toc-skip class="date">March 18, 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ManonMartin/limpca/blob/HEAD/vignettes/Trout.Rmd" class="external-link"><code>vignettes/Trout.Rmd</code></a></small>
       <div class="d-none name"><code>Trout.Rmd</code></div>
@@ -829,9 +829,9 @@ will be studied more deeply by PCA in the next sections.</p>
 <tr class="even">
 <td align="center"><strong>Bootstrap p-values</strong></td>
 <td align="center">&lt; 0.001</td>
-<td align="center">0.022</td>
-<td align="center">0.578</td>
-<td align="center">0.103</td>
+<td align="center">0.026</td>
+<td align="center">0.547</td>
+<td align="center">0.126</td>
 </tr>
 </tbody>
 </table>
@@ -857,8 +857,8 @@ will be studied more deeply by PCA in the next sections.</p>
 </tr>
 <tr class="even">
 <td align="center"><strong>Bootstrap p-values</strong></td>
-<td align="center">0.36</td>
-<td align="center">0.481</td>
+<td align="center">0.382</td>
+<td align="center">0.46</td>
 <td align="center">-</td>
 </tr>
 </tbody>
@@ -1272,7 +1272,8 @@ We then only give them here for all model effects.</p>
 <code class="sourceCode R"><span><span class="co"># Treatment Effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>, effectNames <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
 <span>color <span class="op">=</span> <span class="st">"Treatment"</span>, shape <span class="op">=</span> <span class="st">"Treatment"</span>,drawShapes<span class="op">=</span><span class="st">"ellipse"</span><span class="op">)</span></span></code></pre></div>
-<pre><code>Warning:  [1m [22mRemoved 30 rows containing missing values (`geom_path()`).</code></pre>
+<pre><code>Warning:  [1m [22mRemoved 30 rows containing missing values or values outside the scale range
+(`geom_path()`).</code></pre>
 <p><img src="Trout_files/figure-html/APCA%20Scores-2.png" width="250"></p>
 <div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exposure Effect</span></span>
@@ -1588,9 +1589,9 @@ increasing max.overlaps</code></pre>
 </h2>
 <div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code>R version 4.3.2 (2023-10-31)
+<pre><code>R version 4.3.3 (2024-02-29)
 Platform: x86_64-pc-linux-gnu (64-bit)
-Running under: Ubuntu 22.04.3 LTS
+Running under: Ubuntu 22.04.4 LTS
 
 Matrix products: default
 BLAS:   /usr/lib/x86_64-linux-gnu/openblas-pthread/libblas.so.3 
@@ -1610,31 +1611,31 @@ attached base packages:
 
 other attached packages:
 [1] car_3.1-2        carData_3.0-5    pander_0.6.5     gridExtra_2.3   
-[5] limpca_0.99.4    ggplot2_3.4.4    BiocStyle_2.30.0
+[5] limpca_0.99.4    ggplot2_3.5.0    BiocStyle_2.30.0
 
 loaded via a namespace (and not attached):
- [1] tidyr_1.3.1         sass_0.4.8          utf8_1.2.4         
- [4] generics_0.1.3      stringi_1.8.3       digest_0.6.34      
- [7] magrittr_2.0.3      evaluate_0.23       grid_4.3.2         
-[10] bookdown_0.37       iterators_1.0.14    fastmap_1.1.1      
+ [1] tidyr_1.3.1         sass_0.4.9          utf8_1.2.4         
+ [4] generics_0.1.3      stringi_1.8.3       digest_0.6.35      
+ [7] magrittr_2.0.3      evaluate_0.23       grid_4.3.3         
+[10] bookdown_0.38       iterators_1.0.14    fastmap_1.1.1      
 [13] plyr_1.8.9          foreach_1.5.2       doParallel_1.0.17  
 [16] jsonlite_1.8.8      ggrepel_0.9.5       tidyverse_2.0.0    
 [19] BiocManager_1.30.22 purrr_1.0.2         fansi_1.0.6        
 [22] scales_1.3.0        codetools_0.2-19    textshaping_0.3.7  
 [25] jquerylib_0.1.4     abind_1.4-5         cli_3.6.2          
 [28] rlang_1.1.3         munsell_0.5.0       withr_3.0.0        
-[31] cachem_1.0.8        yaml_2.3.8          tools_4.3.2        
-[34] parallel_4.3.2      reshape2_1.4.4      memoise_2.0.1      
+[31] cachem_1.0.8        yaml_2.3.8          tools_4.3.3        
+[34] parallel_4.3.3      reshape2_1.4.4      memoise_2.0.1      
 [37] dplyr_1.1.4         colorspace_2.1-0    vctrs_0.6.5        
 [40] R6_2.5.1            lifecycle_1.0.4     stringr_1.5.1      
-[43] fs_1.6.3            ragg_1.2.7          pkgconfig_2.0.3    
+[43] fs_1.6.3            ragg_1.3.0          pkgconfig_2.0.3    
 [46] desc_1.4.3          pkgdown_2.0.7       pillar_1.9.0       
 [49] bslib_0.6.1         gtable_0.3.4        glue_1.7.0         
-[52] Rcpp_1.0.12         systemfonts_1.0.5   highr_0.10         
-[55] xfun_0.42           tibble_3.2.1        tidyselect_1.2.0   
+[52] Rcpp_1.0.12         systemfonts_1.0.6   highr_0.10         
+[55] xfun_0.42           tibble_3.2.1        tidyselect_1.2.1   
 [58] knitr_1.45          farver_2.1.1        htmltools_0.5.7    
-[61] labeling_0.4.3      ggsci_3.0.0         rmarkdown_2.25     
-[64] compiler_4.3.2     </code></pre>
+[61] labeling_0.4.3      rmarkdown_2.26      ggsci_3.0.1        
+[64] compiler_4.3.3     </code></pre>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>
