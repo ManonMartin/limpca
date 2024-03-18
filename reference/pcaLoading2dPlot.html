@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.4</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -132,33 +132,33 @@ loadings and \(\lambda_{ab}\) their singular values.</p>
 <span class="r-in"><span><span class="va">ResPCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">pcaLoading2dPlot</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  title <span class="op">=</span> <span class="st">"PCA loading plot UCH"</span></span></span>
+<span class="r-in"><span>    resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    title <span class="op">=</span> <span class="st">"PCA loading plot UCH"</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pcaLoading2dPlot-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># adding color,  shape and labels to points</span></span></span>
-<span class="r-in"><span><span class="va">id_cit</span> <span class="op">&lt;-</span> <span class="fl">446</span><span class="op">:</span><span class="fl">459</span></span></span>
-<span class="r-in"><span><span class="va">id_hip</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">126</span><span class="op">:</span><span class="fl">156</span>, <span class="fl">362</span><span class="op">:</span><span class="fl">375</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">id_cit</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">446</span>, <span class="fl">459</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="va">id_hip</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">126</span>, <span class="fl">156</span><span class="op">)</span>, <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">362</span>, <span class="fl">375</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">peaks</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="st">"other"</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="va">peaks</span><span class="op">[</span><span class="va">id_hip</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"hip"</span></span></span>
 <span class="r-in"><span><span class="va">peaks</span><span class="op">[</span><span class="va">id_cit</span><span class="op">]</span> <span class="op">&lt;-</span> <span class="st">"cit"</span></span></span>
 <span class="r-in"><span><span class="va">metadata</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/data.frame.html" class="external-link">data.frame</a></span><span class="op">(</span><span class="va">peaks</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu">pcaLoading2dPlot</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  title <span class="op">=</span> <span class="st">"PCA loading plot UCH"</span>, metadata <span class="op">=</span> <span class="va">metadata</span>,</span></span>
-<span class="r-in"><span>  color <span class="op">=</span> <span class="st">"peaks"</span>, shape <span class="op">=</span> <span class="st">"peaks"</span>, addRownames <span class="op">=</span> <span class="cn">TRUE</span></span></span>
+<span class="r-in"><span>    resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    title <span class="op">=</span> <span class="st">"PCA loading plot UCH"</span>, metadata <span class="op">=</span> <span class="va">metadata</span>,</span></span>
+<span class="r-in"><span>    color <span class="op">=</span> <span class="st">"peaks"</span>, shape <span class="op">=</span> <span class="st">"peaks"</span>, addRownames <span class="op">=</span> <span class="cn">TRUE</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pcaLoading2dPlot-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># changing max.overlaps of ggrepel</span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>ggrepel.max.overlaps <span class="op">=</span> <span class="fl">30</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">pcaLoading2dPlot</span><span class="op">(</span></span></span>
-<span class="r-in"><span>  resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>  title <span class="op">=</span> <span class="st">"PCA loading plot UCH"</span>, metadata <span class="op">=</span> <span class="va">metadata</span>,</span></span>
-<span class="r-in"><span>  color <span class="op">=</span> <span class="st">"peaks"</span>, shape <span class="op">=</span> <span class="st">"peaks"</span>, addRownames <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
-<span class="r-in"><span>  pl_n <span class="op">=</span> <span class="fl">35</span></span></span>
+<span class="r-in"><span>    resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>    title <span class="op">=</span> <span class="st">"PCA loading plot UCH"</span>, metadata <span class="op">=</span> <span class="va">metadata</span>,</span></span>
+<span class="r-in"><span>    color <span class="op">=</span> <span class="st">"peaks"</span>, shape <span class="op">=</span> <span class="st">"peaks"</span>, addRownames <span class="op">=</span> <span class="cn">TRUE</span>,</span></span>
+<span class="r-in"><span>    pl_n <span class="op">=</span> <span class="fl">35</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="pcaLoading2dPlot-3.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
