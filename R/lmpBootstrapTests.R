@@ -203,12 +203,12 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     Y_withoutIntercept <- Res$outcomes - Res$Intercept
     denom <- norm(x = data.matrix(Y_withoutIntercept), "F")^2
 
-    result <- sapply(L, function(x) {
+    result <- vapply(L, function(x) {
       computeSS_bis(
         Xmat = Res$modelMatrix, L = x,
         Res$parameters
       )
-    })
+    }, FUN.VALUE = 0, USE.NAMES = TRUE)
 
     result <- c(result, ((norm(x = Res$residuals, "F")^2) / denom) * 100)
     # result = c(result,norm(x=Res$residuals,"F")^2)

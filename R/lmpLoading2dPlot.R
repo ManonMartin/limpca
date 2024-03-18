@@ -154,9 +154,10 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
       labs
     }
 
-    points_labels <- sapply(effectNames, dist_labels_fun,
-      axes = axes, labs = labs, simplify = FALSE
-    )
+    points_labels <- lapply(effectNames, dist_labels_fun,
+                             axes = axes, labs = labs)
+
+    names(points_labels) = effectNames
   }
 
 
