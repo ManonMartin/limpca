@@ -36,7 +36,7 @@ Imports: ggplot2, stringr, plyr, ggrepel, reshape2,
 Suggests: 
     BiocStyle, pander, 
     rmarkdown, car, gridExtra, knitr
-biocViews: StatisticalMethod, PrincipalComponent, Regression, Visualization, ExperimentalDesign, MultipleComparison
+biocViews: StatisticalMethod, PrincipalComponent, Regression, Visualization, ExperimentalDesign, MultipleComparison, GeneExpression, Metabolomics
 RoxygenNote: 7.2.3
 Roxygen: list(markdown=TRUE)
 BugReports: https://github.com/ManonMartin/limpca/issues

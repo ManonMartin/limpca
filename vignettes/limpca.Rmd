@@ -124,3 +124,9 @@ lmpScoreScatterPlotM(resASCA,PCdim=c(1,1,1,1,1,1,1,2),
                      title = "ASCA scores scatterplot matrix")
 ```
 
+
+# sessionInfo
+```{r}
+sessionInfo()
+```
+
