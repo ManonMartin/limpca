@@ -129,13 +129,13 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
         varPercentage = unname(resLmpPcaEffects$variationPercentages)
     )
 
-    plotTotal <- ggplot2::ggplot(
+    plotTotal <- with(dataTotal,{ggplot2::ggplot(
         data = dataTotal,
         ggplot2::aes(
             x = stats::reorder(effects, -varPercentage),
             y = varPercentage
         )
-    ) +
+    )}) +
         ggplot2::geom_bar(stat = "identity") +
         ggplot2::xlab("Effects") +
         ggplot2::ylab("Percentage of Variance") +
@@ -157,7 +157,7 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
 
     dataContrib <- as.data.frame(effect_vector[seq_len(10)])
 
-    plotContrib <- ggplot2::ggplot(
+    plotContrib <- with(dataContrib, {ggplot2::ggplot(
         data = dataContrib,
         ggplot2::aes(
             x = stats::reorder(
@@ -166,11 +166,11 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
             ),
             y = dataContrib[, 1]
         )
-    ) +
+    )}) +
         ggplot2::geom_bar(stat = "identity") +
         ggplot2::xlab("Contributions") +
         ggplot2::ylab("Percentage of Variance") +
-        ggplot2::scale_x_discrete(limits = rownames(data)) +
+        ggplot2::scale_x_discrete(limits = rownames(dataContrib)) +
         ggplot2::theme_bw()
 
 

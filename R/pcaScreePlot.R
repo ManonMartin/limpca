@@ -38,7 +38,7 @@ pcaScreePlot <- function(resPcaBySvd, nPC = 5,
     res <- data.frame(var = resPcaBySvd$var[seq_len(nPC)])
     res <- res %>% rownames_to_column("PC")
 
-    ggplot2::ggplot(
+    with(res, {ggplot2::ggplot(
         data = res,
         ggplot2::aes(
             x = factor(PC, levels = PC),
@@ -49,5 +49,5 @@ pcaScreePlot <- function(resPcaBySvd, nPC = 5,
         ggplot2::xlab("Principal Components") +
         ggplot2::ylab("Percentage of Variance") +
         ggplot2::ggtitle(title) +
-        theme
+        theme})
 }
