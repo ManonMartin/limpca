@@ -43,7 +43,7 @@ Data can be included as a \code{\link{SummarizedExperiment}} (SE) object or by m
 elements of \code{outcomes}, \code{design} and \code{formula}. If a SE is provided,
 the \code{outcomes} corresponds to a transposed assay of the SE (by default the first one),
 the \code{design} corresponds to the \code{\link{colData}} of the SE and the \code{formula} can be provided as a
-\code{formula} element in the \code{\link{S4Vectors::metadata}} of SE (\code{metadata(se)$formula}).
+\code{formula} element in the \code{S4Vectors::metadata} of SE (\code{metadata(se)$formula}).
 
 In the outputted list, the outcomes are structured in a standard statistical fashion,
 i.e. with observations in rows and the variables (features) in column.
@@ -60,6 +60,8 @@ Multiple checks are performed to ensure that the data are correctly formatted:
 }
 }
 \examples{
+
+data(UCH)
 
 ### create manually the dataset
 

@@ -24,7 +24,7 @@
 #' elements of \code{outcomes}, \code{design} and \code{formula}. If a SE is provided,
 #' the \code{outcomes} corresponds to a transposed assay of the SE (by default the first one),
 #' the \code{design} corresponds to the \code{\link{colData}} of the SE and the \code{formula} can be provided as a
-#' \code{formula} element in the \code{\link{S4Vectors::metadata}} of SE (\code{metadata(se)$formula}).
+#' \code{formula} element in the \code{S4Vectors::metadata} of SE (\code{metadata(se)$formula}).
 #'
 #' In the outputted list, the outcomes are structured in a standard statistical fashion,
 #' i.e. with observations in rows and the variables (features) in column.
@@ -42,6 +42,8 @@
 #' @seealso \code{\link{SummarizedExperiment}}
 #'
 #' @examples
+#'
+#' data(UCH)
 #'
 #' ### create manually the dataset
 #'
@@ -70,6 +72,7 @@
 #'
 #' @import SummarizedExperiment
 #' @importFrom stats as.formula
+#' @importFrom S4Vectors metadata
 
 data2lmpDataList <- function(se = NULL, assay_name = NULL,
                              outcomes = NULL, design = NULL,
