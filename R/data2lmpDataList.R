@@ -54,7 +54,9 @@
 #'
 #' ### create the dataset from a SummarizedExperiment
 #'
-#' se_UCH <- SummarizedExperiment(
+#' library(SummarizedExperiment)
+#'
+#' se <- SummarizedExperiment(
 #'   assays = list(
 #'     counts = t(UCH$outcomes),
 #'     counts2 = t(UCH$outcomes * 2)
@@ -62,10 +64,10 @@
 #'   metadata = list(formula = "~ Hippurate + Citrate")
 #' )
 #'
-#' res <- data2lmpDataList(se_UCH, assay_name = "counts2")
+#' res <- data2lmpDataList(se, assay_name = "counts2")
 #'
 #' # changing the formula:
-#' res <- data2lmpDataList(se_UCH,
+#' res <- data2lmpDataList(se,
 #'   assay_name = "counts2",
 #'   formula = "~ Hippurate + Citrate + Time"
 #' )
