@@ -54,6 +54,12 @@ reference:
   - UCH
   - trout
 
+- title: Data formatting
+  desc:  ~
+  contents:
+  - data2lmpDataList
+
+
 - title: Data exploration
   desc:  ~
   contents:
