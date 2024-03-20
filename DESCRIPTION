@@ -33,7 +33,7 @@ LazyData: FALSE
 VignetteBuilder: knitr
 Imports: ggplot2, stringr, plyr, ggrepel, reshape2,
     grDevices, graphics, doParallel, parallel, dplyr, tibble, tidyr, ggsci,
-    tidyverse, methods, stats, SummarizedExperiment
+    tidyverse, methods, stats, SummarizedExperiment, S4Vectors
 Suggests: 
     BiocStyle,
     pander,
