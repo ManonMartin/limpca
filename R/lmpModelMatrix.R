@@ -8,7 +8,7 @@
 #'
 #' @return A list with the 5 following named elements :
 #' \describe{
-#'    \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula.}
+#'    \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
 #'    \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
 #'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each model effect.}
 #'    \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}

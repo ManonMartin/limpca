@@ -8,6 +8,7 @@
 #' \code{\link{pcaLoading1dPlot}}, \code{\link{pcaLoading2dPlot}} and \code{\link{pcaScreePlot}}.
 #'
 #' @param Y The \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} (response) variables.
+#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
 #' @param nPC Number of Principal Components to extract.
 #'
 #' @return A list containing the following elements:
@@ -19,16 +20,36 @@
 #'   \item{\code{var}}{Explained variances}
 #'   \item{\code{cumvar}}{Cumulated explained variances}
 #'   \item{\code{original.dataset}}{Original dataset}
+#'   \item{\code{design}}{Design of the study}
 #'
 #' }
 #'
 #' @examples
 #'
 #' data("UCH")
-#' PCA.res <- pcaBySvd(UCH$outcomes)
-pcaBySvd <- function(Y, nPC = min(dim(Y))) {
-    # checks =========================
-    checkArg(Y, "matrix", can.be.null = FALSE)
+#'
+#' PCA.res1 <- pcaBySvd(Y = UCH$outcomes)
+#'
+#' PCA.res2 <- pcaBySvd(lmpData = UCH)
+#'
+#' identical(PCA.res1,PCA.res2)
+
+pcaBySvd <- function(Y = NULL, lmpData = NULL, nPC = min(dim(Y))) {
+
+  design = NULL
+
+   if (is.null(Y) & is.null(lmpData)){
+    stop("both Y and lmpData are NULL, at least one should be non NULL.")
+  }else if (!is.null(Y) & !is.null(lmpData)){
+    message("both Y and lmpData are non-NULL, Y will be used to perform PCA")
+  }else if (is.null(Y) & ! is.null(lmpData)){
+    lmpDataListCheck(lmpData, null_formula = TRUE)
+    Y = lmpData$outcomes
+    design = lmpData$design
+  }
+
+
+    checkArg(Y, "matrix", can.be.null = TRUE)
     checkArg(nPC, c("num", "pos", "length1"), can.be.null = FALSE)
 
     # PCA =========================
@@ -107,7 +128,8 @@ pcaBySvd <- function(Y, nPC = min(dim(Y))) {
         eigval = outcomes.eigval,
         singvar = outcomes.singularval, var = outcomes.variances,
         cumvar = outcomes.cumvariances,
-        original.dataset = original.dataset
+        original.dataset = original.dataset,
+        design = design
     )
 
     return(res)

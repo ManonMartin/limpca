@@ -35,7 +35,7 @@ pcaLoading1dPlot <- function(resPcaBySvd,
 
     if (!identical(names(resPcaBySvd), c(
         "scores", "loadings", "eigval", "singvar",
-        "var", "cumvar", "original.dataset"
+        "var", "cumvar", "original.dataset", "design"
     ))) {
         stop("resPcaBySvd is not an output value of pcaBySvd")
     }

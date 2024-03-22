@@ -4,10 +4,12 @@
 \alias{pcaBySvd}
 \title{Singular Value Decomposition for PCA analysis}
 \usage{
-pcaBySvd(Y, nPC = min(dim(Y)))
+pcaBySvd(Y = NULL, lmpData = NULL, nPC = min(dim(Y)))
 }
 \arguments{
 \item{Y}{The \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} (response) variables.}
+
+\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
 
 \item{nPC}{Number of Principal Components to extract.}
 }
@@ -21,6 +23,7 @@ A list containing the following elements:
 \item{\code{var}}{Explained variances}
 \item{\code{cumvar}}{Cumulated explained variances}
 \item{\code{original.dataset}}{Original dataset}
+\item{\code{design}}{Design of the study}
 
 }
 }
@@ -33,5 +36,10 @@ Outputs are represented with the functions \code{\link{pcaScorePlot}},
 \examples{
 
 data("UCH")
-PCA.res <- pcaBySvd(UCH$outcomes)
+
+PCA.res1 <- pcaBySvd(Y = UCH$outcomes)
+
+PCA.res2 <- pcaBySvd(lmpData = UCH)
+
+identical(PCA.res1,PCA.res2)
 }

@@ -9,6 +9,7 @@ pcaScorePlot(
   axes = c(1, 2),
   title = "PCA score plot",
   points_labs_rn = FALSE,
+  design = NULL,
   ...
 )
 }
@@ -20,6 +21,8 @@ pcaScorePlot(
 \item{title}{Plot title.}
 
 \item{points_labs_rn}{Boolean indicating if the rownames of the scores matrix should be plotted.}
+
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
@@ -35,12 +38,20 @@ Produces score plots from \code{\link{pcaBySvd}} output with the same graphical 
 \examples{
 
 data("UCH")
-ResPCA <- pcaBySvd(UCH$outcomes)
+ResPCA <- pcaBySvd(Y = UCH$outcomes)
 
 pcaScorePlot(
     resPcaBySvd = ResPCA, axes = c(1, 2),
     title = "PCA score plot UCH", design = UCH$design,
     color = "Hippurate", shape = "Citrate"
-)
+    )
+
+ResPCA <- pcaBySvd(lmpData = UCH)
+
+pcaScorePlot(
+    resPcaBySvd = ResPCA, axes = c(1, 2),
+    title = "PCA score plot UCH",
+    color = "Hippurate", shape = "Citrate"
+    )
 
 }

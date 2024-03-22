@@ -8,6 +8,7 @@
 #' @param axes A numerical vector of length 2 with the Principal Components axes to be drawn.
 #' @param title Plot title.
 #' @param points_labs_rn Boolean indicating if the rownames of the scores matrix should be plotted.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
 #' @return A `ggplot2` PCA score plot.
@@ -19,19 +20,27 @@
 #' @examples
 #'
 #' data("UCH")
-#' ResPCA <- pcaBySvd(UCH$outcomes)
+#' ResPCA <- pcaBySvd(Y = UCH$outcomes)
 #'
 #' pcaScorePlot(
 #'     resPcaBySvd = ResPCA, axes = c(1, 2),
 #'     title = "PCA score plot UCH", design = UCH$design,
 #'     color = "Hippurate", shape = "Citrate"
-#' )
+#'     )
+#'
+#' ResPCA <- pcaBySvd(lmpData = UCH)
+#'
+#' pcaScorePlot(
+#'     resPcaBySvd = ResPCA, axes = c(1, 2),
+#'     title = "PCA score plot UCH",
+#'     color = "Hippurate", shape = "Citrate"
+#'     )
 #'
 #' @import ggplot2
 
 pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
                          title = "PCA score plot",
-                         points_labs_rn = FALSE, ...) {
+                         points_labs_rn = FALSE, design = NULL, ...) {
     mcall <- as.list(match.call())[-1L]
 
     # checks ===================
@@ -42,10 +51,16 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
 
     if (!identical(names(resPcaBySvd), c(
         "scores", "loadings", "eigval", "singvar",
-        "var", "cumvar", "original.dataset"
+        "var", "cumvar", "original.dataset", "design"
     ))) {
         stop("resPcaBySvd is not an output value of pcaBySvd")
     }
+
+    # design
+    if (!is.null(resPcaBySvd$design)){
+      design = resPcaBySvd$design
+    }
+
 
     # scores
     scores <- resPcaBySvd$scores
@@ -99,6 +114,7 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
                     Y = scores, title = title,
                     xy = axes, xlab = xlab, ylab = ylab,
                     points_labs = rownames(scores),
+                    design = design,
                     ...
                 )
             } else {
@@ -106,6 +122,7 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
                     Y = scores, title = title,
                     xy = axes, xlab = xlab,
                     points_labs = rownames(scores),
+                    design = design,
                     ...
                 )
             }
@@ -115,6 +132,7 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
                     Y = scores, title = title,
                     xy = axes, ylab = ylab,
                     points_labs = rownames(scores),
+                    design = design,
                     ...
                 )
             } else {
@@ -122,6 +140,7 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
                     Y = scores, title = title,
                     xy = axes,
                     points_labs = rownames(scores),
+                    design = design,
                     ...
                 )
             }
@@ -131,13 +150,16 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
             if (!"ylab" %in% names(mcall)) {
                 fig <- plotScatter(
                     Y = scores, title = title,
-                    xy = axes, xlab = xlab, ylab = ylab,
+                    xy = axes, xlab = xlab,
+                    ylab = ylab,
+                    design = design,
                     ...
                 )
             } else {
                 fig <- plotScatter(
                     Y = scores, title = title,
                     xy = axes, xlab = xlab,
+                    design = design,
                     ...
                 )
             }
@@ -146,12 +168,14 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
                 fig <- plotScatter(
                     Y = scores, title = title,
                     xy = axes, ylab = ylab,
+                    design = design,
                     ...
                 )
             } else {
                 fig <- plotScatter(
                     Y = scores, title = title,
                     xy = axes,
+                    design = design,
                     ...
                 )
             }
