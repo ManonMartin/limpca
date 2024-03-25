@@ -31,9 +31,9 @@ plotScatter(
 
 \item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
 
-\item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color.}
+\item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color. Currently treated as a discrete variable.}
 
-\item{shape}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as shape.}
+\item{shape}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as shape. Currently treated as a discrete variable.}
 
 \item{points_labs}{If not \code{NULL}, a character vector with point labels.}
 

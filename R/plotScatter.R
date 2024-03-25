@@ -7,8 +7,8 @@
 #' @param Y A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.
 #' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).
 #' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
-#' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color.
-#' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape.
+#' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color. Currently treated as a discrete variable.
+#' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape. Currently treated as a discrete variable.
 #' @param points_labs If not \code{NULL}, a character vector with point labels.
 #' @param title Plot title.
 #' @param xlab If not \code{NULL}, label for the x-axis.
@@ -138,6 +138,14 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
         if (is.null(design)) {
             stop("color or shape is specified but design is NULL")
         }
+    }
+
+    vars <- c(color,shape)
+    if (!is.null(vars)){
+      testClass <- mapply(class,design[,vars])
+      if (any(grepl("numeric", testClass))){
+        warning("at least one variable used as color or shape is numeric and will be converted to factor")
+      }
     }
 
 

@@ -63,16 +63,7 @@ pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
     # design
      if (is.null(design) & !is.null(resPcaBySvd$design)){
       design <- resPcaBySvd$design
-    }
-
-    vars <- c(mcall$color,mcall$shape)
-    if (!is.null(vars)){
-      testClass <- mapply(class,design[,vars])
-      if (any(grepl("numeric", testClass))){
-        warning("at least one variable used as color or shape
-                is numeric and will be converted to factor")
-      }
-    }
+     }
 
     # scores
     scores <- resPcaBySvd$scores
