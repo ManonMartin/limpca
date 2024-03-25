@@ -4,6 +4,7 @@ design <- data.frame(
     factB = factor(rep(c(1, 2), 5))
 )
 outcomes <- matrix(rnorm(30), ncol = 3)
+rownames(outcomes) = c(1:nrow(outcomes))
 formula <- "~ factA+factB"
 lmpDL <- list(design = design, outcomes = outcomes, formula = formula)
 

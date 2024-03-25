@@ -158,21 +158,24 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
 
   # formatting formula
 
-  formulaChar <- as.character(stats::as.formula(out_formula))
+  if (! is.null(out_formula)){
+    formulaChar <- as.character(stats::as.formula(out_formula))
 
-  if (length(formulaChar) == 3) {
-    out_formula <- paste(
-      formulaChar[1],
-      formulaChar[3]
-    )
-  } else if (length(formulaChar) == 2) {
-    out_formula <- paste(
-      formulaChar[1],
-      formulaChar[2]
-    )
-  } else {
-    stop("Please put the formula argument in its right form: ~ model terms")
+    if (length(formulaChar) == 3) {
+      out_formula <- paste(
+        formulaChar[1],
+        formulaChar[3]
+      )
+    } else if (length(formulaChar) == 2) {
+      out_formula <- paste(
+        formulaChar[1],
+        formulaChar[2]
+      )
+    } else {
+      stop("Please put the formula argument in its right form: ~ model terms")
+    }
   }
+
 
 #   # Checking correspondence between formula names and design names ----------
 #

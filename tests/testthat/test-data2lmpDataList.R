@@ -78,7 +78,7 @@ test_that("data2lmpDataList with misspecified arguments fails", {
   expect_error(data2lmpDataList())
   expect_error(data2lmpDataList(design = design, formula = formula))
   expect_error(data2lmpDataList(outcomes = outcomes, formula = formula))
-  expect_error(data2lmpDataList(outcomes = outcomes, design = design))
+  expect_warning(data2lmpDataList(outcomes = outcomes, design = design))
 })
 
 
