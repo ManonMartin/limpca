@@ -78,7 +78,7 @@ lmpDataListCheck <- function(lmpData,
   # Checking formula ==================================
 
   if (!is.null(out_formula)) {
-    formulaChar <- as.character(as.formula(out_formula))
+    formulaChar <- as.character(stats::as.formula(out_formula))
 
     if (length(formulaChar) == 3) {
       out_formula <- paste(

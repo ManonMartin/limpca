@@ -22,7 +22,7 @@ data2lmpDataList(
 
 \item{design}{If not \code{NULL} (default), a data.frame with the experimental design of \emph{n} observations and \emph{q} explanatory variables. The rownames of design has to match the rownames of outcomes.}
 
-\item{formula}{If not \code{NULL}  (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should marcht the column names of the design}
+\item{formula}{If not \code{NULL}  (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should match the column names of the design}
 
 \item{verbose}{If \code{TRUE}, prints useful information about the outputted list.}
 }
@@ -51,7 +51,7 @@ If the \code{outcomes} argument is not \code{NULL}, it has to be formatted that 
 
 Note that there is a priority to the \code{outcomes}, \code{design} and \code{formula}
 arguments if they are not \code{NULL} (e.g. if both \code{se} and \code{outcomes} arguments are provided,
-the resulting outcomes matrix will be from the \code{outcomes} argument).
+the resulting outcomes matrix will be from the \code{outcomes} argument). outcomes and design elements are mandatory.
 
 Multiple checks are performed to ensure that the data are correctly formatted:
 \itemize{

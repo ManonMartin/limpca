@@ -28,6 +28,7 @@ Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors
 will be of size \emph{nxp}. For a fator with \emph{a} levels, the \emph{sum coding} creates \emph{a-1} columns in the model matrix with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
 \emph{p} is the total number parameter for each response (outcome) in the ASCA model.
 More information is available in the article (\emph{Thiel et al}, 2017)
+Note that at the moment, only factors can be used as explanatory variables.
 }
 \examples{
 

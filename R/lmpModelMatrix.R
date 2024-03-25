@@ -21,6 +21,7 @@
 #' will be of size \emph{nxp}. For a fator with \emph{a} levels, the \emph{sum coding} creates \emph{a-1} columns in the model matrix with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
 #' \emph{p} is the total number parameter for each response (outcome) in the ASCA model.
 #' More information is available in the article (\emph{Thiel et al}, 2017)
+#' Note that at the moment, only factors can be used as explanatory variables.
 #'
 #' @seealso \code{\link{model.matrix}}
 #'
@@ -40,55 +41,34 @@
 
 
 lmpModelMatrix <- function(lmpDataList) {
+
+    lmpDataList = data2lmpDataList(outcomes = lmpDataList$outcomes,
+                     design = lmpDataList$design,
+                     formula = lmpDataList$formula, verbose = FALSE)
+    lmpDataListCheck(lmpData=lmpDataList)
+
     formula <- stats::as.formula(lmpDataList$formula)
+    formulaDesignMatrix <- formula
+
     design <- lmpDataList$design
-
-    # Checking no missing argument and the class of the object
-
-    checkArg(formula, "formula", can.be.null = FALSE)
-    checkArg(design, "data.frame", can.be.null = FALSE)
-
-    # Checking formula
-
-    formulaChar <- as.character(formula)
-    if (length(formulaChar) == 3) {
-        formulaDesignMatrix <- stats::as.formula(paste(
-            formulaChar[1],
-            formulaChar[3]
-        ))
-    } else if (length(formulaChar) == 2) {
-        formulaDesignMatrix <- formula
-    } else {
-        stop("Please put the formula argument in its right form")
-    }
-
-    # Checking correspondence between formula names and design names
-
-    varNames <- all.vars(formulaDesignMatrix)
-    matchesVarNames <- varNames %in% names(design)
-    if (!all(matchesVarNames, na.rm = FALSE)) {
-        stop("Some of the variable names, present in the formula argument,
-         do not correspond to one of the column names of the design argument.
-         Please adapt either one of both arguments.")
-    }
 
     # Checking if all variables are factors
 
-    if (all(names(Filter(is.factor, design)) != colnames(design))) {
-        NoFactor <- vector()
-        for (i in seq_along(colnames(design))) {
-            NoFactor[i] <- is.factor(design[, i])
-        }
-        stop(
-            "Some of the variables from the design
-               matrix are not factors :",
-            colnames(design)[!NoFactor]
-        )
+    varNames <- all.vars(formula)
+
+    if (!is.null(varNames)){
+      testClass <- mapply(is.factor, design[,varNames])
+      if (!all(testClass)){
+        warning("at least one design variable used in the formula is not a factor ",
+                "(",paste(varNames[!testClass], collapse=", "),")")
+      }
     }
 
     # Checking which variables are factors
     factorsDesign <- names(Filter(is.factor, design))
     varNamesFactors <- intersect(factorsDesign, varNames)
+
+
 
     # Creating model matrix If factors are present, a list is created to specify
     # which variables are considered as factors in model.matrix

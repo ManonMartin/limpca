@@ -142,9 +142,9 @@ plotScatter <- function(Y, xy, design = NULL, color = NULL,
 
     vars <- c(color,shape)
     if (!is.null(vars)){
-      testClass <- mapply(class,design[,vars])
-      if (any(grepl("numeric", testClass))){
-        warning("at least one variable used as color or shape is numeric and will be converted to factor")
+      testClass <- mapply(is.factor,design[,vars])
+      if (!all(testClass)){
+        warning("at least one variable used as color or shape is not a factor and will be converted as such")
       }
     }
 

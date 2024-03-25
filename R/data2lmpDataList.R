@@ -9,7 +9,7 @@
 #' @param assay_name If not \code{NULL} (default), a character string naming the assay from the \code{\link{SummarizedExperiment}} object \code{se}. If \code{NULL}, the first assay is selected.
 #' @param outcomes If not \code{NULL}  (default), a numerical matrix with \emph{n} observations and \emph{m} response variables. The rownames needs to be non-NULL and match those of the design matrix.
 #' @param design If not \code{NULL} (default), a data.frame with the experimental design of \emph{n} observations and \emph{q} explanatory variables. The rownames of design has to match the rownames of outcomes.
-#' @param formula If not \code{NULL}  (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should marcht the column names of the design
+#' @param formula If not \code{NULL}  (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should match the column names of the design
 #' @param verbose If \code{TRUE}, prints useful information about the outputted list.
 #'
 #' @return A list with the 3 following named elements:
@@ -32,7 +32,7 @@
 #'
 #' Note that there is a priority to the \code{outcomes}, \code{design} and \code{formula}
 #' arguments if they are not \code{NULL} (e.g. if both \code{se} and \code{outcomes} arguments are provided,
-#' the resulting outcomes matrix will be from the \code{outcomes} argument).
+#' the resulting outcomes matrix will be from the \code{outcomes} argument). outcomes and design elements are mandatory.
 #'
 #' Multiple checks are performed to ensure that the data are correctly formatted:
 #' - the rownames of \code{design} and \code{outcomes} should match
@@ -93,9 +93,9 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
     can.be.null = TRUE
   )
   checkArg(verbose, "bool", can.be.null = FALSE)
-  checkArg(formula, c("str", "length1"), can.be.null = TRUE)
-  checkArg(design, "data.frame", can.be.null = TRUE)
-  checkArg(outcomes, "matrix", can.be.null = TRUE)
+  # checkArg(formula, c("str", "length1"), can.be.null = TRUE)
+  # checkArg(design, "data.frame", can.be.null = TRUE)
+  # checkArg(outcomes, "matrix", can.be.null = TRUE)
 
   ## if se is specified ===========
   coldat_se <- form_se <- assay_se <- NULL
@@ -128,14 +128,15 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
   }
 
   if (!is.null(formula)) {
-    out_formula <- stats::as.formula(formula)
+    out_formula <- formula
   } else if (!is.null(form_se)) {
-    out_formula <- stats::as.formula(form_se)
+    out_formula <- form_se
   } else {
-    stop("formula information is missing in the arguments")
+    out_formula <- NULL
+    warning("formula information is missing in the arguments")
   }
 
-  checkArg(out_formula, "formula", can.be.null = TRUE)
+  # checkArg(out_formula, "formula", can.be.null = TRUE)
 
   if (!is.null(design)) {
     out_design <- design
@@ -147,10 +148,17 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
 
 
   ## format the data ====================
+  lmpDataList = list(outcomes = out_outcomes,
+                     design = out_design,
+                     formula = out_formula)
 
-  # Checking formula
+  lmpDataListCheck(lmpData = lmpDataList,
+                   null_formula = TRUE)
 
-  formulaChar <- as.character(out_formula)
+
+  # formatting formula
+
+  formulaChar <- as.character(stats::as.formula(out_formula))
 
   if (length(formulaChar) == 3) {
     out_formula <- paste(
@@ -166,52 +174,52 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
     stop("Please put the formula argument in its right form: ~ model terms")
   }
 
-  # Checking correspondence between formula names and design names ----------
-
-  varNames <- all.vars(stats::as.formula(out_formula))
-  matchesVarNames <- varNames %in% names(out_design)
-  if (!all(matchesVarNames, na.rm = FALSE)) {
-    stop(
-      "Some of the variable names (", varNames[!matchesVarNames],
-      "), present in the formula argument,
-         do not correspond to one of the column names of the design argument.
-         Please adapt either one of both arguments."
-    )
-  }
-
-  # Checking correspondence between the rows of design and outcomes ----------
-
-  # check if rownames are given for outcomes
-  if (is.null(rownames(out_outcomes))) {
-    stop("rownames for outcomes is not present and needs to be defined")
-  }
-
-  if (nrow(out_design) == nrow(out_outcomes)) {
-    if (!identical(rownames(out_design), rownames(out_outcomes))) {
-      # if same length but not well ordered/named
-      if (all(rownames(out_design) %in% rownames(out_outcomes))) {
-        warning("reordering the rownames of design to match those of outcomes")
-        # reorder the rownames of design to match those of outcomes
-        reorder_idx <- match(rownames(out_outcomes), rownames(out_design))
-        out_design <- out_design[reorder_idx, ]
-        if (!identical(rownames(out_design), rownames(out_outcomes))) {
-          # if the reordering fails
-          stop("mismatch between the rownames of design and outcomes")
-        }
-      } else {
-        mismatch_names <- rownames(out_design)[!rownames(out_design) %in% rownames(out_outcomes)]
-        stop(
-          "some rownames of the design (", paste(mismatch_names, collapse = ", "),
-          ") do not match the rownames of the outcomes"
-        )
-      }
-    }
-  } else {
-    stop(
-      "nrow of design (", nrow(out_design),
-      ") is different from nrow outcomes (", nrow(out_outcomes), ")"
-    )
-  }
+#   # Checking correspondence between formula names and design names ----------
+#
+#   varNames <- all.vars(stats::as.formula(out_formula))
+#   matchesVarNames <- varNames %in% names(out_design)
+#   if (!all(matchesVarNames, na.rm = FALSE)) {
+#     stop(
+#       "Some of the variable names (", varNames[!matchesVarNames],
+#       "), present in the formula argument,
+#          do not correspond to one of the column names of the design argument.
+#          Please adapt either one of both arguments."
+#     )
+#   }
+#
+#   # Checking correspondence between the rows of design and outcomes ----------
+#
+#   # check if rownames are given for outcomes
+#   if (is.null(rownames(out_outcomes))) {
+#     stop("rownames for outcomes is not present and needs to be defined")
+#   }
+#
+#   if (nrow(out_design) == nrow(out_outcomes)) {
+#     if (!identical(rownames(out_design), rownames(out_outcomes))) {
+#       # if same length but not well ordered/named
+#       if (all(rownames(out_design) %in% rownames(out_outcomes))) {
+#         warning("reordering the rownames of design to match those of outcomes")
+#         # reorder the rownames of design to match those of outcomes
+#         reorder_idx <- match(rownames(out_outcomes), rownames(out_design))
+#         out_design <- out_design[reorder_idx, ]
+#         if (!identical(rownames(out_design), rownames(out_outcomes))) {
+#           # if the reordering fails
+#           stop("mismatch between the rownames of design and outcomes")
+#         }
+#       } else {
+#         mismatch_names <- rownames(out_design)[!rownames(out_design) %in% rownames(out_outcomes)]
+#         stop(
+#           "some rownames of the design (", paste(mismatch_names, collapse = ", "),
+#           ") do not match the rownames of the outcomes"
+#         )
+#       }
+#     }
+#   } else {
+#     stop(
+#       "nrow of design (", nrow(out_design),
+#       ") is different from nrow outcomes (", nrow(out_outcomes), ")"
+#     )
+#   }
 
 
 
