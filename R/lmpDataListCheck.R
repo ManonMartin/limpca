@@ -50,8 +50,7 @@
 lmpDataListCheck <- function(lmpData,
                              null_formula = FALSE,
                              null_design = FALSE,
-                             null_outcomes = FALSE){
-
+                             null_outcomes = FALSE) {
   # checks =========================
 
   # check lmpdata
@@ -59,17 +58,17 @@ lmpDataListCheck <- function(lmpData,
 
   checkArg(lmpData, "list", can.be.null = FALSE)
 
-  if(length(lmpData) >3){
+  if (length(lmpData) > 3) {
     stop("length of lmpData is superior to 3, there is unnecessary objects")
   }
 
-  if (!all(names(lmpData) %in% c("design","outcomes","formula"))){
+  if (!all(names(lmpData) %in% c("design", "outcomes", "formula"))) {
     stop("the names of lmpData do not correspond to \"design\", \"outcomes\" and \"formula\"")
   }
 
-  out_formula = lmpData$formula
-  out_design = lmpData$design
-  out_outcomes = lmpData$outcomes
+  out_formula <- lmpData$formula
+  out_design <- lmpData$design
+  out_outcomes <- lmpData$outcomes
 
   checkArg(out_formula, c("str", "length1"), can.be.null = null_formula)
   checkArg(out_design, "data.frame", can.be.null = null_design)
@@ -78,7 +77,7 @@ lmpDataListCheck <- function(lmpData,
 
   # Checking formula ==================================
 
-  if (!is.null(out_formula)){
+  if (!is.null(out_formula)) {
     formulaChar <- as.character(as.formula(out_formula))
 
     if (length(formulaChar) == 3) {
@@ -91,7 +90,7 @@ lmpDataListCheck <- function(lmpData,
         formulaChar[1],
         formulaChar[2]
       )
-    } else{
+    } else {
       stop("Please put the formula argument in its right form: ~ model terms")
     }
   }
@@ -99,8 +98,8 @@ lmpDataListCheck <- function(lmpData,
 
   # Checking outcomes ==================================
 
-  if (!is.null(out_outcomes)){
-  # check if rownames are given for outcomes
+  if (!is.null(out_outcomes)) {
+    # check if rownames are given for outcomes
     if (is.null(rownames(out_outcomes))) {
       stop("rownames for outcomes is not present and needs to be defined")
     }
@@ -110,7 +109,7 @@ lmpDataListCheck <- function(lmpData,
 
   # Checking correspondence between formula names and design names ----------
 
-  if (!is.null(out_formula) & !is.null(out_design) ){
+  if (!is.null(out_formula) & !is.null(out_design)) {
     varNames <- all.vars(stats::as.formula(out_formula))
     matchesVarNames <- varNames %in% names(out_design)
     if (!all(matchesVarNames, na.rm = FALSE)) {
@@ -125,7 +124,7 @@ lmpDataListCheck <- function(lmpData,
 
   # Checking correspondence between the rows of design and outcomes ----------
 
-  if (!is.null(out_outcomes) & !is.null(out_design) ){
+  if (!is.null(out_outcomes) & !is.null(out_design)) {
     if (nrow(out_design) == nrow(out_outcomes)) {
       if (!identical(rownames(out_design), rownames(out_outcomes))) {
         # if same length but not well ordered/named
@@ -152,9 +151,5 @@ lmpDataListCheck <- function(lmpData,
         ") is different from nrow of outcomes (", nrow(out_outcomes), ")"
       )
     }
-
   }
-
-
-
 }

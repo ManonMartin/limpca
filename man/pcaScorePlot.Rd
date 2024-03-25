@@ -38,6 +38,8 @@ Produces score plots from \code{\link{pcaBySvd}} output with the same graphical 
 \examples{
 
 data("UCH")
+
+# design is explicitly defined
 ResPCA <- pcaBySvd(Y = UCH$outcomes)
 
 pcaScorePlot(
@@ -46,6 +48,7 @@ pcaScorePlot(
     color = "Hippurate", shape = "Citrate"
     )
 
+# design is recovered from lmpData
 ResPCA <- pcaBySvd(lmpData = UCH)
 
 pcaScorePlot(

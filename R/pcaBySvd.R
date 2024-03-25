@@ -36,7 +36,7 @@
 
 pcaBySvd <- function(Y = NULL, lmpData = NULL, nPC = min(dim(Y))) {
 
-  design = NULL
+  design <- NULL
 
    if (is.null(Y) & is.null(lmpData)){
     stop("both Y and lmpData are NULL, at least one should be non NULL.")

@@ -75,6 +75,7 @@
 #' @import SummarizedExperiment
 #' @importFrom stats as.formula
 #' @importFrom S4Vectors metadata
+#' @importFrom methods is
 
 data2lmpDataList <- function(se = NULL, assay_name = NULL,
                              outcomes = NULL, design = NULL,
@@ -83,7 +84,7 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
   ## checks ===========
 
   # se
-  if (!is(se, "SummarizedExperiment") & !is.null(se)) {
+  if (!methods::is(se, "SummarizedExperiment") & !is.null(se)) {
     stop("se is not a SummarizedExperiment nor NULL")
   }
 
@@ -161,7 +162,7 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
       formulaChar[1],
       formulaChar[2]
     )
-  } else{
+  } else {
     stop("Please put the formula argument in its right form: ~ model terms")
   }
 
