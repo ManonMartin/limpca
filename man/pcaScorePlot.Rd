@@ -43,18 +43,18 @@ data("UCH")
 ResPCA <- pcaBySvd(Y = UCH$outcomes)
 
 pcaScorePlot(
-    resPcaBySvd = ResPCA, axes = c(1, 2),
-    title = "PCA score plot UCH", design = UCH$design,
-    color = "Hippurate", shape = "Citrate"
-    )
+  resPcaBySvd = ResPCA, axes = c(1, 2),
+  title = "PCA score plot UCH", design = UCH$design,
+  color = "Hippurate", shape = "Citrate"
+)
 
 # design is recovered from lmpData
 ResPCA <- pcaBySvd(lmpData = UCH)
 
 pcaScorePlot(
-    resPcaBySvd = ResPCA, axes = c(1, 2),
-    title = "PCA score plot UCH",
-    color = "Hippurate", shape = "Citrate"
-    )
+  resPcaBySvd = ResPCA, axes = c(1, 2),
+  title = "PCA score plot UCH",
+  color = "Hippurate", shape = "Citrate"
+)
 
 }

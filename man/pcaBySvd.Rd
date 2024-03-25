@@ -41,5 +41,5 @@ PCA.res1 <- pcaBySvd(Y = UCH$outcomes)
 
 PCA.res2 <- pcaBySvd(lmpData = UCH)
 
-identical(PCA.res1,PCA.res2)
+identical(PCA.res1, PCA.res2)
 }

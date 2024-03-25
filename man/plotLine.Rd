@@ -5,7 +5,8 @@
 \title{Line plot}
 \usage{
 plotLine(
-  Y,
+  Y = NULL,
+  lmpData = NULL,
   rows = 1,
   type = c("l", "p", "s"),
   title = "Line plot",
@@ -26,6 +27,8 @@ plotLine(
 }
 \arguments{
 \item{Y}{A numerical matrix containing the rows to be drawn.}
+
+\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
 
 \item{rows}{A vector with either the row name(s) of the \eqn{Y} matrix to plot (character) or the row index position(s) (integer). Default to 1.}
 
@@ -65,26 +68,31 @@ A \code{ggplot2} line plot.
 \description{
 Generates the response profile of one or more observations i.e. plots of one or more rows of the outcomes matrix on the y-axis against the \eqn{m} response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots can be used.
 }
+\details{
+Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
+}
 \examples{
 
 data("UCH")
 plotLine(Y = UCH$outcomes)
+
+plotLine(lmpData = UCH)
 
 # separate plots
 plotLine(Y = UCH$outcomes, rows = seq(1, 8), hline = NULL)
 plotLine(Y = UCH$outcomes, rows = seq(1, 8), color = 2)
 plotLine(Y = UCH$outcomes, rows = seq(1, 8), ncol = 2)
 plotLine(
-    Y = UCH$outcomes, type = "p",
-    rows = seq(1, 8), ncol = 2
+  Y = UCH$outcomes, type = "p",
+  rows = seq(1, 8), ncol = 2
 )
 
 # stacked plots
 library(ggplot2)
 plotLine(
-    Y = UCH$outcomes, rows = seq(1, 1),
-    stacked = TRUE, color = "rows"
+  Y = UCH$outcomes, rows = seq(1, 1),
+  stacked = TRUE, color = "rows"
 ) +
-    scale_color_brewer(palette = "Set1")
+  scale_color_brewer(palette = "Set1")
 
 }

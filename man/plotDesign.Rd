@@ -5,7 +5,8 @@
 \title{Plot of the design matrix}
 \usage{
 plotDesign(
-  design,
+  design = NULL,
+  lmpData = NULL,
   x = NULL,
   y = NULL,
   rows = NULL,
@@ -17,13 +18,15 @@ plotDesign(
 \arguments{
 \item{design}{A data.frame representing the \eqn{n \times k} "freely encoded" experimental design.}
 
-\item{x}{By default, the first column of \code{design} ; otherwise if not \code{NULL}, a character string giving the column name of \code{design} to be used for the x-axis.}
+\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+
+\item{x}{By default, the first column of \code{design} ; otherwise if not \code{NULL}, a character string giving the column name of \code{design} to be used for the x-axis. The column needs to be a factor.}
 
 \item{y}{By default, the second column of \code{design} if present ; otherwise if not \code{NULL}, a character string giving the column name of \code{design} to be used for the y-axis.}
 
-\item{rows}{By default, the fourth column of \code{design} if present ; otherwise if not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows.}
+\item{rows}{By default, the fourth column of \code{design} if present ; otherwise if not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the rows. The column needs to be a factor.}
 
-\item{cols}{By default, the third column of \code{design} if present ; otherwise if not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns.}
+\item{cols}{By default, the third column of \code{design} if present ; otherwise if not \code{NULL}, a character vector with one or several column name(s) of \code{design} to be used for faceting along the columns. The column needs to be a factor.}
 
 \item{title}{Plot title.}
 
@@ -36,45 +39,53 @@ A \code{ggplot2} plot of the design matrix.
 Provides a graphical representation of the experimental design. It allows to visualize factors levels and check the design balance.
 }
 \details{
+Either \code{design} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{design}.
 The default behavior (parameters \code{x}, \code{y}, \code{cols} and \code{rows} are \code{NULL}) uses the first four columns of \code{df}. If at least one of these arguments is not \code{NULL}, the function will only use the non \code{NULL} parameters to be displayed.
 }
 \examples{
+### trout data
+data(trout)
+
+plotDesign(design = trout$design, x = "Day", y = "Treatment")
+
+# equivalent to:
+plotDesign(lmpData = trout, x = "Day", y = "Treatment")
 
 ### mtcars
 data(mtcars)
 library(tidyverse)
 df <- mtcars \%>\%
-    dplyr::select(cyl, vs, am, gear, carb) \%>\%
-    as.data.frame() \%>\%
-    dplyr::mutate(across(everything(), as.factor))
+  dplyr::select(cyl, vs, am, gear, carb) \%>\%
+  as.data.frame() \%>\%
+  dplyr::mutate(across(everything(), as.factor))
 
 # Default behavior: display the 4 first factors in the design
 plotDesign(design = df)
 
 # 2 factors
 plotDesign(
-    design = df, x = "cyl", y = "vs",
-    cols = NULL, rows = NULL
+  design = df, x = "cyl", y = "vs",
+  cols = NULL, rows = NULL
 )
 # 3 factors
 plotDesign(
-    design = df, x = "cyl", y = "vs",
-    cols = NULL, rows = c("am")
+  design = df, x = "cyl", y = "vs",
+  cols = NULL, rows = c("am")
 )
 # 4 factors
 plotDesign(
-    design = df, x = "cyl", y = "vs",
-    cols = c("gear"), rows = c("am")
+  design = df, x = "cyl", y = "vs",
+  cols = c("gear"), rows = c("am")
 )
 # 5 factors
 plotDesign(
-    design = df, x = "cyl", y = "vs",
-    cols = c("gear"), rows = c("am", "carb")
+  design = df, x = "cyl", y = "vs",
+  cols = c("gear"), rows = c("am", "carb")
 )
 
 plotDesign(
-    design = df, x = "cyl", y = "vs",
-    cols = c("vs"), rows = c("am", "carb")
+  design = df, x = "cyl", y = "vs",
+  cols = c("vs"), rows = c("am", "carb")
 )
 
 ### UCH

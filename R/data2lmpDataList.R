@@ -148,17 +148,21 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
 
 
   ## format the data ====================
-  lmpDataList = list(outcomes = out_outcomes,
-                     design = out_design,
-                     formula = out_formula)
+  lmpDataList <- list(
+    outcomes = out_outcomes,
+    design = out_design,
+    formula = out_formula
+  )
 
-  lmpDataListCheck(lmpData = lmpDataList,
-                   null_formula = TRUE)
+  lmpDataListCheck(
+    lmpData = lmpDataList,
+    null_formula = TRUE
+  )
 
 
   # formatting formula
 
-  if (! is.null(out_formula)){
+  if (!is.null(out_formula)) {
     formulaChar <- as.character(stats::as.formula(out_formula))
 
     if (length(formulaChar) == 3) {
@@ -177,52 +181,52 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
   }
 
 
-#   # Checking correspondence between formula names and design names ----------
-#
-#   varNames <- all.vars(stats::as.formula(out_formula))
-#   matchesVarNames <- varNames %in% names(out_design)
-#   if (!all(matchesVarNames, na.rm = FALSE)) {
-#     stop(
-#       "Some of the variable names (", varNames[!matchesVarNames],
-#       "), present in the formula argument,
-#          do not correspond to one of the column names of the design argument.
-#          Please adapt either one of both arguments."
-#     )
-#   }
-#
-#   # Checking correspondence between the rows of design and outcomes ----------
-#
-#   # check if rownames are given for outcomes
-#   if (is.null(rownames(out_outcomes))) {
-#     stop("rownames for outcomes is not present and needs to be defined")
-#   }
-#
-#   if (nrow(out_design) == nrow(out_outcomes)) {
-#     if (!identical(rownames(out_design), rownames(out_outcomes))) {
-#       # if same length but not well ordered/named
-#       if (all(rownames(out_design) %in% rownames(out_outcomes))) {
-#         warning("reordering the rownames of design to match those of outcomes")
-#         # reorder the rownames of design to match those of outcomes
-#         reorder_idx <- match(rownames(out_outcomes), rownames(out_design))
-#         out_design <- out_design[reorder_idx, ]
-#         if (!identical(rownames(out_design), rownames(out_outcomes))) {
-#           # if the reordering fails
-#           stop("mismatch between the rownames of design and outcomes")
-#         }
-#       } else {
-#         mismatch_names <- rownames(out_design)[!rownames(out_design) %in% rownames(out_outcomes)]
-#         stop(
-#           "some rownames of the design (", paste(mismatch_names, collapse = ", "),
-#           ") do not match the rownames of the outcomes"
-#         )
-#       }
-#     }
-#   } else {
-#     stop(
-#       "nrow of design (", nrow(out_design),
-#       ") is different from nrow outcomes (", nrow(out_outcomes), ")"
-#     )
-#   }
+  #   # Checking correspondence between formula names and design names ----------
+  #
+  #   varNames <- all.vars(stats::as.formula(out_formula))
+  #   matchesVarNames <- varNames %in% names(out_design)
+  #   if (!all(matchesVarNames, na.rm = FALSE)) {
+  #     stop(
+  #       "Some of the variable names (", varNames[!matchesVarNames],
+  #       "), present in the formula argument,
+  #          do not correspond to one of the column names of the design argument.
+  #          Please adapt either one of both arguments."
+  #     )
+  #   }
+  #
+  #   # Checking correspondence between the rows of design and outcomes ----------
+  #
+  #   # check if rownames are given for outcomes
+  #   if (is.null(rownames(out_outcomes))) {
+  #     stop("rownames for outcomes is not present and needs to be defined")
+  #   }
+  #
+  #   if (nrow(out_design) == nrow(out_outcomes)) {
+  #     if (!identical(rownames(out_design), rownames(out_outcomes))) {
+  #       # if same length but not well ordered/named
+  #       if (all(rownames(out_design) %in% rownames(out_outcomes))) {
+  #         warning("reordering the rownames of design to match those of outcomes")
+  #         # reorder the rownames of design to match those of outcomes
+  #         reorder_idx <- match(rownames(out_outcomes), rownames(out_design))
+  #         out_design <- out_design[reorder_idx, ]
+  #         if (!identical(rownames(out_design), rownames(out_outcomes))) {
+  #           # if the reordering fails
+  #           stop("mismatch between the rownames of design and outcomes")
+  #         }
+  #       } else {
+  #         mismatch_names <- rownames(out_design)[!rownames(out_design) %in% rownames(out_outcomes)]
+  #         stop(
+  #           "some rownames of the design (", paste(mismatch_names, collapse = ", "),
+  #           ") do not match the rownames of the outcomes"
+  #         )
+  #       }
+  #     }
+  #   } else {
+  #     stop(
+  #       "nrow of design (", nrow(out_design),
+  #       ") is different from nrow outcomes (", nrow(out_outcomes), ")"
+  #     )
+  #   }
 
 
 

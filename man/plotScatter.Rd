@@ -5,9 +5,10 @@
 \title{Scatter plot}
 \usage{
 plotScatter(
-  Y,
-  xy,
+  Y = NULL,
   design = NULL,
+  lmpData = NULL,
+  xy,
   color = NULL,
   shape = NULL,
   points_labs = NULL,
@@ -27,9 +28,11 @@ plotScatter(
 \arguments{
 \item{Y}{A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.}
 
-\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).}
-
 \item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+
+\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+
+\item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).}
 
 \item{color}{If not \code{NULL}, a character string giving the column name of \code{design} to be used as color. Currently treated as a discrete variable.}
 
@@ -65,6 +68,10 @@ A \code{ggplot2} scatter plot.
 \description{
 Produces a plot describing the relationship between two columns of the outcomes matrix \eqn{Y}. Colors and symbols can be chosen for the levels of the design factors. Ellipses, polygons or segments can be added to group different sets of points on the graph.
 }
+\details{
+Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
+The same rule applies for \code{design} or \code{lmpData}.
+}
 \examples{
 
 data("UCH")
@@ -72,59 +79,69 @@ data("UCH")
 # Without the design info
 plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 
+# equivalent to:
+plotScatter(lmpData = UCH, xy = c(453, 369))
+
 # With color and shape
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), color = "Hippurate",
-    shape = "Citrate"
+  lmpData = UCH,
+  xy = c(453, 369), color = "Hippurate",
+  shape = "Citrate"
+)
+
+# equivalent to:
+plotScatter(
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), color = "Hippurate",
+  shape = "Citrate"
 )
 
 # With color and shapes
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), color = "Hippurate",
-    drawShapes = "ellipse"
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), color = "Hippurate",
+  drawShapes = "ellipse"
 )
 
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), color = "Hippurate",
-    drawShapes = "polygon"
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), color = "Hippurate",
+  drawShapes = "polygon"
 )
 
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), color = "Hippurate",
-    drawShapes = "segment"
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), color = "Hippurate",
+  drawShapes = "segment"
 )
 
 # With customized shapes
 library(ggplot2)
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), shape = "Hippurate", size = 3
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), shape = "Hippurate", size = 3
 ) +
-    scale_discrete_identity(
-        aesthetics = "shape",
-        guide = "legend"
-    )
+  scale_discrete_identity(
+    aesthetics = "shape",
+    guide = "legend"
+  )
 
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), shape = "Hippurate"
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), shape = "Hippurate"
 ) +
-    scale_shape_discrete(solid = FALSE)
+  scale_shape_discrete(solid = FALSE)
 
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), shape = "Hippurate"
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), shape = "Hippurate"
 ) +
-    scale_shape_manual(values = c(15, 16, 17))
+  scale_shape_manual(values = c(15, 16, 17))
 
 # With labels
 plotScatter(
-    Y = UCH$outcomes, design = UCH$design,
-    xy = c(453, 369), points_labs = rownames(UCH$design)
+  Y = UCH$outcomes, design = UCH$design,
+  xy = c(453, 369), points_labs = rownames(UCH$design)
 )
 
 }

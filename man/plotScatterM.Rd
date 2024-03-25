@@ -5,9 +5,10 @@
 \title{Scatter plot matrix}
 \usage{
 plotScatterM(
-  Y,
+  Y = NULL,
+  design = NULL,
+  lmpData = NULL,
   cols,
-  design,
   labelVector = NULL,
   title = "Scatterplot matrix",
   varname.colorup = NULL,
@@ -23,9 +24,11 @@ plotScatterM(
 \arguments{
 \item{Y}{\eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.}
 
-\item{cols}{A vector with either the column names of the \eqn{Y} matrix to plot (character) or the column index positions.}
-
 \item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+
+\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+
+\item{cols}{A vector with either the column names of the \eqn{Y} matrix to plot (character) or the column index positions.}
 
 \item{labelVector}{Labels to display on the diagonal. If \code{NULL}, the column names are deduced from \code{cols}.}
 
@@ -53,17 +56,32 @@ A matrix of scatter plots.
 \description{
 Produces a scatter plot matrix between the selected columns of the outcomes matrix \eqn{Y} choosing specific colors and symbols for up to four factors from the design on the upper and lower diagonals.
 }
+\details{
+Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
+The same rule applies for \code{design} or \code{lmpData}.
+}
 \examples{
 
 data("UCH")
 
+# basic usage
 plotScatterM(
-    Y = UCH$outcomes, cols = c(1:4), design = UCH$design,
-    varname.colorup = "Hippurate", varname.colordown = "Citrate",
-    varname.pchup = "Time", varname.pchdown = "Day",
-    vec.colorup = c(2, 4, 1),
-    vec.colordown = c("orange", "purple", "green"),
-    vec.pchup = c(1, 2), vec.pchdown = c("a", "b")
+  Y = UCH$outcomes, design = UCH$design, cols = c(1:4)
+)
+
+# equivalent to:
+plotScatterM(
+  lmpData = UCH, cols = c(1:4)
+)
+
+# with optionnal arguments
+plotScatterM(
+  Y = UCH$outcomes, design = UCH$design, cols = c(1:4),
+  varname.colorup = "Hippurate", varname.colordown = "Citrate",
+  varname.pchup = "Time", varname.pchdown = "Day",
+  vec.colorup = c(2, 4, 1),
+  vec.colordown = c("orange", "purple", "green"),
+  vec.pchup = c(1, 2), vec.pchdown = c("a", "b")
 )
 
 }

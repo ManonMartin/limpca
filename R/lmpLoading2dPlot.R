@@ -40,17 +40,17 @@
 #' metadata <- data.frame(peaks)
 #'
 #' lmpLoading2dPlot(resASCA,
-#'     effectNames = "Hippurate",
-#'     metadata = metadata, addRownames = TRUE, color = "peaks",
-#'     shape = "peaks"
+#'   effectNames = "Hippurate",
+#'   metadata = metadata, addRownames = TRUE, color = "peaks",
+#'   shape = "peaks"
 #' )
 #'
 #' # changing max.overlaps of ggrepel
 #' options(ggrepel.max.overlaps = 30)
 #' lmpLoading2dPlot(resASCA,
-#'     effectNames = "Hippurate",
-#'     metadata = metadata, addRownames = TRUE, color = "peaks",
-#'     shape = "peaks", pl_n = 20
+#'   effectNames = "Hippurate",
+#'   metadata = metadata, addRownames = TRUE, color = "peaks",
+#'   shape = "peaks", pl_n = 20
 #' )
 #'
 #' @importFrom methods hasArg
@@ -64,240 +64,240 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
                              metadata = NULL,
                              drawOrigin = TRUE,
                              ...) {
-    mcall <- as.list(match.call())[-1L]
+  mcall <- as.list(match.call())[-1L]
 
-    # checks ===================
-    checkArg(resLmpPcaEffects, c("list"), can.be.null = FALSE)
-    checkArg(effectNames, c("str"), can.be.null = TRUE)
-    checkArg(axes, c("int", "pos"), can.be.null = FALSE)
-    checkArg(metadata, "data.frame", can.be.null = TRUE)
+  # checks ===================
+  checkArg(resLmpPcaEffects, c("list"), can.be.null = FALSE)
+  checkArg(effectNames, c("str"), can.be.null = TRUE)
+  checkArg(axes, c("int", "pos"), can.be.null = FALSE)
+  checkArg(metadata, "data.frame", can.be.null = TRUE)
 
-    if (!all(effectNames %in% names(resLmpPcaEffects))) {
-        stop("One of the effects from effectNames is not in resLmpPcaEffects.")
+  if (!all(effectNames %in% names(resLmpPcaEffects))) {
+    stop("One of the effects from effectNames is not in resLmpPcaEffects.")
+  }
+
+  if (!identical(
+    names(resLmpPcaEffects[seq((length(resLmpPcaEffects) - 7), length(resLmpPcaEffects))]),
+    c(
+      "Residuals", "lmpDataList", "effectsNamesUnique",
+      "effectsNamesUniqueCombined",
+      "method", "type3SS", "variationPercentages",
+      "combineEffects"
+    )
+  )) {
+    stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+  }
+
+
+  if (is.null(effectNames)) {
+    effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
+    effectNames <- effectNames[effectNames != "Intercept"]
+    effectNames <- c(effectNames, "Residuals")
+  }
+
+
+  # loadings   ===================
+
+  loadings <- lapply(effectNames, function(x) {
+    resLmpPcaEffects[[x]][["loadings"]]
+  })
+  names(loadings) <- effectNames
+
+  if (length(axes) != 2) {
+    stop("axes is not of length 2")
+  }
+
+  if (max(axes) > ncol(loadings[[effectNames[1]]])) {
+    stop(
+      "axes (", paste(axes, collapse = ","),
+      ") is beyond the ncol of loadings (", ncol(loadings), ")"
+    )
+  }
+
+
+
+  # percentage of explained variance   ===================
+
+  pc_var_fun <- function(effect) {
+    pc_var <- resLmpPcaEffects[[effect]][["var"]]
+    pc_var_x <- format(pc_var[pc_var >= 0.1],
+      digits = 2, trim = TRUE
+    )
+    pc_var_y <- format(pc_var[pc_var < 0.1],
+      digits = 2,
+      scientific = TRUE, trim = TRUE
+    )
+    pc_var_char <- as.character(pc_var)
+    pc_var_char[pc_var >= 0.1] <- pc_var_x
+    pc_var_char[pc_var < 0.1] <- pc_var_y
+
+    pc_var_char <- paste0(
+      "PC", axes, " (",
+      pc_var_char[axes], "%)"
+    )
+
+    return(pc_var_char)
+  }
+
+  pc_axes <- lapply(effectNames, pc_var_fun)
+  names(pc_axes) <- effectNames
+
+
+  # distance measure and labels  ===================
+
+  if (methods::hasArg("points_labs")) {
+    addRownames <- FALSE
+  } else {
+    labs <- colnames(resLmpPcaEffects$lmpDataList$outcomes)
+    dist_labels_fun <- function(effect, axes, labs) {
+      load <- resLmpPcaEffects[[effect]][["loadings"]][, axes]
+      singvar <- resLmpPcaEffects[[effect]][["singvar"]][axes]
+      dista <- load^2 %*% singvar^2
+      ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
+      labs[-ids] <- ""
+      labs
     }
 
-    if (!identical(
-        names(resLmpPcaEffects[seq((length(resLmpPcaEffects) - 7), length(resLmpPcaEffects))]),
-        c(
-            "Residuals", "lmpDataList", "effectsNamesUnique",
-            "effectsNamesUniqueCombined",
-            "method", "type3SS", "variationPercentages",
-            "combineEffects"
+    points_labels <- lapply(effectNames, dist_labels_fun,
+      axes = axes, labs = labs
+    )
+
+    names(points_labels) <- effectNames
+  }
+
+
+
+
+
+  # graphical parameters   ===================
+
+  buildFig <- function(effect) {
+    title <- paste(
+      effect, ":", resLmpPcaEffects$method,
+      "loading plot"
+    )
+
+    xlab_pc <- pc_axes[[effect]][1]
+    ylab_pc <- pc_axes[[effect]][2]
+
+    xlim_val <- c(
+      1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]]),
+      1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]])
+    )
+
+    # Checking the second component
+    if (resLmpPcaEffects$method != "APCA") {
+      if (resLmpPcaEffects[[effect]][["var"]][axes[2]] < 1) {
+        warning("The variance of PC2 is inferior to 1%. Graph scaled")
+        ylim_val <- c(
+          100 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
+          100 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
         )
-    )) {
-        stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
-    }
-
-
-    if (is.null(effectNames)) {
-        effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
-        effectNames <- effectNames[effectNames != "Intercept"]
-        effectNames <- c(effectNames, "Residuals")
-    }
-
-
-    # loadings   ===================
-
-    loadings <- lapply(effectNames, function(x) {
-        resLmpPcaEffects[[x]][["loadings"]]
-    })
-    names(loadings) <- effectNames
-
-    if (length(axes) != 2) {
-        stop("axes is not of length 2")
-    }
-
-    if (max(axes) > ncol(loadings[[effectNames[1]]])) {
-        stop(
-            "axes (", paste(axes, collapse = ","),
-            ") is beyond the ncol of loadings (", ncol(loadings), ")"
+      } else {
+        ylim_val <- c(
+          1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
+          1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
         )
-    }
-
-
-
-    # percentage of explained variance   ===================
-
-    pc_var_fun <- function(effect) {
-        pc_var <- resLmpPcaEffects[[effect]][["var"]]
-        pc_var_x <- format(pc_var[pc_var >= 0.1],
-            digits = 2, trim = TRUE
-        )
-        pc_var_y <- format(pc_var[pc_var < 0.1],
-            digits = 2,
-            scientific = TRUE, trim = TRUE
-        )
-        pc_var_char <- as.character(pc_var)
-        pc_var_char[pc_var >= 0.1] <- pc_var_x
-        pc_var_char[pc_var < 0.1] <- pc_var_y
-
-        pc_var_char <- paste0(
-            "PC", axes, " (",
-            pc_var_char[axes], "%)"
-        )
-
-        return(pc_var_char)
-    }
-
-    pc_axes <- lapply(effectNames, pc_var_fun)
-    names(pc_axes) <- effectNames
-
-
-    # distance measure and labels  ===================
-
-    if (methods::hasArg("points_labs")) {
-        addRownames <- FALSE
+      }
     } else {
-        labs <- colnames(resLmpPcaEffects$lmpDataList$outcomes)
-        dist_labels_fun <- function(effect, axes, labs) {
-            load <- resLmpPcaEffects[[effect]][["loadings"]][, axes]
-            singvar <- resLmpPcaEffects[[effect]][["singvar"]][axes]
-            dista <- load^2 %*% singvar^2
-            ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
-            labs[-ids] <- ""
-            labs
-        }
-
-        points_labels <- lapply(effectNames, dist_labels_fun,
-            axes = axes, labs = labs
-        )
-
-        names(points_labels) <- effectNames
+      ylim_val <- c(
+        1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
+        1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
+      )
     }
 
+    # Building plots
 
-
-
-
-    # graphical parameters   ===================
-
-    buildFig <- function(effect) {
-        title <- paste(
-            effect, ":", resLmpPcaEffects$method,
-            "loading plot"
-        )
-
-        xlab_pc <- pc_axes[[effect]][1]
-        ylab_pc <- pc_axes[[effect]][2]
-
-        xlim_val <- c(
-            1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]]),
-            1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]])
-        )
-
-        # Checking the second component
-        if (resLmpPcaEffects$method != "APCA") {
-            if (resLmpPcaEffects[[effect]][["var"]][axes[2]] < 1) {
-                warning("The variance of PC2 is inferior to 1%. Graph scaled")
-                ylim_val <- c(
-                    100 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
-                    100 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
-                )
-            } else {
-                ylim_val <- c(
-                    1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
-                    1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
-                )
-            }
+    if (addRownames) {
+      if (!"xlab" %in% names(mcall)) {
+        if (!"ylab" %in% names(mcall)) {
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            xlab = xlab_pc, ylab = ylab_pc,
+            design = metadata,
+            points_labs = points_labels[[effect]],
+            drawOrigin = drawOrigin,
+            ...
+          )
         } else {
-            ylim_val <- c(
-                1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
-                1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
-            )
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            xlab = xlab_pc,
+            design = metadata,
+            points_labs = points_labels[[effect]],
+            drawOrigin = drawOrigin,
+            ...
+          )
         }
-
-        # Building plots
-
-        if (addRownames) {
-            if (!"xlab" %in% names(mcall)) {
-                if (!"ylab" %in% names(mcall)) {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        xlab = xlab_pc, ylab = ylab_pc,
-                        design = metadata,
-                        points_labs = points_labels[[effect]],
-                        drawOrigin = drawOrigin,
-                        ...
-                    )
-                } else {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        xlab = xlab_pc,
-                        design = metadata,
-                        points_labs = points_labels[[effect]],
-                        drawOrigin = drawOrigin,
-                        ...
-                    )
-                }
-            } else {
-                if (!"ylab" %in% names(mcall)) {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        ylab = ylab_pc,
-                        design = metadata,
-                        points_labs = points_labels[[effect]],
-                        drawOrigin = drawOrigin,
-                        ...
-                    )
-                } else {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        design = metadata,
-                        points_labs = points_labels[[effect]],
-                        drawOrigin = drawOrigin,
-                        ...
-                    )
-                }
-            }
+      } else {
+        if (!"ylab" %in% names(mcall)) {
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            ylab = ylab_pc,
+            design = metadata,
+            points_labs = points_labels[[effect]],
+            drawOrigin = drawOrigin,
+            ...
+          )
         } else {
-            if (!"xlab" %in% names(mcall)) {
-                if (!"ylab" %in% names(mcall)) {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        xlab = xlab_pc, ylab = ylab_pc,
-                        design = metadata,
-                        drawOrigin = drawOrigin, ...
-                    )
-                } else {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        xlab = xlab_pc,
-                        design = metadata,
-                        drawOrigin = drawOrigin, ...
-                    )
-                }
-            } else {
-                if (!"ylab" %in% names(mcall)) {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        ylab = ylab_pc,
-                        design = metadata,
-                        drawOrigin = drawOrigin, ...
-                    )
-                } else {
-                    fig <- plotScatter(
-                        Y = loadings[[effect]], xy = axes,
-                        design = metadata,
-                        drawOrigin = drawOrigin, ...
-                    )
-                }
-            }
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            design = metadata,
+            points_labs = points_labels[[effect]],
+            drawOrigin = drawOrigin,
+            ...
+          )
         }
-
-
-        fig <- fig + ylim(ylim_val) + xlim(xlim_val) +
-            ggtitle(title)
+      }
+    } else {
+      if (!"xlab" %in% names(mcall)) {
+        if (!"ylab" %in% names(mcall)) {
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            xlab = xlab_pc, ylab = ylab_pc,
+            design = metadata,
+            drawOrigin = drawOrigin, ...
+          )
+        } else {
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            xlab = xlab_pc,
+            design = metadata,
+            drawOrigin = drawOrigin, ...
+          )
+        }
+      } else {
+        if (!"ylab" %in% names(mcall)) {
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            ylab = ylab_pc,
+            design = metadata,
+            drawOrigin = drawOrigin, ...
+          )
+        } else {
+          fig <- plotScatter(
+            Y = loadings[[effect]], xy = axes,
+            design = metadata,
+            drawOrigin = drawOrigin, ...
+          )
+        }
+      }
     }
 
-    # loadings plot  ===================
 
-    fig <- lapply(effectNames, buildFig)
-    names(fig) <- effectNames
+    fig <- fig + ylim(ylim_val) + xlim(xlim_val) +
+      ggtitle(title)
+  }
 
-    if (length(fig) == 1) {
-        fig <- fig[[1]]
-    }
+  # loadings plot  ===================
+
+  fig <- lapply(effectNames, buildFig)
+  names(fig) <- effectNames
+
+  if (length(fig) == 1) {
+    fig <- fig[[1]]
+  }
 
 
-    return(fig)
+  return(fig)
 }

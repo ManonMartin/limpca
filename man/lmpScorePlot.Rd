@@ -34,15 +34,15 @@ resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 resASCA <- lmpPcaEffects(resLmpEffectMatrices)
 # Score plot of Hippurate effect matrix
 lmpScorePlot(resASCA,
-    effectNames = "Hippurate",
-    color = "Hippurate", shape = "Hippurate"
+  effectNames = "Hippurate",
+  color = "Hippurate", shape = "Hippurate"
 )
 
 # PCA decomposition of augmented effect matrices (APCA)
 resASCA <- lmpPcaEffects(resLmpEffectMatrices, method = "APCA")
 # Score plot of Hippurate augmented effect matrix
 lmpScorePlot(resASCA,
-    effectNames = "Hippurate",
-    color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse"
+  effectNames = "Hippurate",
+  color = "Hippurate", shape = "Hippurate", drawShapes = "ellipse"
 )
 }

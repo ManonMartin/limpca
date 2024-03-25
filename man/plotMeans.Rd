@@ -5,8 +5,9 @@
 \title{Means plot}
 \usage{
 plotMeans(
-  Y,
-  design,
+  Y = NULL,
+  design = NULL,
+  lmpData = NULL,
   cols = NULL,
   x,
   z = NULL,
@@ -26,6 +27,8 @@ plotMeans(
 \item{Y}{A numerical matrix containing the columns to be drawn.}
 
 \item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+
+\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
 
 \item{cols}{A vector with either the column name(s) of the \eqn{Y} matrix to plot (character) or the column index position(s) (integer).}
 
@@ -59,25 +62,35 @@ A list of \code{ggplot2} means plot(s).
 \description{
 For a given response variable, draws a plot of the response means by levels of up to three categorical factors from the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
 }
+\details{
+Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
+The same rule applies for \code{design} or \code{lmpData}.
+}
 \examples{
 
 data("UCH")
 # 1 factor
 plotMeans(
-    Y = UCH$outcomes, design = UCH$design, cols = "4.0628702",
-    x = "Hippurate", color = "blue"
+  Y = UCH$outcomes, design = UCH$design, cols = "4.0628702",
+  x = "Hippurate", color = "blue"
+)
+
+# equivalent to:
+plotMeans(
+  lmpData = UCH, cols = "4.0628702",
+  x = "Hippurate", color = "blue"
 )
 
 # 2 factors
 plotMeans(
-    Y = UCH$outcomes, design = UCH$design, cols = c(364, 365),
-    x = "Hippurate", z = "Time", shape = c(15, 1)
+  Y = UCH$outcomes, design = UCH$design, cols = c(364, 365),
+  x = "Hippurate", z = "Time", shape = c(15, 1)
 )
 
 # 3 factors
 plotMeans(
-    Y = UCH$outcomes, design = UCH$design, cols = c(364, 365),
-    x = "Hippurate", z = "Time", w = "Citrate", linetype = c(3, 3)
+  Y = UCH$outcomes, design = UCH$design, cols = c(364, 365),
+  x = "Hippurate", z = "Time", w = "Citrate", linetype = c(3, 3)
 )
 
 }

@@ -49,8 +49,8 @@ data("UCH")
 resLmpModelMatrix <- lmpModelMatrix(UCH)
 resLmpEffectMatrices <- lmpEffectMatrices(resLmpModelMatrix)
 resASCA <- lmpPcaEffects(
-    resLmpEffectMatrices = resLmpEffectMatrices,
-    method = "ASCA", combineEffects = list(c("Hippurate", "Time", "Hippurate:Time"))
+  resLmpEffectMatrices = resLmpEffectMatrices,
+  method = "ASCA", combineEffects = list(c("Hippurate", "Time", "Hippurate:Time"))
 )
 
 # Effect plot for an interaction effect

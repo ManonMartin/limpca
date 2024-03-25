@@ -41,116 +41,116 @@
 
 
 lmpEffectMatrices <- function(resLmpModelMatrix, SS = TRUE, contrastList = NA) {
-    # Checking the object
-    if (!is.list(resLmpModelMatrix)) {
-        stop("Argument resLmpModelMatrix is not a list")
-    }
-    if (length(resLmpModelMatrix) != 5) {
-        stop("List does not contain 5 elements")
-    }
-    if (names(resLmpModelMatrix)[1] != "lmpDataList" |
-        names(resLmpModelMatrix)[2] != "modelMatrix" |
-        names(resLmpModelMatrix)[3] != "modelMatrixByEffect" |
-        names(resLmpModelMatrix)[4] != "effectsNamesUnique" |
-        names(resLmpModelMatrix)[5] != "effectsNamesAll") {
-        stop("Argument is not a resLmpModelMatrix object")
-    }
-    checkArg(SS, c("bool", "length1"), can.be.null = FALSE)
+  # Checking the object
+  if (!is.list(resLmpModelMatrix)) {
+    stop("Argument resLmpModelMatrix is not a list")
+  }
+  if (length(resLmpModelMatrix) != 5) {
+    stop("List does not contain 5 elements")
+  }
+  if (names(resLmpModelMatrix)[1] != "lmpDataList" |
+    names(resLmpModelMatrix)[2] != "modelMatrix" |
+    names(resLmpModelMatrix)[3] != "modelMatrixByEffect" |
+    names(resLmpModelMatrix)[4] != "effectsNamesUnique" |
+    names(resLmpModelMatrix)[5] != "effectsNamesAll") {
+    stop("Argument is not a resLmpModelMatrix object")
+  }
+  checkArg(SS, c("bool", "length1"), can.be.null = FALSE)
 
-    # Attribute a name in the function environment
-    formula <- resLmpModelMatrix$lmpDataList$formula
-    design <- resLmpModelMatrix$lmpDataList$design
-    outcomes <- resLmpModelMatrix$lmpDataList$outcomes
-    lmpDataList <- resLmpModelMatrix$lmpDataList
-    modelMatrix <- resLmpModelMatrix$modelMatrix
-    modelMatrixByEffect <- resLmpModelMatrix$modelMatrixByEffect
-    effectsNamesAll <- resLmpModelMatrix$effectsNamesAll
-    effectsNamesUnique <- resLmpModelMatrix$effectsNamesUnique
-    nEffect <- length(effectsNamesUnique)
+  # Attribute a name in the function environment
+  formula <- resLmpModelMatrix$lmpDataList$formula
+  design <- resLmpModelMatrix$lmpDataList$design
+  outcomes <- resLmpModelMatrix$lmpDataList$outcomes
+  lmpDataList <- resLmpModelMatrix$lmpDataList
+  modelMatrix <- resLmpModelMatrix$modelMatrix
+  modelMatrixByEffect <- resLmpModelMatrix$modelMatrixByEffect
+  effectsNamesAll <- resLmpModelMatrix$effectsNamesAll
+  effectsNamesUnique <- resLmpModelMatrix$effectsNamesUnique
+  nEffect <- length(effectsNamesUnique)
 
-    # Creating empty effects matrices
-    effectMatrices <- list()
-    length(effectMatrices) <- nEffect
-    names(effectMatrices) <- effectsNamesUnique
+  # Creating empty effects matrices
+  effectMatrices <- list()
+  length(effectMatrices) <- nEffect
+  names(effectMatrices) <- effectsNamesUnique
 
-    # GLM decomposition calculated by using glm.fit and alply on outcomes
+  # GLM decomposition calculated by using glm.fit and alply on outcomes
 
-    # The following line gives an error of type: Error in glm.fit(modelMatrix, xx) : NAs in V(mu),
-    # it is temporarily replaced by a loop
-    # resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
+  # The following line gives an error of type: Error in glm.fit(modelMatrix, xx) : NAs in V(mu),
+  # it is temporarily replaced by a loop
+  # resGLM <- plyr::alply(outcomes, 2, function(xx) glm.fit(modelMatrix, xx))
 
-    resGLM <- list()
-    for (i in seq_len(ncol(outcomes))) resGLM[[i]] <- stats::glm.fit(modelMatrix, outcomes[, i])
-    parameters <- t(plyr::laply(resGLM, function(xx) xx$coefficients))
-    predictedValues <- t(plyr::laply(resGLM, function(xx) xx$fitted.values))
-    residuals <- t(plyr::laply(resGLM, function(xx) xx$residuals))
-    colnames(residuals) <- colnames(predictedValues) <- colnames(outcomes)
+  resGLM <- list()
+  for (i in seq_len(ncol(outcomes))) resGLM[[i]] <- stats::glm.fit(modelMatrix, outcomes[, i])
+  parameters <- t(plyr::laply(resGLM, function(xx) xx$coefficients))
+  predictedValues <- t(plyr::laply(resGLM, function(xx) xx$fitted.values))
+  residuals <- t(plyr::laply(resGLM, function(xx) xx$residuals))
+  colnames(residuals) <- colnames(predictedValues) <- colnames(outcomes)
 
-    # Filling effectMatrices
-    for (iEffect in seq_len(nEffect)) {
-        selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
-        selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
-        # Effect matrices
-        effectMatrices[[iEffect]] <- t(plyr::aaply(
-            parameters, 2,
-            function(xx) {
-                as.matrix(modelMatrix[, selection]) %*%
-                    xx[selection]
-            }
-        ))
-        colnames(effectMatrices[[iEffect]]) <- colnames(outcomes)
-    }
+  # Filling effectMatrices
+  for (iEffect in seq_len(nEffect)) {
+    selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
+    selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
+    # Effect matrices
+    effectMatrices[[iEffect]] <- t(plyr::aaply(
+      parameters, 2,
+      function(xx) {
+        as.matrix(modelMatrix[, selection]) %*%
+          xx[selection]
+      }
+    ))
+    colnames(effectMatrices[[iEffect]]) <- colnames(outcomes)
+  }
 
 
-    resLmpEffectMatrices <- list(
-        lmpDataList = lmpDataList,
-        modelMatrix = modelMatrix,
-        modelMatrixByEffect = modelMatrixByEffect,
-        effectsNamesUnique = effectsNamesUnique,
-        effectsNamesAll = effectsNamesAll,
-        effectMatrices = effectMatrices,
-        predictedvalues = predictedValues,
-        residuals = residuals,
-        parameters = parameters
-    )
+  resLmpEffectMatrices <- list(
+    lmpDataList = lmpDataList,
+    modelMatrix = modelMatrix,
+    modelMatrixByEffect = modelMatrixByEffect,
+    effectsNamesUnique = effectsNamesUnique,
+    effectsNamesAll = effectsNamesAll,
+    effectMatrices = effectMatrices,
+    predictedvalues = predictedValues,
+    residuals = residuals,
+    parameters = parameters
+  )
 
-    # Compute the Sum of Squares Type 3
-    if (SS == TRUE) {
-        if (is.na(contrastList)) {
-            L <- contrastSS(resLmpModelMatrix)
-        } else {
-            L <- contrastList
-        }
-        resLmpSS <- lmpSS(resLmpEffectMatrices, L)
-
-        # Plot of the total contribution
-        contrib <- as.data.frame(resLmpSS$variationPercentages)
-        rownames(contrib) <- ModelAbbrev(rownames(contrib))
-
-        plot <- ggplot2::ggplot(
-            data = contrib,
-            ggplot2::aes(
-                x = stats::reorder(
-                    rownames(contrib),
-                    -contrib[, 1]
-                ),
-                y = contrib[, 1]
-            )
-        ) +
-            ggplot2::geom_bar(stat = "identity") +
-            ggplot2::xlab("Effects") +
-            ggplot2::ylab("Percentage of Variance") +
-            ggplot2::theme_bw()
-
-        resLmpEffectMatrices <- c(resLmpEffectMatrices, resLmpSS,
-            varPercentagesPlot = list(plot)
-        )
+  # Compute the Sum of Squares Type 3
+  if (SS == TRUE) {
+    if (is.na(contrastList)) {
+      L <- contrastSS(resLmpModelMatrix)
     } else {
-        resLmpEffectMatrices <- c(resLmpEffectMatrices,
-            type3SS = NA,
-            variationPercentages = NA, varPercentagesPlot = NA
-        )
+      L <- contrastList
     }
+    resLmpSS <- lmpSS(resLmpEffectMatrices, L)
 
-    return(resLmpEffectMatrices)
+    # Plot of the total contribution
+    contrib <- as.data.frame(resLmpSS$variationPercentages)
+    rownames(contrib) <- ModelAbbrev(rownames(contrib))
+
+    plot <- ggplot2::ggplot(
+      data = contrib,
+      ggplot2::aes(
+        x = stats::reorder(
+          rownames(contrib),
+          -contrib[, 1]
+        ),
+        y = contrib[, 1]
+      )
+    ) +
+      ggplot2::geom_bar(stat = "identity") +
+      ggplot2::xlab("Effects") +
+      ggplot2::ylab("Percentage of Variance") +
+      ggplot2::theme_bw()
+
+    resLmpEffectMatrices <- c(resLmpEffectMatrices, resLmpSS,
+      varPercentagesPlot = list(plot)
+    )
+  } else {
+    resLmpEffectMatrices <- c(resLmpEffectMatrices,
+      type3SS = NA,
+      variationPercentages = NA, varPercentagesPlot = NA
+    )
+  }
+
+  return(resLmpEffectMatrices)
 }

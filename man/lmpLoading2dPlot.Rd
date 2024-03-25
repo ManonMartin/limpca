@@ -62,17 +62,17 @@ peaks[id_hip] <- "hip"
 metadata <- data.frame(peaks)
 
 lmpLoading2dPlot(resASCA,
-    effectNames = "Hippurate",
-    metadata = metadata, addRownames = TRUE, color = "peaks",
-    shape = "peaks"
+  effectNames = "Hippurate",
+  metadata = metadata, addRownames = TRUE, color = "peaks",
+  shape = "peaks"
 )
 
 # changing max.overlaps of ggrepel
 options(ggrepel.max.overlaps = 30)
 lmpLoading2dPlot(resASCA,
-    effectNames = "Hippurate",
-    metadata = metadata, addRownames = TRUE, color = "peaks",
-    shape = "peaks", pl_n = 20
+  effectNames = "Hippurate",
+  metadata = metadata, addRownames = TRUE, color = "peaks",
+  shape = "peaks", pl_n = 20
 )
 
 }
