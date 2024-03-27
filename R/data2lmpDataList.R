@@ -1,15 +1,15 @@
-#' @export data2lmpDataList
-#' @title Converts data to a lmpDataList list.
+#' @export data2LmpDataList
+#' @title Converts data to a lmpDataList.
 #'
 #' @description
-#' Creates the lmpDataList list from a SummarizedExperiment or by manually defining the design, the outcomes and the model formula.
+#' Creates the lmpDataList from a SummarizedExperiment or by manually defining the design, the outcomes and the model formula.
 #' lmpDataList serves as an input for the \code{\link{lmpModelMatrix}} function to start the limpca modeling.
 #'
 #' @param se A \code{\link{SummarizedExperiment}} object.
 #' @param assay_name If not \code{NULL} (default), a character string naming the assay from the \code{\link{SummarizedExperiment}} object \code{se}. If \code{NULL}, the first assay is selected.
-#' @param outcomes If not \code{NULL}  (default), a numerical matrix with \emph{n} observations and \emph{m} response variables. The rownames needs to be non-NULL and match those of the design matrix.
+#' @param outcomes If not \code{NULL} (default), a numerical matrix with \emph{n} observations and \emph{m} response variables. The rownames needs to be non-NULL and match those of the design matrix.
 #' @param design If not \code{NULL} (default), a data.frame with the experimental design of \emph{n} observations and \emph{q} explanatory variables. The rownames of design has to match the rownames of outcomes.
-#' @param formula If not \code{NULL}  (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should match the column names of the design
+#' @param formula If not \code{NULL} (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should match the column names of the design
 #' @param verbose If \code{TRUE}, prints useful information about the outputted list.
 #'
 #' @return A list with the 3 following named elements:
@@ -32,7 +32,7 @@
 #'
 #' Note that there is a priority to the \code{outcomes}, \code{design} and \code{formula}
 #' arguments if they are not \code{NULL} (e.g. if both \code{se} and \code{outcomes} arguments are provided,
-#' the resulting outcomes matrix will be from the \code{outcomes} argument). outcomes and design elements are mandatory.
+#' the resulting outcomes matrix will be from the \code{outcomes} argument). \code{outcomes} and \code{design} elements are mandatory.
 #'
 #' Multiple checks are performed to ensure that the data are correctly formatted:
 #' - the rownames of \code{design} and \code{outcomes} should match
@@ -47,7 +47,7 @@
 #'
 #' ### create manually the dataset
 #'
-#' res <- data2lmpDataList(
+#' res <- data2LmpDataList(
 #'   outcomes = UCH$outcomes,
 #'   design = UCH$design[, 1, drop = FALSE], formula = "~ Hippurate"
 #' )
@@ -64,10 +64,10 @@
 #'   metadata = list(formula = "~ Hippurate + Citrate")
 #' )
 #'
-#' res <- data2lmpDataList(se, assay_name = "counts2")
+#' res <- data2LmpDataList(se, assay_name = "counts2")
 #'
 #' # changing the formula:
-#' res <- data2lmpDataList(se,
+#' res <- data2LmpDataList(se,
 #'   assay_name = "counts2",
 #'   formula = "~ Hippurate + Citrate + Time"
 #' )
@@ -77,7 +77,7 @@
 #' @importFrom S4Vectors metadata
 #' @importFrom methods is
 
-data2lmpDataList <- function(se = NULL, assay_name = NULL,
+data2LmpDataList <- function(se = NULL, assay_name = NULL,
                              outcomes = NULL, design = NULL,
                              formula = NULL,
                              verbose = TRUE) {
@@ -148,14 +148,14 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
 
 
   ## format the data ====================
-  lmpDataList <- list(
+  lmpData <- list(
     outcomes = out_outcomes,
     design = out_design,
     formula = out_formula
   )
 
   lmpDataListCheck(
-    lmpData = lmpDataList,
+    lmpDataList = lmpData,
     null_formula = TRUE
   )
 
@@ -179,55 +179,6 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
       stop("Please put the formula argument in its right form: ~ model terms")
     }
   }
-
-
-  #   # Checking correspondence between formula names and design names ----------
-  #
-  #   varNames <- all.vars(stats::as.formula(out_formula))
-  #   matchesVarNames <- varNames %in% names(out_design)
-  #   if (!all(matchesVarNames, na.rm = FALSE)) {
-  #     stop(
-  #       "Some of the variable names (", varNames[!matchesVarNames],
-  #       "), present in the formula argument,
-  #          do not correspond to one of the column names of the design argument.
-  #          Please adapt either one of both arguments."
-  #     )
-  #   }
-  #
-  #   # Checking correspondence between the rows of design and outcomes ----------
-  #
-  #   # check if rownames are given for outcomes
-  #   if (is.null(rownames(out_outcomes))) {
-  #     stop("rownames for outcomes is not present and needs to be defined")
-  #   }
-  #
-  #   if (nrow(out_design) == nrow(out_outcomes)) {
-  #     if (!identical(rownames(out_design), rownames(out_outcomes))) {
-  #       # if same length but not well ordered/named
-  #       if (all(rownames(out_design) %in% rownames(out_outcomes))) {
-  #         warning("reordering the rownames of design to match those of outcomes")
-  #         # reorder the rownames of design to match those of outcomes
-  #         reorder_idx <- match(rownames(out_outcomes), rownames(out_design))
-  #         out_design <- out_design[reorder_idx, ]
-  #         if (!identical(rownames(out_design), rownames(out_outcomes))) {
-  #           # if the reordering fails
-  #           stop("mismatch between the rownames of design and outcomes")
-  #         }
-  #       } else {
-  #         mismatch_names <- rownames(out_design)[!rownames(out_design) %in% rownames(out_outcomes)]
-  #         stop(
-  #           "some rownames of the design (", paste(mismatch_names, collapse = ", "),
-  #           ") do not match the rownames of the outcomes"
-  #         )
-  #       }
-  #     }
-  #   } else {
-  #     stop(
-  #       "nrow of design (", nrow(out_design),
-  #       ") is different from nrow outcomes (", nrow(out_outcomes), ")"
-  #     )
-  #   }
-
 
 
   # output ==============================
@@ -254,8 +205,8 @@ data2lmpDataList <- function(se = NULL, assay_name = NULL,
     message("| dim outcomes: ", nrow(out_outcomes), "x", ncol(out_outcomes))
     message("| formula: ", as.character(out_formula))
     message(
-      "| design variables (", ncol(out_design), "): ",
-      paste(paste(cn, cc_p), collapse = ", ")
+      "| design variables (", ncol(out_design), "): \n",
+      paste("*",paste(cn, cc_p), collapse = "\n")
     )
   }
 

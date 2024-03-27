@@ -7,7 +7,7 @@
 plotMeans(
   Y = NULL,
   design = NULL,
-  lmpData = NULL,
+  lmpDataList = NULL,
   cols = NULL,
   x,
   z = NULL,
@@ -24,11 +24,11 @@ plotMeans(
 )
 }
 \arguments{
-\item{Y}{A numerical matrix containing the columns to be drawn.}
+\item{Y}{A numerical matrix containing the columns to be drawn. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+\item{lmpDataList}{If not \code{NULL}, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
 
 \item{cols}{A vector with either the column name(s) of the \eqn{Y} matrix to plot (character) or the column index position(s) (integer).}
 
@@ -63,8 +63,8 @@ A list of \code{ggplot2} means plot(s).
 For a given response variable, draws a plot of the response means by levels of up to three categorical factors from the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
 }
 \details{
-Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
-The same rule applies for \code{design} or \code{lmpData}.
+Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
+The same rule applies for \code{design} or \code{lmpDataList}.
 }
 \examples{
 
@@ -77,7 +77,7 @@ plotMeans(
 
 # equivalent to:
 plotMeans(
-  lmpData = UCH, cols = "4.0628702",
+  lmpDataList = UCH, cols = "4.0628702",
   x = "Hippurate", color = "blue"
 )
 

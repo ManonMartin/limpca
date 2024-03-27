@@ -57,7 +57,7 @@ reference:
 - title: Data formatting
   desc:  ~
   contents:
-  - data2lmpDataList
+  - data2LmpDataList
 
 
 - title: Data exploration

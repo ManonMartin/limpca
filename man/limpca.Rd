@@ -10,6 +10,7 @@ This package has for objectives to provide a method to make Linear Models for hi
 \strong{The core functions of the package are:}
 
 \describe{
+  \item{\code{\link{data2LmpDataList}}}{Converts data to a lmpDataList, the input argument for \code{lmpModelMatrix}.}
   \item{\code{\link{lmpModelMatrix}}}{Creates the model matrix \eqn{\mathbf{X}} from the design matrix and the model formula.}
   \item{\code{\link{lmpEffectMatrices}}}{Estimates the model by OLS based on the outcomes and model matrices provided in the outputs of the \code{\link{lmpModelMatrix}} function and calculates the estimated effect matrices \eqn{\hat{\mathbf{M}}_0, \hat{\mathbf{M}}_1, ...\hat{\mathbf{M}}_F} and residual matrix \eqn{\hat{\mathbf{E}}}. It calculates also the type III percentage of variance explained by each effect.}
   \item{\code{\link{lmpBootstrapTests}}}{Tests the significance of one or a combination of the model effects using bootstrap. This function is based on the outputs of the \code{\link{lmpEffectMatrices}} function.}

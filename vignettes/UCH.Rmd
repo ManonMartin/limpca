@@ -14,52 +14,7 @@ vignette: >
    %\VignetteEngine{knitr::rmarkdown}
 editor_options: 
    chunk_output_type: console
-references:
-- id: Thiel2017
-  title: ASCA+ and APCA+ Extensions of ASCA and APCA in the analysis of unbalanced multifactorial designs
-  author:
-  - family: Thiel
-    given: Michel
-  - family: Feraud
-    given: Baptiste
-  - family: Govaerts
-    given: Bernadette
-  container-title: Journal of Chemometrics
-  type: article-journal
-  issued:
-    year: 2017
-- id: Guisset2019
-  title: Comparison of PARAFASCA, AComDim, and AMOPLS approaches in the multivariate GLM modelling of multi-factorial designs
-  author:
-  - family: Guisset
-    given: Severine
-  - family: Martin
-    given: Manon
-  - family: Govaerts
-    given: Bernadette
-  container-title: Chemometrics and Intelligent Laboratory Systems
-  type: article-journal
-  issued:
-    year: 2019
-- id: Thiel2023
-  title: "limpca : an R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods"
-  author:
-  - family: Thiel
-    given: Michel
-  - family: Benaiche
-    given: Nadia
-  - family: Martin
-    given: Manon
-  - family: Franceschini
-    given: Sebastien
-  - family: Van Oirbeek
-    given: Robin
-  - family: Govaerts
-    given: Bernadette
-  container-title: Journal of Chemometrics
-  type: "article-journal"
-  issued:
-    year: 2023
+bibliography: references.bib  
 resource_files:
   - figs/ASCAMethodo.png
   - figs/limpcaDEfunctions.png
@@ -76,9 +31,7 @@ knitr::opts_chunk$set(
     fig.width = 5, fig.height = 3.5
 )
 rm(list = ls())
-```
 
-```{r}
 if (!requireNamespace("pander", quietly = TRUE)) {
     stop("Install 'pander' to knit this vignette")
 }
@@ -89,6 +42,11 @@ if (!requireNamespace("gridExtra", quietly = TRUE)) {
     stop("Install 'gridExtra' to knit this vignette")
 }
 library(gridExtra)
+
+if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+    stop("Install 'SummarizedExperiment' to knit this vignette")
+}
+library(SummarizedExperiment)
 ```
 
 
@@ -135,11 +93,42 @@ remotes::install_github("ManonMartin/limpca",
 
 # Data importation
 
-Before any analysis, the `UCH` data set needs to be loaded. The `limpca` package contains the data set and it can be loaded with the `data` function. The `load` function is also useful to import your own data in an R format.
+In order to use the limpca core functions, the data need to be formatted as a list (informally called an lmpDataList) with the following elements: `outcomes` (multivariate matrix), `design` (data.frame) and `formula` (character string). 
+The `UCH` data set is already formatted appropriately and can be loaded from `limpca` with the `data` function.
 
 ```{r Data_Importation}
 data("UCH")
+
+str(UCH)
 ```
+
+
+Alternatively, the lmpDataList can be created with the function `data2LmpDataList` :
+
+- from scratch:
+
+```{r, message = TRUE}
+UCH2 <- data2LmpDataList(
+   outcomes = UCH$outcomes,
+   design = UCH$design, 
+   formula = UCH$formula
+ )
+```
+
+- or from a `SummarizedExperiment`:
+
+```{r, message = TRUE}
+se <- SummarizedExperiment(
+   assays = list(
+     counts = t(UCH$outcomes)), colData = UCH$design,
+   metadata = list(formula = UCH$formula)
+ )
+
+UCH3 <- data2LmpDataList(se, assay_name = "counts")
+```
+
+`SummarizedExperiment` is a generic data container that stores rectangular matrices of experimental results. See @SummarizedExperiment23 for more information.
+
 
 # Data exploration
 

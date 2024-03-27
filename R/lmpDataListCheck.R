@@ -47,7 +47,7 @@
 #' @import dplyr
 #' @importFrom stats as.formula
 
-lmpDataListCheck <- function(lmpData,
+lmpDataListCheck <- function(lmpDataList,
                              null_formula = FALSE,
                              null_design = FALSE,
                              null_outcomes = FALSE) {
@@ -56,19 +56,19 @@ lmpDataListCheck <- function(lmpData,
   # check lmpdata
 
 
-  checkArg(lmpData, "list", can.be.null = FALSE)
+  checkArg(lmpDataList, "list", can.be.null = FALSE)
 
-  if (length(lmpData) > 3) {
-    stop("length of lmpData is superior to 3, there is unnecessary objects")
+  if (length(lmpDataList) > 3) {
+    stop("length of lmpDataList is superior to 3, there is unnecessary objects")
   }
 
-  if (!all(names(lmpData) %in% c("design", "outcomes", "formula"))) {
-    stop("the names of lmpData do not correspond to \"design\", \"outcomes\" and \"formula\"")
+  if (!all(names(lmpDataList) %in% c("design", "outcomes", "formula"))) {
+    stop("the names of lmpDataList do not correspond to \"design\", \"outcomes\" and \"formula\"")
   }
 
-  out_formula <- lmpData$formula
-  out_design <- lmpData$design
-  out_outcomes <- lmpData$outcomes
+  out_formula <- lmpDataList$formula
+  out_design <- lmpDataList$design
+  out_outcomes <- lmpDataList$outcomes
 
   checkArg(out_formula, c("str", "length1"), can.be.null = null_formula)
   checkArg(out_design, "data.frame", can.be.null = null_design)

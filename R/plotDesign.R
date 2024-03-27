@@ -4,8 +4,8 @@
 #' @description
 #' Provides a graphical representation of the experimental design. It allows to visualize factors levels and check the design balance.
 #'
-#' @param design A data.frame representing the \eqn{n \times k} "freely encoded" experimental design.
-#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
+#' @param design A data.frame representing the \eqn{n \times k} "freely encoded" experimental design. Can be `NULL` if `lmpDataList` is defined.
+#' @param lmpDataList If not `NULL`, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.
 #' @param x By default, the first column of `design` ; otherwise if not `NULL`, a character string giving the column name of `design` to be used for the x-axis. The column needs to be a factor.
 #' @param y By default, the second column of `design` if present ; otherwise if not `NULL`, a character string giving the column name of `design` to be used for the y-axis.
 #' @param cols By default, the third column of `design` if present ; otherwise if not `NULL`, a character vector with one or several column name(s) of `design` to be used for faceting along the columns. The column needs to be a factor.
@@ -17,7 +17,7 @@
 #'
 #' @details
 #'
-#' Either \code{design} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{design}.
+#' Either \code{design} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{design}.
 #' The default behavior (parameters `x`, `y`, `cols` and `rows` are `NULL`) uses the first four columns of `df`. If at least one of these arguments is not `NULL`, the function will only use the non `NULL` parameters to be displayed.
 #'
 #' @examples
@@ -27,7 +27,7 @@
 #' plotDesign(design = trout$design, x = "Day", y = "Treatment")
 #'
 #' # equivalent to:
-#' plotDesign(lmpData = trout, x = "Day", y = "Treatment")
+#' plotDesign(lmpDataList = trout, x = "Day", y = "Treatment")
 #'
 #' ### mtcars
 #' data(mtcars)
@@ -74,7 +74,7 @@
 #' @import dplyr
 #' @import tidyverse
 
-plotDesign <- function(design = NULL, lmpData = NULL, x = NULL,
+plotDesign <- function(design = NULL, lmpDataList = NULL, x = NULL,
                        y = NULL, rows = NULL, cols = NULL,
                        title = "Plot of the design", theme = theme_bw()) {
   # checks arguments ===================
@@ -88,13 +88,13 @@ plotDesign <- function(design = NULL, lmpData = NULL, x = NULL,
 
 
   # define design
-  if (is.null(design) & is.null(lmpData)) {
-    stop("both design and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(design) & !is.null(lmpData)) {
-    message("both design and lmpData are non-NULL, design will be used to perform plotDesign")
-  } else if (is.null(design) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    design <- lmpData$design
+  if (is.null(design) & is.null(lmpDataList)) {
+    stop("both design and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(design) & !is.null(lmpDataList)) {
+    message("both design and lmpDataList are non-NULL, design will be used to perform plotDesign")
+  } else if (is.null(design) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    design <- lmpDataList$design
   }
 
   # initialize x, y, rows, cols
