@@ -7,7 +7,7 @@
 plotScatterM(
   Y = NULL,
   design = NULL,
-  lmpData = NULL,
+  lmpDataList = NULL,
   cols,
   labelVector = NULL,
   title = "Scatterplot matrix",
@@ -22,11 +22,11 @@ plotScatterM(
 )
 }
 \arguments{
-\item{Y}{\eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.}
+\item{Y}{\eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+\item{lmpDataList}{If not \code{NULL}, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
 
 \item{cols}{A vector with either the column names of the \eqn{Y} matrix to plot (character) or the column index positions.}
 
@@ -57,8 +57,8 @@ A matrix of scatter plots.
 Produces a scatter plot matrix between the selected columns of the outcomes matrix \eqn{Y} choosing specific colors and symbols for up to four factors from the design on the upper and lower diagonals.
 }
 \details{
-Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
-The same rule applies for \code{design} or \code{lmpData}.
+Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
+The same rule applies for \code{design} or \code{lmpDataList}.
 }
 \examples{
 
@@ -71,7 +71,7 @@ plotScatterM(
 
 # equivalent to:
 plotScatterM(
-  lmpData = UCH, cols = c(1:4)
+  lmpDataList = UCH, cols = c(1:4)
 )
 
 # with optionnal arguments

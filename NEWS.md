@@ -1,5 +1,5 @@
 # limpca 0.0.99
 
  - submitted to bioconductor
- - added the argument lmpData to pcaBySvd(), plotLine()
- - added the function data2lmpDataList()
+ - added the argument lmpDataList to pcaBySvd(), plotLine(), plotScatter(), plotScatterM(), plotMeans(), plotDesign()
+ - added the function data2LmpDataList()

@@ -7,7 +7,7 @@
 plotScatter(
   Y = NULL,
   design = NULL,
-  lmpData = NULL,
+  lmpDataList = NULL,
   xy,
   color = NULL,
   shape = NULL,
@@ -26,11 +26,11 @@ plotScatter(
 )
 }
 \arguments{
-\item{Y}{A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.}
+\item{Y}{A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+\item{lmpDataList}{If not \code{NULL}, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
 
 \item{xy}{x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).}
 
@@ -69,8 +69,8 @@ A \code{ggplot2} scatter plot.
 Produces a plot describing the relationship between two columns of the outcomes matrix \eqn{Y}. Colors and symbols can be chosen for the levels of the design factors. Ellipses, polygons or segments can be added to group different sets of points on the graph.
 }
 \details{
-Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
-The same rule applies for \code{design} or \code{lmpData}.
+Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
+The same rule applies for \code{design} or \code{lmpDataList}.
 }
 \examples{
 
@@ -80,11 +80,11 @@ data("UCH")
 plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 
 # equivalent to:
-plotScatter(lmpData = UCH, xy = c(453, 369))
+plotScatter(lmpDataList = UCH, xy = c(453, 369))
 
 # With color and shape
 plotScatter(
-  lmpData = UCH,
+  lmpDataList = UCH,
   xy = c(453, 369), color = "Hippurate",
   shape = "Citrate"
 )

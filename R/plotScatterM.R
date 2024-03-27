@@ -4,9 +4,9 @@
 #' @description
 #' Produces a scatter plot matrix between the selected columns of the outcomes matrix \eqn{Y} choosing specific colors and symbols for up to four factors from the design on the upper and lower diagonals.
 #'
-#' @param Y \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.
-#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
-#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
+#' @param Y \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables. Can be `NULL` if `lmpDataList` is defined.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame. Can be `NULL` if `lmpDataList` is defined.
+#' @param lmpDataList If not `NULL`, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.
 #' @param cols A vector with either the column names of the \eqn{Y} matrix to plot (character) or the column index positions.
 #' @param labelVector Labels to display on the diagonal. If `NULL`, the column names are deduced from `cols`.
 #' @param title Title of the graph.
@@ -22,8 +22,8 @@
 #' @return A matrix of scatter plots.
 #'
 #' @details
-#' Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
-#' The same rule applies for \code{design} or \code{lmpData}.
+#' Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
+#' The same rule applies for \code{design} or \code{lmpDataList}.
 #'
 #' @examples
 #'
@@ -36,7 +36,7 @@
 #'
 #' # equivalent to:
 #' plotScatterM(
-#'   lmpData = UCH, cols = c(1:4)
+#'   lmpDataList = UCH, cols = c(1:4)
 #' )
 #'
 #' # with optionnal arguments
@@ -53,7 +53,7 @@
 #' @import ggsci
 
 
-plotScatterM <- function(Y = NULL, design = NULL, lmpData = NULL, cols,
+plotScatterM <- function(Y = NULL, design = NULL, lmpDataList = NULL, cols,
                          labelVector = NULL, title = "Scatterplot matrix",
                          varname.colorup = NULL, varname.colordown = NULL,
                          varname.pchup = NULL, varname.pchdown = NULL,
@@ -71,23 +71,23 @@ plotScatterM <- function(Y = NULL, design = NULL, lmpData = NULL, cols,
 
 
   # define Y
-  if (is.null(Y) & is.null(lmpData)) {
-    stop("both Y and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(Y) & !is.null(lmpData)) {
-    message("both Y and lmpData are non-NULL, Y will be used to perform PCA")
-  } else if (is.null(Y) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    Y <- lmpData$outcomes
+  if (is.null(Y) & is.null(lmpDataList)) {
+    stop("both Y and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(Y) & !is.null(lmpDataList)) {
+    message("both Y and lmpDataList are non-NULL, Y will be used to perform PCA")
+  } else if (is.null(Y) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    Y <- lmpDataList$outcomes
   }
 
   # define design
-  if (is.null(design) & is.null(lmpData)) {
-    stop("both design and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(design) & !is.null(lmpData)) {
-    message("both design and lmpData are non-NULL, design will be used to perform plotScatterM")
-  } else if (is.null(design) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    design <- lmpData$design
+  if (is.null(design) & is.null(lmpDataList)) {
+    stop("both design and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(design) & !is.null(lmpDataList)) {
+    message("both design and lmpDataList are non-NULL, design will be used to perform plotScatterM")
+  } else if (is.null(design) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    design <- lmpDataList$design
   }
 
 

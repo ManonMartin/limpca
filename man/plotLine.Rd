@@ -6,7 +6,7 @@
 \usage{
 plotLine(
   Y = NULL,
-  lmpData = NULL,
+  lmpDataList = NULL,
   rows = 1,
   type = c("l", "p", "s"),
   title = "Line plot",
@@ -26,9 +26,9 @@ plotLine(
 )
 }
 \arguments{
-\item{Y}{A numerical matrix containing the rows to be drawn.}
+\item{Y}{A numerical matrix containing the rows to be drawn. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+\item{lmpDataList}{If not \code{NULL}, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
 
 \item{rows}{A vector with either the row name(s) of the \eqn{Y} matrix to plot (character) or the row index position(s) (integer). Default to 1.}
 
@@ -69,14 +69,14 @@ A \code{ggplot2} line plot.
 Generates the response profile of one or more observations i.e. plots of one or more rows of the outcomes matrix on the y-axis against the \eqn{m} response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots can be used.
 }
 \details{
-Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
+Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
 }
 \examples{
 
 data("UCH")
 plotLine(Y = UCH$outcomes)
 
-plotLine(lmpData = UCH)
+plotLine(lmpDataList = UCH)
 
 # separate plots
 plotLine(Y = UCH$outcomes, rows = seq(1, 8), hline = NULL)

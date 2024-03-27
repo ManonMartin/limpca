@@ -8,7 +8,7 @@
 #' \code{\link{pcaLoading1dPlot}}, \code{\link{pcaLoading2dPlot}} and \code{\link{pcaScreePlot}}.
 #'
 #' @param Y The \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} (response) variables.
-#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
+#' @param lmpDataList A list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.
 #' @param nPC Number of Principal Components to extract.
 #'
 #' @return A list containing the following elements:
@@ -30,20 +30,22 @@
 #'
 #' PCA.res1 <- pcaBySvd(Y = UCH$outcomes)
 #'
-#' PCA.res2 <- pcaBySvd(lmpData = UCH)
+#' PCA.res2 <- pcaBySvd(lmpDataList = UCH)
 #'
 #' identical(PCA.res1, PCA.res2)
-pcaBySvd <- function(Y = NULL, lmpData = NULL, nPC = min(dim(Y))) {
+pcaBySvd <- function(Y = NULL, lmpDataList = NULL, nPC = min(dim(Y))) {
+
   design <- NULL
 
-  if (is.null(Y) & is.null(lmpData)) {
-    stop("both Y and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(Y) & !is.null(lmpData)) {
-    message("both Y and lmpData are non-NULL, Y will be used to perform PCA")
-  } else if (is.null(Y) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    Y <- lmpData$outcomes
-    design <- lmpData$design
+  if (is.null(Y) & is.null(lmpDataList)) {
+    stop("both Y and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(Y) & !is.null(lmpDataList)) {
+    message("both Y and lmpDataList are non-NULL, Y will be used to perform PCA")
+  } else if (is.null(Y) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE,
+                     null_design = TRUE)
+    Y <- lmpDataList$outcomes
+    design <- lmpDataList$design
   }
 
 

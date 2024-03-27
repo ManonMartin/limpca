@@ -8,7 +8,7 @@
 #'
 #' @return A list with the 5 following named elements :
 #' \describe{
-#'    \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+#'    \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
 #'    \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
 #'    \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each model effect.}
 #'    \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
@@ -41,12 +41,12 @@
 
 
 lmpModelMatrix <- function(lmpDataList) {
-  lmpDataList <- data2lmpDataList(
+  lmpDataList <- data2LmpDataList(
     outcomes = lmpDataList$outcomes,
     design = lmpDataList$design,
     formula = lmpDataList$formula, verbose = FALSE
   )
-  lmpDataListCheck(lmpData = lmpDataList)
+  lmpDataListCheck(lmpDataList = lmpDataList)
 
   formula <- stats::as.formula(lmpDataList$formula)
   formulaDesignMatrix <- formula
@@ -60,7 +60,7 @@ lmpModelMatrix <- function(lmpDataList) {
   if (!is.null(varNames)) {
     testClass <- mapply(is.factor, design[, varNames])
     if (!all(testClass)) {
-      warning(
+      stop(
         "at least one design variable used in the formula is not a factor ",
         "(", paste(varNames[!testClass], collapse = ", "), ")"
       )

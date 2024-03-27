@@ -4,9 +4,9 @@
 #' @description
 #' For a given response variable, draws a plot of the response means by levels of up to three categorical factors from the design. When the design is balanced, it allows to visualize main effects or interactions for the response of interest. For unbalanced designs, this plot must be used with caution.
 #'
-#' @param Y A numerical matrix containing the columns to be drawn.
-#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
-#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
+#' @param Y A numerical matrix containing the columns to be drawn. Can be `NULL` if `lmpDataList` is defined.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame. Can be `NULL` if `lmpDataList` is defined.
+#' @param lmpDataList If not `NULL`, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.
 #' @param cols A vector with either the column name(s) of the \eqn{Y} matrix to plot (character) or the column index position(s) (integer).
 #' @param x A character string giving the `design` factor whose levels will form the x-axis.
 #' @param z A character string giving the `design` factor whose levels will form the traces.
@@ -24,8 +24,8 @@
 #' @return A list of `ggplot2` means plot(s).
 #'
 #' @details
-#' Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
-#' The same rule applies for \code{design} or \code{lmpData}.
+#' Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
+#' The same rule applies for \code{design} or \code{lmpDataList}.
 #'
 #' @examples
 #'
@@ -38,7 +38,7 @@
 #'
 #' # equivalent to:
 #' plotMeans(
-#'   lmpData = UCH, cols = "4.0628702",
+#'   lmpDataList = UCH, cols = "4.0628702",
 #'   x = "Hippurate", color = "blue"
 #' )
 #'
@@ -58,7 +58,7 @@
 #' @importFrom stats aggregate
 #' @import reshape2
 
-plotMeans <- function(Y = NULL, design = NULL, lmpData = NULL,
+plotMeans <- function(Y = NULL, design = NULL, lmpDataList = NULL,
                       cols = NULL, x, z = NULL, w = NULL,
                       title = NULL, xlab = NULL, ylab = NULL,
                       color = NULL, shape = NULL, linetype = NULL, size = 2,
@@ -94,23 +94,23 @@ plotMeans <- function(Y = NULL, design = NULL, lmpData = NULL,
   }
 
   # define Y
-  if (is.null(Y) & is.null(lmpData)) {
-    stop("both Y and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(Y) & !is.null(lmpData)) {
-    message("both Y and lmpData are non-NULL, Y will be used to perform PCA")
-  } else if (is.null(Y) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    Y <- lmpData$outcomes
+  if (is.null(Y) & is.null(lmpDataList)) {
+    stop("both Y and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(Y) & !is.null(lmpDataList)) {
+    message("both Y and lmpDataList are non-NULL, Y will be used to perform PCA")
+  } else if (is.null(Y) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    Y <- lmpDataList$outcomes
   }
 
   # define design
-  if (is.null(design) & is.null(lmpData)) {
-    stop("both design and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(design) & !is.null(lmpData)) {
-    message("both design and lmpData are non-NULL, design will be used to perform plotMeans")
-  } else if (is.null(design) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    design <- lmpData$design
+  if (is.null(design) & is.null(lmpDataList)) {
+    stop("both design and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(design) & !is.null(lmpDataList)) {
+    message("both design and lmpDataList are non-NULL, design will be used to perform plotMeans")
+  } else if (is.null(design) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    design <- lmpDataList$design
   }
 
 

@@ -6,7 +6,7 @@
 \usage{
 plotDesign(
   design = NULL,
-  lmpData = NULL,
+  lmpDataList = NULL,
   x = NULL,
   y = NULL,
   rows = NULL,
@@ -16,9 +16,9 @@ plotDesign(
 )
 }
 \arguments{
-\item{design}{A data.frame representing the \eqn{n \times k} "freely encoded" experimental design.}
+\item{design}{A data.frame representing the \eqn{n \times k} "freely encoded" experimental design. Can be \code{NULL} if \code{lmpDataList} is defined.}
 
-\item{lmpData}{A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.}
+\item{lmpDataList}{If not \code{NULL}, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
 
 \item{x}{By default, the first column of \code{design} ; otherwise if not \code{NULL}, a character string giving the column name of \code{design} to be used for the x-axis. The column needs to be a factor.}
 
@@ -39,7 +39,7 @@ A \code{ggplot2} plot of the design matrix.
 Provides a graphical representation of the experimental design. It allows to visualize factors levels and check the design balance.
 }
 \details{
-Either \code{design} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{design}.
+Either \code{design} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{design}.
 The default behavior (parameters \code{x}, \code{y}, \code{cols} and \code{rows} are \code{NULL}) uses the first four columns of \code{df}. If at least one of these arguments is not \code{NULL}, the function will only use the non \code{NULL} parameters to be displayed.
 }
 \examples{
@@ -49,7 +49,7 @@ data(trout)
 plotDesign(design = trout$design, x = "Day", y = "Treatment")
 
 # equivalent to:
-plotDesign(lmpData = trout, x = "Day", y = "Treatment")
+plotDesign(lmpDataList = trout, x = "Day", y = "Treatment")
 
 ### mtcars
 data(mtcars)

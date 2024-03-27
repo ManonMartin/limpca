@@ -6,23 +6,23 @@
 \usage{
 pcaScorePlot(
   resPcaBySvd,
+  design = NULL,
   axes = c(1, 2),
   title = "PCA score plot",
   points_labs_rn = FALSE,
-  design = NULL,
   ...
 )
 }
 \arguments{
 \item{resPcaBySvd}{A list corresponding to the output value of \code{\link{pcaBySvd}}.}
 
+\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
+
 \item{axes}{A numerical vector of length 2 with the Principal Components axes to be drawn.}
 
 \item{title}{Plot title.}
 
 \item{points_labs_rn}{Boolean indicating if the rownames of the scores matrix should be plotted.}
-
-\item{design}{A \eqn{n \times k} "freely encoded" experimental design data.frame.}
 
 \item{...}{Additional arguments to be passed to \code{\link{plotScatter}}.}
 }
@@ -48,8 +48,8 @@ pcaScorePlot(
   color = "Hippurate", shape = "Citrate"
 )
 
-# design is recovered from lmpData
-ResPCA <- pcaBySvd(lmpData = UCH)
+# design is recovered from lmpDataList through pcaBySvd()
+ResPCA <- pcaBySvd(lmpDataList = UCH)
 
 pcaScorePlot(
   resPcaBySvd = ResPCA, axes = c(1, 2),

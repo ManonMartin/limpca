@@ -4,9 +4,9 @@
 #' @description
 #' Produces a plot describing the relationship between two columns of the outcomes matrix \eqn{Y}. Colors and symbols can be chosen for the levels of the design factors. Ellipses, polygons or segments can be added to group different sets of points on the graph.
 #'
-#' @param Y A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables.
-#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
-#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
+#' @param Y A \eqn{n \times m} matrix with \eqn{n} observations and \eqn{m} variables. Can be `NULL` if `lmpDataList` is defined.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame. Can be `NULL` if `lmpDataList` is defined.
+#' @param lmpDataList If not `NULL`, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.
 #' @param xy x- and y-axis values: a vector of length 2 with either the column name(s) of the \eqn{Y} matrix to plot (character) or the index position(s) (integer).
 #' @param color If not \code{NULL}, a character string giving the column name of `design` to be used as color. Currently treated as a discrete variable.
 #' @param shape If not \code{NULL}, a character string giving the column name of `design` to be used as shape. Currently treated as a discrete variable.
@@ -26,8 +26,8 @@
 #' @return A `ggplot2` scatter plot.
 #'
 #' @details
-#' Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
-#' The same rule applies for \code{design} or \code{lmpData}.
+#' Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
+#' The same rule applies for \code{design} or \code{lmpDataList}.
 #'
 #' @examples
 #'
@@ -37,11 +37,11 @@
 #' plotScatter(Y = UCH$outcomes, xy = c(453, 369))
 #'
 #' # equivalent to:
-#' plotScatter(lmpData = UCH, xy = c(453, 369))
+#' plotScatter(lmpDataList = UCH, xy = c(453, 369))
 #'
 #' # With color and shape
 #' plotScatter(
-#'   lmpData = UCH,
+#'   lmpDataList = UCH,
 #'   xy = c(453, 369), color = "Hippurate",
 #'   shape = "Citrate"
 #' )
@@ -106,7 +106,7 @@
 #' @import dplyr
 #' @importFrom plyr ddply
 
-plotScatter <- function(Y = NULL, design = NULL, lmpData = NULL,
+plotScatter <- function(Y = NULL, design = NULL, lmpDataList = NULL,
                         xy, color = NULL, shape = NULL,
                         points_labs = NULL, title = "Scatter plot",
                         xlab = NULL, ylab = NULL, size = 2, size_lab = 3,
@@ -132,21 +132,21 @@ plotScatter <- function(Y = NULL, design = NULL, lmpData = NULL,
   checkArg(alphaPoly, c("num", "pos", "length1"), can.be.null = FALSE)
 
   # define Y
-  if (is.null(Y) & is.null(lmpData)) {
-    stop("both Y and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(Y) & !is.null(lmpData)) {
-    message("both Y and lmpData are non-NULL, Y will be used to perform plotScatter")
-  } else if (is.null(Y) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    Y <- lmpData$outcomes
+  if (is.null(Y) & is.null(lmpDataList)) {
+    stop("both Y and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(Y) & !is.null(lmpDataList)) {
+    message("both Y and lmpDataList are non-NULL, Y will be used to perform plotScatter")
+  } else if (is.null(Y) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    Y <- lmpDataList$outcomes
   }
 
   # define design
-  if (!is.null(design) & !is.null(lmpData)) {
-    message("both design and lmpData are non-NULL, design will be used to perform plotScatter")
-  } else if (is.null(design) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData, null_formula = TRUE)
-    design <- lmpData$design
+  if (!is.null(design) & !is.null(lmpDataList)) {
+    message("both design and lmpDataList are non-NULL, design will be used to perform plotScatter")
+  } else if (is.null(design) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList, null_formula = TRUE)
+    design <- lmpDataList$design
   }
 
 

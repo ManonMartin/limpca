@@ -4,8 +4,8 @@
 #' @description
 #' Generates the response profile of one or more observations i.e. plots of one or more rows of the outcomes matrix on the y-axis against the \eqn{m} response variables on the x-axis. Depending on the response type (spectra, gene expression...), point, line or segment plots can be used.
 #'
-#' @param Y A numerical matrix containing the rows to be drawn.
-#' @param lmpData A list with outcomes, design and formula, as outputted by \code{\link{data2lmpDataList}}.
+#' @param Y A numerical matrix containing the rows to be drawn. Can be `NULL` if `lmpDataList` is defined.
+#' @param lmpDataList If not `NULL`, a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.
 #' @param rows A vector with either the row name(s) of the \eqn{Y} matrix to plot (character) or the row index position(s) (integer). Default to 1.
 #' @param type Type of graph to be drawn: `"p"` for point, `"l"` for line (default) or `"s"` for segment.
 #' @param title Plot title.
@@ -27,14 +27,14 @@
 #' @return A `ggplot2` line plot.
 #'
 #' @details
-#' Either \code{Y} or \code{lmpData} need to be defined. If both are given, the priority goes to \code{Y}.
+#' Either \code{Y} or \code{lmpDataList} need to be defined. If both are given, the priority goes to \code{Y}.
 #'
 #' @examples
 #'
 #' data("UCH")
 #' plotLine(Y = UCH$outcomes)
 #'
-#' plotLine(lmpData = UCH)
+#' plotLine(lmpDataList = UCH)
 #'
 #' # separate plots
 #' plotLine(Y = UCH$outcomes, rows = seq(1, 8), hline = NULL)
@@ -59,7 +59,7 @@
 #' @import tibble
 
 
-plotLine <- function(Y = NULL, lmpData = NULL, rows = 1, type = c("l", "p", "s"),
+plotLine <- function(Y = NULL, lmpDataList = NULL, rows = 1, type = c("l", "p", "s"),
                      title = "Line plot", xlab = NULL, ylab = NULL,
                      xaxis_type = c("numeric", "character"),
                      stacked = FALSE, ncol = 1, nrow = NULL,
@@ -104,16 +104,16 @@ plotLine <- function(Y = NULL, lmpData = NULL, rows = 1, type = c("l", "p", "s")
   }
 
 
-  if (is.null(Y) & is.null(lmpData)) {
-    stop("both Y and lmpData are NULL, at least one should be non NULL.")
-  } else if (!is.null(Y) & !is.null(lmpData)) {
-    message("both Y and lmpData are non-NULL, Y will be used to perform plotLine")
-  } else if (is.null(Y) & !is.null(lmpData)) {
-    lmpDataListCheck(lmpData,
+  if (is.null(Y) & is.null(lmpDataList)) {
+    stop("both Y and lmpDataList are NULL, at least one should be non NULL.")
+  } else if (!is.null(Y) & !is.null(lmpDataList)) {
+    message("both Y and lmpDataList are non-NULL, Y will be used to perform plotLine")
+  } else if (is.null(Y) & !is.null(lmpDataList)) {
+    lmpDataListCheck(lmpDataList,
       null_formula = TRUE,
       null_design = TRUE
     )
-    Y <- lmpData$outcomes
+    Y <- lmpDataList$outcomes
   }
 
   # prepare the arguments  ==============================

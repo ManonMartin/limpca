@@ -5,10 +5,10 @@
 #' Produces score plots from \code{\link{pcaBySvd}} output with the same graphical options as \code{\link{plotScatter}} as this is a wrapper of this function..
 #'
 #' @param resPcaBySvd A list corresponding to the output value of \code{\link{pcaBySvd}}.
+#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
 #' @param axes A numerical vector of length 2 with the Principal Components axes to be drawn.
 #' @param title Plot title.
 #' @param points_labs_rn Boolean indicating if the rownames of the scores matrix should be plotted.
-#' @param design A \eqn{n \times k} "freely encoded" experimental design data.frame.
 #' @param ... Additional arguments to be passed to \code{\link{plotScatter}}.
 #'
 #' @return A `ggplot2` PCA score plot.
@@ -30,8 +30,8 @@
 #'   color = "Hippurate", shape = "Citrate"
 #' )
 #'
-#' # design is recovered from lmpData
-#' ResPCA <- pcaBySvd(lmpData = UCH)
+#' # design is recovered from lmpDataList through pcaBySvd()
+#' ResPCA <- pcaBySvd(lmpDataList = UCH)
 #'
 #' pcaScorePlot(
 #'   resPcaBySvd = ResPCA, axes = c(1, 2),
@@ -41,10 +41,10 @@
 #'
 #' @import ggplot2
 
-pcaScorePlot <- function(resPcaBySvd, axes = c(1, 2),
+pcaScorePlot <- function(resPcaBySvd, design = NULL,
+                         axes = c(1, 2),
                          title = "PCA score plot",
-                         points_labs_rn = FALSE,
-                         design = NULL, ...) {
+                         points_labs_rn = FALSE, ...) {
   mcall <- as.list(match.call())[-1L]
 
   # checks ===================

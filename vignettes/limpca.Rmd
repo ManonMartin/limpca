@@ -3,6 +3,7 @@ title: Get started with limpca.
 description: >
   Get started with limpca.
 output: rmarkdown::html_vignette
+bibliography: references.bib  
 vignette: >
   %\VignetteIndexEntry{Get started with limpca.}
   %\VignetteEngine{knitr::rmarkdown}
@@ -19,6 +20,11 @@ knitr::opts_chunk$set(
 )
 rm(list = ls())
 library("limpca")
+
+if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
+    stop("Install 'SummarizedExperiment' to knit this vignette")
+}
+library(SummarizedExperiment)
 ```  
 
 
@@ -41,11 +47,41 @@ For any enquiry, you can send an email to the package authors: [bernadette.govae
 
 ## Data object
 
-`UCH` contains a multivariate matrix (`outcomes`), a `design` data.frame and a `formula` as a character string:
+In order to use the limpca core functions, the data need to be formatted as a list (informally called an lmpDataList) with the following elements: `outcomes` (multivariate matrix), `design` (data.frame) and `formula` (character string). 
+The `UCH` data set is already formatted appropriately and can be loaded from `limpca` with the `data` function.
+
 ```{r}
 data("UCH")
 str(UCH)
 ```
+
+
+
+Alternatively, the lmpDataList can be created with the function `data2LmpDataList` :
+
+- from scratch:
+
+```{r, message = TRUE}
+UCH2 <- data2LmpDataList(
+   outcomes = UCH$outcomes,
+   design = UCH$design, 
+   formula = UCH$formula
+ )
+```
+
+- or from a `SummarizedExperiment`:
+
+```{r, message = TRUE}
+se <- SummarizedExperiment(
+   assays = list(
+     counts = t(UCH$outcomes)), colData = UCH$design,
+   metadata = list(formula = UCH$formula)
+ )
+
+UCH3 <- data2LmpDataList(se, assay_name = "counts")
+```
+
+`SummarizedExperiment` is a generic data container that stores rectangular matrices of experimental results. See @SummarizedExperiment23 for more information.
 
 
 ## Data visualisation
