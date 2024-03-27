@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,7 +65,8 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotLine</span><span class="op">(</span></span>
-<span>  <span class="va">Y</span>,</span>
+<span>  Y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lmpDataList <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  rows <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  type <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"l"</span>, <span class="st">"p"</span>, <span class="st">"s"</span><span class="op">)</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Line plot"</span>,</span>
@@ -88,7 +89,11 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>Y</dt>
-<dd><p>A numerical matrix containing the rows to be drawn.</p></dd>
+<dd><p>A numerical matrix containing the rows to be drawn. Can be <code>NULL</code> if <code>lmpDataList</code> is defined.</p></dd>
+
+
+<dt>lmpDataList</dt>
+<dd><p>If not <code>NULL</code>, a list with outcomes, design and formula, as outputted by <code><a href="data2lmpDataList.html">data2LmpDataList</a></code>.</p></dd>
 
 
 <dt>rows</dt>
@@ -161,6 +166,10 @@
 
 <p>A <code>ggplot2</code> line plot.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Either <code>Y</code> or <code>lmpDataList</code> need to be defined. If both are given, the priority goes to <code>Y</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
@@ -169,27 +178,30 @@
 <span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plotLine-1.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>lmpDataList <span class="op">=</span> <span class="va">UCH</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plotLine-2.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># separate plots</span></span></span>
 <span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, hline <span class="op">=</span> <span class="cn">NULL</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plotLine-2.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, color <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plotLine-3.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, color <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plotLine-4.png" alt="" width="700" height="433"></span>
-<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, type <span class="op">=</span> <span class="st">"p"</span>,</span></span>
-<span class="r-in"><span>    rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span></span></span>
-<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span>Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plotLine-5.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, type <span class="op">=</span> <span class="st">"p"</span>,</span></span>
+<span class="r-in"><span>  rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">8</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">2</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plotLine-6.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="co"># stacked plots</span></span></span>
 <span class="r-in"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">plotLine</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    stacked <span class="op">=</span> <span class="cn">TRUE</span>, color <span class="op">=</span> <span class="st">"rows"</span></span></span>
+<span class="r-in"><span>  Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/seq.html" class="external-link">seq</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  stacked <span class="op">=</span> <span class="cn">TRUE</span>, color <span class="op">=</span> <span class="st">"rows"</span></span></span>
 <span class="r-in"><span><span class="op">)</span> <span class="op">+</span></span></span>
-<span class="r-in"><span>    <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span></span></span>
-<span class="r-plt img"><img src="plotLine-6.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span>  <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/scale_brewer.html" class="external-link">scale_color_brewer</a></span><span class="op">(</span>palette <span class="op">=</span> <span class="st">"Set1"</span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plotLine-7.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>

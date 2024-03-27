@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -78,7 +78,7 @@
     
 
 <p>A list with the 5 following named elements :</p><dl><dt><code>lmpDataList</code></dt>
-<dd><p>The initial object: a list with outcomes, design and formula.</p></dd>
+<dd><p>The initial object: a list with outcomes, design and formula, as outputted by <code><a href="data2lmpDataList.html">data2LmpDataList</a></code>.</p></dd>
 
 <dt><code>modelMatrix</code></dt>
 <dd><p>A <em>nxK</em> model matrix specifically encoded for the ASCA-GLM method.</p></dd>
@@ -100,7 +100,8 @@
 Suppose the design matrix is <em>nxk</em> with n observations and <em>k</em> factors. After the transformation, the model matrix
 will be of size <em>nxp</em>. For a fator with <em>a</em> levels, the <em>sum coding</em> creates <em>a-1</em> columns in the model matrix with 0 and 1 for the <em>a-1</em> first levels and -1 for the last one.
 <em>p</em> is the total number parameter for each response (outcome) in the ASCA model.
-More information is available in the article (<em>Thiel et al</em>, 2017)</p>
+More information is available in the article (<em>Thiel et al</em>, 2017)
+Note that at the moment, only factors can be used as explanatory variables.</p>
     </div>
     <div class="section level2">
     <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a></h2>

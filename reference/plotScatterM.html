@@ -10,7 +10,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.5</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.6</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -65,9 +65,10 @@
     <div class="section level2">
     <h2 id="ref-usage">Usage<a class="anchor" aria-label="anchor" href="#ref-usage"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span><span class="fu">plotScatterM</span><span class="op">(</span></span>
-<span>  <span class="va">Y</span>,</span>
+<span>  Y <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  design <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  lmpDataList <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  <span class="va">cols</span>,</span>
-<span>  <span class="va">design</span>,</span>
 <span>  labelVector <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  title <span class="op">=</span> <span class="st">"Scatterplot matrix"</span>,</span>
 <span>  varname.colorup <span class="op">=</span> <span class="cn">NULL</span>,</span>
@@ -84,15 +85,19 @@
     <div class="section level2">
     <h2 id="arguments">Arguments<a class="anchor" aria-label="anchor" href="#arguments"></a></h2>
     <dl><dt>Y</dt>
-<dd><p>\(n \times m\) matrix with \(n\) observations and \(m\) variables.</p></dd>
+<dd><p>\(n \times m\) matrix with \(n\) observations and \(m\) variables. Can be <code>NULL</code> if <code>lmpDataList</code> is defined.</p></dd>
+
+
+<dt>design</dt>
+<dd><p>A \(n \times k\) "freely encoded" experimental design data.frame. Can be <code>NULL</code> if <code>lmpDataList</code> is defined.</p></dd>
+
+
+<dt>lmpDataList</dt>
+<dd><p>If not <code>NULL</code>, a list with outcomes, design and formula, as outputted by <code><a href="data2lmpDataList.html">data2LmpDataList</a></code>.</p></dd>
 
 
 <dt>cols</dt>
 <dd><p>A vector with either the column names of the \(Y\) matrix to plot (character) or the column index positions.</p></dd>
-
-
-<dt>design</dt>
-<dd><p>A \(n \times k\) "freely encoded" experimental design data.frame.</p></dd>
 
 
 <dt>labelVector</dt>
@@ -141,21 +146,38 @@
 
 <p>A matrix of scatter plots.</p>
     </div>
+    <div class="section level2">
+    <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
+    <p>Either <code>Y</code> or <code>lmpDataList</code> need to be defined. If both are given, the priority goes to <code>Y</code>.
+The same rule applies for <code>design</code> or <code>lmpDataList</code>.</p>
+    </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
     <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span></span></span>
 <span class="r-in"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"UCH"</span><span class="op">)</span></span></span>
 <span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># basic usage</span></span></span>
 <span class="r-in"><span><span class="fu">plotScatterM</span><span class="op">(</span></span></span>
-<span class="r-in"><span>    Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>, design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span></span>
-<span class="r-in"><span>    varname.colorup <span class="op">=</span> <span class="st">"Hippurate"</span>, varname.colordown <span class="op">=</span> <span class="st">"Citrate"</span>,</span></span>
-<span class="r-in"><span>    varname.pchup <span class="op">=</span> <span class="st">"Time"</span>, varname.pchdown <span class="op">=</span> <span class="st">"Day"</span>,</span></span>
-<span class="r-in"><span>    vec.colorup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    vec.colordown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"purple"</span>, <span class="st">"green"</span><span class="op">)</span>,</span></span>
-<span class="r-in"><span>    vec.pchup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, vec.pchdown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span></span></span>
+<span class="r-in"><span>  Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># equivalent to:</span></span></span>
+<span class="r-in"><span><span class="fu">plotScatterM</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  lmpDataList <span class="op">=</span> <span class="va">UCH</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="op">)</span></span></span>
 <span class="r-plt img"><img src="plotScatterM-1.png" alt="" width="700" height="433"></span>
+<span class="r-in"><span></span></span>
+<span class="r-in"><span><span class="co"># with optionnal arguments</span></span></span>
+<span class="r-in"><span><span class="fu">plotScatterM</span><span class="op">(</span></span></span>
+<span class="r-in"><span>  Y <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>, design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">4</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  varname.colorup <span class="op">=</span> <span class="st">"Hippurate"</span>, varname.colordown <span class="op">=</span> <span class="st">"Citrate"</span>,</span></span>
+<span class="r-in"><span>  varname.pchup <span class="op">=</span> <span class="st">"Time"</span>, varname.pchdown <span class="op">=</span> <span class="st">"Day"</span>,</span></span>
+<span class="r-in"><span>  vec.colorup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">2</span>, <span class="fl">4</span>, <span class="fl">1</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  vec.colordown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"orange"</span>, <span class="st">"purple"</span>, <span class="st">"green"</span><span class="op">)</span>,</span></span>
+<span class="r-in"><span>  vec.pchup <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>, vec.pchdown <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"a"</span>, <span class="st">"b"</span><span class="op">)</span></span></span>
+<span class="r-in"><span><span class="op">)</span></span></span>
+<span class="r-plt img"><img src="plotScatterM-2.png" alt="" width="700" height="433"></span>
 <span class="r-in"><span></span></span>
 </code></pre></div>
     </div>
