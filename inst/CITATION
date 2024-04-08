@@ -3,7 +3,7 @@ bibentry(
 	author = c(person("Michel", "Thiel"),
 	           person("Nadia","Benaiche"),
 	           person("Manon","Martin"),
-	           person("Sébastien","Franceschini"),
+	           person("Sebastien","Franceschini"),
 	           person("Robin","Van Oirbeek"),
 	           person("Bernadette","Govaerts")),
 	title = "limpca: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods",
