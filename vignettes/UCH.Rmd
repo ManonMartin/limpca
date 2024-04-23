@@ -62,31 +62,21 @@ The motivation of publishing `limpca` in `bioconductor` is twofold.
 First, no `bioconductor` package includes ASCA/APCA methods and other `R` packages implementing them are very basic as explained in the literature review of @Thiel2023. 
 Secondly, ASCA/APCA are highly informative methods to analyse -omics data tables in a multivariate framework as a complement to differential analyses packages like `limma`. 
 
-# Installation
+# Installation and loading of the package
 
-The package is actually in its development stage and is available on GitHub: <https://github.com/ManonMartin/limpca>. It can be installed via the `remotes::install_github` function. The package needs to be loaded afterwards.
+The package can be installed from Bioconductor:
 
 ```{r Install, eval=FALSE}
-if (!requireNamespace("remotes")) {
-    install.packages(pkgs = "remotes", dependencies = TRUE)
-}
-remotes::install_github("ManonMartin/limpca",
-    dependencies = TRUE
-)
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("limpca")
 ```
 
+And then loaded in your R session: 
 
 ```{r Load, results=FALSE, message=FALSE}
 library("limpca")
-```
-
-Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command:
-
-```{r InstallVign, eval=FALSE}
-remotes::install_github("ManonMartin/limpca",
-    dependencies = TRUE,
-    build_vignettes = TRUE
-)
 ```
 
 

@@ -26,18 +26,15 @@ models.
 
 ## Installation
 
-Installation from GitHub:
+Installation from Bioconductor:
 
-``` r
-remotes::install_github("ManonMartin/limpca", dependencies = TRUE)
-library("limpca")
+```r
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+    
+BiocManager::install("limpca")
 ```
 
-Note that if you would like to build the vignettes, you have to install
-`BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and
-`rmarkdown` packages before installing `limpca` with the following
-command:
-`remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`.
 
 ## Additional information
 
