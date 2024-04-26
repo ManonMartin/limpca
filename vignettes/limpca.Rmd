@@ -41,8 +41,6 @@ library(SummarizedExperiment)
 
 # Introduction
 
-# Introduction
-
 ## About the package
 
 This package was created to analyse models with high-dimensional data and a multi-factor design of experiment. `limpca` stands for **li**near **m**odeling of high-dimensional designed data based on the ASCA (ANOVA-Simultaneous Component Analysis) and A**PCA** (ANOVA-Principal Component Analysis) family of methods. These methods combine ANOVA with a General Linear Model (GLM) decomposition and PCA. They provide powerful visualization tools for multivariate structures in the space of each effect of the statistical model linked to the experimental design. Details on the methods used and the package implementation can be found in the articles of @Thiel2017, @Guisset2019 and @Thiel2023.
@@ -53,9 +51,9 @@ Therefore, ASCA/APCA are highly informative modeling and visualisation tools to 
 
 - `Get started with limpca` (this vignette): This vignette is a short application of `limpca` on the `UCH` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA modelling. The ASCA model used in this example is a three-way ANOVA with fixed effects.
 
-- [Analysis of the UCH dataset with limpca](UCH.html): This vignette is an extensive application of `limpca` on the `UCH` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E modelling. The models used in this example are three-way ANOVAs with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results.
+- [Analysis of the UCH dataset with limpca](UCH.html): This vignette is an extensive application of `limpca` on the `UCH` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E modelling. The applied model is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results.
 
-- [Analysis of the Trout dataset with limpca](Trout.html): This vignette is an extensive application of `limpca` on the `Trout` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E modelling. It also compares the results of ASCA to a univariate ANOVA modeling. The models used involve three main effects and two way interaction terms.
+- [Analysis of the Trout dataset with limpca](Trout.html): This vignette is an extensive application of `limpca` on the `Trout` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E modelling. The applied model involves three main effects and their two-way interaction terms. It also compares the results of ASCA to a univariate ANOVA modeling. 
 
 
 
