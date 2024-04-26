@@ -49,22 +49,24 @@ if (!requireNamespace("SummarizedExperiment", quietly = TRUE)) {
 library(SummarizedExperiment)
 ```
 
+Package loading
+
+```{r, eval=FALSE}
+
+library(pander)
+library(gridExtra)
+library(ggplot2)
+library(SummarizedExperiment)
+```
 
 # Introduction
 
-The purpose of this vignette is to show the possibilities offered by the `limpca` package. 
-
-`limpca` stands for linear modeling of high-dimensional designed data based on ASCA/APCA family of methods. This package was created to analyse models with high-dimensional data and a multi-factor design of experiment and provides an implementation of ASCA and APCA derived methods.  
-
 The model used in this example is a three-way ANOVA with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results. Details on the methods used and the package implementation can be found in the articles of @Thiel2017, @Guisset2019 and @Thiel2023.
 
-The motivation of publishing `limpca` in `bioconductor` is twofold. 
-First, no `bioconductor` package includes ASCA/APCA methods and other `R` packages implementing them are very basic as explained in the literature review of @Thiel2023. 
-Secondly, ASCA/APCA are highly informative methods to analyse -omics data tables in a multivariate framework as a complement to differential analyses packages like `limma`. 
 
-# Installation and loading of the package
+# Installation and loading of the `limpca` package
 
-The package can be installed from Bioconductor:
+`limpca` can be installed from Bioconductor:
 
 ```{r Install, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
@@ -73,15 +75,14 @@ if (!requireNamespace("BiocManager", quietly = TRUE))
 BiocManager::install("limpca")
 ```
 
-And then loaded in your R session: 
+And then loaded into your R session: 
 
 ```{r Load, results=FALSE, message=FALSE}
 library("limpca")
 ```
 
 
-
-# Data importation
+# Data import
 
 In order to use the limpca core functions, the data need to be formatted as a list (informally called an lmpDataList) with the following elements: `outcomes` (multivariate matrix), `design` (data.frame) and `formula` (character string). 
 The `UCH` data set is already formatted appropriately and can be loaded from `limpca` with the `data` function.

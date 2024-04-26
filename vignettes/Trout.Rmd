@@ -10,7 +10,7 @@ output:
     toc_depth: 4
     toc_float: yes
 vignette: >
-   %\VignetteIndexEntry{Application of limpca package on the Trout dataset}
+   %\VignetteIndexEntry{Analysis of the Trout dataset with limpca}
    %\VignetteEncoding{UTF-8}
    %\VignetteEngine{knitr::rmarkdown}
 ---
@@ -47,7 +47,35 @@ knitr::opts_chunk$set(
 )
 ```
 
-# Dataset and model presentation
+Package loading
+
+```{r, eval=FALSE}
+library(car)
+library(pander)
+library(gridExtra)
+library(ggplot2)
+```
+
+
+# Installation and loading of the `limpca` package
+
+`limpca` can be installed from Bioconductor:
+
+```{r Install, eval=FALSE}
+if (!requireNamespace("BiocManager", quietly = TRUE))
+    install.packages("BiocManager")
+
+BiocManager::install("limpca")
+```
+
+And then loaded into your R session: 
+
+```{r Load, eval=FALSE}
+library("limpca")
+```
+
+
+# Data and model presentation
 
 This data set comes from the study of the modulation of immunity in rainbow trout (Oncorhynchus mykiss) by exposure to cadmium (Cd) combined with polyunsaturated fatty acids (PUFAs) enriched diets [Cornet et al., 2018].
 
@@ -59,7 +87,7 @@ The responses were quantified by measuring the modification of the expression of
 
 This gives a 3 × 4 × 2 factorial design. Each of the 24 trials corresponds to a different aquarium. Three fishes were analysed (3 replicates) for each condition, giving a total of 72 observations.
 
-In this limpca vignette the data are first explored in order to prepare an appropriate data set for ASCA/APCA analysis. Data are first represented by PCA and outliers removed. The remaining observations are then log transformed. Next the data of each aquarium are mean aggregated in order to avoid the inclusion of an aquarium random factor in the statistical model because limpca is not yet able to handle mixed linear models. The data are finally centered and scaled by column.
+In this `limpca` vignette, the data are first explored in order to prepare an appropriate data set for ASCA/APCA analysis. Data are first represented by PCA and outliers removed. The remaining observations are then log transformed. Next, the data of each aquarium are mean aggregated in order to avoid the inclusion of an aquarium random factor in the statistical model because limpca is not yet able to handle mixed linear models. The data are finally centered and scaled by column.
 
 The estimated model in then a (general) linear model for fixed factors including main effects and all two way interactions. The three way interaction is not included because the aggregated design has no replicate.     
 
@@ -538,9 +566,9 @@ lmpScorePlot(resAPCA,
 
 # Univariate ANOVA
 
-This part of the vignette links the results of the ASCA/APCA analysis to a more classical analysis applied in -omics transcriptomic data analysis (see e.g. `LIMMA` package).
+This part of the vignette links the results of the ASCA/APCA analysis to a more classical analysis applied in -omics transcriptomic data analysis (see e.g. `limma` package).
 
-An ANOVA model is fitted to each response separately and then, for each model effect, p-values of effect significance are corrected by FDR and ordered. These results allow to detect for which responses each effect of interest is significant. E.g. find which gene is a potential biomarker to differentiate patients with or without a given disease.
+An ANOVA model is fitted to each response separately and then, for each model effect, p-values of effect significance are corrected by FDR and ordered. These results allow to detect for which responses each effect of interest is significant (e.g. find which gene is a potential biomarker to differentiate patients with or without a given disease).
 
 The code below applies such analysis and compares then responses importance based on FDR p-values to response loadings obtained by ASCA/APCA.
 

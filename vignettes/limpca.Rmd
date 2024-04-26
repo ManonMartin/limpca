@@ -1,13 +1,20 @@
 ---
-title: Get started with limpca.
-description: >
-  Get started with limpca.
-output: rmarkdown::html_vignette
-bibliography: references.bib  
+title: "Get started with limpca."
+author: "Benaiche Nadia, Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts Bernadette"
+date: '`r format(Sys.time(), "%B %d, %Y")`'
+package: limpca
+output:
+  BiocStyle::html_document:
+    toc: true
+    toc_depth: 4
+    toc_float: true
 vignette: >
-  %\VignetteIndexEntry{Get started with limpca.}
-  %\VignetteEngine{knitr::rmarkdown}
-  %\VignetteEncoding{UTF-8}
+   %\VignetteIndexEntry{Get started with limpca}
+   %\VignetteEncoding{UTF-8}
+   %\VignetteEngine{knitr::rmarkdown}
+editor_options: 
+   chunk_output_type: console
+bibliography: references.bib  
 ---
 
 ```{r setup, include = FALSE}
@@ -32,18 +39,48 @@ library(SummarizedExperiment)
 [![R-CMD-check](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml/badge.svg)](https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml)
 <!-- badges: end -->
 
-# Installation
+# Introduction
 
-```{r, eval=FALSE}
+# Introduction
+
+## About the package
+
+This package was created to analyse models with high-dimensional data and a multi-factor design of experiment. `limpca` stands for **li**near **m**odeling of high-dimensional designed data based on the ASCA (ANOVA-Simultaneous Component Analysis) and A**PCA** (ANOVA-Principal Component Analysis) family of methods. These methods combine ANOVA with a General Linear Model (GLM) decomposition and PCA. They provide powerful visualization tools for multivariate structures in the space of each effect of the statistical model linked to the experimental design. Details on the methods used and the package implementation can be found in the articles of @Thiel2017, @Guisset2019 and @Thiel2023.
+
+Therefore, ASCA/APCA are highly informative modeling and visualisation tools to analyse -omics data tables in a multivariate framework and act as a complement to differential expression analyses methods such as `limma` (@limma2015). 
+
+## Vignettes description
+
+- `Get started with limpca` (this vignette): This vignette is a short application of `limpca` on the `UCH` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA modelling. The ASCA model used in this example is a three-way ANOVA with fixed effects.
+
+- [Analysis of the UCH dataset with limpca](UCH.html): This vignette is an extensive application of `limpca` on the `UCH` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E modelling. The models used in this example are three-way ANOVAs with fixed effects. This document presents all the usual steps of the analysis, from importing the data to visualising the results.
+
+- [Analysis of the Trout dataset with limpca](Trout.html): This vignette is an extensive application of `limpca` on the `Trout` dataset with data visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E modelling. It also compares the results of ASCA to a univariate ANOVA modeling. The models used involve three main effects and two way interaction terms.
+
+
+
+
+
+# Installation and loading of the `limpca` package
+
+`limpca` can be installed from Bioconductor:
+
+```{r Install, eval=FALSE}
 if (!requireNamespace("BiocManager", quietly = TRUE))
     install.packages("BiocManager")
 
 BiocManager::install("limpca")
 ```
 
-<!-- Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command: `remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`. -->
+And then loaded into your R session: 
+
+```{r Load, results=FALSE, message=FALSE}
+library("limpca")
+```
+
 
 For any enquiry, you can send an email to the package authors: [bernadette.govaerts@uclouvain.be](mailto:bernadette.govaerts@uclouvain.be) ; [michel.thiel@uclouvain.be](mailto:michel.thiel@uclouvain.be) or [manon.martin@uclouvain.be](mailto:manon.martin@uclouvain.be)
+
 
 # Short application on the `UCH` dataset
 
