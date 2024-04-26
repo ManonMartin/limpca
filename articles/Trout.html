@@ -26,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -84,7 +84,7 @@ way design for fixed factors</h3>
                         <h4 data-toc-skip class="author">Benaiche Nadia,
 Bernadette Govaerts</h4>
             
-            <h4 data-toc-skip class="date">April 23, 2024</h4>
+            <h4 data-toc-skip class="date">April 26, 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ManonMartin/limpca/blob/HEAD/vignettes/Trout.Rmd" class="external-link"><code>vignettes/Trout.Rmd</code></a></small>
       <div class="d-none name"><code>Trout.Rmd</code></div>
@@ -92,8 +92,27 @@ Bernadette Govaerts</h4>
 
     
     
+<p>Package loading</p>
+<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://r-forge.r-project.org/projects/car/" class="external-link">car</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://rapporter.github.io/pander/" class="external-link">pander</a></span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va">gridExtra</span><span class="op">)</span></span>
+<span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://ggplot2.tidyverse.org" class="external-link">ggplot2</a></span><span class="op">)</span></span></code></pre></div>
 <div class="section level2">
-<h2 id="dataset-and-model-presentation">Dataset and model presentation<a class="anchor" aria-label="anchor" href="#dataset-and-model-presentation"></a>
+<h2 id="installation-and-loading-of-the-limpca-package">Installation and loading of the <code>limpca</code> package<a class="anchor" aria-label="anchor" href="#installation-and-loading-of-the-limpca-package"></a>
+</h2>
+<p><code>limpca</code> can be installed from Bioconductor:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
+<span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
+<span></span>
+<span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"limpca"</span><span class="op">)</span></span></code></pre></div>
+<p>And then loaded into your R session:</p>
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ManonMartin/limpca" class="external-link">"limpca"</a></span><span class="op">)</span></span></code></pre></div>
+</div>
+<div class="section level2">
+<h2 id="data-and-model-presentation">Data and model presentation<a class="anchor" aria-label="anchor" href="#data-and-model-presentation"></a>
 </h2>
 <p>This data set comes from the study of the modulation of immunity in
 rainbow trout (Oncorhynchus mykiss) by exposure to cadmium (Cd) combined
@@ -119,13 +138,14 @@ alpha-linolenic acid (ALA), linoleic acid (LA), eicosapentaenoic acid
 <p>This gives a 3 × 4 × 2 factorial design. Each of the 24 trials
 corresponds to a different aquarium. Three fishes were analysed (3
 replicates) for each condition, giving a total of 72 observations.</p>
-<p>In this limpca vignette the data are first explored in order to
-prepare an appropriate data set for ASCA/APCA analysis. Data are first
-represented by PCA and outliers removed. The remaining observations are
-then log transformed. Next the data of each aquarium are mean aggregated
-in order to avoid the inclusion of an aquarium random factor in the
-statistical model because limpca is not yet able to handle mixed linear
-models. The data are finally centered and scaled by column.</p>
+<p>In this <code>limpca</code> vignette, the data are first explored in
+order to prepare an appropriate data set for ASCA/APCA analysis. Data
+are first represented by PCA and outliers removed. The remaining
+observations are then log transformed. Next, the data of each aquarium
+are mean aggregated in order to avoid the inclusion of an aquarium
+random factor in the statistical model because limpca is not yet able to
+handle mixed linear models. The data are finally centered and scaled by
+column.</p>
 <p>The estimated model in then a (general) linear model for fixed
 factors including main effects and all two way interactions. The three
 way interaction is not included because the aggregated design has no
@@ -142,20 +162,20 @@ available in [Benaiche, 2022].</p>
 <p>The <code>trout</code> data set is list of three objects : the model
 <code>outcomes</code>, the <code>design</code> and the model
 <code>formula</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"trout"</span><span class="op">)</span></span>
 <span><span class="co"># print number of and response names</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n Nb of Responses :  "</span>, <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span>, <span class="st">"\n "</span><span class="op">)</span></span></code></pre></div>
 <pre><code>
  Nb of Responses :   15 
  </code></pre>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nResponses :\n"</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span>, <span class="st">"\n "</span><span class="op">)</span></span></code></pre></div>
 <pre><code>
 Responses :
  IL.1b IL6 IL8 Lysozyme IgM MCSFR.a MPO TGF.b TLR3 TLR9 MyD88 SOD Elov5 C3 Cox2 
  </code></pre>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Order responses by alphabetic order</span></span>
 <span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span> <span class="op">&lt;-</span> <span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">[</span>, <span class="fu"><a href="https://rdrr.io/r/base/order.html" class="external-link">order</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/dimnames.html" class="external-link">dimnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span><span class="op">)</span><span class="op">]</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\n Ordered responses :\n  "</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span>, <span class="st">"\n "</span><span class="op">)</span></span></code></pre></div>
@@ -163,13 +183,13 @@ Responses :
  Ordered responses :
    C3 Cox2 Elov5 IgM IL.1b IL6 IL8 Lysozyme MCSFR.a MPO MyD88 SOD TGF.b TLR3 TLR9 
  </code></pre>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># print factor names</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/cat.html" class="external-link">cat</a></span><span class="op">(</span><span class="st">"\nDesign factors :  "</span>, <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">design</span><span class="op">)</span>, <span class="st">"\n "</span><span class="op">)</span></span></code></pre></div>
 <pre><code>
 Design factors :   Day Treatment Exposure Aquarium 
  </code></pre>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># plot the design with plotDesign function</span></span>
 <span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/plotDesign.html">plotDesign</a></span><span class="op">(</span></span>
 <span>    design <span class="op">=</span> <span class="va">trout</span><span class="op">$</span><span class="va">design</span>, x <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
@@ -186,11 +206,11 @@ Design factors :   Day Treatment Exposure Aquarium
 <code>pcaScorePlot</code> are used to take a first look at the data by
 PCA.</p>
 <p>This PCA shows that the data should be log transformed.</p>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resPCA</span> <span class="op">&lt;-</span> <span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScreePlot.html">pcaScreePlot</a></span><span class="op">(</span><span class="va">resPCA</span>, nPC <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/Exploratory%20PCA-1.png" width="250"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Score plot of original data "</span>,</span>
@@ -207,7 +227,7 @@ increasing max.overlaps</code></pre>
 <p>Data are log transfomed and a new PCA is applied.</p>
 <p>The score plot show clearly two outliers (i.e. fishes D72EPA2.1 and
 D28EPA2.2). They will removed of the analysis for the next steps.</p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Log Transformation</span></span>
 <span><span class="va">trout_log</span> <span class="op">&lt;-</span> <span class="va">trout</span></span>
 <span><span class="va">trout_log</span><span class="op">$</span><span class="va">outcomes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span><span class="op">)</span></span>
@@ -216,7 +236,7 @@ D28EPA2.2). They will removed of the analysis for the next steps.</p>
 <span><span class="va">resPCA1</span> <span class="op">&lt;-</span> <span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">trout_log</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScreePlot.html">pcaScreePlot</a></span><span class="op">(</span><span class="va">resPCA1</span>, nPC <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/Transformation-1.png" width="250"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA1</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Score plot of Log10 data "</span>,</span>
@@ -235,7 +255,7 @@ The option <code>polygon</code> of <code>pcaScorePlot</code> function
 allows to group data by aquarium. In some aquariums, the 3 fishes shows
 very similar results and in other not.</p>
 <p>The data are now clean for further analysis</p>
-<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Remove outliers and create new dataset</span></span>
 <span><span class="va">trout_clean</span> <span class="op">&lt;-</span> <span class="va">trout_log</span></span>
 <span><span class="va">outliers</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/match.html" class="external-link">match</a></span><span class="op">(</span></span>
@@ -244,12 +264,12 @@ very similar results and in other not.</p>
 <span><span class="op">)</span></span>
 <span><span class="va">trout_clean</span><span class="op">$</span><span class="va">outcomes</span> <span class="op">&lt;-</span> <span class="va">trout_log</span><span class="op">$</span><span class="va">outcomes</span><span class="op">[</span><span class="op">-</span><span class="va">outliers</span>, <span class="op">]</span></span>
 <span><span class="va">trout_clean</span><span class="op">$</span><span class="va">design</span> <span class="op">&lt;-</span> <span class="va">trout_log</span><span class="op">$</span><span class="va">design</span><span class="op">[</span><span class="op">-</span><span class="va">outliers</span>, <span class="op">]</span></span></code></pre></div>
-<div class="sourceCode" id="cb17"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># PCA</span></span>
 <span><span class="va">resPCA2</span> <span class="op">&lt;-</span> <span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">trout_clean</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScreePlot.html">pcaScreePlot</a></span><span class="op">(</span><span class="va">resPCA2</span>, nPC <span class="op">=</span> <span class="fl">8</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/new%20PCA-1.png" width="250"></p>
-<div class="sourceCode" id="cb18"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Score plot Components 1 and 2</span></span>
 <span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA2</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
@@ -259,7 +279,7 @@ very similar results and in other not.</p>
 <span>    points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/new%20PCA-2.png" width="250"></p>
-<div class="sourceCode" id="cb19"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Score plot Components 3 and 4</span></span>
 <span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA2</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">3</span>, <span class="fl">4</span><span class="op">)</span>,</span>
@@ -280,7 +300,7 @@ hierarchy in the design and allow to apply a classical fixed effect
 general linear model to the data.</p>
 <p>Data are next centered and scaled by column. This will give the same
 importance to each response in the analysis.</p>
-<div class="sourceCode" id="cb20"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Mean aggregation</span></span>
 <span><span class="va">mean_outcomes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">24</span>, ncol <span class="op">=</span> <span class="fl">15</span><span class="op">)</span></span>
 <span><span class="va">mean_design</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fl">0</span>, nrow <span class="op">=</span> <span class="fl">24</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
@@ -300,7 +320,7 @@ importance to each response in the analysis.</p>
 <span><span class="va">trout_mean_names</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/apply.html" class="external-link">apply</a></span><span class="op">(</span><span class="va">mean_design</span>, <span class="fl">1</span>, <span class="va">paste</span>, collapse <span class="op">=</span> <span class="st">""</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mean_outcomes</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">trout_mean_names</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">rownames</a></span><span class="op">(</span><span class="va">mean_design</span><span class="op">)</span> <span class="op">&lt;-</span> <span class="va">trout_mean_names</span></span></code></pre></div>
-<div class="sourceCode" id="cb21"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Outcomes centering and Scaling</span></span>
 <span><span class="va">mean_outcomes</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/scale.html" class="external-link">scale</a></span><span class="op">(</span><span class="va">mean_outcomes</span>, center <span class="op">=</span> <span class="cn">TRUE</span>, scale <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span></span>
 <span><span class="co"># New data object creation</span></span>
@@ -326,8 +346,8 @@ importance to each response in the analysis.</p>
 <p>Note that there is no replicate in this new design. There is only one
 observation (i.e. one aquarium) for each of the 24 factor
 combinations.</p>
-<div class="sourceCode" id="cb22"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">pander</span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">trout_mean</span><span class="op">$</span><span class="va">design</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">trout_mean</span><span class="op">$</span><span class="va">design</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table style="width:61%;" class="table">
 <colgroup>
 <col width="19%">
@@ -380,7 +400,7 @@ combinations.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb23"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/plotDesign.html">plotDesign</a></span><span class="op">(</span></span>
 <span>    design <span class="op">=</span> <span class="va">trout_mean</span><span class="op">$</span><span class="va">design</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"Design of mean aggregated trout dataset"</span></span>
@@ -391,7 +411,7 @@ combinations.</p>
 <h3 id="example-of-lineplot-of-the-responses-for-two-observations">Example of <code>lineplot</code> of the responses for two
 observations<a class="anchor" aria-label="anchor" href="#example-of-lineplot-of-the-responses-for-two-observations"></a>
 </h3>
-<div class="sourceCode" id="cb24"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/plotLine.html">plotLine</a></span><span class="op">(</span><span class="va">trout_mean</span><span class="op">$</span><span class="va">outcomes</span>,</span>
 <span>    rows <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">24</span><span class="op">)</span>,</span>
 <span>    xaxis_type <span class="op">=</span> <span class="st">"character"</span>, type <span class="op">=</span> <span class="st">"s"</span></span>
@@ -402,7 +422,7 @@ observations<a class="anchor" aria-label="anchor" href="#example-of-lineplot-of-
 <div class="section level3">
 <h3 id="pca-aggregated-data">PCA aggregated data<a class="anchor" aria-label="anchor" href="#pca-aggregated-data"></a>
 </h3>
-<div class="sourceCode" id="cb25"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resPCA_mean</span> <span class="op">&lt;-</span> <span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">trout_mean</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pcaScreePlot.html">pcaScreePlot</a></span><span class="op">(</span><span class="va">resPCA_mean</span>, nPC <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/PCA-1.png" width="250"></p>
@@ -411,7 +431,7 @@ observations<a class="anchor" aria-label="anchor" href="#example-of-lineplot-of-
 </h4>
 <p>The three score plots below show clearly that the Day is the more
 important effect.</p>
-<div class="sourceCode" id="cb26"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA_mean</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"PCA score plot by Exposure and Day"</span>,</span>
@@ -419,8 +439,8 @@ important effect.</p>
 <span>    shape <span class="op">=</span> <span class="st">"Exposure"</span>, color <span class="op">=</span> <span class="st">"Day"</span>,</span>
 <span>    points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-1-1.png" width="250"></p>
-<div class="sourceCode" id="cb27"><pre class="downlit sourceCode r">
+<p><img src="Trout_files/figure-html/unnamed-chunk-2-1.png" width="250"></p>
+<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA_mean</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"PCA scores plot by Treatment and Day"</span>,</span>
@@ -428,8 +448,8 @@ important effect.</p>
 <span>    shape <span class="op">=</span> <span class="st">"Day"</span>, color <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
 <span>    points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-1-2.png" width="250"></p>
-<div class="sourceCode" id="cb28"><pre class="downlit sourceCode r">
+<p><img src="Trout_files/figure-html/unnamed-chunk-2-2.png" width="250"></p>
+<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA_mean</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"PCA scores plot by Exposure and Treatment"</span>,</span>
@@ -437,19 +457,19 @@ important effect.</p>
 <span>    shape <span class="op">=</span> <span class="st">"Treatment"</span>, color <span class="op">=</span> <span class="st">"Exposure"</span>,</span>
 <span>    points_labs_rn <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-1-3.png" width="250"></p>
+<p><img src="Trout_files/figure-html/unnamed-chunk-2-3.png" width="250"></p>
 </div>
 <div class="section level4">
 <h4 id="d-loading-plots">1D Loading plots<a class="anchor" aria-label="anchor" href="#d-loading-plots"></a>
 </h4>
-<div class="sourceCode" id="cb29"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaLoading1dPlot.html">pcaLoading1dPlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA_mean</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"PCA loadings plot trout"</span>, xlab <span class="op">=</span> <span class="st">" "</span>,</span>
 <span>    ylab <span class="op">=</span> <span class="st">"Expression"</span>, xaxis_type <span class="op">=</span> <span class="st">"character"</span>, type <span class="op">=</span> <span class="st">"s"</span></span>
 <span><span class="op">)</span> <span class="op">+</span></span>
 <span>    <span class="fu">ggplot2</span><span class="fu">::</span><span class="fu"><a href="https://ggplot2.tidyverse.org/reference/theme.html" class="external-link">theme</a></span><span class="op">(</span>axis.text.x <span class="op">=</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/element.html" class="external-link">element_text</a></span><span class="op">(</span>angle <span class="op">=</span> <span class="fl">45</span>, hjust <span class="op">=</span> <span class="fl">1</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-2-1.png" width="250"></p>
+<p><img src="Trout_files/figure-html/unnamed-chunk-3-1.png" width="250"></p>
 </div>
 <div class="section level4">
 <h4 id="d-loading-plots-1">2D Loading plots<a class="anchor" aria-label="anchor" href="#d-loading-plots-1"></a>
@@ -457,12 +477,12 @@ important effect.</p>
 <p>This 2D loading plot allows already to observe that most responses
 are correlated with each others. Igm, SOD and TLR9 behave quite
 differently.</p>
-<div class="sourceCode" id="cb30"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/pcaLoading2dPlot.html">pcaLoading2dPlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">resPCA_mean</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"PCA loadings plot trout"</span>, addRownames <span class="op">=</span> <span class="cn">TRUE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-3-1.png" width="250"></p>
+<p><img src="Trout_files/figure-html/unnamed-chunk-4-1.png" width="250"></p>
 </div>
 </div>
 <div class="section level3">
@@ -473,7 +493,7 @@ relation between all (or some of) the responses simultaneously and
 choose different markers and colors above and below the diagonal
 according to factor levels. Strong relations between expressions are
 confirmed here for most genes.</p>
-<div class="sourceCode" id="cb31"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/plotScatterM.html">plotScatterM</a></span><span class="op">(</span></span>
 <span>    Y <span class="op">=</span> <span class="va">trout_mean</span><span class="op">$</span><span class="va">outcomes</span>, cols <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">15</span><span class="op">)</span>,</span>
 <span>    design <span class="op">=</span> <span class="va">trout_mean</span><span class="op">$</span><span class="va">design</span>,</span>
@@ -497,7 +517,7 @@ has been removed because it is confounded with residuals.</p>
 <div class="section level3">
 <h3 id="model-matrix-x-generation">Model matrix X generation<a class="anchor" aria-label="anchor" href="#model-matrix-x-generation"></a>
 </h3>
-<div class="sourceCode" id="cb32"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpModelMatrix</span> <span class="op">&lt;-</span> <span class="fu">limpca</span><span class="fu">::</span><span class="fu"><a href="../reference/lmpModelMatrix.html">lmpModelMatrix</a></span><span class="op">(</span><span class="va">trout_mean</span><span class="op">)</span></span>
 <span><span class="fu">pander</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/utils/head.html" class="external-link">head</a></span><span class="op">(</span><span class="va">resLmpModelMatrix</span><span class="op">$</span><span class="va">modelMatrix</span><span class="op">)</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
@@ -794,7 +814,7 @@ has been removed because it is confounded with residuals.</p>
 </h3>
 <p>As observed before, the more important effect in the model is the Day
 main effect.</p>
-<div class="sourceCode" id="cb33"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpEffectMatrices</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpEffectMatrices.html">lmpEffectMatrices</a></span><span class="op">(</span><span class="va">resLmpModelMatrix</span><span class="op">)</span></span>
 <span><span class="va">resLmpEffectMatrices</span><span class="op">$</span><span class="va">varPercentagesPlot</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/EffectMatrices-1.png" width="250"></p>
@@ -806,7 +826,7 @@ main effect.</p>
 Treatment effect is also significant (p&lt;0.05) and the DxT effect is
 nearly significant (p close to 0.1). The corresponding effect matrices
 will be studied more deeply by PCA in the next sections.</p>
-<div class="sourceCode" id="cb34"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpBootstrapTests</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpBootstrapTests.html">lmpBootstrapTests</a></span><span class="op">(</span></span>
 <span>    resLmpEffectMatrices <span class="op">=</span> <span class="va">resLmpEffectMatrices</span>,</span>
 <span>    nboot <span class="op">=</span> <span class="fl">1000</span></span>
@@ -892,7 +912,7 @@ here.</p>
 <p>In addition to single model effects, a combined effect matrix
 <code>Day+Treatment+Day:Treatment</code> also is computed in order to
 visualize the combined effect of these two most important factors.</p>
-<div class="sourceCode" id="cb35"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resASCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpPcaEffects.html">lmpPcaEffects</a></span><span class="op">(</span></span>
 <span>    resLmpEffectMatrices <span class="op">=</span> <span class="va">resLmpEffectMatrices</span>,</span>
 <span>    method <span class="op">=</span> <span class="st">"ASCA"</span>,</span>
@@ -908,9 +928,9 @@ visualize the combined effect of these two most important factors.</p>
 <p>Print contributions of each model effect and of each PC for each
 effect matrix decomposition by PCA. This last result is given effect by
 effect and then reported to the global variance.</p>
-<div class="sourceCode" id="cb36"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resLmpContributions</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpContributions.html">lmpContributions</a></span><span class="op">(</span><span class="va">resASCA</span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb37"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pander</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">totalContribTable</span><span class="op">)</span></span></code></pre></div>
 <table style="width:69%;" class="table">
 <colgroup>
@@ -952,7 +972,7 @@ effect and then reported to the global variance.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb38"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pander</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">effectTable</span><span class="op">)</span></span></code></pre></div>
 <table style="width:99%;" class="table">
 <colgroup>
@@ -1039,7 +1059,7 @@ effect and then reported to the global variance.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb39"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pander</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">contribTable</span><span class="op">)</span></span></code></pre></div>
 <table style="width:99%;" class="table">
 <colgroup>
@@ -1126,7 +1146,7 @@ effect and then reported to the global variance.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb40"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu">pander</span><span class="fu">::</span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">combinedEffectTable</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <colgroup>
@@ -1168,7 +1188,7 @@ effect and then reported to the global variance.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb41"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co">## Visualize the more important contributions</span></span>
 <span><span class="va">resLmpContributions</span><span class="op">$</span><span class="va">plotContrib</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20ContribP-1.png" width="250"></p>
@@ -1182,7 +1202,7 @@ see for which response each effect is or is not important</p>
 <div class="section level5">
 <h5 id="day-effect">Day effect<a class="anchor" aria-label="anchor" href="#day-effect"></a>
 </h5>
-<div class="sourceCode" id="cb42"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Day"</span>, shape <span class="op">=</span> <span class="st">"Day"</span></span>
@@ -1191,13 +1211,13 @@ see for which response each effect is or is not important</p>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day"</span>,</span>
 <span>    points_labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20Day-1.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="treatment-effect">Treatment effect<a class="anchor" aria-label="anchor" href="#treatment-effect"></a>
 </h5>
-<div class="sourceCode" id="cb43"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Treatment"</span>, shape <span class="op">=</span> <span class="st">"Treatment"</span></span>
@@ -1206,13 +1226,13 @@ see for which response each effect is or is not important</p>
 <span>    effectNames <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
 <span>    points_labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20Treatment-1.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="daytreatment-effect">Day:Treatment effect<a class="anchor" aria-label="anchor" href="#daytreatment-effect"></a>
 </h5>
-<div class="sourceCode" id="cb44"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day:Treatment"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Treatment"</span>, shape <span class="op">=</span> <span class="st">"Day"</span></span>
@@ -1221,13 +1241,13 @@ see for which response each effect is or is not important</p>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day:Treatment"</span>,</span>
 <span>    points_labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20DayTreatment-1.png" width="250"></p>
 </div>
 <div class="section level5">
 <h5 id="combined-daytreatmentdaytreatment-effect">Combined Day+Treatment+Day:Treatment effect<a class="anchor" aria-label="anchor" href="#combined-daytreatmentdaytreatment-effect"></a>
 </h5>
-<div class="sourceCode" id="cb45"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day+Treatment+Day:Treatment"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Treatment"</span>, shape <span class="op">=</span> <span class="st">"Day"</span></span>
@@ -1236,7 +1256,7 @@ see for which response each effect is or is not important</p>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day+Treatment+Day:Treatment"</span>,</span>
 <span>    points_labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20Combined%20effect-1.png" width="250"></p>
 </div>
 <div class="section level5">
@@ -1244,7 +1264,7 @@ see for which response each effect is or is not important</p>
 </h5>
 <p>The score and loading plot of the residual matrix does not show any
 special pattern.</p>
-<div class="sourceCode" id="cb46"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Residuals"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Treatment"</span>, shape <span class="op">=</span> <span class="st">"Day"</span></span>
@@ -1253,7 +1273,7 @@ special pattern.</p>
 <span>    effectNames <span class="op">=</span> <span class="st">"Residuals"</span>,</span>
 <span>    points_labs <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/colnames.html" class="external-link">colnames</a></span><span class="op">(</span><span class="va">trout</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span>, <span class="va">B</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20Residuals-1.png" width="250"></p>
 </div>
 </div>
@@ -1267,23 +1287,23 @@ factor on a PC for different level of the other.</p>
 combined with the two related main effects.</p>
 <p>The second graph shows that their is some interaction effect but
 small compared to the Day and even treatment main effects.</p>
-<div class="sourceCode" id="cb47"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectName <span class="op">=</span> <span class="st">"Day:Treatment"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Day"</span>, z <span class="op">=</span> <span class="st">"Treatment"</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">A</span><span class="op">$</span><span class="va">PC1</span> <span class="op">&lt;-</span> <span class="va">A</span><span class="op">$</span><span class="va">PC1</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"PC1: Day:Treatment effect alone"</span><span class="op">)</span></span>
 <span><span class="va">A</span><span class="op">$</span><span class="va">PC2</span> <span class="op">&lt;-</span> <span class="va">A</span><span class="op">$</span><span class="va">PC2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"PC2: Day:Treatment effect alone"</span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span><span class="op">$</span><span class="va">PC1</span>, <span class="va">A</span><span class="op">$</span><span class="va">PC2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span><span class="op">$</span><span class="va">PC1</span>, <span class="va">A</span><span class="op">$</span><span class="va">PC2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20Effects-1.png" width="250"></p>
-<div class="sourceCode" id="cb48"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpEffectPlot.html">lmpEffectPlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
 <span>    effectName <span class="op">=</span> <span class="st">"Day+Treatment+Day:Treatment"</span>,</span>
 <span>    x <span class="op">=</span> <span class="st">"Day"</span>, z <span class="op">=</span> <span class="st">"Treatment"</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span></span>
 <span><span class="op">)</span></span>
 <span><span class="va">A</span><span class="op">$</span><span class="va">PC1</span> <span class="op">&lt;-</span> <span class="va">A</span><span class="op">$</span><span class="va">PC1</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"PC1: Combined D+T+D:T effects"</span><span class="op">)</span></span>
 <span><span class="va">A</span><span class="op">$</span><span class="va">PC2</span> <span class="op">&lt;-</span> <span class="va">A</span><span class="op">$</span><span class="va">PC2</span> <span class="op">+</span> <span class="fu"><a href="https://ggplot2.tidyverse.org/reference/labs.html" class="external-link">ggtitle</a></span><span class="op">(</span><span class="st">"PC2: Combined D+T+D:T effects"</span><span class="op">)</span></span>
-<span><span class="fu">grid.arrange</span><span class="op">(</span><span class="va">A</span><span class="op">$</span><span class="va">PC1</span>, <span class="va">A</span><span class="op">$</span><span class="va">PC2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
+<span><span class="fu"><a href="https://rdrr.io/pkg/gridExtra/man/arrangeGrob.html" class="external-link">grid.arrange</a></span><span class="op">(</span><span class="va">A</span><span class="op">$</span><span class="va">PC1</span>, <span class="va">A</span><span class="op">$</span><span class="va">PC2</span>, ncol <span class="op">=</span> <span class="fl">2</span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/ASCA%20Effects-2.png" width="250"></p>
 </div>
 </div>
@@ -1296,19 +1316,19 @@ significance. Be care that the significance depends also crucially of
 the number of observations in the experiment.</p>
 <p>In APCA the score plots are the more interesting graphics to look at.
 We then only give them here for all model effects.</p>
-<div class="sourceCode" id="cb49"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb52"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">resAPCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpPcaEffects.html">lmpPcaEffects</a></span><span class="op">(</span></span>
 <span>    resLmpEffectMatrices <span class="op">=</span></span>
 <span>        <span class="va">resLmpEffectMatrices</span>, method <span class="op">=</span> <span class="st">"APCA"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<div class="sourceCode" id="cb50"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Day Effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Day"</span>, shape <span class="op">=</span> <span class="st">"Day"</span>, drawShapes <span class="op">=</span> <span class="st">"ellipse"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/APCA%20Scores-1.png" width="250"></p>
-<div class="sourceCode" id="cb51"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Treatment Effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Treatment"</span>,</span>
@@ -1317,14 +1337,14 @@ We then only give them here for all model effects.</p>
 <pre><code>Warning:  [1m [22mRemoved 30 rows containing missing values or values outside the scale range
 (`geom_path()`).</code></pre>
 <p><img src="Trout_files/figure-html/APCA%20Scores-2.png" width="250"></p>
-<div class="sourceCode" id="cb53"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Exposure Effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Exposure"</span>,</span>
 <span>    color <span class="op">=</span> <span class="st">"Exposure"</span>, shape <span class="op">=</span> <span class="st">"Exposure"</span>, drawShapes <span class="op">=</span> <span class="st">"ellipse"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="Trout_files/figure-html/APCA%20Scores-3.png" width="250"></p>
-<div class="sourceCode" id="cb54"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Day:Treatment Effect</span></span>
 <span><span class="fu"><a href="../reference/lmpScorePlot.html">lmpScorePlot</a></span><span class="op">(</span><span class="va">resAPCA</span>,</span>
 <span>    effectNames <span class="op">=</span> <span class="st">"Day:Treatment"</span>,</span>
@@ -1338,19 +1358,20 @@ We then only give them here for all model effects.</p>
 </h2>
 <p>This part of the vignette links the results of the ASCA/APCA analysis
 to a more classical analysis applied in -omics transcriptomic data
-analysis (see e.g. <code>LIMMA</code> package).</p>
+analysis (see e.g. <code>limma</code> package).</p>
 <p>An ANOVA model is fitted to each response separately and then, for
 each model effect, p-values of effect significance are corrected by FDR
 and ordered. These results allow to detect for which responses each
-effect of interest is significant. E.g. find which gene is a potential
-biomarker to differentiate patients with or without a given disease.</p>
+effect of interest is significant (e.g. find which gene is a potential
+biomarker to differentiate patients with or without a given
+disease).</p>
 <p>The code below applies such analysis and compares then responses
 importance based on FDR p-values to response loadings obtained by
 ASCA/APCA.</p>
 <div class="section level3">
 <h3 id="parallel-anova-modeling-and-fdr-p-value-corrections">Parallel ANOVA modeling and FDR p-value corrections<a class="anchor" aria-label="anchor" href="#parallel-anova-modeling-and-fdr-p-value-corrections"></a>
 </h3>
-<div class="sourceCode" id="cb55"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Creation of a matrix to store the p-values</span></span>
 <span><span class="va">m</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/nrow.html" class="external-link">ncol</a></span><span class="op">(</span><span class="va">trout_mean</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="va">mat_pval</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span>nrow <span class="op">=</span> <span class="va">m</span>, ncol <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span>
@@ -1369,7 +1390,7 @@ ASCA/APCA.</p>
 <span>        contrasts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span>Day <span class="op">=</span> <span class="va">contr.sum</span>, Treatment <span class="op">=</span> <span class="va">contr.sum</span>, Exposure <span class="op">=</span> <span class="va">contr.sum</span><span class="op">)</span>,</span>
 <span>        data <span class="op">=</span> <span class="va">data</span></span>
 <span>    <span class="op">)</span></span>
-<span>    <span class="va">tabanova</span> <span class="op">&lt;-</span> <span class="fu">Anova</span><span class="op">(</span><span class="va">Modl</span>, type <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
+<span>    <span class="va">tabanova</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/car/man/Anova.html" class="external-link">Anova</a></span><span class="op">(</span><span class="va">Modl</span>, type <span class="op">=</span> <span class="fl">3</span><span class="op">)</span></span>
 <span>    <span class="va">mat_pval</span><span class="op">[</span><span class="va">i</span>, <span class="op">]</span> <span class="op">&lt;-</span> <span class="va">tabanova</span><span class="op">[</span><span class="fl">2</span><span class="op">:</span><span class="fl">7</span>, <span class="fl">4</span><span class="op">]</span></span>
 <span><span class="op">}</span></span>
 <span></span>
@@ -1379,8 +1400,8 @@ ASCA/APCA.</p>
 <div class="section level3">
 <h3 id="fdr-corrected-p_values-q-values">FDR corrected p_values (q-values)<a class="anchor" aria-label="anchor" href="#fdr-corrected-p_values-q-values"></a>
 </h3>
-<div class="sourceCode" id="cb56"><pre class="downlit sourceCode r">
-<code class="sourceCode R"><span><span class="fu">pander</span><span class="op">(</span><span class="va">mat_pval</span><span class="op">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/pkg/pander/man/pander.html" class="external-link">pander</a></span><span class="op">(</span><span class="va">mat_pval</span><span class="op">)</span></span></code></pre></div>
 <table class="table">
 <caption>Table continues below</caption>
 <colgroup>
@@ -1594,12 +1615,12 @@ ASCA/APCA.</p>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb57"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/stats/heatmap.html" class="external-link">heatmap</a></span><span class="op">(</span><span class="op">-</span><span class="fu"><a href="https://rdrr.io/r/base/Log.html" class="external-link">log10</a></span><span class="op">(</span><span class="va">mat_pval</span><span class="op">)</span>,</span>
 <span>    Rowv <span class="op">=</span> <span class="cn">NA</span>, Colv <span class="op">=</span> <span class="st">"Rowv"</span>,</span>
 <span>    cexCol <span class="op">=</span> <span class="fl">0.8</span>, scale <span class="op">=</span> <span class="st">"none"</span>, main <span class="op">=</span> <span class="st">"Heatmap of -log10(q-values)"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-4-1.png" width="250"></p>
+<p><img src="Trout_files/figure-html/unnamed-chunk-5-1.png" width="250"></p>
 </div>
 <div class="section level3">
 <h3 id="plot-asca-loadings-versus--log10q-values">Plot ASCA loadings versus -log10(q-values)<a class="anchor" aria-label="anchor" href="#plot-asca-loadings-versus--log10q-values"></a>
@@ -1609,7 +1630,7 @@ three more important effects of the model : Day, Treatment and
 Day:Treatment.</p>
 <p>FDR p-values are log transformed and loadings are summarized over the
 2 first components.</p>
-<div class="sourceCode" id="cb58"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">Effects</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="st">"Day"</span>, <span class="st">"Treatment"</span>, <span class="st">"Day:Treatment"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="kw">for</span> <span class="op">(</span><span class="va">i</span> <span class="kw">in</span> <span class="fl">1</span><span class="op">:</span><span class="fl">3</span><span class="op">)</span> <span class="op">{</span></span>
@@ -1628,24 +1649,24 @@ Day:Treatment.</p>
 <span><span class="va">A</span><span class="op">[[</span><span class="fl">1</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code>Warning: ggrepel: 1 unlabeled data points (too many overlaps). Consider
 increasing max.overlaps</code></pre>
-<p><img src="Trout_files/figure-html/unnamed-chunk-5-1.png" width="250"></p>
-<div class="sourceCode" id="cb60"><pre class="downlit sourceCode r">
+<p><img src="Trout_files/figure-html/unnamed-chunk-6-1.png" width="250"></p>
+<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span><span class="op">[[</span><span class="fl">2</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
-<p><img src="Trout_files/figure-html/unnamed-chunk-5-2.png" width="250"></p>
-<div class="sourceCode" id="cb61"><pre class="downlit sourceCode r">
+<p><img src="Trout_files/figure-html/unnamed-chunk-6-2.png" width="250"></p>
+<div class="sourceCode" id="cb64"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">A</span><span class="op">[[</span><span class="fl">3</span><span class="op">]</span><span class="op">]</span></span></code></pre></div>
 <pre><code>Warning: ggrepel: 6 unlabeled data points (too many overlaps). Consider
 increasing max.overlaps</code></pre>
-<p><img src="Trout_files/figure-html/unnamed-chunk-5-3.png" width="250"></p>
+<p><img src="Trout_files/figure-html/unnamed-chunk-6-3.png" width="250"></p>
 </div>
 </div>
 <div class="section level2">
 <h2 id="sessioninfo">sessionInfo<a class="anchor" aria-label="anchor" href="#sessioninfo"></a>
 </h2>
-<div class="sourceCode" id="cb63"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb66"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span></code></pre></div>
-<pre><code>R version 4.3.3 (2024-02-29)
-Platform: x86_64-pc-linux-gnu (64-bit)
+<pre><code>R version 4.4.0 (2024-04-24)
+Platform: x86_64-pc-linux-gnu
 Running under: Ubuntu 22.04.4 LTS
 
 Matrix products: default
@@ -1666,52 +1687,52 @@ attached base packages:
 
 other attached packages:
 [1] car_3.1-2        carData_3.0-5    pander_0.6.5     gridExtra_2.3   
-[5] limpca_0.99.8    ggplot2_3.5.0    BiocStyle_2.30.0
+[5] limpca_0.99.9    ggplot2_3.5.1    BiocStyle_2.31.0
 
 loaded via a namespace (and not attached):
- [1] SummarizedExperiment_1.32.0 gtable_0.3.5               
+ [1] SummarizedExperiment_1.33.3 gtable_0.3.5               
  [3] xfun_0.43                   bslib_0.7.0                
- [5] ggrepel_0.9.5               Biobase_2.62.0             
- [7] lattice_0.22-5              vctrs_0.6.5                
- [9] tools_4.3.3                 bitops_1.0-7               
-[11] generics_0.1.3              parallel_4.3.3             
-[13] stats4_4.3.3                tibble_3.2.1               
-[15] fansi_1.0.6                 highr_0.10                 
-[17] pkgconfig_2.0.3             Matrix_1.6-5               
-[19] tidyverse_2.0.0             desc_1.4.3                 
-[21] S4Vectors_0.40.2            lifecycle_1.0.4            
-[23] GenomeInfoDbData_1.2.11     farver_2.1.1               
-[25] stringr_1.5.1               compiler_4.3.3             
-[27] textshaping_0.3.7           munsell_0.5.1              
-[29] ggsci_3.0.3                 codetools_0.2-19           
-[31] GenomeInfoDb_1.38.8         htmltools_0.5.8.1          
-[33] sass_0.4.9                  RCurl_1.98-1.14            
-[35] yaml_2.3.8                  tidyr_1.3.1                
-[37] pillar_1.9.0                pkgdown_2.0.9              
-[39] crayon_1.5.2                jquerylib_0.1.4            
-[41] cachem_1.0.8                DelayedArray_0.28.0        
-[43] iterators_1.0.14            abind_1.4-5                
-[45] foreach_1.5.2               tidyselect_1.2.1           
-[47] digest_0.6.35               stringi_1.8.3              
-[49] reshape2_1.4.4              dplyr_1.1.4                
-[51] purrr_1.0.2                 bookdown_0.39              
-[53] labeling_0.4.3              fastmap_1.1.1              
-[55] grid_4.3.3                  colorspace_2.1-0           
-[57] cli_3.6.2                   SparseArray_1.2.4          
-[59] magrittr_2.0.3              S4Arrays_1.2.1             
-[61] utf8_1.2.4                  withr_3.0.0                
-[63] scales_1.3.0                rmarkdown_2.26             
-[65] XVector_0.42.0              matrixStats_1.3.0          
+ [5] ggrepel_0.9.5               Biobase_2.63.1             
+ [7] lattice_0.22-6              vctrs_0.6.5                
+ [9] tools_4.4.0                 generics_0.1.3             
+[11] parallel_4.4.0              stats4_4.4.0               
+[13] tibble_3.2.1                fansi_1.0.6                
+[15] highr_0.10                  pkgconfig_2.0.3            
+[17] Matrix_1.7-0                tidyverse_2.0.0            
+[19] desc_1.4.3                  S4Vectors_0.41.7           
+[21] lifecycle_1.0.4             GenomeInfoDbData_1.2.12    
+[23] farver_2.1.1                stringr_1.5.1              
+[25] compiler_4.4.0              textshaping_0.3.7          
+[27] munsell_0.5.1               ggsci_3.0.3                
+[29] codetools_0.2-20            GenomeInfoDb_1.39.14       
+[31] htmltools_0.5.8.1           sass_0.4.9                 
+[33] yaml_2.3.8                  tidyr_1.3.1                
+[35] pillar_1.9.0                pkgdown_2.0.9              
+[37] crayon_1.5.2                jquerylib_0.1.4            
+[39] cachem_1.0.8                DelayedArray_0.29.9        
+[41] iterators_1.0.14            abind_1.4-5                
+[43] foreach_1.5.2               tidyselect_1.2.1           
+[45] digest_0.6.35               stringi_1.8.3              
+[47] reshape2_1.4.4              dplyr_1.1.4                
+[49] purrr_1.0.2                 bookdown_0.39              
+[51] labeling_0.4.3              fastmap_1.1.1              
+[53] grid_4.4.0                  colorspace_2.1-0           
+[55] cli_3.6.2                   SparseArray_1.3.5          
+[57] magrittr_2.0.3              S4Arrays_1.3.7             
+[59] utf8_1.2.4                  withr_3.0.0                
+[61] scales_1.3.0                UCSC.utils_0.99.7          
+[63] rmarkdown_2.26              XVector_0.43.1             
+[65] httr_1.4.7                  matrixStats_1.3.0          
 [67] ragg_1.3.0                  memoise_2.0.1              
 [69] evaluate_0.23               knitr_1.46                 
-[71] GenomicRanges_1.54.1        IRanges_2.36.0             
+[71] GenomicRanges_1.55.4        IRanges_2.37.1             
 [73] doParallel_1.0.17           rlang_1.1.3                
 [75] Rcpp_1.0.12                 glue_1.7.0                 
-[77] BiocManager_1.30.22         BiocGenerics_0.48.1        
+[77] BiocManager_1.30.22         BiocGenerics_0.49.1        
 [79] jsonlite_1.8.8              plyr_1.8.9                 
-[81] R6_2.5.1                    MatrixGenerics_1.14.0      
+[81] R6_2.5.1                    MatrixGenerics_1.15.1      
 [83] systemfonts_1.0.6           fs_1.6.3                   
-[85] zlibbioc_1.48.2            </code></pre>
+[85] zlibbioc_1.49.3            </code></pre>
 </div>
 <div class="section level2">
 <h2 id="references">References<a class="anchor" aria-label="anchor" href="#references"></a>

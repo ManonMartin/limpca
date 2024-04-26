@@ -5,16 +5,14 @@
 <meta charset="utf-8">
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="Get started with limpca.
-">
+<meta name="description" content="limpca">
 <title>Get started with limpca. • limpca</title>
 <script src="../deps/jquery-3.6.0/jquery-3.6.0.min.js"></script><meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <link href="../deps/bootstrap-5.3.1/bootstrap.min.css" rel="stylesheet">
 <script src="../deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><!-- Font Awesome icons --><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/all.min.css" integrity="sha256-mmgLkCYLUQbXn0B1SRqzHar6dCnv9oZFPEC1g1cwlkk=" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.12.1/css/v4-shims.min.css" integrity="sha256-wZjR52fzng1pJHwx4aV2AO3yyTOXrcDW7jBpJtTwVxw=" crossorigin="anonymous">
 <!-- bootstrap-toc --><script src="https://cdn.jsdelivr.net/gh/afeld/bootstrap-toc@v1.0.1/dist/bootstrap-toc.min.js" integrity="sha256-4veVQbu7//Lk5TSmc7YV48MxtMy98e26cf5MrgZYnwo=" crossorigin="anonymous"></script><!-- headroom.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/headroom.min.js" integrity="sha256-AsUX4SJE1+yuDu5+mAVzJbuYNPHj/WroHuZ8Ir/CkE0=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/headroom/0.11.0/jQuery.headroom.min.js" integrity="sha256-ZX/yNShbjqsohH1k95liqY9Gd8uOiE1S4vZc+9KQ1K4=" crossorigin="anonymous"></script><!-- clipboard.js --><script src="https://cdnjs.cloudflare.com/ajax/libs/clipboard.js/2.0.11/clipboard.min.js" integrity="sha512-7O5pXpc0oCRrxk8RUfDYFgn0nO1t+jLuIOQdOMRp4APB7uZ4vSjspzp5y6YDtDs4VzUSTbWzBFZ/LKJhnyFOKw==" crossorigin="anonymous" referrerpolicy="no-referrer"></script><!-- search --><script src="https://cdnjs.cloudflare.com/ajax/libs/fuse.js/6.4.6/fuse.js" integrity="sha512-zv6Ywkjyktsohkbp9bb45V6tEMoWhzFzXis+LrMehmJZZSys19Yxf1dopHx7WzIKxr5tK2dVcYmaCk2uqdjF4A==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/autocomplete.js/0.38.0/autocomplete.jquery.min.js" integrity="sha512-GU9ayf+66Xx2TmpxqJpliWbT5PiGYxpaG8rfnBEk1LL8l1KGkRShhngwdXK1UgqhAzWpZHSiYPc09/NwDQIGyg==" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mark.js/8.11.1/mark.min.js" integrity="sha512-5CYOlHXGh6QpOFA/TeTylKLWfB3ftPsde7AnmhuitiTX4K5SqCLBeKro6sPS8ilsz1Q4NRx3v8Ko2IBiszzdww==" crossorigin="anonymous"></script><!-- pkgdown --><script src="../pkgdown.js"></script><meta property="og:title" content="Get started with limpca.">
-<meta property="og:description" content="Get started with limpca.
-">
+<meta property="og:description" content="limpca">
 <!-- mathjax --><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js" integrity="sha256-nvJJv9wWKEm88qvoQl9ekL2J+k/RWIsaSScxxlsrv8k=" crossorigin="anonymous"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/config/TeX-AMS-MML_HTMLorMML.js" integrity="sha256-84DKXVJXs0/F8OTMzX4UR909+jtl4G7SPypPavF+GfA=" crossorigin="anonymous"></script><!--[if lt IE 9]>
 <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
 <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
@@ -28,7 +26,7 @@
     
     <a class="navbar-brand me-2" href="../index.html">limpca</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.8</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Released version">0.99.9</small>
 
     
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -81,7 +79,11 @@
 <div class="row">
   <main id="main" class="col-md-9"><div class="page-header">
       <img src="" class="logo" alt=""><h1>Get started with limpca.</h1>
+                        <h4 data-toc-skip class="author">Benaiche Nadia,
+Sébastien Franceschini, Martin Manon, Thiel Michel, Govaerts
+Bernadette</h4>
             
+            <h4 data-toc-skip class="date">April 26, 2024</h4>
       
       <small class="dont-index">Source: <a href="https://github.com/ManonMartin/limpca/blob/HEAD/vignettes/limpca.Rmd" class="external-link"><code>vignettes/limpca.Rmd</code></a></small>
       <div class="d-none name"><code>limpca.Rmd</code></div>
@@ -92,14 +94,69 @@
 <!-- badges: start -->
 <p><a href="https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml" class="external-link"><img src="https://github.com/ManonMartin/limpca/actions/workflows/check-standard.yaml/badge.svg" alt="R-CMD-check"></a> <!-- badges: end --></p>
 <div class="section level2">
-<h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
+<h2 id="introduction">Introduction<a class="anchor" aria-label="anchor" href="#introduction"></a>
 </h2>
+</div>
+<div class="section level2">
+<h2 id="introduction-1">Introduction<a class="anchor" aria-label="anchor" href="#introduction-1"></a>
+</h2>
+<div class="section level3">
+<h3 id="about-the-package">About the package<a class="anchor" aria-label="anchor" href="#about-the-package"></a>
+</h3>
+<p>This package was created to analyse models with high-dimensional data
+and a multi-factor design of experiment. <code>limpca</code> stands for
+<strong>li</strong>near <strong>m</strong>odeling of high-dimensional
+designed data based on the ASCA (ANOVA-Simultaneous Component Analysis)
+and A<strong>PCA</strong> (ANOVA-Principal Component Analysis) family of
+methods. These methods combine ANOVA with a General Linear Model (GLM)
+decomposition and PCA. They provide powerful visualization tools for
+multivariate structures in the space of each effect of the statistical
+model linked to the experimental design. Details on the methods used and
+the package implementation can be found in the articles of <span class="citation">Thiel, Féraud, and Govaerts (2017)</span>, <span class="citation">Guisset, Martin, and Govaerts (2019)</span> and <span class="citation">Thiel et al. (2023)</span>.</p>
+<p>Therefore, ASCA/APCA are highly informative modeling and
+visualisation tools to analyse -omics data tables in a multivariate
+framework and act as a complement to differential expression analyses
+methods such as <code>limma</code> (<span class="citation">Ritchie et
+al. (2015)</span>).</p>
+</div>
+<div class="section level3">
+<h3 id="vignettes-description">Vignettes description<a class="anchor" aria-label="anchor" href="#vignettes-description"></a>
+</h3>
+<ul>
+<li><p><code>Get started with limpca</code> (this vignette): This
+vignette is a short application of <code>limpca</code> on the
+<code>UCH</code> dataset with data visualisation, exploration (PCA), GLM
+decomposition and ASCA modelling. The ASCA model used in this example is
+a three-way ANOVA with fixed effects.</p></li>
+<li><p><a href="UCH.html">Analysis of the UCH dataset with limpca</a>:
+This vignette is an extensive application of <code>limpca</code> on the
+<code>UCH</code> dataset with data visualisation, exploration (PCA), GLM
+decomposition and ASCA/APCA/ASCA-E modelling. The models used in this
+example are three-way ANOVAs with fixed effects. This document presents
+all the usual steps of the analysis, from importing the data to
+visualising the results.</p></li>
+<li><p><a href="Trout.html">Analysis of the Trout dataset with
+limpca</a>: This vignette is an extensive application of
+<code>limpca</code> on the <code>Trout</code> dataset with data
+visualisation, exploration (PCA), GLM decomposition and ASCA/APCA/ASCA-E
+modelling. It also compares the results of ASCA to a univariate ANOVA
+modeling. The models used involve three main effects and two way
+interaction terms.</p></li>
+</ul>
+</div>
+</div>
+<div class="section level2">
+<h2 id="installation-and-loading-of-the-limpca-package">Installation and loading of the <code>limpca</code> package<a class="anchor" aria-label="anchor" href="#installation-and-loading-of-the-limpca-package"></a>
+</h2>
+<p><code>limpca</code> can be installed from Bioconductor:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw">if</span> <span class="op">(</span><span class="op">!</span><span class="fu"><a href="https://rdrr.io/r/base/ns-load.html" class="external-link">requireNamespace</a></span><span class="op">(</span><span class="st">"BiocManager"</span>, quietly <span class="op">=</span> <span class="cn">TRUE</span><span class="op">)</span><span class="op">)</span></span>
 <span>    <span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"BiocManager"</span><span class="op">)</span></span>
 <span></span>
 <span><span class="fu">BiocManager</span><span class="fu">::</span><span class="fu"><a href="https://bioconductor.github.io/BiocManager/reference/install.html" class="external-link">install</a></span><span class="op">(</span><span class="st">"limpca"</span><span class="op">)</span></span></code></pre></div>
-<!-- Note that if you would like to build the vignettes, you have to install `BiocStyle` (from [Bioconductor](https://www.bioconductor.org/)) and `rmarkdown` packages before installing `limpca` with the following command: `remotes::install_github("ManonMartin/limpca", dependencies = TRUE, build_vignettes = TRUE)`. -->
+<p>And then loaded into your R session:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="st"><a href="https://github.com/ManonMartin/limpca" class="external-link">"limpca"</a></span><span class="op">)</span></span></code></pre></div>
 <p>For any enquiry, you can send an email to the package authors: <a href="mailto:bernadette.govaerts@uclouvain.be">bernadette.govaerts@uclouvain.be</a>
 ; <a href="mailto:michel.thiel@uclouvain.be">michel.thiel@uclouvain.be</a> or
 <a href="mailto:manon.martin@uclouvain.be">manon.martin@uclouvain.be</a></p>
@@ -117,7 +174,7 @@ following elements: <code>outcomes</code> (multivariate matrix),
 string). The <code>UCH</code> data set is already formatted
 appropriately and can be loaded from <code>limpca</code> with the
 <code>data</code> function.</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/data.html" class="external-link">data</a></span><span class="op">(</span><span class="st">"UCH"</span><span class="op">)</span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/str.html" class="external-link">str</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">)</span></span>
 <span><span class="co">#&gt; List of 3</span></span>
@@ -137,7 +194,7 @@ appropriately and can be loaded from <code>limpca</code> with the
 <ul>
 <li>from scratch:</li>
 </ul>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">UCH2</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/data2lmpDataList.html">data2LmpDataList</a></span><span class="op">(</span></span>
 <span>   outcomes <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span>,</span>
 <span>   design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>, </span>
@@ -154,7 +211,7 @@ appropriately and can be loaded from <code>limpca</code> with the
 <ul>
 <li>or from a <code>SummarizedExperiment</code>:</li>
 </ul>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">se</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/pkg/SummarizedExperiment/man/RangedSummarizedExperiment-class.html" class="external-link">SummarizedExperiment</a></span><span class="op">(</span></span>
 <span>   assays <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/list.html" class="external-link">list</a></span><span class="op">(</span></span>
 <span>     counts <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/t.html" class="external-link">t</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span><span class="op">)</span>, colData <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>,</span>
@@ -177,7 +234,7 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <h3 id="data-visualisation">Data visualisation<a class="anchor" aria-label="anchor" href="#data-visualisation"></a>
 </h3>
 <p>The design can be visualised with <code><a href="../reference/plotDesign.html">plotDesign()</a></code>.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># design</span></span>
 <span><span class="fu"><a href="../reference/plotDesign.html">plotDesign</a></span><span class="op">(</span></span>
 <span>    design <span class="op">=</span> <span class="va">UCH</span><span class="op">$</span><span class="va">design</span>, x <span class="op">=</span> <span class="st">"Hippurate"</span>,</span>
@@ -185,7 +242,7 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <span>    title <span class="op">=</span> <span class="st">"Design of the UCH dataset"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="limpca_files/figure-html/dataVisu-1.png" width="70%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># row 3 of outcomes</span></span>
 <span><span class="fu"><a href="../reference/plotLine.html">plotLine</a></span><span class="op">(</span></span>
@@ -200,11 +257,11 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <div class="section level3">
 <h3 id="pca">PCA<a class="anchor" aria-label="anchor" href="#pca"></a>
 </h3>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">ResPCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/pcaBySvd.html">pcaBySvd</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">$</span><span class="va">outcomes</span><span class="op">)</span></span>
 <span><span class="fu"><a href="../reference/pcaScreePlot.html">pcaScreePlot</a></span><span class="op">(</span><span class="va">ResPCA</span>, nPC <span class="op">=</span> <span class="fl">6</span><span class="op">)</span></span></code></pre></div>
 <p><img src="limpca_files/figure-html/PCA-1.png" width="70%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="../reference/pcaScorePlot.html">pcaScorePlot</a></span><span class="op">(</span></span>
 <span>    resPcaBySvd <span class="op">=</span> <span class="va">ResPCA</span>, axes <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">1</span>, <span class="fl">2</span><span class="op">)</span>,</span>
 <span>    title <span class="op">=</span> <span class="st">"PCA scores plot: PC1 and PC2"</span>,</span>
@@ -217,7 +274,7 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <div class="section level3">
 <h3 id="model-estimation-and-effect-matrix-decomposition">Model estimation and effect matrix decomposition<a class="anchor" aria-label="anchor" href="#model-estimation-and-effect-matrix-decomposition"></a>
 </h3>
-<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Model matrix generation</span></span>
 <span><span class="va">resMM</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpModelMatrix.html">lmpModelMatrix</a></span><span class="op">(</span><span class="va">UCH</span><span class="op">)</span></span>
 <span></span>
@@ -227,11 +284,11 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <div class="section level3">
 <h3 id="effect-matrix-test-of-significance-and-importance-measure">Effect matrix test of significance and importance measure<a class="anchor" aria-label="anchor" href="#effect-matrix-test-of-significance-and-importance-measure"></a>
 </h3>
-<div class="sourceCode" id="cb10"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># Effects importance</span></span>
 <span><span class="va">resEM</span><span class="op">$</span><span class="va">varPercentagesPlot</span></span></code></pre></div>
 <p><img src="limpca_files/figure-html/effectImpSign-1.png" width="70%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb11"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Bootstrap tests</span></span>
 <span><span class="va">resBT</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpBootstrapTests.html">lmpBootstrapTests</a></span><span class="op">(</span>resLmpEffectMatrices <span class="op">=</span> <span class="va">resEM</span>, nboot <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
@@ -249,7 +306,7 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <div class="section level3">
 <h3 id="asca-decomposition">ASCA decomposition<a class="anchor" aria-label="anchor" href="#asca-decomposition"></a>
 </h3>
-<div class="sourceCode" id="cb12"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># ASCA decomposition</span></span>
 <span><span class="va">resASCA</span> <span class="op">&lt;-</span> <span class="fu"><a href="../reference/lmpPcaEffects.html">lmpPcaEffects</a></span><span class="op">(</span>resLmpEffectMatrices <span class="op">=</span> <span class="va">resEM</span>, method <span class="op">=</span> <span class="st">"ASCA"</span><span class="op">)</span></span>
 <span></span>
@@ -259,7 +316,7 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <span>    color <span class="op">=</span> <span class="st">"Hippurate"</span>, shape <span class="op">=</span> <span class="st">"Hippurate"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="limpca_files/figure-html/ASCA-1.png" width="70%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb13"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Loadings Plot for the hippurate</span></span>
 <span><span class="fu"><a href="../reference/lmpLoading1dPlot.html">lmpLoading1dPlot</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
@@ -267,7 +324,7 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <span>    axes <span class="op">=</span> <span class="fl">1</span>, xlab <span class="op">=</span> <span class="st">"ppm"</span></span>
 <span><span class="op">)</span></span></code></pre></div>
 <p><img src="limpca_files/figure-html/ASCA-2.png" width="70%" style="display: block; margin: auto;"></p>
-<div class="sourceCode" id="cb14"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span></span>
 <span><span class="co"># Scores ScatterPlot matrix</span></span>
 <span><span class="fu"><a href="../reference/lmpScoreScatterPlotM.html">lmpScoreScatterPlotM</a></span><span class="op">(</span><span class="va">resASCA</span>,</span>
@@ -285,10 +342,10 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <div class="section level2">
 <h2 id="sessioninfo">sessionInfo<a class="anchor" aria-label="anchor" href="#sessioninfo"></a>
 </h2>
-<div class="sourceCode" id="cb15"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb16"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/sessionInfo.html" class="external-link">sessionInfo</a></span><span class="op">(</span><span class="op">)</span></span>
-<span><span class="co">#&gt; R version 4.3.3 (2024-02-29)</span></span>
-<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu (64-bit)</span></span>
+<span><span class="co">#&gt; R version 4.4.0 (2024-04-24)</span></span>
+<span><span class="co">#&gt; Platform: x86_64-pc-linux-gnu</span></span>
 <span><span class="co">#&gt; Running under: Ubuntu 22.04.4 LTS</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; Matrix products: default</span></span>
@@ -309,42 +366,70 @@ stores rectangular matrices of experimental results. See <span class="citation">
 <span><span class="co">#&gt; [8] base     </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; other attached packages:</span></span>
-<span><span class="co">#&gt;  [1] SummarizedExperiment_1.32.0 Biobase_2.62.0             </span></span>
-<span><span class="co">#&gt;  [3] GenomicRanges_1.54.1        GenomeInfoDb_1.38.8        </span></span>
-<span><span class="co">#&gt;  [5] IRanges_2.36.0              S4Vectors_0.40.2           </span></span>
-<span><span class="co">#&gt;  [7] BiocGenerics_0.48.1         MatrixGenerics_1.14.0      </span></span>
-<span><span class="co">#&gt;  [9] matrixStats_1.3.0           limpca_0.99.8              </span></span>
+<span><span class="co">#&gt;  [1] SummarizedExperiment_1.33.3 Biobase_2.63.1             </span></span>
+<span><span class="co">#&gt;  [3] GenomicRanges_1.55.4        GenomeInfoDb_1.39.14       </span></span>
+<span><span class="co">#&gt;  [5] IRanges_2.37.1              S4Vectors_0.41.7           </span></span>
+<span><span class="co">#&gt;  [7] BiocGenerics_0.49.1         MatrixGenerics_1.15.1      </span></span>
+<span><span class="co">#&gt;  [9] matrixStats_1.3.0           limpca_0.99.9              </span></span>
+<span><span class="co">#&gt; [11] BiocStyle_2.31.0           </span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; loaded via a namespace (and not attached):</span></span>
 <span><span class="co">#&gt;  [1] gtable_0.3.5            xfun_0.43               bslib_0.7.0            </span></span>
-<span><span class="co">#&gt;  [4] ggplot2_3.5.0           ggrepel_0.9.5           lattice_0.22-5         </span></span>
-<span><span class="co">#&gt;  [7] vctrs_0.6.5             tools_4.3.3             bitops_1.0-7           </span></span>
-<span><span class="co">#&gt; [10] generics_0.1.3          parallel_4.3.3          tibble_3.2.1           </span></span>
-<span><span class="co">#&gt; [13] fansi_1.0.6             highr_0.10              pkgconfig_2.0.3        </span></span>
-<span><span class="co">#&gt; [16] Matrix_1.6-5            tidyverse_2.0.0         desc_1.4.3             </span></span>
-<span><span class="co">#&gt; [19] lifecycle_1.0.4         GenomeInfoDbData_1.2.11 farver_2.1.1           </span></span>
-<span><span class="co">#&gt; [22] stringr_1.5.1           compiler_4.3.3          textshaping_0.3.7      </span></span>
-<span><span class="co">#&gt; [25] munsell_0.5.1           ggsci_3.0.3             codetools_0.2-19       </span></span>
-<span><span class="co">#&gt; [28] htmltools_0.5.8.1       sass_0.4.9              RCurl_1.98-1.14        </span></span>
-<span><span class="co">#&gt; [31] yaml_2.3.8              tidyr_1.3.1             pkgdown_2.0.9          </span></span>
-<span><span class="co">#&gt; [34] pillar_1.9.0            crayon_1.5.2            jquerylib_0.1.4        </span></span>
-<span><span class="co">#&gt; [37] DelayedArray_0.28.0     cachem_1.0.8            iterators_1.0.14       </span></span>
-<span><span class="co">#&gt; [40] abind_1.4-5             foreach_1.5.2           tidyselect_1.2.1       </span></span>
-<span><span class="co">#&gt; [43] digest_0.6.35           stringi_1.8.3           reshape2_1.4.4         </span></span>
-<span><span class="co">#&gt; [46] dplyr_1.1.4             purrr_1.0.2             labeling_0.4.3         </span></span>
-<span><span class="co">#&gt; [49] fastmap_1.1.1           grid_4.3.3              colorspace_2.1-0       </span></span>
-<span><span class="co">#&gt; [52] cli_3.6.2               SparseArray_1.2.4       magrittr_2.0.3         </span></span>
-<span><span class="co">#&gt; [55] S4Arrays_1.2.1          utf8_1.2.4              withr_3.0.0            </span></span>
-<span><span class="co">#&gt; [58] scales_1.3.0            rmarkdown_2.26          XVector_0.42.0         </span></span>
-<span><span class="co">#&gt; [61] ragg_1.3.0              memoise_2.0.1           evaluate_0.23          </span></span>
-<span><span class="co">#&gt; [64] knitr_1.46              doParallel_1.0.17       rlang_1.1.3            </span></span>
-<span><span class="co">#&gt; [67] Rcpp_1.0.12             glue_1.7.0              jsonlite_1.8.8         </span></span>
-<span><span class="co">#&gt; [70] plyr_1.8.9              R6_2.5.1                systemfonts_1.0.6      </span></span>
-<span><span class="co">#&gt; [73] fs_1.6.3                zlibbioc_1.48.2</span></span></code></pre></div>
+<span><span class="co">#&gt;  [4] ggplot2_3.5.1           ggrepel_0.9.5           lattice_0.22-6         </span></span>
+<span><span class="co">#&gt;  [7] vctrs_0.6.5             tools_4.4.0             generics_0.1.3         </span></span>
+<span><span class="co">#&gt; [10] parallel_4.4.0          tibble_3.2.1            fansi_1.0.6            </span></span>
+<span><span class="co">#&gt; [13] highr_0.10              pkgconfig_2.0.3         Matrix_1.7-0           </span></span>
+<span><span class="co">#&gt; [16] tidyverse_2.0.0         desc_1.4.3              lifecycle_1.0.4        </span></span>
+<span><span class="co">#&gt; [19] GenomeInfoDbData_1.2.12 farver_2.1.1            stringr_1.5.1          </span></span>
+<span><span class="co">#&gt; [22] compiler_4.4.0          textshaping_0.3.7       munsell_0.5.1          </span></span>
+<span><span class="co">#&gt; [25] ggsci_3.0.3             codetools_0.2-20        htmltools_0.5.8.1      </span></span>
+<span><span class="co">#&gt; [28] sass_0.4.9              yaml_2.3.8              tidyr_1.3.1            </span></span>
+<span><span class="co">#&gt; [31] pkgdown_2.0.9           pillar_1.9.0            crayon_1.5.2           </span></span>
+<span><span class="co">#&gt; [34] jquerylib_0.1.4         DelayedArray_0.29.9     cachem_1.0.8           </span></span>
+<span><span class="co">#&gt; [37] iterators_1.0.14        abind_1.4-5             foreach_1.5.2          </span></span>
+<span><span class="co">#&gt; [40] tidyselect_1.2.1        digest_0.6.35           stringi_1.8.3          </span></span>
+<span><span class="co">#&gt; [43] reshape2_1.4.4          dplyr_1.1.4             purrr_1.0.2            </span></span>
+<span><span class="co">#&gt; [46] bookdown_0.39           labeling_0.4.3          fastmap_1.1.1          </span></span>
+<span><span class="co">#&gt; [49] grid_4.4.0              colorspace_2.1-0        cli_3.6.2              </span></span>
+<span><span class="co">#&gt; [52] SparseArray_1.3.5       magrittr_2.0.3          S4Arrays_1.3.7         </span></span>
+<span><span class="co">#&gt; [55] utf8_1.2.4              withr_3.0.0             scales_1.3.0           </span></span>
+<span><span class="co">#&gt; [58] UCSC.utils_0.99.7       rmarkdown_2.26          XVector_0.43.1         </span></span>
+<span><span class="co">#&gt; [61] httr_1.4.7              ragg_1.3.0              memoise_2.0.1          </span></span>
+<span><span class="co">#&gt; [64] evaluate_0.23           knitr_1.46              doParallel_1.0.17      </span></span>
+<span><span class="co">#&gt; [67] rlang_1.1.3             Rcpp_1.0.12             glue_1.7.0             </span></span>
+<span><span class="co">#&gt; [70] BiocManager_1.30.22     jsonlite_1.8.8          plyr_1.8.9             </span></span>
+<span><span class="co">#&gt; [73] R6_2.5.1                systemfonts_1.0.6       fs_1.6.3               </span></span>
+<span><span class="co">#&gt; [76] zlibbioc_1.49.3</span></span></code></pre></div>
 <div id="refs" class="references csl-bib-body hanging-indent" entry-spacing="0">
+<div id="ref-Guisset2019" class="csl-entry">
+Guisset, Séverine, Manon Martin, and Bernadette Govaerts. 2019.
+<span>“Comparison of PARAFASCA, AComDim, and AMOPLS Approaches in the
+Multivariate GLM Modelling of Multi-Factorial Designs.”</span>
+<em>Chemometrics and Intelligent Laboratory Systems</em> 184: 44–63.
+https://doi.org/<a href="https://doi.org/10.1016/j.chemolab.2018.11.006" class="external-link">https://doi.org/10.1016/j.chemolab.2018.11.006</a>.
+</div>
 <div id="ref-SummarizedExperiment23" class="csl-entry">
 Morgan, Martin, Valerie Obenchain, Jim Hester, and Hervé Pagès. 2023.
 <em>SummarizedExperiment: SummarizedExperiment Container</em>. <a href="https://doi.org/10.18129/B9.bioc.SummarizedExperiment" class="external-link">https://doi.org/10.18129/B9.bioc.SummarizedExperiment</a>.
+</div>
+<div id="ref-limma2015" class="csl-entry">
+Ritchie, Matthew E, Belinda Phipson, Di Wu, Yifang Hu, Charity W Law,
+Wei Shi, and Gordon K Smyth. 2015. <span>“<span class="nocase">limma</span> Powers Differential Expression Analyses for
+<span>RNA</span>-Sequencing and Microarray Studies.”</span> <em>Nucleic
+Acids Research</em> 43 (7): e47. <a href="https://doi.org/10.1093/nar/gkv007" class="external-link">https://doi.org/10.1093/nar/gkv007</a>.
+</div>
+<div id="ref-Thiel2023" class="csl-entry">
+Thiel, Michel, Nadia Benaiche, Manon Martin, Sébastien Franceschini,
+Robin Van Oirbeek, and Bernadette Govaerts. 2023. <span>“Limpca: An r
+Package for the Linear Modeling of High-Dimensional Designed Data Based
+on ASCA/APCA Family of Methods.”</span> <em>Journal of Chemometrics</em>
+37 (7): e3482. https://doi.org/<a href="https://doi.org/10.1002/cem.3482" class="external-link">https://doi.org/10.1002/cem.3482</a>.
+</div>
+<div id="ref-Thiel2017" class="csl-entry">
+Thiel, Michel, Baptiste Féraud, and Bernadette Govaerts. 2017.
+<span>“ASCA+ and APCA+: Extensions of ASCA and APCA in the Analysis of
+Unbalanced Multifactorial Designs.”</span> <em>Journal of
+Chemometrics</em> 31 (6): e2895. https://doi.org/<a href="https://doi.org/10.1002/cem.2895" class="external-link">https://doi.org/10.1002/cem.2895</a>.
 </div>
 </div>
 </div>
