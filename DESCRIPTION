@@ -1,7 +1,7 @@
 Package: limpca
 Type: Package
 Title: An R package for the linear modeling of high-dimensional designed data based on ASCA/APCA family of methods
-Version: 0.99.10
+Version: 1.0.0
 Authors@R: c(person("Bernadette", "Govaerts", role = c("aut", "ths"),
                      email = "bernadette.govaerts@uclouvain.be"),
               person("Sebastien","Franceschini", role = "ctb",
