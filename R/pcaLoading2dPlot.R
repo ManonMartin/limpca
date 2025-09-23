@@ -220,9 +220,9 @@ pcaLoading2dPlot <- function(resPcaBySvd,
   # loadings plot  ===================
   fig <- fig + ggplot2::xlim(xlim_val) + ggplot2::ylim(ylim_val)
 
-  if (length(fig) == 1) {
-    fig <- fig[[1]]
-  }
+  # if (length(fig) == 1) {
+  #   fig <- fig[[1]]
+  # }
 
   return(fig)
 }

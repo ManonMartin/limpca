@@ -77,9 +77,9 @@ pcaLoading1dPlot <- function(resPcaBySvd,
     ...
   )
 
-  if (length(fig) == 1) {
-    fig <- fig[[1]]
-  }
+  # if (length(fig) == 1) {
+  #   fig <- fig[[1]]
+  # }
 
   return(fig)
 }

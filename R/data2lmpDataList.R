@@ -5,8 +5,8 @@
 #' Creates the lmpDataList from a SummarizedExperiment or by manually defining the design, the outcomes and the model formula.
 #' lmpDataList serves as an input for the \code{\link{lmpModelMatrix}} function to start the limpca modeling.
 #'
-#' @param se A \code{\link{SummarizedExperiment}} object.
-#' @param assay_name If not \code{NULL} (default), a character string naming the assay from the \code{\link{SummarizedExperiment}} object \code{se}. If \code{NULL}, the first assay is selected.
+#' @param se A \code{\link[SummarizedExperiment]{SummarizedExperiment}} object.
+#' @param assay_name If not \code{NULL} (default), a character string naming the assay from the \code{\link[SummarizedExperiment]{SummarizedExperiment}} object \code{se}. If \code{NULL}, the first assay is selected.
 #' @param outcomes If not \code{NULL} (default), a numerical matrix with \emph{n} observations and \emph{m} response variables. The rownames needs to be non-NULL and match those of the design matrix.
 #' @param design If not \code{NULL} (default), a data.frame with the experimental design of \emph{n} observations and \emph{q} explanatory variables. The rownames of design has to match the rownames of outcomes.
 #' @param formula If not \code{NULL} (default), a character string with the formula that will be used to analyze the data. Only the right part of the formula is necessary, eg: \code{"~ A + B"}, The names of the formula should match the column names of the design
@@ -20,10 +20,10 @@
 #'    }
 #'
 #' @details
-#' Data can be included as a \code{\link{SummarizedExperiment}} (SE) object or by manually defining one or multiple
+#' Data can be included as a \code{\link[SummarizedExperiment]{SummarizedExperiment}} (SE) object or by manually defining one or multiple
 #' elements of \code{outcomes}, \code{design} and \code{formula}. If a SE is provided,
 #' the \code{outcomes} corresponds to a transposed assay of the SE (by default the first one),
-#' the \code{design} corresponds to the \code{\link{colData}} of the SE and the \code{formula} can be provided as a
+#' the \code{design} corresponds to the \code{\link[SummarizedExperiment]{colData}} of the SE and the \code{formula} can be provided as a
 #' \code{formula} element in the \code{S4Vectors::metadata} of SE (\code{metadata(se)$formula}).
 #'
 #' In the outputted list, the outcomes are structured in a standard statistical fashion,
@@ -39,7 +39,7 @@
 #' - the names of the model terms in the \code{formula} should match column names from the \code{design}
 #'
 #'
-#' @seealso \code{\link{SummarizedExperiment}}
+#' @seealso \code{\link[SummarizedExperiment]{SummarizedExperiment}}
 #'
 #' @examples
 #'
