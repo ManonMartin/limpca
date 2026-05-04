@@ -7,7 +7,7 @@
 lmpEffectMatrices(resLmpModelMatrix, SS = TRUE, contrastList = NA)
 }
 \arguments{
-\item{resLmpModelMatrix}{A list of 5 elements from \code{\link{lmpModelMatrix}}.}
+\item{resLmpModelMatrix}{A list of 5 or 9 elements from \code{\link{lmpModelMatrix}}.}
 
 \item{SS}{Logical. If \code{FALSE}, won't compute the percentage of variance for each effect.}
 
@@ -17,23 +17,39 @@ lmpEffectMatrices(resLmpModelMatrix, SS = TRUE, contrastList = NA)
 A list with the following elements:
 \describe{
 \item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula.}
-\item{\code{modelMatrix}}{A \emph{nxp} model matrix specifically encoded for the ASCA-GLM method.}
-\item{\code{modelMatrixByEffect}}{A list of \emph{F+1} model matrices for each effect.}
-\item{\code{effectsNamesUnique}}{A character vector with the \emph{F+1} names of the model effects, each repeated once.}
-\item{\code{effectsNamesAll}}{A character vector with the \emph{p} names of the model effects ordered and repeated as the column names of the model matrix.}
-\item{\code{effectMatrices}}{A list of \emph{F+1} effect matrices for each model effect.}
+\item{\code{modelMatrix}}{A \emph{nxp} fixed model matrix specifically encoded for the ASCA-GLM method.}
+\item{\code{modelMatrixByEffect}}{A list of \emph{F+1} model matrices for each fixed effect.}
+\item{\code{effectsNamesUnique}}{A character vector with the \emph{F+1} names of the fixed model effects, each repeated once.}
+\item{\code{effectsNamesAll}}{A character vector with the \emph{p} names of the fixed model effects ordered and repeated as the column names of the fixed model matrix.}
+\item{\code{effectMatrices}}{A list of \emph{F+1} effect matrices for each fixed model effect.}
 \item{\code{predictedvalues}}{The \emph{nxm} matrix of predicted outcome values.}
 \item{\code{residuals}}{The \emph{nxm} matrix of model residuals.}
-\item{\code{parameters}}{The \emph{pxm} matrix of the estimated parameters.}
-\item{\code{type3SS}}{A vector with the type III sum of squares for each model effect \emph{(If SS = TRUE)}.}
-\item{\code{variationPercentages}}{A vector with the percentage of variance for each model effect \emph{(If SS = TRUE)}.}
-\item{\code{varPercentagesPlot}}{A ggplot bar plot of the contributions of each model effect to the total variance \emph{(If SS = TRUE)}.}
+\item{\code{parameters}}{The \emph{pxm} matrix of the fixed estimated parameters.}
+\item{\code{modelMatrixR}{The informative effect random matrix if mixed linear model.}
+\item{\code{modelMatrixByEffectR}}{A list of \emph{R} model matrices for each random effect if mixed linear model.}
+\item{\code{effectsNamesUniqueR}{A character vector with the \emph{R} names of the random model effects, each repeated once if mixed linear model.}
+\item{\code{effectsNamesAllR}{A character vector with the names of the random model effects ordered and repeated as the column names of the random model matrix if mixed linear model.}
+\item{\code{effectMatricesR}{A list of \emph{R} effect matrices for each random model effect if mixed linear model.}
+\item{\code{parametersR}{The matrix of the random estimated parameters if mixed linear model.}
+\item{\code{resStdError}{The estimated standard deviation (sigma) of residuals if mixed linear model.}
+\item{\code{variancesEstimatedR}{The estimated variances of the random effects if mixed linear model.}
+\item{\code{MM_full}{The list of lmerMod object for each response variable if mixed linear model.}
+\item{\code{type3SS}}{A vector with the type III sum of squares for each model effect fixed \emph{(If SS = TRUE)}.}
+\item{\code{varComponentsAbs}}{A vector with the absolute variance for each model effect if mixed linear model.}
+\item{\code{variationPercentages}}{A vector with the percentage of variance for each model effect \emph{(If SS = TRUE) or mixed linear model}.}
+\item{\code{varPercentagesPlot}}{A ggplot bar plot of the contributions of each model effect to the total variance \emph{(If SS = TRUE) or mixed linear model}.}
 }
 }
 \description{
-Estimates the model by OLS based on the outcomes and model matrices provided in the outputs of lmpModelMatrix function and calculates the estimated effect matrices
+For the linear model, estimates the model by OLS based on the outcomes and model matrices provided in the outputs of lmpModelMatrix function and calculates the estimated effect matrices
 \eqn{\hat{\mathbf{M}}_0, \hat{\mathbf{M}}_1, ...\hat{\mathbf{M}}_F}, ...  and residual matrix \eqn{\hat{\mathbf{E}}}.
 It calculates also the type III percentage of variance explained by each effect.
+
+For the linear mixed model, the estimation of effects matrix is calculated using the lmer function from the lme4 package.The model is computed for each column of the outcomes matrix in parallel.
+The function calculate the matrices of fixed effects \eqn{\hat{\mathbf{M}}_0, \hat{\mathbf{M}}_1, ...\hat{\mathbf{M}}_F}, the matrices of random effects \eqn{\hat{\mathbf{M}}_1, ...\hat{\mathbf{M}}_R}
+and residual matrix \eqn{\hat{\mathbf{E}}} where F is the number of fixed effect and R is the the number of mixed effect.
+The Nakagawa and Schielzeth(2012) method is used to calculate the percentage of variance explained by each effect in mixed-effects models.
+But the variance estimation of fixed effect use the SS type III divides by numbers of observations.
 }
 \examples{
 data("UCH")

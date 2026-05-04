@@ -65,6 +65,24 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
   checkArg(modelAbbrev, "bool", can.be.null = FALSE)
 
   # Checking resLmpPcaEffects object and match with effectNames
+  model <- resLmpPcaEffects$lmpDataList$model
+  checkArg(model,c("model"), can.be.null = FALSE)
+  
+  if(model == "lmm"){
+    if (!identical(
+      names(resLmpPcaEffects[(length(resLmpPcaEffects) - 9):length(resLmpPcaEffects)]),
+      c(
+        "Residuals", "lmpDataList", "effectsNamesUnique",
+        "effectsNamesUniqueCombined", "effectsNamesUniqueR",
+        "effectsNamesUniqueCombinedR", "method", 
+        "varComponentsAbs", "variationPercentages",
+        "combineEffects"
+      )
+    )) {
+      stop("resLmpPcaEffects is not an output value of
+           lmpPcaEffects")
+    }
+  } else {
   if (!identical(
     names(resLmpPcaEffects[seq((length(resLmpPcaEffects) - 7), length(resLmpPcaEffects))]),
     c(
@@ -75,6 +93,7 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
     )
   )) {
     stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+    } 
   }
 
   if (allEffect == FALSE) {
@@ -91,6 +110,9 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
     if (allEffect == TRUE) {
       effectsNamesUnique <- resLmpPcaEffects$effectsNamesUniqueCombined
       effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
+      if(model == "lmm"){
+        effectsNamesUnique <- c(effectsNamesUnique, resLmpPcaEffects$effectsNamesUniqueCombinedR)
+      }
       PCdim <- rep(1, (length(effectsNamesUnique) + 1)) # +1 for the residuals
       effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
     } else {
@@ -101,6 +123,9 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
     if (allEffect == TRUE) {
       effectsNamesUnique <- resLmpPcaEffects$effectsNamesUniqueCombined
       effectsNamesUnique <- effectsNamesUnique[effectsNamesUnique != "Intercept"]
+      if(model == "lmm"){
+        effectsNamesUnique <- c(effectsNamesUnique, resLmpPcaEffects$effectsNamesUniqueCombinedR)
+      }
       effectsNamesUniqueRes <- c(effectsNamesUnique, "Residuals")
     }
   }
@@ -167,7 +192,7 @@ lmpScoreScatterPlotM <- function(resLmpPcaEffects,
           names(resLmpPcaEffects)[iEffect_temp],
           colnames(iEffect$scores)[j]
         )
-        var[l] <- (resLmpPcaEffects$variationPercentages[iEffect_temp] *
+        var[l] <- (resLmpPcaEffects$variationPercentages[effectNames[i]] *
           resLmpPcaEffects[[iEffect_temp]]$var[j]) / 100
         l <- l + 1
       }

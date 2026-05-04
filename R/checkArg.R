@@ -27,7 +27,11 @@ checkArg <- function(arg, checks, can.be.null = FALSE) {
     list = c(is.list, "a list"),
     length1 = c(function(x) {
       length(x) == 1
-    }, "of length 1")
+    }, "of length 1"),
+    ## check formula in model
+    model = c(function(x) {
+      (x == "lmm" | x == "lm")
+    }, "a valid model (must be lmm or lm)")
   )
 
   if (is.null(arg)) {

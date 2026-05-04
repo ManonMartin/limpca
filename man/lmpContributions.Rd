@@ -14,9 +14,9 @@ lmpContributions(resLmpPcaEffects, nPC = 5)
 \value{
 A list of:
 \describe{
-\item{\code{totalContribTable}}{Table of the percentage of contribution of each effect to the total variance.}
-\item{\code{effectTable}}{Table of the percentage of variance explained by each principal component in each model effect decomposition.}
-\item{\code{contribTable}}{Table of the percentage of variance explained by each principal component of each effect reported to the percentage contribution of the given effect to the total variance.}
+\item{\code{totalContribTable}}{Table of the percentages of contribution of each effect to the total variance.}
+\item{\code{effectTable}}{Table of the percentages of variance explained by each principal component in each model effect decomposition.}
+\item{\code{contribTable}}{Table of the percentages of variance explained by each principal component of each effect reported to the percentage contribution of the given effect to the total variance.}
 \item{\code{combinedEffectTable}}{Equivalent of the \emph{EffectTable} for combined effects.}
 \item{\code{plotTotal}}{Plot of the ordered contributions of \emph{TotalContribTable}.}
 \item{\code{plotContrib}}{Plot of the ordered contributions of \emph{ContribTable}.}

@@ -54,8 +54,6 @@ lmpDataListCheck <- function(lmpDataList,
   # checks =========================
 
   # check lmpdata
-
-
   checkArg(lmpDataList, "list", can.be.null = FALSE)
 
   if (length(lmpDataList) > 3) {
@@ -77,22 +75,14 @@ lmpDataListCheck <- function(lmpDataList,
 
   # Checking formula ==================================
 
-  if (!is.null(out_formula)) {
-    formulaChar <- as.character(stats::as.formula(out_formula))
-
-    if (length(formulaChar) == 3) {
-      out_formula <- paste(
-        formulaChar[1],
-        formulaChar[3]
-      )
-    } else if (length(formulaChar) == 2) {
-      out_formula <- paste(
-        formulaChar[1],
-        formulaChar[2]
-      )
-    } else {
-      stop("Please put the formula argument in its right form: ~ model terms")
-    }
+formulaChar <- as.character(stats::as.formula(out_formula))
+  if (length(formulaChar) == 3) {
+    formulaDesignMatrix <- stats::as.formula(paste(formulaChar[1],
+                                                   formulaChar[3]))
+  } else if (length(formulaChar) == 2) {
+    formulaDesignMatrix <- formula
+  } else {
+    stop("Please put the formula argument in its right form: ~ model terms")
   }
 
 
@@ -121,6 +111,7 @@ lmpDataListCheck <- function(lmpDataList,
       )
     }
   }
+
 
   # Checking correspondence between the rows of design and outcomes ----------
 

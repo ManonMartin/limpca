@@ -76,6 +76,24 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
     stop("One of the effects from effectNames is not in resLmpPcaEffects.")
   }
 
+  model <- resLmpPcaEffects$lmpDataList$model
+  checkArg(model,c("model"), can.be.null = FALSE)
+  
+  if(model == "lmm"){
+    if (!identical(
+      names(resLmpPcaEffects[(length(resLmpPcaEffects) - 9):length(resLmpPcaEffects)]),
+      c(
+        "Residuals", "lmpDataList", "effectsNamesUnique",
+        "effectsNamesUniqueCombined", "effectsNamesUniqueR",
+        "effectsNamesUniqueCombinedR", "method", 
+        "varComponentsAbs", "variationPercentages",
+        "combineEffects"
+      )
+    )) {
+      stop("resLmpPcaEffects is not an output value of
+           lmpPcaEffects")
+    }
+  } else {
   if (!identical(
     names(resLmpPcaEffects[seq((length(resLmpPcaEffects) - 7), length(resLmpPcaEffects))]),
     c(
@@ -87,11 +105,14 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
   )) {
     stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
   }
-
+  }
 
   if (is.null(effectNames)) {
     effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
     effectNames <- effectNames[effectNames != "Intercept"]
+    if(model == "lmm"){
+      effectNames <- c(effectNames, resLmpPcaEffects$effectsNamesUniqueCombinedR)
+    }
     effectNames <- c(effectNames, "Residuals")
   }
 
@@ -108,10 +129,10 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
   }
 
   if (max(axes) > ncol(loadings[[effectNames[1]]])) {
-    stop(
-      "axes (", paste(axes, collapse = ","),
+    stop(paste0(
+      "axes (", paste0(axes, collapse = ","),
       ") is beyond the ncol of loadings (", ncol(loadings), ")"
-    )
+    ))
   }
 
 
@@ -153,6 +174,9 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
       load <- resLmpPcaEffects[[effect]][["loadings"]][, axes]
       singvar <- resLmpPcaEffects[[effect]][["singvar"]][axes]
       dista <- load^2 %*% singvar^2
+      if(length(labs) < pl_n){
+        pl_n <- length(labs)
+      }
       ids <- order(dista, decreasing = TRUE)[seq_len(pl_n)]
       labs[-ids] <- ""
       labs
@@ -180,30 +204,48 @@ lmpLoading2dPlot <- function(resLmpPcaEffects,
     xlab_pc <- pc_axes[[effect]][1]
     ylab_pc <- pc_axes[[effect]][2]
 
-    xlim_val <- c(
-      1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]]),
-      1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]])
-    )
+    # xlim_val <- c(
+    #   1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]]),
+    #   1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]])
+    # )
+    min_x = min(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]])
+    max_x = max(resLmpPcaEffects[[effect]][["loadings"]][, axes[1]])
+    if(min_x < 0 & max_x > 0){
+      xlim_val <- c(1.4 * min_x,1.4 * max_x)
+    } else if(min_x > 0 & max_x > 0){
+      xlim_val <- c(0.6 * min_x,1.4 * max_x)
+    } else if(min_x > 0 & max_x < 0){
+      xlim_val <- c(0.6 * min_x,0.6 * max_x)
+    } else{
+      xlim_val <- c(1.4 * min_x,0.6 * max_x)
+    }
 
     # Checking the second component
-    if (resLmpPcaEffects$method != "APCA") {
-      if (resLmpPcaEffects[[effect]][["var"]][axes[2]] < 1) {
+    min_y = min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
+    max_y = max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
+    if (resLmpPcaEffects$method != "APCA" & resLmpPcaEffects[[effect]][["var"]][axes[2]] < 1) {
         warning("The variance of PC2 is inferior to 1%. Graph scaled")
         ylim_val <- c(
-          100 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
-          100 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
+          if(min_y < 0 & max_y > 0){
+            ylim_val <- c(100 * min_y,100 * max_y)
+          } else if(min_y > 0 & max_y > 0){
+            ylim_val <- c(min_y - (100 * min_y - min_y),100 * max_y)
+          } else if(min_y > 0 & max_y < 0){
+            ylim_val <- c(min_y - (100 * min_y - min_y),max_y - (100 * max_y - max_y))
+          } else{
+            ylim_val <- c(100 * min_y,max_y - (100 * max_y - max_y))
+          }
         )
-      } else {
-        ylim_val <- c(
-          1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
-          1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
-        )
-      }
     } else {
-      ylim_val <- c(
-        1.4 * min(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]]),
-        1.4 * max(resLmpPcaEffects[[effect]][["loadings"]][, axes[2]])
-      )
+        if(min_y < 0 & max_y > 0){
+          ylim_val <- c(1.4 * min_y,1.4 * max_y)
+        } else if(min_y > 0 & max_y > 0){
+          ylim_val <- c(0.6 * min_y,1.4 * max_y)
+        } else if(min_y > 0 & max_y < 0){
+          ylim_val <- c(0.6 * min_y,0.6 * max_y)
+        } else{
+          ylim_val <- c(1.4 * min_y,0.6 * max_y)
+        }
     }
 
     # Building plots

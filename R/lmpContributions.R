@@ -12,9 +12,9 @@
 #'
 #' @return A list of:
 #' \describe{
-#' \item{\code{totalContribTable}}{Table of the percentage of contribution of each effect to the total variance.}
-#' \item{\code{effectTable}}{Table of the percentage of variance explained by each principal component in each model effect decomposition.}
-#' \item{\code{contribTable}}{Table of the percentage of variance explained by each principal component of each effect reported to the percentage contribution of the given effect to the total variance.}
+#' \item{\code{totalContribTable}}{Table of the percentages of contribution of each effect to the total variance.}
+#' \item{\code{effectTable}}{Table of the percentages of variance explained by each principal component in each model effect decomposition.}
+#' \item{\code{contribTable}}{Table of the percentages of variance explained by each principal component of each effect reported to the percentage contribution of the given effect to the total variance.}
 #' \item{\code{combinedEffectTable}}{Equivalent of the \emph{EffectTable} for combined effects.}
 #' \item{\code{plotTotal}}{Plot of the ordered contributions of \emph{TotalContribTable}.}
 #' \item{\code{plotContrib}}{Plot of the ordered contributions of \emph{ContribTable}.}
@@ -38,24 +38,28 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
         the principal components are then derived from the
         pure effect matrices.")
   }
-  neffect <- length(resLmpPcaEffects$effectsNamesUnique)
+   listNames <- c(resLmpPcaEffects$effectsNamesUnique[-1],"Residuals")
+  neffect <- length(listNames)
+
+  ##### update Antoine
+  model <- resLmpPcaEffects$lmpDataList$model
+  UPDATE_checkArg(model,c("model"), can.be.null = FALSE)
+  
+  # add random effects
+  if(model == "lmm"){
+    listNames <- c(resLmpPcaEffects$effectsNamesUnique[-1],resLmpPcaEffects$effectsNamesUniqueR,"Residuals")
+    neffect <- length(listNames)
+  }
 
   # Effect table with the total contribution ===============
   total_contrib_table <- matrix(data = NA, nrow = neffect, ncol = 1)
-  rownames(total_contrib_table) <- c(
-    names(resLmpPcaEffects)[seq_len(neffect - 1)],
-    "Residuals"
-  )
+  rownames(total_contrib_table) <- listNames
   colnames(total_contrib_table) <- "Percentage of Variance"
-
   total_contrib_table[, 1] <- round(resLmpPcaEffects$variationPercentages, 2)
 
   # Effect table with the variance of each component ===============
   effect_table <- matrix(data = NA, nrow = neffect, ncol = (nPC + 1))
-  rownames(effect_table) <- c(
-    names(resLmpPcaEffects)[seq_len(neffect - 1)],
-    "Residuals"
-  )
+  rownames(effect_table) <- listNames
 
   # Colnames
   temp_colnames <- vector()
@@ -66,10 +70,10 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
   colnames(effect_table) <- temp_colnames
 
   # Filling table
-  for (i in seq_len(neffect - 1)) {
-    effect_table[i, seq_len(nPC)] <- round(resLmpPcaEffects[[i]]$var[seq_len(nPC)], 2)
+  for (i in seq_len(neffect)) {
+    iEffect <- listNames[i]
+    effect_table[i, seq_len(nPC)] <- round(resLmpPcaEffects[[iEffect]]$var[seq_len(nPC)], 2)
   }
-  effect_table[neffect, seq_len(nPC)] <- round(resLmpPcaEffects[["Residuals"]]$var[seq_len(nPC)], 2)
   effect_table[, nPC + 1] <- c(rep(0, neffect))
   effect_table[, nPC + 1] <- apply(X = effect_table, MARGIN = 1, sum)
 
@@ -78,17 +82,14 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
   # to the variance of the effect ===============
 
   contrib_table <- matrix(data = NA, nrow = neffect, (nPC + 1))
-  rownames(contrib_table) <- c(
-    names(resLmpPcaEffects)[seq_len(neffect - 1)],
-    "Residuals"
-  )
+  rownames(contrib_table) <- listNames
   temp_colnames <- c(temp_colnames[seq_len(nPC)], "Contrib")
   colnames(contrib_table) <- temp_colnames
 
   # Filling table
   for (i in seq_len(neffect)) {
     contrib_table[i, seq_len(nPC)] <- (effect_table[i, seq_len(nPC)] *
-      resLmpPcaEffects$variationPercentages[i]) / 100
+      resLmpPcaEffects$variationPercentages[listNames[i]]) / 100
   }
 
   contrib_table[, (nPC + 1)] <- resLmpPcaEffects$variationPercentages
@@ -96,17 +97,33 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
 
 
   # Effect table for combined effects ===============
-  if (length(resLmpPcaEffects) - 6 != length(resLmpPcaEffects$effectsNamesUnique)) {
-    neffectTot <- length(resLmpPcaEffects) - 6
+ if ((length(resLmpPcaEffects) - 6 != length(resLmpPcaEffects$effectsNamesUnique)
+      & model == "lm")
+      | (length(resLmpPcaEffects) - 8 != (length(resLmpPcaEffects$effectsNamesUnique) 
+                                          + length(resLmpPcaEffects$effectsNamesUniqueR))
+                        & model == "lmm")) {
+    if(model == "lmm"){
+      neffectTot <- length(resLmpPcaEffects) - 8 -1
+    } else{
+      neffectTot <- length(resLmpPcaEffects) - 6
+    }
+    
     neffectComb <- neffectTot - neffect
+    
+    listNameComb <- setdiff(resLmpPcaEffects$effectsNamesUniqueCombined, resLmpPcaEffects$effectsNamesUnique)
+    if(model == "lmm"){
+      listNameComb <- c(listNameComb,setdiff(resLmpPcaEffects$effectsNamesUniqueCombinedR, resLmpPcaEffects$effectsNamesUniqueR))
+    }
 
     combinedEffect_table <- matrix(data = NA, nrow = neffectComb, ncol = (nPC + 1))
-    rownames(combinedEffect_table) <- names(resLmpPcaEffects)[seq(neffect, (neffectTot - 1))]
-    temp_colnames <- c(temp_colnames[seq_len(nPC)], "Sum")
+    print(listNameComb)
+    print(neffectComb)
+    rownames(combinedEffect_table) <- listNameComb
+    temp_colnames <- c(temp_colnames[1:nPC], "Sum")
     colnames(combinedEffect_table) <- temp_colnames
 
     # Filling table
-    resCombined <- resLmpPcaEffects[seq(neffect, (neffectTot - 1))]
+    resCombined <- resLmpPcaEffects[listNameComb]
 
     for (i in seq_along(resCombined)) {
       combinedEffect_table[i, seq_len(nPC)] <- round(resCombined[[i]]$var[seq_len(nPC)], 2)
@@ -120,10 +137,7 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
   # Plots ===============
 
   # Plot of the total contribution
-  effect_name <- ModelAbbrev(c(
-    names(resLmpPcaEffects)[seq_len(neffect - 1)],
-    "Residuals"
-  ))
+   effect_name <- ModelAbbrev(listNames)
   dataTotal <- data.frame(
     effects = effect_name,
     varPercentage = unname(resLmpPcaEffects$variationPercentages)

@@ -51,7 +51,24 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
   checkArg(z, c("str", "length1"), can.be.null = TRUE)
   checkArg(w, c("str", "length1"), can.be.null = TRUE)
   checkArg(hline, "num", can.be.null = TRUE)
-
+model <- resASCA$lmpDataList$model
+  checkArg(model,c("model"), can.be.null = FALSE)
+  
+  if(model == "lmm"){
+    if (!identical(
+      names(resASCA[(length(resASCA) - 9):length(resASCA)]),
+      c(
+        "Residuals", "lmpDataList", "effectsNamesUnique",
+        "effectsNamesUniqueCombined", "effectsNamesUniqueR",
+        "effectsNamesUniqueCombinedR", "method", 
+        "varComponentsAbs", "variationPercentages",
+        "combineEffects"
+      )
+    )) {
+      stop("resLmpPcaEffects is not an output value of
+           lmpPcaEffects")
+    }
+  } else {
   if (!identical(
     names(resASCA[(length(resASCA) - 7):length(resASCA)]),
     c(
@@ -61,6 +78,7 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
     )
   )) {
     stop("resLmpPcaEffects is not an output value of lmpPcaEffects")
+    }
   }
 
   if (resASCA$method != "ASCA") {
@@ -69,15 +87,15 @@ lmpEffectPlot <- function(resASCA, effectName, axes = 1,
   }
 
   if (!effectName %in% names(resASCA)) {
-    stop(effectName, " is not an effect of resASCA")
+    stop(paste0(effectName, " is not an effect of resASCA"))
   }
 
   if (max(axes) > ncol(resASCA[[effectName]][["scores"]])) {
-    stop(
-      "PC (", paste(axes, collapse = ","),
+    stop(paste0(
+      "PC (", paste0(axes, collapse = ","),
       ") is beyond the number of PC of scores (",
       ncol(resASCA[[effectName]][["scores"]]), ")"
-    )
+    ))
   }
 
   if (str_detect(string = effectName, pattern = "[+]")) {

@@ -12,13 +12,13 @@ lmpBootstrapTests(
 )
 }
 \arguments{
-\item{resLmpEffectMatrices}{A list of 12 from \code{\link{lmpEffectMatrices}}.}
+\item{resLmpEffectMatrices}{A list of 12 for linear model and 22 for linear mixed model from \code{\link{lmpEffectMatrices}}.}
 
 \item{nboot}{An integer with the number of bootstrap sample to be drawn.}
 
 \item{nCores}{The number of cores to use for parallel execution.}
 
-\item{verbose}{If \code{TRUE}, will display a message with the duration of execution.}
+\item{verbose}{If \code{TRUE}, a message will be displayed with the duration of execution.}
 }
 \value{
 A list with the following elements:

@@ -7,28 +7,38 @@
 lmpModelMatrix(lmpDataList)
 }
 \arguments{
-\item{lmpDataList}{A list containing the outcomes, the experimental design and the formula.}
+\item{lmpDataList}{A list containing the outcomes, the experimental design, the formula and the type of model \emph{model} (\emph{"lmm"} for linear mixed model or \emph{"lm"} for linear model).}
 }
 \value{
 A list with the 5 following named elements :
 \describe{
-\item{\code{lmpDataList}}{The initial object: a list with outcomes, design and formula, as outputted by \code{\link{data2LmpDataList}}.}
+\item{\code{lmpDataList}}{The initial object: a list with outcomes, design, formula and type of model.}
 \item{\code{modelMatrix}}{A \emph{nxK} model matrix specifically encoded for the ASCA-GLM method.}
 \item{\code{modelMatrixByEffect}}{A list of \emph{p} model matrices for each model effect.}
 \item{\code{effectsNamesUnique}}{A character vector with the \emph{p} names of the model effects, each repeated once.}
 \item{\code{effectsNamesAll}}{A character vector with the \emph{K} names of the model effects ordered and repeated as the column names of the model matrix.}
+\item{\code{modelMatrixR}}{A \emph{nxK} model random matrix with all levels if linear mixed model.}
+\item{\code{modelMatrixByEffectR}}{A list of random model matrices for each random model effect if linear mixed model.}
+\item{\code{effectsNamesUniqueR}}{A character vector with the names of the random model effects, each repeated once if linear mixed model.}
+\item{\code{effectsNamesAllR}}{A character vector with the names of the random model effects ordered and repeated as the column names of the random model matrix if linear mixed model.}
 }
 }
 \description{
-Creates the model matrix \code{X} from the design matrix and the model formula.
+Creates the model matrix \code{X} and the model matrix \code{Z} (if mixed model) from the design matrix and the model formula.
 }
 \details{
 In typical ASCA-GLM (ASCA+) analysis, the effects of the GLM model must first be used to transform the design matrix to a model matrix where the design factors encoded usign \emph{sum coding} commonly used in industrial experimental design.
 Suppose the design matrix is \emph{nxk} with n observations and \emph{k} factors. After the transformation, the model matrix
-will be of size \emph{nxp}. For a fator with \emph{a} levels, the \emph{sum coding} creates \emph{a-1} columns in the model matrix with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
+will be of size \emph{nxp}. For a factor with \emph{a} levels, the \emph{sum coding} creates \emph{a-1} columns in the model matrix with 0 and 1 for the \emph{a-1} first levels and -1 for the last one.
 \emph{p} is the total number parameter for each response (outcome) in the ASCA model.
 More information is available in the article (\emph{Thiel et al}, 2017)
 Note that at the moment, only factors can be used as explanatory variables.
+If the mixed-effects model is used, we obtain the same model matrix \code{X} for fixed effects.
+However, for a random effect, the model matrix \code{Z} is created in such a way that for a factor with \emph{a} levels, \emph{sum coding} generates \emph{a} columns in the model matrix with only 0 and 1.
+
+For now, \emph{limpca} only handles three types of mixed models: hierarchical models with 2 random variables, models with a single random variable, and models with 2 random variables, including an interaction effect between the random variable and a fixed variable.
+All random effects must be of the form \emph{(1 | varR)} where \emph{varR} is the name of the random effect.
+However, the \emph{limpca} package handles all fixed models#'
 }
 \examples{
 

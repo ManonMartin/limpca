@@ -49,6 +49,24 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
     stop("One of the effects from effectNames is not in resLmpPcaEffects.")
   }
 
+    model <- resLmpPcaEffects$lmpDataList$model
+  checkArg(model,c("model"), can.be.null = FALSE)
+  
+  if(model == "lmm"){
+    if (!identical(
+      names(resLmpPcaEffects[(length(resLmpPcaEffects) - 9):length(resLmpPcaEffects)]),
+      c(
+        "Residuals", "lmpDataList", "effectsNamesUnique",
+        "effectsNamesUniqueCombined", "effectsNamesUniqueR",
+        "effectsNamesUniqueCombinedR", "method", 
+        "varComponentsAbs", "variationPercentages",
+        "combineEffects"
+      )
+    )) {
+      stop("resLmpPcaEffects is not an output value of
+           lmpPcaEffects")
+    }
+  } else {
   if (!identical(
     names(resLmpPcaEffects[(length(resLmpPcaEffects) - 7):length(resLmpPcaEffects)]),
     c(
@@ -57,14 +75,18 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
       "method", "type3SS", "variationPercentages",
       "combineEffects"
     )
-  )) {
+    )) {
     stop("resLmpPcaEffects is not an output value of
          lmpPcaEffects")
+    }  
   }
 
   if (is.null(effectNames)) {
     effectNames <- resLmpPcaEffects$effectsNamesUniqueCombined
     effectNames <- effectNames[effectNames != "Intercept"]
+    if(model == "lmm"){
+      effectNames <- c(effectNames, resLmpPcaEffects$effectsNamesUniqueCombinedR)
+    }
     effectNames <- c(effectNames, "Residuals")
   }
 
@@ -80,10 +102,10 @@ lmpScorePlot <- function(resLmpPcaEffects, effectNames = NULL,
   }
 
   if (max(axes) > ncol(scores[[effectNames[1]]])) {
-    stop(
-      "axes (", paste(axes, collapse = ","),
+    stop(paste0(
+      "axes (", paste0(axes, collapse = ","),
       ") is beyond the ncol of scores (", ncol(scores), ")"
-    )
+    ))
   }
 
   # percentage of explained variance   ===================

@@ -7,8 +7,10 @@
 lmpPcaEffects(
   resLmpEffectMatrices,
   method = c("ASCA", "APCA", "ASCA-E"),
+  backtransform = FALSE,
   combineEffects = NULL,
-  verbose = FALSE
+  verbose = FALSE,
+  correctedMatrixAdd = FALSE
 )
 }
 \arguments{
@@ -16,12 +18,16 @@ lmpPcaEffects(
 
 \item{method}{The method used to compute the PCA. One of \code{c("ASCA","APCA","ASCA-E")}.}
 
+\item{backtransform}{If \code{TRUE}, back-transforms the \code{outcomes} matrix if it has been reduced.}
+
 \item{combineEffects}{If not \code{NULL}, a list of vectors containing the names of the effects to be combined.}
 
 \item{verbose}{If \code{TRUE}, will display a message with the duration of execution.}
+
+\item{correctedMatrixAdd}{If \code{TRUE} and for the method APCA or ASCA-E, allows effect matrices to be augmented with the effect matrix add multiplied by a factor corrected and not just by the effect matrix add.}
 }
 \value{
-A list with first,the PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
+A list with the PCA results from \code{\link{pcaBySvd}} for each effect matrix. Those results contain :
 \describe{
 \item{\code{scores}}{Scores from the PCA for each principal component.}
 \item{\code{loadings}}{Loadings from the PCA for each principal component.}
@@ -32,13 +38,18 @@ A list with first,the PCA results from \code{\link{pcaBySvd}} for each effect ma
 \item{\code{original.dataset}}{Original dataset.}
 }
 
-There are also others outputs :
+There are also other outputs :
 \describe{
 \item{\code{lmpDataList}}{The initial object: a list of outcomes, design and formula.}
-\item{\code{effectsNamesUnique}}{A character vector with the \emph{F+1} names of the model terms, each repeated once.}
+\item{\code{effectsNamesUnique}}{A character vector with the \emph{F+1} names of the fixed model terms, each repeated once.}
+\item{\code{effectsNamesUniqueR}}{A character vector with the \emph{R} names of the random model terms, each repeated once.}
+\item{\code{effectsNamesUniqueCombined}}{A character vector with the names of the fixed model terms and the new combined fixed model terms, each repeated once.}
+\item{\code{effectsNamesUniqueCombinedR}}{A character vector with the names of the random model terms and the new combined random model terms, each repeated once.}
 \item{\code{method}}{The dimension reduction method used: \code{c("ASCA","APCA","ASCA-E")}.}
 \item{\code{type3SS}}{A vector with the type III SS for each model term.}
+\item{\code{varComponentsAbs}}{A vector with the absolute variance for each model effect If mixed model.}
 \item{\code{variationPercentages}}{A vector with the percentage of variance explained by each model term.}
+\item{\code{combineEffects}}{a list of vectors containing the names of the effects to be combined.}
 }
 }
 \description{
@@ -48,10 +59,22 @@ Performs a PCA on each of the effect matrices from the outputs of \code{\link{lm
 The function allows 3 different methods :
 
 \describe{
-\item{ASCA}{PCA is applied directly on each pure effect matrix \eqn{\hat{\mathbf{M}}_f, f=1...F}.}
+\item{ASCA}{PCA is applied directly on each pure effect matrix \eqn{\hat{\mathbf{M}}_g, f=1...F+R}.}
 \item{ASCA-E}{PCA is applied on each pure effect matrix but then the augmented effect matrix is projected in the space of the ASCA components.}
-\item{APCA}{PCA is applied on each augmented effect matrix : \eqn{\hat{\mathbf{M}}_f+\hat{\mathbf{E}}}.}
+\item{APCA}{PCA is applied on each augmented effect matrix : \eqn{\hat{\mathbf{M}}_g+\hat{\mathbf{E}}}.}
 }
+
+If we are in the case of APCA or ASCA-E, all effect matrices are increased by the residuals matrix in general linear model.
+
+For linear mixed model, if the model have structure of one of the three models :
+\describe{
+\item{A mixed ANOVA2 with interaction. This type of model includes a fixed main effect, a random main effect, and a random interaction effect between the factor of the fixed effect and the factor of the random effect ; }
+\item{A hierarchical mixed ANOVA2. This type of model includes a random effect and another hierarchical random effect between the factor of the first higher-level random effect and another random factor at a lower level ; }
+\item{A two-factor mixed longitudinal model. This type of model includes two fixed effects, one being a Time effect, a fixed interaction effect between the two main fixed factors, and a random effect.}
+}
+one of the effect matrix is augmented with other random matrix than residuals matrix and all other effect matrices are augmented with the residuals matrix.
+
+The user have the choice to augmented all (random and fixed) effects matrices with corrected form or not with \code{correctedMatrixAdd}.
 }
 \examples{
 data("UCH")

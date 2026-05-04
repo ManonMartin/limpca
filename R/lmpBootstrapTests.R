@@ -4,10 +4,10 @@
 #' @description
 #' Tests the significance of the effects from the model using bootstrap. This function is based on the outputs of \code{\link{lmpEffectMatrices}}. Tests on combined effects are also provided.
 #'
-#' @param resLmpEffectMatrices A list of 12 from \code{\link{lmpEffectMatrices}}.
+#' @param resLmpEffectMatrices A list of 12 for linear model and 22 for linear mixed model from \code{\link{lmpEffectMatrices}}.
 #' @param nboot An integer with the number of bootstrap sample to be drawn.
 #' @param nCores The number of cores to use for parallel execution.
-#' @param verbose If \code{TRUE}, will display a message with the duration of execution.
+#' @param verbose If \code{TRUE}, a message will be displayed with the duration of execution.
 #'
 #' @return A list with the following elements:
 #'  \describe{
@@ -36,10 +36,365 @@
 #' ASCA/APCA family of methods}, Journal of Chemometrics
 #' @import doParallel
 #' @import parallel
+#' @import doFuture
+#' @import future
 #' @importFrom plyr laply llply
+#' @importFrom lmerTest ran
+#' @importFrom lme4 lmer
 
 lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, verbose = FALSE) {
+
+  start_time <- Sys.time()
+
+    if (!is.list(resLmpEffectMatrices)) {
+    stop("Argument resLmpEffectMatrices is not a list")
+  }
+  
+  if(names(resLmpEffectMatrices)[1] != "lmpDataList"){
+    stop("Argument is not a resLmpEffectMatrices object")
+  }
+  
+  model <- resLmpEffectMatrices$lmpDataList$model
+  checkArg(model,c("model"), can.be.null = FALSE)
+  
+  if(model == "lmm"){
   # Checking the resLmpEffectMatrices list
+    checkname <- c(
+      "lmpDataList", "modelMatrix", "modelMatrixByEffect",
+      "effectsNamesUnique",
+      "effectsNamesAll", "effectMatrices",
+      "predictedvalues", "residuals", "parameters", "modelMatrixR", 
+      "modelMatrixByEffectR", "effectsNamesUniqueR",
+      "effectsNamesAllR", "effectMatricesR", "parametersR", "resStdError",
+      "variancesEstimatedR", "MM_full", "varComponentsAbs", "type3SS", "variationPercentages", 
+      "varPercentagesPlot"
+    )
+    
+    if (length(resLmpEffectMatrices) != 22) {
+      stop("List does not contain 22 arguments")
+    }
+    if (!all(names(resLmpEffectMatrices) == checkname)) {
+      stop("Argument is not a resLmpEffectMatrices object")
+    }
+    if (length(resLmpEffectMatrices$effectMatrices) !=
+        length(resLmpEffectMatrices$effectsNamesUnique)) {
+      stop("Number of effect fixed matrices differs from the number of fixed effects")
+    }
+    if (length(resLmpEffectMatrices$effectMatricesR) !=
+        length(resLmpEffectMatrices$effectsNamesUniqueR)) {
+      stop("Number of effect mixed matrices differs from the number of mixed effects")
+    }
+    
+    # Attributing names
+    start_time <- Sys.time()
+    form <- resLmpEffectMatrices$lmpDataList$formula
+    formula <- formula(form)
+    outcomes <- resLmpEffectMatrices$lmpDataList$outcomes
+    design <- resLmpEffectMatrices$lmpDataList$design
+    data_full <- cbind(design,outcomes)
+    effectsNamesUnique <- resLmpEffectMatrices$effectsNamesUnique
+    effectsNamesUniqueR <- resLmpEffectMatrices$effectsNamesUniqueR
+    MM_full <- resLmpEffectMatrices$MM_full
+    
+    # Parallel computing
+    # Add function bootstrapLT on the parallel process.
+    # source("./R_new_update/bootstrapLT.R",local = TRUE)
+    # source("./R_new_update/createContrastsSum.R",local = TRUE)
+    options(doFuture.rng.onMisuse = "ignore")
+    doFuture::registerDoFuture()
+    future::plan("multisession", workers = nCores)
+    
+    # The message number with the message (name is the message and number is the value).
+    responseWithMsg <- list()
+    # The warning number with the warning message (name is the warning message and number is the value).
+    responseWithWarning <- list()
+    
+    # All variable names
+    namesAll <- effectsNamesUnique[-1]
+    
+    # Add "(1 | ...)" for all random variables
+    namesAllTransformed <- effectsNamesUnique[-1]
+    
+    if(length(effectsNamesUniqueR) > 0){
+      for(i in (length(effectsNamesUnique)):(length(effectsNamesUnique) - 1 +length(effectsNamesUniqueR))){
+        namesAllTransformed[i] <- paste0("(1 | ", effectsNamesUniqueR[i - length(effectsNamesUnique) + 1], ")")
+        namesAll[i] <- effectsNamesUniqueR[i - length(effectsNamesUnique) + 1]
+      }
+    } else {
+      stop("It is not a linear mixed model")
+    }
+    
+    # List of Formulas without the effect to test
+    null_formulas <- list()
+    # List of object for the formula
+    null_form_data <- list()
+    
+    for(i in 1:length(namesAll)){
+      effect <- namesAll[i]
+      #not the effect
+      namesWithoutEffect <- namesAllTransformed[effect != namesAll]
+      
+      # Only fixed effect
+      namesWithoutEffectF <- namesWithoutEffect[namesWithoutEffect %in% effectsNamesUnique]
+      
+      if(length(namesWithoutEffectF) > 0){
+        # fixed matrix
+        dataFormF <- lapply(namesWithoutEffectF, function(x){resLmpEffectMatrices$modelMatrixByEffect[[x]]})
+        names(dataFormF) <- namesWithoutEffectF
+      } else {
+        formulaWithoutEffectF = ""
+        dataFormF = NULL
+      }
+      
+      # only random effect
+      namesWithoutEffectR <- namesWithoutEffect[!(namesWithoutEffect %in% effectsNamesUnique)]
+      # randoms vectors 
+      formulaWithoutEffectR <- paste0(namesWithoutEffectR ,collapse = " + ")
+      
+      if(!is.null(dataFormF)){
+        # Rename the column of data dataFormF
+        dataFormF <- lapply(names(dataFormF), function(matrice_nom) {
+          matrice <- dataFormF[[matrice_nom]]
+          colnames(matrice) <- gsub(":","",paste(matrice_nom, ".", colnames(matrice), sep = ""))
+          return(matrice)
+        })
+        null_form_data[[effect]] <- cbind(do.call(cbind,dataFormF),design)
+        formulaWithoutEffectF <- paste0(colnames(do.call(cbind,dataFormF)) ,collapse = " + ")
+        if(formulaWithoutEffectR != ""){
+          null_formulas[[effect]] <- paste("~", formulaWithoutEffectF , "+", formulaWithoutEffectR)
+        } else{
+          null_formulas[[effect]] <-  paste("~", formulaWithoutEffectF)
+        }
+      }else{
+        null_form_data[[effect]] <- design
+        null_formulas[[effect]] <- paste("~", formulaWithoutEffectR)
+      }
+    }
+    
+    # 1 random effect model is a particular case 
+    # because the lmer function doesn't support models without random model and 
+    # if the random effect is removed, the model will only have fixed effects.
+    if(length(effectsNamesUniqueR) == 1){
+      tmp_formula <- null_formulas[length(null_formulas)]
+      tmp_form_data <-  null_form_data[length(null_form_data)]
+      
+      null_formulas <- null_formulas[-length(null_formulas)]
+      null_form_data <- null_form_data[-length(null_form_data)]
+      
+      namesAll <- namesAll[-length(namesAll)]
+      # vector with FALSE for fixed effect minus intercept 
+      REML <- c(rep(FALSE, length(effectsNamesUnique) - 1))
+    } else{
+      # vector with FALSE for fixed effect minus intercept and TRUE for random effect
+      REML <- c(rep(FALSE, length(effectsNamesUnique) - 1),rep(TRUE,length(effectsNamesUniqueR)))
+    }
+    names(REML) <- namesAll
+    
+    ##################################################
+    # True log-likelihood Ratio statistics
+    ##################################################
+    
+    # full model: MM_full
+    ######################
+    # REML
+    loglik_full_REML <- sapply(MM_full, logLik, REML=T)
+    
+    # ML
+    loglik_full_ML <- sapply(MM_full, logLik, REML=F)
+    
+    loglik_full <- matrix(NA, ncol = ncol(outcomes),
+                             nrow=length(null_formulas), byrow = TRUE)
+    for (i in 1:length(REML)){
+      if (REML[i]==TRUE){
+        loglik_full[i,] <- loglik_full_REML
+      }else {loglik_full[i,] <- loglik_full_ML}
+    }
+    
+    ### Restricted models  
+    ######################
+    
+    # List with lmer without the effect index 
+    res.lmer_NULL <- vector("list", length = length(null_formulas))
+    names(res.lmer_NULL) <- names(null_formulas)
+    
+    for (i in 1:length(null_formulas)) {
+      # Run lmer
+      fmla_tmp <- sapply(paste0(colnames(outcomes), null_formulas[[i]]), as.formula)
+      # Allows you to display a specific message error
+      res.lmer_NULL[[i]] <- withCallingHandlers({
+        res.lmer_NULL[[i]] <- lapply(fmla_tmp, lmer, data = cbind(null_form_data[[i]],outcomes), control = lmerControl(optimizer = "bobyqa"))
+      },
+      message = function(msg) {
+        # Count the same message
+        if (is.null(responseWithMsg[[msg$message]])) {
+          responseWithMsg[[msg$message]] <<- 1
+        } else{
+          responseWithMsg[[msg$message]] <<- responseWithMsg[[msg$message]] + 1
+        }
+        invokeRestart("muffleMessage")
+      },
+      warning = function(w) {
+        # Count the same message
+        if (is.null(responseWithWarning[[w$message]])) {
+          responseWithWarning[[w$message]] <<- 1
+        }else{
+          responseWithWarning[[w$message]] <<- responseWithWarning[[w$message]] + 1
+        }
+        invokeRestart("muffleWarning")
+      })
+    }
+    
+    # Save the results
+    MM_null <- res.lmer_NULL
+    
+    ######################
+    # compute the LRT 
+    ######################
+    
+    # objects initialisation ------------
+    Res_std_error_null <- vector("list", length=length(null_formulas))
+    loglik_null <- vector("list", length=length(null_formulas))
+    sumlog <- c()
+    
+    ### compute the LRT ----------------------------
+    for (i in 1:length(null_formulas)){
+      Res_std_error_null[[i]]  <- sapply(MM_null[[i]], sigma)
+      
+      #  sumlog
+      loglik_null[[i]] <- sapply(MM_null[[i]], logLik, REML=REML[i])
+      
+      sumlog[i] <- 2*(sum(loglik_full[i,] - loglik_null[[i]]))
+    }
+    
+    # LRT
+    names(sumlog) <- names(null_formulas)
+    sumlog_true <- sumlog
+    
+    # Integrate the function that fetchs the log-likelihood of each model 
+    # for the random effect because the lmer function doesn't work 
+    # if there is no random effect. 
+    # We use the ran() function from the lmerTest package, 
+    # which allows the testing of the random effect
+    if(length(effectsNamesUniqueR) == 1){
+      lmerand  <- MM_full
+      
+      for (i in 1:length(lmerand)){
+        lmerand[[i]]@call[["data"]] <- data_full
+        #specified the contrast sum
+        lmerand[[i]]@call[["contrasts"]] <-  createContrastsSum(form)
+      }
+      
+      loglik_null_R <- numeric()
+      for (i in 1:length(lmerand)){
+        loglik_null_R[i] <- lmerTest::rand(lmerand[[i]])[2,2]
+      }
+      
+      loglik_full_R <- numeric()
+      for (i in 1:length(lmerand)){
+        loglik_full_R[i] <- lmerTest::rand(lmerand[[i]])[1,2]
+      }
+      
+      sumlogR <- 2*(sum(loglik_full_R - loglik_null_R))
+      
+      # Add the random variable in the object
+      nbr_effect <- length(null_formulas) + 1
+      loglik_full <- rbind(loglik_full,loglik_full_R)
+      loglik_null[[nbr_effect]] <- loglik_null_R
+      null_formulas[[effectsNamesUniqueR[1]]] <- tmp_formula[[1]]
+      null_form_data[[effectsNamesUniqueR[1]]] <- tmp_form_data[[1]]
+      sumlog_true[effectsNamesUniqueR[1]] <- sumlogR
+      namesAll <- names(null_formulas)
+      MM_null[[effectsNamesUniqueR[1]]] <- MM_full
+      REML[[effectsNamesUniqueR[1]]] <- TRUE
+    }
+    
+    # The list of summed LLR 
+    sumlog_boot <- vector("list", length=length(null_formulas))
+    # The LLR per response
+    ratio_boot <- vector("list", length=length(null_formulas))
+    names(sumlog_boot) <- names(ratio_boot) <- namesAll
+    
+    for (i in 1:length(null_formulas)){
+      # Allow to display a specific message error
+      res <- withCallingHandlers({
+        # Simulate nboot times for each effect, output list with sumlog and ratio
+          null_effect <- namesAll[i]
+          #print(null_formulas[[null_effect]])
+          res <- plyr::laply(1:nboot, function(x){
+            bootstrapLT(MM_null = MM_null[[null_effect]], 
+                        useREML = REML[null_effect],
+                        null_form_data = null_form_data[[null_effect]], 
+                        null_formula = null_formulas[[null_effect]],
+                        outcomes = outcomes, form_full = form)},
+            .parallel = FALSE, .inform = TRUE)
+      },
+      message = function(msg) {
+        # Count the same message
+        if (is.null(responseWithMsg[[msg$message]])) {
+          responseWithMsg[[msg$message]] <<- 1
+        } else{
+          responseWithMsg[[msg$message]] <<- responseWithMsg[[msg$message]] + 1
+        }
+        invokeRestart("muffleMessage")
+      },
+      warning = function(w) {
+        # Count the same message
+        if(grepl("Model failed to converge",w$message)){
+          if (is.null(responseWithWarning[["Model failed to converge"]])){
+            responseWithWarning[["Model failed to converge"]] <<- 1
+          }else{
+            responseWithWarning[["Model failed to converge"]] <<- responseWithWarning[["Model failed to converge"]] + 1
+          }
+        } else {
+          if (is.null(responseWithWarning[[w$message]])) {
+            responseWithWarning[[w$message]] <<- 1
+          }else{
+            responseWithWarning[[w$message]] <<- responseWithWarning[[w$message]] + 1
+          }
+        }
+        invokeRestart("muffleWarning")
+      })
+      sumlog_boot[[i]] <- res[, "sumlog"]
+      sumlog_boot[[i]] <- unlist(sumlog_boot[[i]])
+      ratio_boot[[i]] <- res[, "ratio"]
+      ratio_boot[[i]] <- do.call(rbind, ratio_boot[[i]])
+    }
+    
+    
+    # Calcule P-value
+    pval <- c()
+    for (i in 1:length(null_formulas)){
+      pval[i] <- (sum(sumlog_true[i]<sumlog_boot[[i]])+1)/(nboot+1)
+      # For add "<" in the pval at the end of code.
+      if(pval[i] <= (1/nboot)){
+        pval[i] = 0
+      }
+    }
+    names(pval) <- names(null_formulas)
+    
+    # Results
+    result <- pval
+    Fobs <- sumlog_true
+    Fboot <- sumlog_boot
+    
+    # Display messages
+    if(length(responseWithMsg) != 0 ){
+      for(msg in names(responseWithMsg)){
+        warning(paste(msg, "This warning was called", responseWithMsg[[msg]], "times.\n"))
+      }
+    }
+    
+    # Display warnings
+    if(length(responseWithWarning) != 0 ){
+      for(w in names(responseWithWarning)){
+          warning("The model estimates for these response(s) may be biased.\n")
+          warning(paste(w, "This warning was called", responseWithWarning[[w]], "times.\n"))
+      }
+    }
+    
+  } else {
+  #################################################
+    # Checking the resLmpEffectMatrices list
 
   checkname <- c(
     "lmpDataList", "modelMatrix", "modelMatrixByEffect",
@@ -49,10 +404,6 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     "type3SS", "variationPercentages", "varPercentagesPlot"
   )
 
-
-  if (!is.list(resLmpEffectMatrices)) {
-    stop("Argument resLmpEffectMatrices is not a list")
-  }
   if (length(resLmpEffectMatrices) != 12) {
     stop("List does not contain 12 arguments")
   }
@@ -71,6 +422,8 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     stop("lmpBootstrapTests can't be performed if
          resLmpEffectMatrices doesn't include the effect percentage variations (SS=FALSE)")
   }
+  # Recreate resLmpModelMatrix
+  resLmpModelMatrix <- resLmpEffectMatrices[1:6]
 
   # Attributing names
   start_time <- Sys.time()
@@ -87,11 +440,14 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
   nObs <- nrow(outcomes)
   nParam <- length(effectsNamesAll)
 
-  # Recreate resLmpModelMatrix
-
-  resLmpModelMatrix <- resLmpEffectMatrices[seq_len(6)]
-
   # Parallel computing
+    # # Evaluate the task in a local environment to enhance performances
+    # source("./R/lmpModelMatrix.R",local = TRUE)
+    # source("./R/lmpEffectMatrices.R",local = TRUE)
+    # source("./R/checkArg.R",local = TRUE)
+    # source("./R/contrastSS.R", local = TRUE)
+    # source("./R/lmpSS.R", local = TRUE)
+    # source("./R/ModelAbbrev.R", local = TRUE)
 
   doParallel::registerDoParallel(cores = nCores)
 
@@ -126,7 +482,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
 
     colnames(modelMatrixPartial) <- colnames(modelMatrix[, selectionComplementall])
 
-    # Be careful modelMatrixByEffect with 1 parameters have no colnames
+    # Be careful: modelMatrixByEffect with 1 parameter has no colnames
 
     # Create effectsNamesAll
 
@@ -167,18 +523,14 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
   }
 
   res_partial_mod_fun <- plyr::llply(seq_len(nEffect), partial_mod_fun,
-    .parallel = TRUE
+    .parallel = FALSE
   )
 
 
-  listResultPartial <- lapply(
-    res_partial_mod_fun,
-    function(x) x[["listResultPartial"]]
-  )
-  Fobs <- lapply(
-    res_partial_mod_fun[seq(2, nEffect)],
-    function(x) x[["Fobs"]]
-  )
+  listResultPartial <- lapply(res_partial_mod_fun,
+                                function(x) x[["listResultPartial"]])
+  Fobs <- lapply(res_partial_mod_fun[2:nEffect],
+                   function(x) x[["Fobs"]])
 
   # Formating the output
   names(listResultPartial) <- effectsNamesUnique
@@ -209,12 +561,12 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     Y_withoutIntercept <- Res$outcomes - Res$Intercept
     denom <- norm(x = data.matrix(Y_withoutIntercept), "F")^2
 
-    result <- vapply(L, function(x) {
-      computeSS_bis(
-        Xmat = Res$modelMatrix, L = x,
-        Res$parameters
-      )
-    }, FUN.VALUE = 0, USE.NAMES = TRUE)
+    result <- sapply(L, function(x) {
+        computeSS_bis(
+          Xmat = Res$modelMatrix, L = x,
+          Res$parameters
+        )
+    })
 
     result <- c(result, ((norm(x = Res$residuals, "F")^2) / denom) * 100)
     # result = c(result,norm(x=Res$residuals,"F")^2)
@@ -362,7 +714,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     ### Compute Fboot from Sum of Squares Type 3 --------------
 
     # Find the number of parameters for each effect
-    npar <- plyr::llply(resLmpModelMatrix$modelMatrixByEffect, ncol,
+    npar <- plyr::llply(resLmpModelMatrix$modelMatrixByEffect, function(x) ncol(x),
       .parallel = FALSE
     )
 
@@ -398,7 +750,7 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
         resLmpModelMatrix = resLmpModelMatrix
       )
     },
-    .parallel = TRUE
+    .parallel = FALSE
   )
 
 
@@ -412,10 +764,10 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
   }
 
   # Outputs generation
-  result <- apply(X = matrix_temp, FUN = ComputePval, MARGIN = 2)
+    result <- apply(X = matrix_temp, FUN = ComputePval, MARGIN = 2)
+    colnames(Fboot) <- names(Fobs)
+  }
   result <- signif(result, digits = log10(nboot))
-  colnames(Fboot) <- names(Fobs)
-
   result <- replace(result, result == 0, paste0(
     "< ",
     format(1 / nboot,
@@ -432,11 +784,20 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     "-",
     round(resLmpEffectMatrices$variationPercentages[["Residuals"]], 2)
   ))
-  rownames(resultsTable) <- c("Bootstrap p-values", "% of variance (T III)")
-  colnames(resultsTable) <- c(
-    resLmpEffectMatrices$effectsNamesUnique[-1],
-    "Residuals"
-  )
+  if(model == "lm"){
+    rownames(resultsTable) <- c("Bootstrap p-values", "% of variance (T III)")
+  } else {
+    rownames(resultsTable) <- c("Bootstrap p-values", "% of variance")
+  }
+  
+  if(model == "lmm"){
+    colnames(resultsTable) <- c(resLmpEffectMatrices$effectsNamesUnique[-1], 
+                                resLmpEffectMatrices$effectsNamesUniqueR,
+                                "Residuals")
+  }else{
+    colnames(resultsTable) <- c(resLmpEffectMatrices$effectsNamesUnique[-1], 
+                              "Residuals")
+  }
 
   resultsTable <- t(resultsTable)
   resultsTable <- as.data.frame(resultsTable[, c(2, 1)])
@@ -448,10 +809,21 @@ lmpBootstrapTests <- function(resLmpEffectMatrices, nboot = 100, nCores = 2, ver
     resultsTable = resultsTable
   )
 
-  doParallel::stopImplicitCluster
+ if(model == "lm"){
+    doParallel::stopImplicitCluster
+  } else{
+    suppressWarnings({
+      future::plan("multisession", stop = TRUE)
+    })
+  }
   if (verbose) {
-    message(Sys.time() - start_time)
+    print(Sys.time() - start_time)
   }
 
   return(resLmpBootstrapTests)
-}
+
+  if (verbose) {
+    print(Sys.time() - start_time)
+  }
+
+  }
