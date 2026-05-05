@@ -41,10 +41,9 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
    listNames <- c(resLmpPcaEffects$effectsNamesUnique[-1],"Residuals")
   neffect <- length(listNames)
 
-  ##### update Antoine
   model <- resLmpPcaEffects$lmpDataList$model
-  UPDATE_checkArg(model,c("model"), can.be.null = FALSE)
-  
+  checkArg(model,c("model"), can.be.null = FALSE)
+
   # add random effects
   if(model == "lmm"){
     listNames <- c(resLmpPcaEffects$effectsNamesUnique[-1],resLmpPcaEffects$effectsNamesUniqueR,"Residuals")
@@ -99,7 +98,7 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
   # Effect table for combined effects ===============
  if ((length(resLmpPcaEffects) - 6 != length(resLmpPcaEffects$effectsNamesUnique)
       & model == "lm")
-      | (length(resLmpPcaEffects) - 8 != (length(resLmpPcaEffects$effectsNamesUnique) 
+      | (length(resLmpPcaEffects) - 8 != (length(resLmpPcaEffects$effectsNamesUnique)
                                           + length(resLmpPcaEffects$effectsNamesUniqueR))
                         & model == "lmm")) {
     if(model == "lmm"){
@@ -107,9 +106,9 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
     } else{
       neffectTot <- length(resLmpPcaEffects) - 6
     }
-    
+
     neffectComb <- neffectTot - neffect
-    
+
     listNameComb <- setdiff(resLmpPcaEffects$effectsNamesUniqueCombined, resLmpPcaEffects$effectsNamesUnique)
     if(model == "lmm"){
       listNameComb <- c(listNameComb,setdiff(resLmpPcaEffects$effectsNamesUniqueCombinedR, resLmpPcaEffects$effectsNamesUniqueR))

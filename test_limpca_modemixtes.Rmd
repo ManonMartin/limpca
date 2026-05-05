@@ -1,7 +1,7 @@
 ---
 title: "Analyse des 4 dataset Candies,Human Serum, CHOO et UCH avec les fonctions limpca updates"
-author: "Visschers Antoine"
-date: "21/11/2023"
+author: "Visschers Antoine & Manon Martin"
+date: today
 output:
   html_document: # options pour sortie HTML
     code_folding: hide #  Cache le code (mais permet de l'ouvrir :-))
@@ -47,32 +47,23 @@ require("car")
 require(dplyr)
 # pak::pak("metafolio")
 require(metafolio)
-# library(limpca)
 library(kableExtra)
 
-# # Chemin pour les outputs
-# fig_path <- "./test_limpca_outputs/"
-# 
-# # chemin pour mettre dans le fichier Candies
-# output_Candies <- paste0(fig_path,"/Candies")
-# 
-# # chemin pour mettre dans le fichier Serum
-# output_Serum = paste0(fig_path,"/Serum")
-# 
-# # chemin pour mettre dans le fichier CHOO
-# output_CHOO = paste0(fig_path,"/CHOO")
-# 
-# # chemin pour mettre dans le fichier UCH
-# output_UCH = paste0(fig_path,"/UCH")
-
-#charge toute les fonction de limpca
-devtools::load_all(".")
-
-#charge toute les fonctions de limpca modifié
-# map(list.files("../limpca/inst/doc/R_new_update/", full.names = TRUE), source)
 ```
 
-```{bash}
+```{r, eval=FALSE}
+# Install limpca
+# devtools::load_all(".") # loads without installing
+devtools::document()
+devtools::install()
+```
+
+```{r}
+library(limpca)
+```
+
+
+```{bash, eval=FALSE}
 quarto preview test_limpca_modemixtes.Rmd \
   --no-browser \
   --no-watch-inputs \
@@ -144,9 +135,6 @@ plotDesign(design = Candies$design, x = "Judges",
            y = "Candies",
            title = "Plan de l'ensemble Candies")
 
-# #exporter le plan
-# ggsave(plot = last_plot(), device = NULL, filename = file.path(output_Candies,"design_Candies.jpeg"),
-#   scale = 0.6, width = 15, height = 7, units = "cm",dpi = 1000)
 ```
 
 Les données sont bien balancées.
@@ -168,7 +156,6 @@ p1 <- plotLine(Y = Candies$outcomes,
          xaxis_type = "character", 
          type = "s")
 
-# ggsave(file = file.path(output_Candies,"plotLine_Candies.jpeg"),p1)
 p1
 ```
 
@@ -670,7 +657,7 @@ resLmpEffectMatrices_UCH$varPercentagesPlot
 ## Partie Candies
 
 ```{r,eval=FALSE}
-resLmpBootstrapTests_Candies <- lmpBootstrapTests(resLmpEffectMatrices_Candies, nboot = 20, verbose = TRUE)
+resLmpBootstrapTests_Candies <- lmpBootstrapTests(resLmpEffectMatrices_Candies, nboot = 1000, verbose = TRUE)
 save(resLmpBootstrapTests_Candies, file = "./test_limpca_outputs/resBootstrap_Candies.rda")
 ```
 
@@ -772,7 +759,7 @@ ggplot(df_boot, aes(x = glrt_boot)) +
 ## Partie Serum
 
 ```{r,eval=FALSE}
-resLmpBootstrapTests_Serum <- lmpBootstrapTests(resLmpEffectMatrices_Serum, nboot = 20, verbose = TRUE)
+resLmpBootstrapTests_Serum <- lmpBootstrapTests(resLmpEffectMatrices_Serum, nboot = 1000, verbose = TRUE)
 save(resLmpBootstrapTests_Serum, file = "./test_limpca_outputs/resBootstrap_Serum.rda")
 ```
 
@@ -804,7 +791,7 @@ m
 ## Partie CHOO
 
 ```{r, eval=FALSE}
-resLmpBootstrapTests_CHOO <- lmpBootstrapTests(resLmpEffectMatrices_CHOO, nboot = 20, verbose = TRUE)
+resLmpBootstrapTests_CHOO <- lmpBootstrapTests(resLmpEffectMatrices_CHOO, nboot = 1000, verbose = TRUE)
 save(resLmpBootstrapTests_CHOO, file = "./test_limpca_outputs/resBootstrap_CHOO.rda")
 ```
 
@@ -836,7 +823,7 @@ m
 ## Partie UCH
 
 ```{r,eval=FALSE}
-resLmpBootstrapTests_UCH <- lmpBootstrapTests(resLmpEffectMatrices_UCH, nboot = 20, verbose = TRUE)
+resLmpBootstrapTests_UCH <- lmpBootstrapTests(resLmpEffectMatrices_UCH, nboot = 1000, verbose = TRUE)
 save(resLmpBootstrapTests_UCH, file = "./test_limpca_outputs/resBootstrap_UCH.rda")
 ```
 
@@ -879,6 +866,8 @@ fact_corretion <- function(df1, df2, min_df2 = 4){
   coef <- sqrt((Fstat*df1)/df2)
   return(coef)
 }
+
+source("R/computeED.R")
 ```
 
 ## Partie Candies
@@ -886,7 +875,6 @@ fact_corretion <- function(df1, df2, min_df2 = 4){
 ### ED
 
 ```{r}
-# source("inst/doc/R_new_update/computeED.R")
 res_ED_Candies <- computeED(resLmpEffectMatrices_Candies)
 pander::pander(round(res_ED_Candies,1))
 ```
@@ -1464,7 +1452,7 @@ grid.arrange(resid_scores_pl,resid_loadings_pl, ncol=2)
 ```
 
 ```{r}
-UPDATE_lmpEffectPlot(resLmpPcaEffectsASCA_UCH, effectName = "Hippurate:Time", x = "Hippurate", z = "Time")
+lmpEffectPlot(resLmpPcaEffectsASCA_UCH, effectName = "Hippurate:Time", x = "Hippurate", z = "Time")
 ```
 
 #### ASCA avec combinaisons d'effets 
@@ -1604,7 +1592,7 @@ c <- grid.arrange(screeplotCandiesJudges, CA_scores,
               loadCandiesJudges, nrow=1,widths=c(0.3, 1,  0.85),
              top=textGrob("C*J effect matrix",
                           gp=gpar(fontsize=20,font=2)))
-ggsave(file = file.path(output_Candies,"Candies_APCA_CJ.jpeg"),c, width = 30, height = 13, units = "cm",dpi = 1000, scale = 0.8)
+c
 ```
 
 ```{r}
@@ -1612,7 +1600,7 @@ d <- grid.arrange(screeplotResiduals, Residuals_scores,
               loadResiduals, nrow=1,widths=c(0.3, 1,  0.85),
              top=textGrob("Residuals effect matrix",
                           gp=gpar(fontsize=20,font=2)))
-c
+d
 ```
 
 #### APCA avec correction de la matrice augmentée
@@ -2835,8 +2823,7 @@ pander::pander(resContribution_Candies$contribTable)
 
 ```{r}
 resContribution_Candies$plotContrib
-# exporter le graphique
-ggsave(file = file.path(output_Candies,"Candies_plotContrib.jpeg"),resContribution_Candies$plotContrib)
+
 ```
 
 ### Serum
@@ -2865,8 +2852,7 @@ pander::pander(resContribution_Serum$contribTable)
 
 ```{r}
 resContribution_Serum$plotContrib
-# exporter le graphique
-ggsave(file = file.path(output_Serum,"Serum_plotContrib.jpeg"),resContribution_Serum$plotContrib)
+
 ```
 
 ### CHOO
@@ -2895,8 +2881,7 @@ pander::pander(resContribution_CHOO$contribTable)
 
 ```{r}
 resContribution_CHOO$plotContrib
-# exporter le graphique
-ggsave(file = file.path(output_CHOO,"CHOO_plotContrib.jpeg"),resContribution_CHOO$plotContrib)
+
 ```
 
 ### UCH
@@ -2925,8 +2910,7 @@ pander::pander(resContribution_UCH$contribTable)
 
 ```{r}
 resContribution_UCH$plotContrib
-# exporter le graphique
-ggsave(file = file.path(output_UCH,"UCH_plotContrib.jpeg"),resContribution_UCH$plotContrib)
+
 ```
 
 # Info de la Session
