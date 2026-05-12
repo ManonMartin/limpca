@@ -1,3 +1,10 @@
+# FIXME: 
+# - rename column names as original
+# - drop unused levels in factor
+# - test lm sur modmat créé
+# warning si effet nesté second ou plus ordre
+# attention de ne pas selectionner d'effet aléatoire avec grep(:) !!
+
 library(tidyverse)
 
 # factors
@@ -93,61 +100,70 @@ reshape_mod_mat <- function(dat, form, nested = NULL){
 
   # build the corrected model matrix the nested effects
 
-  # for (i in possibly_nested)
-  int <- possibly_nested[1]
+  modMat_nested <- vector(mode = "list", length = seq_along(possibly_nested))
 
-  right_term <- str_remove(pattern = "^.*:", int)
-  left_term <- str_remove(pattern = ":.*$", int)
+  for (i in seq_along(possibly_nested)){
 
-  # rename levels per level of the nesting variable
-  old_var <- dat[,right_term]
+    int <- possibly_nested[i]
 
-  new_var <- ave(as.character(dat$patient), dat$treatment, FUN = function(x) {
-    paste0("patient", as.integer(factor(x, levels = unique(x))))
-  })
+    right_term <- str_remove(pattern = "^.*:", int)
+    left_term <- str_remove(pattern = ":.*$", int)
 
-  lookup_var_levels <- data.frame(old_var, new_var)
-  dat[,right_term] <- as.factor(new_var)
+    # rename levels per level of the nesting variable
+    old_var <- dat[,right_term]
 
-  # check if last level is common to all levels of nesting variable
-  nested_common_levels <- function(data, parent, nested) {
-    tab <- table(data[[nested]], data[[parent]])
-    rownames(tab)[rowSums(tab > 0) == ncol(tab)]
+    new_var <- ave(as.character(dat$patient), dat$treatment, FUN = function(x) {
+      paste0("patient", as.integer(factor(x, levels = unique(x))))
+    })
+
+    lookup_var_levels <- data.frame(old_var, new_var)
+    dat[,right_term] <- as.factor(new_var)
+
+    # check if last level is common to all levels of nesting variable
+    nested_common_levels <- function(data, parent, nested) {
+      tab <- table(data[[nested]], data[[parent]])
+      rownames(tab)[rowSums(tab > 0) == ncol(tab)]
+    }
+
+    ncl <- nested_common_levels(dat, left_term, right_term)
+
+    levs <- levels(dat[,right_term])
+
+    if (tail(ncl, 1) != tail(levs, 1)){
+      # intervert and rename levels
+      # to have the last level as common
+      last_common <- tail(ncl, 1)
+      # last_common <- "P5"
+      id <- which(levs == last_common)
+      new_levs <- c(levs[-id], levs[id])
+      new_names <- paste0(right_term, seq_along(new_levs))
+      lookup_newNames <- data.frame(original_names = levs, new_levels = new_levs)
+
+      lookup_var_levels <- lookup_var_levels |>
+        left_join(lookup_newNames, by = c("new_var" = "original_names")) |>
+        dplyr::select(-new_var) |>
+        dplyr::rename("new_var" = "new_levels")
+
+      dat[,right_term] <- as.factor(lookup_var_levels[,"new_var"])
+
+    }
+
+    modMat_intermediate <- model.matrix(as.formula(paste0("~ ", left_term," + ",int)), data = dat)
+    modMat_nest <- modMat_intermediate[, grepl(":", colnames(modMat_intermediate)), drop = FALSE]
+
+    unique_levels <- apply(modMat_nest, 2, unique)
+
+    contains1 <- map_lgl(unique_levels, \(x) 1 %in% x)
+    modMat_nest <- modMat_nest[, names(contains1)[contains1]]
+
+    modMat_nested[[i]] <- as.data.frame(modMat_nest)
+    
   }
 
-  ncl <- nested_common_levels(dat, left_term, right_term)
-
-  levs <- levels(dat[,right_term])
-
-  if (tail(ncl, 1) != tail(levs, 1)){
-    # intervert and rename levels
-    # to have the last level as common
-    last_common <- tail(ncl, 1)
-    # last_common <- "P5"
-    id <- which(levs == last_common)
-    new_levs <- c(levs[-id], levs[id])
-    new_names <- paste0(right_term, seq_along(new_levs))
-    lookup_newNames <- data.frame(original_names = levs, new_levels = new_levs)
-
-    lookup_var_levels <- lookup_var_levels |>
-      left_join(lookup_newNames, by = c("new_var" = "original_names")) |>
-      dplyr::select(-new_var) |>
-      dplyr::rename("new_var" = "new_levels")
-
-    dat[,right_term] <- as.factor(lookup_var_levels[,"new_var"])
-
-  }
-
-  modMat_intermediate <- model.matrix(as.formula(paste0("~ ", left_term," + ",int)), data = dat)
-  modMat_nested <- modMat_intermediate[, grepl(":", colnames(modMat_intermediate)), drop = FALSE]
-
-  unique_levels <- apply(modMat_nested, 2, unique)
-
-  contains1 <- map_lgl(unique_levels, \(x) 1 %in% x)
-  modMat_nested <- modMat_nested[, names(contains1)[contains1]]
+  modMat_nested_all <- purrr::list_cbind(modMat_nested)
 
 
-  modMat_allTerms <- cbind(modMat_otherTerms, modMat_nested)
+  modMat_allTerms <- cbind(modMat_otherTerms, modMat_nested_all)
 
   # Test again singularity of model matrix
 
