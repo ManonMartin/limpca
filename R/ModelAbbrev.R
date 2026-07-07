@@ -5,24 +5,26 @@ ModelAbbrev <- function(vectorname) {
   # ModelTerms <- c(ModelTerms_sansE, "residuals") # with residuals
   ModelTerms <- vectorname
 
-  ModelTerms_abbrev <- ModelTerms # Abbreviated model terms
-  index <- gregexpr(":", ModelTerms)
-  for (i in seq_along(ModelTerms)) {
-    if (index[[i]][1] != -1) {
-      ModelTerms_abbrev[i] <- substr(ModelTerms[i], 1, 1)
-      index2 <- index[[i]]
-      for (k in seq_along(index2)) {
-        ModelTerms_abbrev[i] <- paste(ModelTerms_abbrev[i],
-          substr(
-            ModelTerms[i],
-            index2[k] + 1,
-            index2[k] + 1
-          ),
-          sep = "x"
-        )
-      }
-    }
-  }
+  ModelTerms_abbrev <- gsub(pattern = ":", x = ModelTerms, replacement = "x")
+
+  # ModelTerms_abbrev <- ModelTerms # Abbreviated model terms
+  # index <- gregexpr(":", ModelTerms)
+  # for (i in seq_along(ModelTerms)) {
+  #   if (index[[i]][1] != -1) {
+  #     ModelTerms_abbrev[i] <- substr(ModelTerms[i], 1, 1)
+  #     index2 <- index[[i]]
+  #     for (k in seq_along(index2)) {
+  #       ModelTerms_abbrev[i] <- paste(ModelTerms_abbrev[i],
+  #         substr(
+  #           ModelTerms[i],
+  #           index2[k] + 1,
+  #           index2[k] + 1
+  #         ),
+  #         sep = "x"
+  #       )
+  #     }
+  #   }
+  # }
 
   ModelTerms_abbrev[length(ModelTerms_abbrev)] <- "Residuals"
 

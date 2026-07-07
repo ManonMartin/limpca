@@ -1,21 +1,28 @@
-# FIXME: 
-# - rename column names as original
-# - drop unused levels in factor
-# - test lm sur modmat créé
-# warning si effet nesté second ou plus ordre
-# attention de ne pas selectionner d'effet aléatoire avec grep(:) !!
-
 library(tidyverse)
+# setwd("~/Dropbox/bg__UCLPartage_Memoires_stages_thèses/Partage_2026_Lucie/Limpca-sigularity")
+source("reshape_mod_mat.R")
+
+# to do:
+# [x] si mat singuliere et pas effet nesté (à tester), se plante -> mettre un message (--> Matrice singulière probablement à cause du design) et stop
+# [x] tester si deux variables sont bien des facteurs, et stop sinon
+# [x] si singulier, ressortir la matrice du modèle pour examination par l'utilisateur
+
+
+##############################################################
+# Exemple 1
+##############################################################
 
 # factors
-treatment <- c(rep(c("A", "B"), each = 15), "B", "B", "B")         # 2 treatments
-patient   <- c(rep(paste0("P", c(1:5)), each = 3), rep(paste0("P", c(6:11)), each = 3))
-time      <- c(rep(c("T1", "T2", "T3"), times = 10), "T1", "T2", "T3")
+treatment <- factor(c(rep(c("A", "B"), each = 15), "B", "B", "B"))         # 2 treatments
+patient   <- factor(c(rep(paste0("P", c(1:5)), each = 3), rep(paste0("P", c(6:11)), each = 3)))
+time      <- factor(c(rep(c("T1", "T2", "T3"), times = 10), "T1", "T2", "T3"))
+clinic <- as.factor(sample(paste0("C", 1:4),replace = TRUE,length(time)) )
+sex <- as.factor(sample(c("F","H"),replace = TRUE,length(time)) )
 
 dat <- data.frame(
-  treatment = factor(treatment),
-  time      = factor(time),
-  patient   = factor(patient)
+  treatment = treatment,
+  time      = time,
+  patient   = patient
 )
 
 dat$patient <- factor(dat$patient, levels = paste0("P", 1:11))
@@ -31,155 +38,350 @@ form <- as.formula("~ treatment/patient")
 # nested parameter
 nested = "treatment:patient"
 
+#BG est ce que cette option doit se trouver dans la fonction ou en dehors  ?
+#BG Quid sinon quand tu crées de nouvelles formules
 options(contrasts = c("contr.sum", "contr.poly"))
 
 ### reshape model matrix columns linked to a nested effect
 
-reshape_mod_mat <- function(dat, form, nested = NULL){
+x1=reshape_mod_mat(dat = dat,
+                form = form,
+                nested = nested)
+x1
+##############################################################
+# Exemple 2 : idem mais modèle défini un peu autrement
+##############################################################
 
-  # extract model matrix without nested effect, then for each nested effect, do the following:
-  # 0. Tester la singularité et stopper si c’est le cas
-  # 1. Ajouter un argument pour spécifier la liste des facteurs hiérarchisés : help indiquer fact hiérarhcisé modèle x1:x2 mais en plus mettre x2 en argument et si X3 dans X2 dans X1, que mettre dans le modèle et dans l’argument.  On peut avoir x3 hiérarchisé dans (x1:x2) ce qui est différent.
-  # 2; Que faire : recoder les niveaux du facteur inférieur avec des xx1,xx2,xx3 dans chaque niveau du facteur supérieur.  Créer des niveaux tels que le dernier apparaisse dans tous les blocs.  Le dernier xxi ou i est le nombre maximum de niveau dans le bloc où il y a le plus de niveaux.
-  # 3. Créer la matrice du modèle avec limpca méthode actuelle
-  # 4. Enlever toutes les colonnes du bloc de ce terme de la matrice X ou il n’y a que des -1
-  # 5.  Et puis tester la singularité -> erreur mais renvoyer la matrice
+# factors
+dat <- data.frame(
+  treatment = treatment,
+  time      = time,
+  patient   = patient
+)
 
+dat$patient <- factor(dat$patient, levels = paste0("P", 1:11))
 
-  # Test singularity of model matrix
+table(dat$treatment, dat$patient)
 
-  modMat <- model.matrix(form, data = dat)
+# response variable
+dat$y <- rnorm(nrow(dat))
 
-  r_modMat <- qr(modMat)$rank # rank
-  p=ncol(modMat)
-  if (r_modMat-p){
-    warning("model matrix is singular",immediate. = TRUE)
-  }
+# formula
+form <- as.formula("~ treatment+treatment:patient")
 
-  # all model terms
-  all_terms <- attr(terms(form), "term.labels")
-  all_terms
+# nested parameter
+nested = "treatment:patient"
 
-  # other terms (no interaction)
-  other_terms <- grep(x = all_terms, pattern = ':',
-              value = TRUE, invert = TRUE)
+#BG est ce que cette option doit se trouver dans la fonction ou en dehors  ?
+#BG Quid sinon quand tu crées de nouvelles formules
+options(contrasts = c("contr.sum", "contr.poly"))
 
-  # all interaction(s) or nested effect(s)
-  all_int <- grep(x = all_terms, pattern = ':', value = TRUE)
+### reshape model matrix columns linked to a nested effect
 
-  test_nesting <- function(x){
-    # possible nesting:
-    right_term <- str_remove(pattern = "^.*:", x)
-    left_term <- str_remove(pattern = ":.*$", x)
-    int <- NA
-    if (! right_term %in% all_terms){
-      int <- x
-    }
-    return(int)
-  }
+x2=reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
 
-  # all_int <- c("treatment:patient", "treatment:time", "treatment:treatment")
+x2
+sum(x1-x2)
 
-  possibly_nested <- map_chr(all_int, test_nesting)
-  possibly_nested <- possibly_nested[!is.na(possibly_nested)]
+##############################################################
+# Exemple 3 : données longitudinale
+##############################################################
 
-  test_nested <- map_lgl(possibly_nested, \(x) ! x %in% nested)
-  names(test_nested) <- possibly_nested
+dat <- data.frame(
+  treatment = treatment,
+  time      = time,
+  patient   = patient
+)
 
-  test_nestedTRUE <- test_nested[test_nested]
-  if (sum(test_nested) > 0){
-    warning(paste0("One or several nested effect(s) has/have been detected in the formula but are not present in the 'nested' argument: ", names(test_nestedTRUE)))
-  }
+dat$patient <- factor(dat$patient, levels = paste0("P", 1:11))
 
-  # build the model matrix for all the terms but the nested effects
-  interactionTerms <- all_int[!all_int %in% possibly_nested]
+table(dat$treatment, dat$patient,dat$time)
 
-  otherTermsInteraction_formula <- as.formula(paste0("~ ", paste(c(other_terms, interactionTerms), collapse=" + ")))
+# On non balance un peu les données avec certains patients qui manquent pour certains temps
 
-  modMat_otherTerms <- model.matrix(otherTermsInteraction_formula, data = dat)
+dat=dat[-c(2,6,1,16,17,20),]
+table(dat$treatment, dat$patient,dat$time)
+# response variable
+dat$y <- rnorm(nrow(dat))
 
-  # build the corrected model matrix the nested effects
+# formula
+form <- as.formula("~ treatment+time+treatment:time+treatment:patient")
 
-  modMat_nested <- vector(mode = "list", length = seq_along(possibly_nested))
+# nested parameter
+nested = "treatment:patient"
 
-  for (i in seq_along(possibly_nested)){
+#BG est ce que cette option doit se trouver dans la fonction ou en dehors  ?
+#BG Quid sinon quand tu crées de nouvelles formules
+options(contrasts = c("contr.sum", "contr.poly"))
 
-    int <- possibly_nested[i]
+### reshape model matrix columns linked to a nested effect
 
-    right_term <- str_remove(pattern = "^.*:", int)
-    left_term <- str_remove(pattern = ":.*$", int)
+x3=reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
+x3
+##############################################################
+# Exemple 4 : 3 facteurs -> ajout sexe, clinique + interaction entre les 2 par rapport à Exemple 1
+##############################################################
 
-    # rename levels per level of the nesting variable
-    old_var <- dat[,right_term]
+table (sex,clinic)
 
-    new_var <- ave(as.character(dat$patient), dat$treatment, FUN = function(x) {
-      paste0("patient", as.integer(factor(x, levels = unique(x))))
-    })
+dat <- data.frame(
+  treatment = treatment,
+  time      = time,
+  patient   = patient,
+  sex=sex,
+  clinic=clinic
+)
 
-    lookup_var_levels <- data.frame(old_var, new_var)
-    dat[,right_term] <- as.factor(new_var)
+dat$patient <- factor(dat$patient, levels = paste0("P", 1:11))
 
-    # check if last level is common to all levels of nesting variable
-    nested_common_levels <- function(data, parent, nested) {
-      tab <- table(data[[nested]], data[[parent]])
-      rownames(tab)[rowSums(tab > 0) == ncol(tab)]
-    }
+table(dat$treatment, dat$patient)
 
-    ncl <- nested_common_levels(dat, left_term, right_term)
+# response variable
+dat$y <- rnorm(nrow(dat))
 
-    levs <- levels(dat[,right_term])
+# formula
+form <- as.formula("~ sex+treatment/patient+clinic+sex:clinic")
 
-    if (tail(ncl, 1) != tail(levs, 1)){
-      # intervert and rename levels
-      # to have the last level as common
-      last_common <- tail(ncl, 1)
-      # last_common <- "P5"
-      id <- which(levs == last_common)
-      new_levs <- c(levs[-id], levs[id])
-      new_names <- paste0(right_term, seq_along(new_levs))
-      lookup_newNames <- data.frame(original_names = levs, new_levels = new_levs)
+# nested parameter
+nested = "treatment:patient"
 
-      lookup_var_levels <- lookup_var_levels |>
-        left_join(lookup_newNames, by = c("new_var" = "original_names")) |>
-        dplyr::select(-new_var) |>
-        dplyr::rename("new_var" = "new_levels")
+options(contrasts = c("contr.sum", "contr.poly"))
 
-      dat[,right_term] <- as.factor(lookup_var_levels[,"new_var"])
+### reshape model matrix columns linked to a nested effect
 
-    }
+x4=reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
+x4
+qr(x4)$rank
+##############################################################
+# Exemple 5 : idem exemple 4 avec matrice sigulière pour sexxclinique retrait un des croisements -> singularité
+##############################################################
 
-    modMat_intermediate <- model.matrix(as.formula(paste0("~ ", left_term," + ",int)), data = dat)
-    modMat_nest <- modMat_intermediate[, grepl(":", colnames(modMat_intermediate)), drop = FALSE]
+table (sex,clinic)
+dat <- data.frame(
+  treatment = treatment,
+  time      = time,
+  patient   = patient,
+  sex=sex,
+  clinic=clinic
+)
 
-    unique_levels <- apply(modMat_nest, 2, unique)
+tosupress=(dat$sex=="H")&(dat$clinic=="C2")
+dat=dat[!tosupress,]
+table (dat$sex,dat$clinic)
+table(dat$treatment, dat$patient)
+dat$sex <- as.character(dat$sex)
+# response variable
+dat$y <- rnorm(nrow(dat))
 
-    contains1 <- map_lgl(unique_levels, \(x) 1 %in% x)
-    modMat_nest <- modMat_nest[, names(contains1)[contains1]]
+# formula
+form <- as.formula("~ sex+treatment/patient+clinic+sex:clinic")
 
-    modMat_nested[[i]] <- as.data.frame(modMat_nest)
-    
-  }
-
-  modMat_nested_all <- purrr::list_cbind(modMat_nested)
-
-
-  modMat_allTerms <- cbind(modMat_otherTerms, modMat_nested_all)
-
-  # Test again singularity of model matrix
-
-  modMat <- modMat_allTerms
-
-  r_modMat <- qr(modMat)$rank # rank
-  p=ncol(modMat)
-  if (r_modMat-p){
-    stop("model matrix is singular, even after the removal of some model matrix columns. The design is mispecified")
-  }
-
-  return(modMat)
-}
-
-reshape_mod_mat(dat = dat,
-                form = as.formula("~ treatment/patient"),
-                nested = "treatment:patient")
+# nested parameter
+nested = "treatment:patient"
 
 
+options(contrasts = c("contr.sum", "contr.poly"))
+
+### reshape model matrix columns linked to a nested effect
+
+x5=reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
+qr(x5)$rank
+
+##############################################################
+# Exemple 6 : cas simple de singulatité sans facteur nested
+##############################################################
+
+table (sex,clinic)
+dat <- data.frame(
+  treatment = treatment,
+  time      = time,
+  sex=sex,
+  clinic=clinic
+)
+
+tosupress=(dat$sex=="H")&(dat$clinic=="C2")
+dat=dat[!tosupress,]
+table (dat$sex,dat$clinic)
+
+# response variable
+dat$y <- rnorm(nrow(dat))
+
+# formula
+form <- as.formula("~ sex+treatment+clinic+sex:clinic")
+
+# nested parameter
+nested = NULL
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+### reshape model matrix columns linked to a nested effect
+
+x6=reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
+qr(x6)$rank
+
+##############################################################
+# Exemple 7 : encore plus simple pas de singulatité et pas de facteur nested
+##############################################################
+
+table (sex,clinic)
+dat <- data.frame(
+  treatment = treatment,
+  time      = time,
+  sex=sex,
+  clinic=clinic
+)
+
+table (dat$sex,dat$clinic)
+
+# response variable
+dat$y <- rnorm(nrow(dat))
+
+# formula
+form <- as.formula("~ sex+treatment+clinic+sex/clinic")
+form <- as.formula("~ sex+treatment+clinic+treatment/patient")
+
+# nested parameter
+nested = NULL
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+### reshape model matrix columns linked to a nested effect
+
+x7=reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
+
+qr(x7)$rank
+
+#######################################################
+########### example metabolomics
+#######################################################
+
+## univariate ============================
+
+library(SummarizedExperiment)
+library(tidySummarizedExperiment)
+
+mae <- readRDS("../FRESH_LACTIN_V_mae_for_Lucie_20260414.RDS")
+
+se_metabo <- mae[["metabo"]]
+
+assayNames(se_metabo)
+
+se_metabo[["peak_batchNormImp_log"]]
+
+# lm()
+
+form <- as.formula("peak_batchNormImp_log ~ arm+visit_label+arm:visit_label+arm:pid")
+
+dat <- se_metabo |>
+  as_tibble() |>
+  dplyr::select(.sample, peak_batchNormImp_log, visit_label, arm, pid) |>
+  unique()
+
+lm(formula = form, data = dat, singular.ok = TRUE)
+lm(formula = form, data = dat, singular.ok = FALSE)
+
+# reshape_mod_mat()
+
+dat$pid <- as.factor(dat$pid)
+
+# nested parameter
+nested = "arm:pid"
+
+form <- "~ arm+visit_label+arm:visit_label+arm:pid"
+
+options(contrasts = c("contr.sum", "contr.poly"))
+
+### reshape model matrix columns linked to a nested effect
+
+x8 = reshape_mod_mat(dat = dat,
+                   form = form,
+                   nested = nested)
+
+## multivariate (limpca) ============================
+
+X <- t(assay(se_metabo, i = "peak_batchNormImp_log"))
+
+form <- "~ arm+visit_label+arm:visit_label+arm:pid"
+
+desi <- colData(se_metabo) |>
+  as.data.frame() |>
+  dplyr::select(visit_label, arm, pid)
+desi$pid <- as.factor(desi$pid)
+
+metabo_data <- list(design = desi, outcomes = X, formula = form)
+
+# PCA reduction
+resPCA_metabo <- lmpOutcomesReduct(metabo_data)
+lmpDataList <- resPCA_metabo$lmpDataList
+
+resPCA <- resPCA_metabo$resPCA
+
+pcaScorePlot(resPcaBySvd = resPCA, axes = c(1,2),
+             title = "Scores plot",
+             design = metabo_data$design, color="arm", drawShapes = "segment",
+             points_labs_rn = FALSE)
+
+# Estimation du modèle et décomposition de la matrice d'effets
+
+## Estimation des matrices de modèles
+
+# # nested parameter
+# nested = "arm:pid"
+# x9 = reshape_mod_mat(dat = lmpDataList$design,
+#                      form = lmpDataList$formula,
+#                      nested = nested)
+
+resLmpModelMatrix <- lmpModelMatrix(lmpDataList)
+
+str(resLmpModelMatrix)
+
+resLmpModelMatrix$effectsNamesUnique
+
+## Estimations des modèles
+
+#### Estimation avec la variance des effets fixes calculée avec la formule du type 3 SS de limpca (resLmpEffectMatrices_Candies).
+
+resLmpEffectMatrices <-  lmpEffectMatrices(resLmpModelMatrix)
+
+resLmpEffectMatrices$type3SS
+
+# Pourcentage de variance expliqué par effet :
+
+pander::pander(resLmpEffectMatrices$variationPercentages)
+resLmpEffectMatrices$varPercentagesPlot
+
+
+# Tests Bootstrap
+
+resLmpBootstrapTests_Candies <- lmpBootstrapTests(resLmpEffectMatrices_Candies, nboot = 1000, verbose = TRUE)
+
+# ASCA
+
+resLmpPcaEffectsASCA_Candies <- lmpPcaEffects(resLmpEffectMatrices_Candies, method="ASCA",
+                                              verbose = TRUE,backtransform = TRUE,
+                                              correctedMatrixAdd = FALSE)
+
+## APCA
+resLmpPcaEffectsAPCA_Candies <- lmpPcaEffects(resLmpEffectMatrices_Candies,
+                                              method="APCA",
+                                              verbose = TRUE,
+                                              backtransform = TRUE,
+                                              correctedMatrixAdd = FALSE)
+
+lmpScoreScatterPlotM(resLmpPcaEffectsAPCA_Candies,
+                     varname.colorup = "Candies",
+                     varname.colordown = "Candies",
+                     varname.pchup = "Judges",
+                     varname.pchdown = "Judges")

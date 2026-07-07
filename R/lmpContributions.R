@@ -38,7 +38,7 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
         the principal components are then derived from the
         pure effect matrices.")
   }
-   listNames <- c(resLmpPcaEffects$effectsNamesUnique[-1],"Residuals")
+  listNames <- c(resLmpPcaEffects$effectsNamesUnique[-1],"Residuals")
   neffect <- length(listNames)
 
   model <- resLmpPcaEffects$lmpDataList$model
@@ -102,9 +102,9 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
                                           + length(resLmpPcaEffects$effectsNamesUniqueR))
                         & model == "lmm")) {
     if(model == "lmm"){
-      neffectTot <- length(resLmpPcaEffects) - 8 -1
+      neffectTot <- length(resLmpPcaEffects) - 8 - 1
     } else{
-      neffectTot <- length(resLmpPcaEffects) - 6
+      neffectTot <- length(resLmpPcaEffects) - 6 - 1
     }
 
     neffectComb <- neffectTot - neffect
@@ -115,8 +115,8 @@ lmpContributions <- function(resLmpPcaEffects, nPC = 5) {
     }
 
     combinedEffect_table <- matrix(data = NA, nrow = neffectComb, ncol = (nPC + 1))
-    print(listNameComb)
-    print(neffectComb)
+    # print(listNameComb)
+    # print(neffectComb)
     rownames(combinedEffect_table) <- listNameComb
     temp_colnames <- c(temp_colnames[1:nPC], "Sum")
     colnames(combinedEffect_table) <- temp_colnames

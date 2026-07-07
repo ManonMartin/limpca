@@ -5,7 +5,7 @@ design <- data.frame(
 )
 outcomes <- matrix(rnorm(30), ncol = 3)
 formula <- "~ factA+factB"
-lmpDL <- list(design = design, outcomes = outcomes, formula = formula)
+lmpDL <- list(design = design, outcomes = outcomes, formula = formula, model = "lm")
 mM <- model.matrix(as.formula(lmpDL$formula), lmpDL$design)
 mMBE <- list(
     Intercept = mM[, "(Intercept)", drop = FALSE],

@@ -133,7 +133,7 @@ data2LmpDataList <- function(se = NULL, assay_name = NULL,
     out_formula <- form_se
   } else {
     out_formula <- NULL
-    warning("formula information is missing in the arguments")
+    stop("formula information is missing in the arguments")
   }
 
   # checkArg(out_formula, "formula", can.be.null = TRUE)

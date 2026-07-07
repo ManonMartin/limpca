@@ -26,14 +26,14 @@
 #' \emph{p} is the total number parameter for each response (outcome) in the ASCA model.
 #' More information is available in the article (\emph{Thiel et al}, 2017)
 #' Note that at the moment, only factors can be used as explanatory variables.
-#' If the mixed-effects model is used, we obtain the same model matrix `X` for fixed effects. 
+#' If the mixed-effects model is used, we obtain the same model matrix `X` for fixed effects.
 #' However, for a random effect, the model matrix `Z` is created in such a way that for a factor with \emph{a} levels, \emph{sum coding} generates \emph{a} columns in the model matrix with only 0 and 1.
-#' 
+#'
 #' For now, \emph{limpca} only handles three types of mixed models: hierarchical models with 2 random variables, models with a single random variable, and models with 2 random variables, including an interaction effect between the random variable and a fixed variable.
-#' All random effects must be of the form \emph{(1 | varR)} where \emph{varR} is the name of the random effect. 
+#' All random effects must be of the form \emph{(1 | varR)} where \emph{varR} is the name of the random effect.
 #' However, the \emph{limpca} package handles all fixed models#'
-#' 
-#' 
+#'
+#'
 #' @seealso \code{\link{model.matrix}}
 #'
 #' @examples
@@ -54,7 +54,7 @@
 lmpModelMatrix <- function(lmpDataList) {
   formula <- stats::as.formula(lmpDataList$formula)
   design <- lmpDataList$design
-  
+
   # Checking no missing argument and the class of the object
 
   checkArg(formula, "formula", can.be.null = FALSE)
@@ -98,17 +98,16 @@ lmpModelMatrix <- function(lmpDataList) {
   factorsDesign <- names(Filter(is.factor, design))
   varNamesFactors <- intersect(factorsDesign, varNames)
 
-##########################update by Antoine############################
   modelMatrixR <- matrix(nrow = dim(design)[1], ncol = 0)
   modelMatrixByEffectR <- list()
   effectsNamesUniqueR <- NULL
   effectsNamesAllR <- NULL
   model <- lmpDataList$model
   checkArg(model,c("model"), can.be.null = TRUE)
-  
+
   # not specified the model
   if(is.null(model)){
-    # it's a mixed model if there is "|" in the formula 
+    # it's a mixed model if there is "|" in the formula
     if(any(grepl("\\|",attr(terms(formula),"term.labels")))){
       model <- "lmm"
       lmpDataList$model <- "lmm"
@@ -117,7 +116,7 @@ lmpModelMatrix <- function(lmpDataList) {
       lmpDataList$model <- "lm"
     }
   }
-  
+
   # If mixed model
   if(model == "lmm"){
     # Check isReduct is TRUE
@@ -135,7 +134,7 @@ lmpModelMatrix <- function(lmpDataList) {
     if(all(trimws(sapply(randFactors,function(x){strsplit(x,"\\|")[[1]][1]})) != 1)){
       stop("All random effects must be of the form (1 | varR) where varR is the name of the random effect")
     }
-    
+
     if(length(randFactors) == 0){
       stop("The model to be estimated is not a linear mixed model")
     } else if(length(randFactors) == 2 & length(randFactors[grepl(":", randFactors)]) != 1){
@@ -145,10 +144,10 @@ lmpModelMatrix <- function(lmpDataList) {
     } else if (length(randFactors) == 1 & length(randFactors[grepl(":", randFactors)]) == 1){
       stop("The model with only interaction random effect is not supported")
     }
-    
+
     randFactors <- sapply(randFactors,function(x){strsplit(x,"\\|")[[1]][2]})
     randFactors <- trimws(randFactors)
-    
+
     # Check the random interaction effect includes the marginal random effect
     interactionR <- randFactors[grepl(":", randFactors)]
     if(length(interactionR) == 1){
@@ -156,7 +155,7 @@ lmpModelMatrix <- function(lmpDataList) {
       marginalR <- randFactors[!grepl(":", randFactors)]
       # List of variable in the interaction
       listInterVar <- strsplit(interactionR,":")[[1]]
-      
+
       if(length(intersect(listInterVar,marginalR)) != 1){
         stop("The random interaction effect must include the marginal random effect")
       }
@@ -164,21 +163,21 @@ lmpModelMatrix <- function(lmpDataList) {
       randFactors[1] <- interactionR
       randFactors[2] <- marginalR
     }
-    
+
     # Create model matrix for random effect (with no Intercept)
     length(modelMatrixByEffectR) <- length(randFactors)
     names(modelMatrixByEffectR) <- randFactors
     for(i in 1:length(randFactors)){
       factor <- randFactors[i]
       formFactor <- formula(paste("~ 0 +",factor))
-      
+
       modelMatrixByEffectR[[factor]] <- (stats::model.matrix(formFactor,
                                                    data = design
       ))
       modelMatrixR <- cbind(modelMatrixR, modelMatrixByEffectR[[factor]])
     }
-    
-    # Finding all unique random variables 
+
+    # Finding all unique random variables
     dummyVarNames <- colnames(modelMatrixR)
     presencePolynomialEffects <- stringr::str_detect(dummyVarNames,
                                                      "\\^[0-9]") # Detect exponent
@@ -190,8 +189,8 @@ lmpModelMatrix <- function(lmpDataList) {
     effectsNamesAllR[!presencePolynomialEffects] <- gsub("[0-9]", "",
                                                          effectsNamesAllR[!presencePolynomialEffects])
     effectsNamesUniqueR <- unique(effectsNamesAllR)
-    
-    
+
+
     # Formula with only fix effect
     tmpNamesVars <-  trimws(strsplit(lmpDataList$formula,"\\+")[[1]])
     tmpNamesVars <- tmpNamesVars[!grepl("\\|", tmpNamesVars)]
@@ -201,7 +200,7 @@ lmpModelMatrix <- function(lmpDataList) {
     } else {
       formulaDesignMatrix <- formula("~ 1")
     }
-    
+
     warning("The random model matrix is provided for indicative purposes only.")
   }
   ###################################################################################
@@ -209,8 +208,8 @@ lmpModelMatrix <- function(lmpDataList) {
   if(any(grepl("\\|",attr(terms(formulaDesignMatrix),"term.labels")))){
     stop("The model to be estimated is not a global linear model")
   }
-  
-  
+
+
   # Creating model matrix. If factors are present, a list is created to specify
   # which variables are considered as factors in model.matrix
   if (length(varNamesFactors) != 0) {
@@ -222,15 +221,25 @@ lmpModelMatrix <- function(lmpDataList) {
     }
     modelMatrix <- (stats::model.matrix(formulaDesignMatrix,
       contrasts.arg = contrasts.arg.Values,
-      data = design
-    ))
+      data = design))
+
+    res_reshape_mod_mat = reshape_mod_mat(dat = design,
+                                          form = formulaDesignMatrix,
+                                          contrasts.arg = contrasts.arg.Values)
+
+    modelMatrix <- res_reshape_mod_mat$modMat
+
+    if (res_reshape_mod_mat$isSingular){
+      assign("modMat", res_reshape_mod_mat$modMat, envir = .GlobalEnv)
+      stop("The model matrix is singular due to design mispecification, even after the potential removal of some columns due to nested effects.\n The model matrix (modMat) is returned in the global environment for inspection.")
+    }
+
   }
 
   # If factors are not present (Currently not the case)
   if (length(varNamesFactors) == 0) {
     modelMatrix <- (stats::model.matrix(formulaDesignMatrix,
-                                        data = design
-    ))
+                                        data = design))
   }
 
   # Creating a list containing model matrices by effect
@@ -248,7 +257,36 @@ lmpModelMatrix <- function(lmpDataList) {
     dummyVarNames[!presencePolynomialEffects]
   )
   effectsNamesAll[effectsNamesAll == "(Intercept)"] <- "Intercept"
+
+
+  # for nested effects, merge the levels into one effect
+  nested_effects <- res_reshape_mod_mat$possibly_nested
+
+  if (length(nested_effects)>0){
+    for (nested in nested_effects){
+      # id to replace the effect name
+      id_repl <- grep(pattern = nested, x = effectsNamesAll)
+
+      left <- sub(x = nested,pattern = ":.*", replacement = "")
+      right <- sub(x = nested,pattern = ".*:", replacement = ":")
+
+      for (k in seq_len(ncol(design))){
+        nam <- colnames(design)[k]
+        ident <- grep(nam, left)
+
+        if (length(ident)>0){
+          for (i in levels(design[,nam])){
+            left[ident] <- sub(x = left[ident], pattern = i, replacement = "")
+          }
+        }
+      }
+
+      effectsNamesAll[id_repl] <- paste(left, right, sep = "")
+    }
+  }
+
   effectsNamesUnique <- unique(effectsNamesAll)
+
   nEffect <- length(effectsNamesUnique)
 
   # Creating empty model matrices by effect
@@ -256,14 +294,16 @@ lmpModelMatrix <- function(lmpDataList) {
   length(modelMatrixByEffect) <- nEffect
   names(modelMatrixByEffect) <- effectsNamesUnique
 
+
   # Filling model matrices by effect
   for (iEffect in seq_len(nEffect)) {
     selection <- which(effectsNamesAll == effectsNamesUnique[iEffect])
-    selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
+    # selectionComplement <- which(effectsNamesAll != effectsNamesUnique[iEffect])
+
     # Model matrices by effect
     modelMatrixByEffect[[iEffect]] <- as.matrix(modelMatrix[, selection])
   }
-  
+
   # the object is not the same for different models
   if(model == "lmm"){
     resLmpModelMatrix <- list(
@@ -276,7 +316,7 @@ lmpModelMatrix <- function(lmpDataList) {
       modelMatrixByEffectR = modelMatrixByEffectR,
       effectsNamesUniqueR = effectsNamesUniqueR,
       effectsNamesAllR = effectsNamesAllR)
-  } else {  
+  } else {
     resLmpModelMatrix <- list(
     lmpDataList = lmpDataList,
     modelMatrix = modelMatrix,
