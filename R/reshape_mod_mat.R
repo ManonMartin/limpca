@@ -163,10 +163,11 @@ reshape_mod_mat <- function(dat, form, nested = NULL, contrasts.arg){
       )
     )
 
+
     # Matrice du modèle correspondante
     modMat_otherTerms <- stats::model.matrix(
       otherTermsInteraction_formula,
-      contrasts.arg = contrasts.arg,
+      contrasts.arg = contrasts.arg[other_terms],
       data = dat
     )
 
@@ -175,7 +176,7 @@ reshape_mod_mat <- function(dat, form, nested = NULL, contrasts.arg){
     ##############################################################
 
     # Pour l'instant on traite uniquement le premier effet imbriqué
-    # int <- possibly_nested[1]
+    # nested_effect <- possibly_nested[1]
 
     modMat_nested_fun <- function(nested_effect){
 
@@ -209,7 +210,7 @@ reshape_mod_mat <- function(dat, form, nested = NULL, contrasts.arg){
       )
 
       lookup_var_levels <- data.frame(old_var, new_var)
-      lookup_var_levels <- unique(lookup_var_levels)
+      # lookup_var_levels <- unique(lookup_var_levels)
 
       # Remplacement des niveaux dans les données
       dat[, right_term] <- as.factor(new_var)
@@ -277,6 +278,8 @@ reshape_mod_mat <- function(dat, form, nested = NULL, contrasts.arg){
       # Construction de la matrice correspondant à l'effet imbriqué
       ##############################################################
 
+      contr <- contrasts.arg[names(contrasts.arg) %in% c(right_term, left_term)]
+
       modMat_intermediate <- stats::model.matrix(
         as.formula(
           paste0(
@@ -286,7 +289,7 @@ reshape_mod_mat <- function(dat, form, nested = NULL, contrasts.arg){
             nested_effect
           )
         ),
-        data = dat, contrasts.arg = contrasts.arg
+        data = dat, contrasts.arg = contr
       )
 
       # Conservation des colonnes correspondant à l'interaction
@@ -307,13 +310,16 @@ reshape_mod_mat <- function(dat, form, nested = NULL, contrasts.arg){
         unique
       )
 
+      # contains1 <- base::apply(unique_levels,2,function(x) 1 %in% x)
+
       contains1 <- purrr::map_lgl(
         unique_levels,
         \(x) 1 %in% x
       )
 
-      modMat_nested <- modMat_nested[,names(contains1)[contains1]]
-      return((modMat_nested))
+      modMat_nested <- modMat_nested[,contains1]
+
+      return(modMat_nested)
     }
 
     res_map <- purrr::map(possibly_nested, modMat_nested_fun)
